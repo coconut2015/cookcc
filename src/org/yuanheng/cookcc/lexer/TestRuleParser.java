@@ -24,11 +24,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package junit_tests;
+package org.yuanheng.cookcc.lexer;
 
 import org.junit.Test;
-import org.yuanheng.cookcc.lexer.NFAFactory;
-import org.yuanheng.cookcc.lexer.RuleParser;
 
 /**
  * @author Heng Yuan

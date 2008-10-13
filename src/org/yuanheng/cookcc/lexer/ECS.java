@@ -55,6 +55,11 @@ class ECS
 		return m_groups;
 	}
 
+	public int getGroup (int group)
+	{
+		return m_groups[group];
+	}
+
 	public int[] getLookup ()
 	{
 		if (m_lookup == null)

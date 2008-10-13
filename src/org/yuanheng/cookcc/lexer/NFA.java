@@ -61,6 +61,7 @@ class NFA
 	int m_caseValue;
 	NFA m_next;
 	NFA m_next2;
+	boolean mark;
 
 	final int m_id;
 

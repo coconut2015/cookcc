@@ -26,45 +26,64 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.yuanheng.cookcc.exception.EscapeSequenceException;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class zz_CCL
+class ESet implements Comparable<ESet>
 {
-	@Test
-	public void escTest () throws EscapeSequenceException
+	private final Set<NFA> m_set = NFA.getSortedSet ();
+	private int m_stateId;
+
+	public ESet ()
 	{
-		Assert.assertEquals ('a', CCL.esc ("\\abc".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\b', CCL.esc ("\\bc".toCharArray (), new int[]{ 0 }));
-
-		Assert.assertEquals ('\1', CCL.esc ("\\1".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\12', CCL.esc ("\\12".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\123".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\1234".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\123]".toCharArray (), new int[]{ 0 }));
-
-		Assert.assertEquals ('\b', CCL.esc ("\b".toCharArray (), new int[]{ 0 }));
-
-		Assert.assertEquals (1, CCL.esc ("\\x1".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals (18, CCL.esc ("\\x12".toCharArray (), new int[]{ 0 }));
-
-		Assert.assertEquals ('\u655f', CCL.esc ("\\u655f".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\u1234', CCL.esc ("\\u12345".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\u1234', CCL.esc ("\\u1234]".toCharArray (), new int[]{ 0 }));
 	}
 
-	@Test
-	public void testCCL () throws Exception
+	public void setStateId (int stateId)
 	{
-		CCL ccl = CCL.getByteCCL ();
-		Assert.assertEquals ("[x]", ccl.toString (ccl.parseCCL ("[x]")));
-		Assert.assertEquals ("[Zabj-o]", ccl.toString (ccl.parseCCL ("[abj-oZ]")));
-		Assert.assertEquals ("[^A-Z]", ccl.toString (ccl.parseCCL ("[^A-Z]")));
-		Assert.assertEquals ("[^\\nA-Z]", ccl.toString (ccl.parseCCL ("[^A-Z\\n]")));
+		m_stateId = stateId;
+	}
+
+	public int getStateId ()
+	{
+		return m_stateId;
+	}
+
+	public NFA isAccept ()
+	{
+		for (NFA n : m_set)
+			if (n.isAccept ())
+			return n;
+		return null;
+	}
+
+	public Set<NFA> getSet ()
+	{
+		return m_set;
+	}
+
+	public void add (NFA nfa)
+	{
+		m_set.add (nfa);
+	}
+
+	public int compareTo (ESet o)
+	{
+		if (m_set.size () != o.m_set.size ())
+			return m_set.size () - o.m_set.size ();
+
+		Iterator<NFA> i1 = m_set.iterator ();
+		Iterator<NFA> i2 = o.m_set.iterator ();
+		for (; i1.hasNext ();)
+		{
+			NFA n1 = i1.next ();
+			NFA n2 = i2.next ();
+			if (n1 != n2)
+				return n1.m_id - n2.m_id;
+		}
+		return 0;
 	}
 }

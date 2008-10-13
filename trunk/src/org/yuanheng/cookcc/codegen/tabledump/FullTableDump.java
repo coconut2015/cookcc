@@ -44,14 +44,15 @@ public class FullTableDump implements CodeGen
 {
 	private void printArray (char[] array, PrintWriter p)
 	{
-		p.print ("    {");
+		p.print (" {");
 		for (int i = 0; i < array.length; ++i)
 		{
 			if ((i % 10) == 0 && i > 0)
-				p.print ("\n\t");
-			p.print ("\t" + (int)array[i]);
+				p.print ("\n  ");
+			p.printf ("%6d", (int)array[i]);
+			//p.print ("\t" + (int)array[i]);
 		}
-		p.print ("    }");
+		p.print (" }");
 	}
 
 	private void generateLexerOutput (Document doc, PrintWriter p)

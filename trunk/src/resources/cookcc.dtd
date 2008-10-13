@@ -11,9 +11,12 @@
 	<!ELEMENT pattern	(#PCDATA)>
 	<!ELEMENT action	(#PCDATA)>
 
-	<!ATTLIST lexer		outputfile CDATA #IMPLIED>
+	<!ATTLIST lexer		source CDATA #IMPLIED>
+	<!ATTLIST lexer		target CDATA #IMPLIED>
 
 	<!ATTLIST shortcut	name CDATA #REQUIRED>
 	<!ATTLIST rule		state CDATA #IMPLIED>
 	<!ATTLIST rule		line CDATA #IMPLIED>
+	<!ATTLIST pattern	bol (true|false) #IMPLIED>
+	<!ATTLIST pattern	nocase (true|false) #IMPLIED>
 ]>

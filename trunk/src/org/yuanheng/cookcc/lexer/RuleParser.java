@@ -68,6 +68,11 @@ public class RuleParser
 		m_cclCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[-\\]\\n]"));
 	}
 
+	public boolean isBOL ()
+	{
+		return m_bol;
+	}
+
 	public NFA parse (int lineNumber, String input)
 	{
 		char[] inputChars = input.toCharArray ();

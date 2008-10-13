@@ -37,6 +37,8 @@ public class LexerStateDoc
 	private final String m_name;
 	private final LinkedList m_rules = new LinkedList ();
 
+	private Object m_userObject;
+
 	public LexerStateDoc (String name)
 	{
 		m_name = name;
@@ -56,5 +58,15 @@ public class LexerStateDoc
 	public RuleDoc[] getRules ()
 	{
 		return (RuleDoc[])m_rules.toArray (new RuleDoc[m_rules.size ()]);
+	}
+
+	public Object getUserObject ()
+	{
+		return m_userObject;
+	}
+
+	public void setUserObject (Object userObject)
+	{
+		m_userObject = userObject;
 	}
 }

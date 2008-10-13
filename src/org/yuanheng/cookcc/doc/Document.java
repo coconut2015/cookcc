@@ -40,10 +40,21 @@ import java.util.StringTokenizer;
  */
 public class Document
 {
+	private boolean m_unicode;
 	private StringBuffer m_header = new StringBuffer ();
 	private final Collection m_tokens = new LinkedList ();
 	private LexerDoc m_lexer;
 	private ParserDoc m_parser;
+
+	public boolean isUnicode ()
+	{
+		return m_unicode;
+	}
+
+	public void setUnicode (boolean unicode)
+	{
+		m_unicode = unicode;
+	}
 
 	public void setLexer (LexerDoc lexerDoc)
 	{

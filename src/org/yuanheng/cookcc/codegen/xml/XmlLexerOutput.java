@@ -29,10 +29,7 @@ package org.yuanheng.cookcc.codegen.xml;
 import java.io.PrintWriter;
 import java.util.HashSet;
 
-import org.yuanheng.cookcc.doc.LexerDoc;
-import org.yuanheng.cookcc.doc.LexerStateDoc;
-import org.yuanheng.cookcc.doc.RuleDoc;
-import org.yuanheng.cookcc.doc.ShortcutDoc;
+import org.yuanheng.cookcc.doc.*;
 
 /**
  * @author Heng Yuan
@@ -51,9 +48,17 @@ class XmlLexerOutput
 			p.println ("\t\t\t<rule line=\"" + rule.getLineNumber () + "\">");
 		else
 			p.println ("\t\t\t<rule>");
-		String[] patterns = rule.getPatterns ();
+		PatternDoc[] patterns = rule.getPatterns ();
 		for (int i = 0; i < patterns.length; ++i)
-			p.println ("\t\t\t\t<pattern>" + Utils.translate (patterns[i]) + "</pattern>");
+		{
+			p.print ("\t\t\t\t<pattern");
+			PatternDoc pattern = patterns[i];
+			if (pattern.isBOL ())
+				p.print (" bol=\"true\"");
+			if (pattern.isNocase ())
+				p.print (" nocase=\"true\"");
+			p.print (">" + Utils.translate (pattern.getPattern ()) + "</pattern>");
+		}
 		p.println ("\t\t\t\t<action>" + Utils.translate (rule.getAction ()) + "</action>");
 		p.println ("\t\t\t</rule>");
 	}

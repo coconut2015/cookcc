@@ -60,7 +60,7 @@ class NFA
 	int m_char;
 	boolean[] m_ccl;
 	int m_anchor;
-	int m_value;
+	int m_caseValue;
 	NFA m_next;
 	NFA m_next2;
 
@@ -78,9 +78,26 @@ class NFA
 		m_char = EPSILON;
 		m_ccl = null;
 		m_anchor = 0;
-		m_value = 0;
+		m_caseValue = 0;
 		m_next = null;
 		m_next2 = null;
+	}
+
+	public void setState (int caseValue, int trail, boolean accept)
+	{
+		NFA end = last ();
+		end.m_caseValue = caseValue;
+		end.m_anchor = trail | (accept ? 1 : 0);
+		if (trail != 0)
+		{
+			if ((trail & 7) != 6) 		// have const head or tail
+			{							// then remove extra memory positions
+				NFA t = this;
+				while ((t.m_anchor & 0x03) == 0)
+					t = t.m_next;
+				t.m_anchor = 0;
+			}
+		}
 	}
 
 	public boolean isAccept ()
@@ -93,7 +110,7 @@ class NFA
 		m_char = other.m_char;
 		m_ccl = other.m_ccl;
 		m_anchor = other.m_anchor;
-		m_value = other.m_value;
+		m_caseValue = other.m_caseValue;
 		m_next = other.m_next;
 		m_next2 = other.m_next2;
 	}

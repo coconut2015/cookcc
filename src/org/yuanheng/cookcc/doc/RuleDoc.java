@@ -43,10 +43,12 @@ public class RuleDoc
 
 	private int m_lineNumber;
 
-	private final LinkedList m_patterns = new LinkedList ();
+	private final LinkedList<PatternDoc> m_patterns = new LinkedList<PatternDoc> ();
 
 	private String m_action = "";
 	private HashSet m_states = new HashSet ();
+
+	private Object m_userObject;
 
 	public RuleDoc (LexerDoc lexer)
 	{
@@ -79,14 +81,14 @@ public class RuleDoc
 		m_lineNumber = lineNumber;
 	}
 
-	public void addPattern (String pattern)
+	public void addPattern (PatternDoc pattern)
 	{
 		m_patterns.add (pattern);
 	}
 
-	public String[] getPatterns ()
+	public PatternDoc[] getPatterns ()
 	{
-		return (String[])m_patterns.toArray (new String[m_patterns.size ()]);
+		return m_patterns.toArray (new PatternDoc[m_patterns.size ()]);
 	}
 
 	public void setAction (String action)
@@ -125,5 +127,15 @@ public class RuleDoc
 	public LexerStateDoc[] getStates ()
 	{
 		return (LexerStateDoc[])m_states.toArray (new LexerStateDoc[m_states.size ()]);
+	}
+
+	public Object getUserObject ()
+	{
+		return m_userObject;
+	}
+
+	public void setUserObject (Object userObject)
+	{
+		m_userObject = userObject;
 	}
 }

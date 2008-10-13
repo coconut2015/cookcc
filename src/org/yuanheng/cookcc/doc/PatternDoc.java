@@ -24,95 +24,49 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.lexer;
-
-import java.util.LinkedList;
+package org.yuanheng.cookcc.doc;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-class NFAFactory
+public class PatternDoc
 {
-	public static NFAFactory getByteNFAFactory ()
+	private String m_pattern;
+	private boolean m_nocase;
+	private boolean m_bol;
+
+	public PatternDoc ()
 	{
-		return new NFAFactory (CCL.getByteCCL ());
 	}
 
-	public static NFAFactory getCharacterNFAFactory ()
+	public void setPattern (String pattern)
 	{
-		return new NFAFactory (CCL.getCharacterCCL ());
+		m_pattern = pattern;
 	}
 
-	private int m_nfaCounter = 0;
-
-	private final CCL m_ccl;
-	/* for computing equivalent classes */
-	private final ECS m_ecs;
-	/* for recycling NFAs */
-	private final LinkedList<NFA> m_spareNFAs = new LinkedList<NFA> ();
-
-	private NFAFactory (CCL ccl)
+	public String getPattern ()
 	{
-		m_ccl = ccl;
-		m_ecs = new ECS (ccl.MAX_SYMBOL);
+		return m_pattern;
 	}
 
-	int incNFACounter ()
+	public boolean isNocase ()
 	{
-		return m_nfaCounter++;
+		return m_nocase;
 	}
 
-	public CCL getCCL ()
+	public void setNocase (boolean nocase)
 	{
-		return m_ccl;
+		m_nocase = nocase;
 	}
 
-	public int getTotalNFACount ()
+	public boolean isBOL ()
 	{
-		return m_nfaCounter - m_spareNFAs.size ();
+		return m_bol;
 	}
 
-	public NFA createNFA ()
+	public void setBOL (boolean bol)
 	{
-		NFA nfa;
-		if (m_spareNFAs.isEmpty ())
-			nfa = new NFA (this);
-		else
-			nfa = m_spareNFAs.removeFirst ();
-		return nfa;
-	}
-
-	public NFA createNFA (int ch, boolean[] ccl)
-	{
-		NFA nfa;
-		if (m_spareNFAs.isEmpty ())
-			nfa = new NFA (this);
-		else
-			nfa = m_spareNFAs.removeFirst ();
-
-		nfa.m_char = ch;
-		nfa.m_ccl = ccl;
-		if (ch >= 0)
-			m_ecs.add ((char)ch);
-		else if (ch == NFA.ISCCL)
-			m_ecs.add (ccl);
-		return nfa;
-	}
-
-	public ECS getECS ()
-	{
-		return m_ecs;
-	}
-
-	public void deleteNFA (NFA nfa)
-	{
-		nfa.init ();
-		m_spareNFAs.add (nfa);
-	}
-
-	public NFA getEOL ()
-	{
-		return new RuleParser (this).parse (0, "(\\r?\\n)|<<EOF>>)");
+		m_bol = bol;
 	}
 }

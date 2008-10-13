@@ -26,9 +26,9 @@
  */
 package org.yuanheng.cookcc.doc;
 
-import java.util.StringTokenizer;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 /**
  * @author Heng Yuan

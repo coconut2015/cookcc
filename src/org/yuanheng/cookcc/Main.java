@@ -26,9 +26,9 @@
  */
 package org.yuanheng.cookcc;
 
-import org.yuanheng.cookcc.input.xml.XmlParser;
-import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.codegen.xml.XmlOutput;
+import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.input.xml.XmlParser;
 
 /**
  * @author Heng Yuan

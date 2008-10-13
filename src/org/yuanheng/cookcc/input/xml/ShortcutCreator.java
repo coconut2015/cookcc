@@ -27,12 +27,10 @@
 package org.yuanheng.cookcc.input.xml;
 
 import org.w3c.dom.Element;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.RuleDoc;
 import org.yuanheng.cookcc.doc.ShortcutDoc;
 
-import cookxml.core.interfaces.Creator;
 import cookxml.core.DecodeEngine;
+import cookxml.core.interfaces.Creator;
 import cookxml.core.util.TextUtils;
 
 /**

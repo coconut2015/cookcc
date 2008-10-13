@@ -84,10 +84,10 @@ class NFAFactory
 		else
 			nfa = m_spareNFAs.removeFirst ();
 
-		nfa.m_char = ch;
-		nfa.m_ccl = ccl;
+		nfa.thisChar = ch;
+		nfa.charSet = ccl;
 		if (ch >= 0)
-			m_ecs.add ((char)ch);
+			m_ecs.add (ch);
 		else if (ch == NFA.ISCCL)
 			m_ecs.add (ccl);
 		return nfa;

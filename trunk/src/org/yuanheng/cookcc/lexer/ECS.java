@@ -81,7 +81,7 @@ public class ECS
 		return m_lookup;
 	}
 
-	public void add (char ch)
+	public void add (int ch)
 	{
 		m_groups[ch] = ++m_groupCount;
 		compute ();

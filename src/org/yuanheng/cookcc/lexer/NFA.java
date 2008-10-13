@@ -26,35 +26,25 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-import java.util.LinkedList;
-import java.util.HashMap;
-import java.util.Comparator;
-import java.util.TreeSet;
-import javax.swing.text.html.HTMLDocument;
+import java.util.*;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class NFA
+class NFA
 {
-	private final static int EPSILON = -1;
-	private final static int ISCCL = -2;
-	private final static int EMPTY = -4;
+	public final static int EPSILON = -1;
+	public final static int ISCCL = -2;
+	public final static int EMPTY = -4;
 
-	private final static int TRAIL_MASK = 0x06;
-	private final static int TRAIL_NONE = 0;
-	private final static int TRAIL_FIXHEAD = 0x02;
-	private final static int TRAIL_FIXTAIL = 0x04;
-	private final static int TRAIL_VAR = 0x06;
+	public final static int TRAIL_MASK = 0x06;
+	public final static int TRAIL_NONE = 0;
+	public final static int TRAIL_FIXHEAD = 0x02;
+	public final static int TRAIL_FIXTAIL = 0x04;
+	public final static int TRAIL_VAR = 0x06;
 
-	private static int s_count = 0;
-
-	/* for computing equivalent classes */
-	private final static ECS s_ecs = new ECS ();
-	/* for recycling NFAs */
-	private final static LinkedList<NFA> s_spareNFAs = new LinkedList<NFA> ();
-
+	/* for sorting NFA in printing */
 	private final static Comparator<NFA> s_comparator = new Comparator<NFA> ()
 	{
 		public int compare (NFA o1, NFA o2)
@@ -63,65 +53,25 @@ public class NFA
 		}
 	};
 
-	public static int getTotalNFACount ()
+	NFAFactory m_factory;
+
+	int m_char;
+	boolean[] m_ccl;
+	int m_anchor;
+	int m_value;
+	NFA m_next;
+	NFA m_next2;
+
+	final int m_id;
+
+	NFA (NFAFactory factory)
 	{
-		return s_count - s_spareNFAs.size ();
-	}
-
-	public static NFA createNFA ()
-	{
-		NFA nfa;
-		if (s_spareNFAs.isEmpty ())
-			nfa = new NFA ();
-		else
-			nfa = s_spareNFAs.removeFirst ();
-		return nfa;
-	}
-
-	public static NFA createNFA (int ch, boolean[] ccl)
-	{
-		NFA nfa;
-		if (s_spareNFAs.isEmpty ())
-			nfa = new NFA ();
-		else
-			nfa = s_spareNFAs.removeFirst ();
-
-		nfa.m_char = ch;
-		nfa.m_ccl = ccl;
-		if (ch >= 0)
-			s_ecs.add ((char)ch);
-		else if (ch == ISCCL)
-			s_ecs.add (ccl);
-		return nfa;
-	}
-
-	public static ECS getECS ()
-	{
-		return s_ecs;
-	}
-
-	public static void deleteNFA (NFA nfa)
-	{
-		nfa.init ();
-		s_spareNFAs.add (nfa);
-	}
-
-	private int m_char;
-	private boolean[] m_ccl;
-	private int m_anchor;
-	private int m_value;
-	private NFA m_next;
-	private NFA m_next2;
-
-	private final int m_id;
-
-	private NFA ()
-	{
-		m_id = s_count++;
+		m_id = factory.incNFACounter ();
+		m_factory = factory;
 		init ();
 	}
 
-	private void init ()
+	void init ()
 	{
 		m_char = EPSILON;
 		m_ccl = null;
@@ -158,16 +108,16 @@ public class NFA
 	{
 		NFA n = last ();
 		n.copy (other);
-		deleteNFA (other);
+		m_factory.deleteNFA (other);
 		return this;
 	}
 
 	public NFA or (NFA other)
 	{
-		NFA n = createNFA ();
+		NFA n = m_factory.createNFA ();
 		n.m_next = this;
 		n.m_next2 = other;
-		NFA e = createNFA ();
+		NFA e = m_factory.createNFA ();
 		last ().m_next = e;
 		other.last ().m_next = e;
 		return n;
@@ -175,8 +125,8 @@ public class NFA
 
 	public NFA star ()
 	{
-		NFA n = createNFA ();
-		NFA e = createNFA ();
+		NFA n = m_factory.createNFA ();
+		NFA e = m_factory.createNFA ();
 		NFA oldend = last ();
 		n.m_next = this;
 		n.m_next2 = e;
@@ -187,9 +137,9 @@ public class NFA
 
 	public NFA plus ()
 	{
-		NFA n = createNFA ();
+		NFA n = m_factory.createNFA ();
 		NFA oldend = last ();
-		oldend.m_next = createNFA ();
+		oldend.m_next = m_factory.createNFA ();
 		oldend.m_next2 = this;
 		n.m_next = this;
 		return n;
@@ -197,21 +147,23 @@ public class NFA
 
 	public NFA q ()
 	{
-		NFA n = createNFA ();
+		NFA n = m_factory.createNFA ();
 		NFA oldend = last ();
-		NFA e = createNFA ();
+		NFA e = m_factory.createNFA ();
 		oldend.m_next = e;
 		n.m_next = this;
 		n.m_next2 = e;
 		return n;
 	}
 
-	private void recursiveUpdateMap (NFA nfa, HashMap<NFA, NFA> nfaMap)
+	private void recursiveUpdateMap (NFA nfa, IdentityHashMap<NFA, NFA> nfaMap)
 	{
+		if (nfaMap.containsKey (nfa))
+			return;
 		nfaMap.put (nfa, null);
-		if (nfa.m_next != null && nfaMap.get (nfa.m_next) == null)
+		if (nfa.m_next != null)
 			recursiveUpdateMap (nfa.m_next, nfaMap);
-		if (nfa.m_next2 != null && nfaMap.get (nfa.m_next2) == null)
+		if (nfa.m_next2 != null)
 			recursiveUpdateMap (nfa.m_next2, nfaMap);
 	}
 
@@ -222,13 +174,13 @@ public class NFA
 	 */
 	private NFA duplicate ()
 	{
-		HashMap<NFA, NFA> nfaMap = new HashMap<NFA, NFA> ();
+		IdentityHashMap<NFA, NFA> nfaMap = new IdentityHashMap<NFA, NFA> ();
 		// serialize all the NFA into nfaMap
 		recursiveUpdateMap (this, nfaMap);
 		// create a corresponding set of NFA
 		NFA[] keys = nfaMap.keySet ().toArray (new NFA[nfaMap.size ()]);
 		for (int i = 0; i < keys.length; ++i)
-			nfaMap.put (keys[i], createNFA ());
+			nfaMap.put (keys[i], m_factory.createNFA ());
 		// update branches
 		for (int i = 0; i < keys.length; ++i)
 		{
@@ -281,7 +233,7 @@ public class NFA
 	{
 		buffer.append ('[').append (m_id).append ("]: ");
 
-		String cclStr = m_ccl == null ? null : CCL.toString (m_ccl);
+		String cclStr = m_ccl == null ? null : m_factory.getCCL ().toString (m_ccl);
 
 		if (m_char >= 0)
 			buffer.append ('\'').append ((char)m_char).append ("' ");
@@ -306,7 +258,7 @@ public class NFA
 			buffer.append ("\t\t");
 
 		if (cclStr != null && cclStr.length () > 3)
-			buffer.append ("\tCCL = ").append (CCL.toString (m_ccl));
+			buffer.append ("\tCCL = ").append (m_factory.getCCL ().toString (m_ccl));
 		buffer.append ('\n');
 	}
 
@@ -314,7 +266,7 @@ public class NFA
 	{
 		StringBuffer buffer = new StringBuffer ();
 
-		HashMap<NFA, NFA> nfaMap = new HashMap<NFA, NFA> ();
+		IdentityHashMap<NFA, NFA> nfaMap = new IdentityHashMap<NFA, NFA> ();
 		// serialize all the NFA into nfaMap
 		recursiveUpdateMap (this, nfaMap);
 
@@ -337,5 +289,16 @@ public class NFA
 	public static int trailCount (int flag)
 	{
 		return flag >> 3;
+	}
+
+	public static int setTrailContext (int distance, boolean fixhead, boolean fixtail)
+	{
+		distance <<= 3;
+		if (fixhead)
+			return distance | TRAIL_FIXHEAD;
+		else if (fixtail)
+			return distance | TRAIL_FIXTAIL;
+		else
+			return distance | TRAIL_VAR;
 	}
 }

@@ -27,46 +27,21 @@
 package junit_tests;
 
 import org.junit.Test;
-import org.junit.Assert;
-import org.yuanheng.cookcc.lexer.CCL;
+import org.yuanheng.cookcc.lexer.RuleParser;
 import org.yuanheng.cookcc.lexer.NFAFactory;
-import org.yuanheng.cookcc.exception.EscapeSequenceException;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class TestCCL
+public class TestRuleParser
 {
 	@Test
-	public void escTest () throws EscapeSequenceException
+	public void testRuleParser ()
 	{
-		Assert.assertEquals ('a', CCL.esc ("\\abc".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\b', CCL.esc ("\\bc".toCharArray (), new int[]{ 0 }));
+		NFAFactory nfaFactory = NFAFactory.getByteNFAFactory ();
+		System.out.println (new RuleParser (nfaFactory).parse (1, "a|b"));
 
-		Assert.assertEquals ('\1', CCL.esc ("\\1".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\12', CCL.esc ("\\12".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\123".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\1234".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\123]".toCharArray (), new int[]{ 0 }));
-
-		Assert.assertEquals ('\b', CCL.esc ("\b".toCharArray (), new int[]{ 0 }));
-
-		Assert.assertEquals (1, CCL.esc ("\\x1".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals (18, CCL.esc ("\\x12".toCharArray (), new int[]{ 0 }));
-
-		Assert.assertEquals ('\u655f', CCL.esc ("\\u655f".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\u1234', CCL.esc ("\\u12345".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\u1234', CCL.esc ("\\u1234]".toCharArray (), new int[]{ 0 }));
-	}
-
-	@Test
-	public void testCCL () throws Exception
-	{
-		CCL ccl = NFAFactory.getByteNFAFactory ().getCCL ();
-		Assert.assertEquals ("[x]", ccl.toString (ccl.parseCCL ("[x]")));
-		Assert.assertEquals ("[Zabj-o]", ccl.toString (ccl.parseCCL ("[abj-oZ]")));
-		Assert.assertEquals ("[^A-Z]", ccl.toString (ccl.parseCCL ("[^A-Z]")));
-		Assert.assertEquals ("[^\\nA-Z]", ccl.toString (ccl.parseCCL ("[^A-Z\\n]")));
+		System.out.println (new RuleParser (nfaFactory).parse (1, "(a|b)*c/$"));
 	}
 }

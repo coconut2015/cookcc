@@ -26,92 +26,103 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
- * Equivalent character classes.
- *
  * @author Heng Yuan
  * @version $Id$
  */
-class ECS
+public class NFAFactory
 {
-	private int m_groupCount;
-	private final int[] m_groups;
-	private int[] m_lookup;
-
-	public ECS (int maxSymbol)
+	private static class ByteNFAFactory
 	{
-		m_groups = new int[maxSymbol + 1];
+		private final static NFAFactory s_instance = new NFAFactory (new CCL (Byte.MAX_VALUE));
 	}
 
-	public int getGroupCount ()
+	private static class CharacterNFAFactory
 	{
-		return m_groupCount;
+		private final static NFAFactory s_instance = new NFAFactory (new CCL (Character.MAX_VALUE));
 	}
 
-	public int[] getGroups ()
+	public static NFAFactory getByteNFAFactory ()
 	{
-		return m_groups;
+		return ByteNFAFactory.s_instance;
 	}
 
-	public int[] getLookup ()
+	public static NFAFactory getCharacterNFAFactory ()
 	{
-		if (m_lookup == null)
-		{
-			// now compute the lookup
-			m_lookup = new int[m_groupCount];
-			for (int i = 0; i < m_groupCount; ++i)
-			{
-				for (int j = 0; j < m_groups.length; ++j)
-				{
-					if (m_groups[j] == i)
-					{
-						m_lookup[i] = j;
-						break;
-					}
-				}
-			}
-		}
-		return m_lookup;
+		return CharacterNFAFactory.s_instance;
 	}
 
-	public void add (char ch)
+	private int m_nfaCounter = 0;
+
+	private final CCL m_ccl;
+	/* for computing equivalent classes */
+	private final ECS m_ecs;
+	/* for recycling NFAs */
+	private final LinkedList<NFA> m_spareNFAs = new LinkedList<NFA> ();
+
+	private NFAFactory (CCL ccl)
 	{
-		m_groups[ch] = ++m_groupCount;
-		compute ();
+		m_ccl = ccl;
+		m_ecs = new ECS (ccl.MAX_SYMBOL);
 	}
 
-	public void add (boolean[] ccl)
+	int incNFACounter ()
 	{
-		int newGroup = ++m_groupCount;
-		for (int i = 0; i < ccl.length; ++i)
-			if (ccl[i])
-				m_groups[i] += newGroup;		// guarranteed to be larger than existing maximum number of groups
-		compute ();
+		return m_nfaCounter++;
 	}
 
-	/**
-	 * Not a particularly efficient method to compute equivalent classes.
-	 * It is quite memory consuming at present.
-	 */
-	private void compute ()
+	public CCL getCCL ()
 	{
-		HashMap<Integer,Integer> numberMap = new HashMap<Integer,Integer> ();
-		int j;
-		m_groupCount = 0;
-		for (int c = 0; c < m_groups.length; c++)
-		{
-			Integer key = new Integer (m_groups[c]);
-			Integer value;
-			if ((value = numberMap.get (key)) == null)
-			{
-				numberMap.put (key, new Integer (m_groupCount));
-				m_groups[c] = m_groupCount++;
-			}
-			else
-				m_groups[c] = value.intValue ();
-		}
-		m_lookup = null;
+		return m_ccl;
+	}
+
+	public int getTotalNFACount ()
+	{
+		return m_nfaCounter - m_spareNFAs.size ();
+	}
+
+	public NFA createNFA ()
+	{
+		NFA nfa;
+		if (m_spareNFAs.isEmpty ())
+			nfa = new NFA (this);
+		else
+			nfa = m_spareNFAs.removeFirst ();
+		return nfa;
+	}
+
+	public NFA createNFA (int ch, boolean[] ccl)
+	{
+		NFA nfa;
+		if (m_spareNFAs.isEmpty ())
+			nfa = new NFA (this);
+		else
+			nfa = m_spareNFAs.removeFirst ();
+
+		nfa.m_char = ch;
+		nfa.m_ccl = ccl;
+		if (ch >= 0)
+			m_ecs.add ((char)ch);
+		else if (ch == NFA.ISCCL)
+			m_ecs.add (ccl);
+		return nfa;
+	}
+
+	public ECS getECS ()
+	{
+		return m_ecs;
+	}
+
+	public void deleteNFA (NFA nfa)
+	{
+		nfa.init ();
+		m_spareNFAs.add (nfa);
+	}
+
+	public NFA getEOL ()
+	{
+		return new RuleParser (this).parse (0, "(\\r?\\n)|<<EOF>>)");
 	}
 }

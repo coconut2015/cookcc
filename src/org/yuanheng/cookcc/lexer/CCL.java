@@ -26,8 +26,6 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-import java.util.Vector;
-
 import org.yuanheng.cookcc.exception.CCLException;
 import org.yuanheng.cookcc.exception.EscapeSequenceException;
 
@@ -37,31 +35,34 @@ import org.yuanheng.cookcc.exception.EscapeSequenceException;
  */
 public class CCL
 {
-	public final static int SYMBOL_MAX = Character.MAX_VALUE;
+	/* 0 to max, then add <<EOF>> as a token */
+	public final int MAX_SYMBOL;
+	public final int EOF;
 
-	public final static boolean[] EMPTY;
-	public final static boolean[] ANY;
-	public final static boolean[] ALL;
+	public final boolean[] EMPTY;
+	public final boolean[] ANY;
+	public final boolean[] ALL;
 
-	public final static boolean[] LOWER;
-	public final static boolean[] UPPER;
-	public final static boolean[] ASCII;
-	public final static boolean[] ALPHA;
-	public final static boolean[] DIGIT;
-	public final static boolean[] ALNUM;
-	public final static boolean[] PUNCT;
-	public final static boolean[] GRAPH;
-	public final static boolean[] PRINT;
-	public final static boolean[] BLANK;
-	public final static boolean[] CNTRL;
-	public final static boolean[] XDIGIT;
-	public final static boolean[] SPACE;
+	public final boolean[] LOWER;
+	public final boolean[] UPPER;
+	public final boolean[] ASCII;
+	public final boolean[] ALPHA;
+	public final boolean[] DIGIT;
+	public final boolean[] ALNUM;
+	public final boolean[] PUNCT;
+	public final boolean[] GRAPH;
+	public final boolean[] PRINT;
+	public final boolean[] BLANK;
+	public final boolean[] CNTRL;
+	public final boolean[] XDIGIT;
+	public final boolean[] SPACE;
 
-	private final static CCL s_instance = new CCL ();
-
-	static
+	public CCL (int maxSymbol)
 	{
-		EMPTY = new boolean[SYMBOL_MAX + 1];
+		MAX_SYMBOL = maxSymbol + 1;
+		EOF = MAX_SYMBOL;
+
+		EMPTY = new boolean[MAX_SYMBOL + 1];
 		ALL = negate (EMPTY.clone ());
 
 		ANY = parseCCL ("[^\\n]");
@@ -76,21 +77,9 @@ public class CCL
 		GRAPH = merge (ALNUM.clone (), PUNCT);
 		PRINT = GRAPH;
 		BLANK = parseCCL ("[ \t]");
-		CNTRL = parseCCL ("\\x0-\\x1f\\x7f");
+		CNTRL = parseCCL ("[\\x0-\\x1f\\x7f]");
 		XDIGIT = parseCCL ("[0-9a-fA-F]");
 		SPACE = parseCCL ("[ \\t\\n\\x0B\\f\\r]");
-	}
-
-	private final Vector<boolean[]> m_vector = new Vector<boolean[]> ();
-
-	private CCL ()
-	{
-	}
-
-	private boolean[] addCCL (boolean[] newCCL)
-	{
-		m_vector.add (newCCL);
-		return newCCL;
 	}
 
 	/**
@@ -260,13 +249,13 @@ public class CCL
 		}
 	}
 
-	public static boolean[] parseCCL (String input) throws CCLException
+	public boolean[] parseCCL (String input) throws CCLException
 	{
 		char[] inputChars = input.toCharArray ();
 		int[] escPos = new int[1];
 		int pos = 0;
 
-		boolean[] map = new boolean[SYMBOL_MAX + 1];
+		boolean[] map = new boolean[MAX_SYMBOL + 1];
 
 		pos++;						// skip past the [
 		boolean negative = inputChars[pos] == '^';
@@ -320,16 +309,23 @@ public class CCL
 			throw new CCLException (input);			// give error
 
 		if (negative)
-			for (int i = 0; i <= SYMBOL_MAX; ++i)
+			for (int i = 0; i <= MAX_SYMBOL; ++i)
 				map[i] = !map[i];					// invert all bits
 
-		return s_instance.addCCL (map);
+		return map;
 	}
 
 	public static boolean[] merge (boolean[] c1, boolean[] c2)
 	{
 		for (int i = 0; i < c1.length; ++i)
 			c1[i] |= c2[i];
+		return c1;
+	}
+
+	public static boolean[] subtract (boolean[] c1, boolean[] c2)
+	{
+		for (int i = 0; i < c1.length; ++i)
+			c1[i] &= !c2[i];
 		return c1;
 	}
 
@@ -382,13 +378,13 @@ public class CCL
 		return "\\u" + Integer.toHexString ((c & 0xffff));
 	}
 
-	private static String printCCL (boolean[] ccl)
+	private String printCCL (boolean[] ccl)
 	{
 		String s = "";
 		int cont = 0;
 		int i;
 
-		for (i = 0; i <= SYMBOL_MAX; i++)
+		for (i = 0; i <= MAX_SYMBOL; i++)
 		{
 			if (ccl[i])
 			{
@@ -421,7 +417,7 @@ public class CCL
 	/**
 	 * Convert a CCL map to a string representation for debugging purpose.
 	 */
-	public static String toString (boolean[] ccl)
+	public String toString (boolean[] ccl)
 	{
 		if (ccl == ANY)
 			return ".";

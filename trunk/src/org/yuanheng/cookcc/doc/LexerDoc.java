@@ -32,7 +32,7 @@ import java.util.HashMap;
  * @author Heng Yuan
  * @version $Id$
  */
-public class LexerDoc
+public class LexerDoc extends TreeDoc
 {
 	public final static String INITIAL_STATE = "INITIAL";
 	private final HashMap<String, LexerStateDoc> m_stateMap = new HashMap<String, LexerStateDoc> ();

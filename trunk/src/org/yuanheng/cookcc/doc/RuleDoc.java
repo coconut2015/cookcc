@@ -34,7 +34,7 @@ import java.util.StringTokenizer;
  * @author Heng Yuan
  * @version $Id$
  */
-public class RuleDoc
+public class RuleDoc extends TreeDoc
 {
 	private static int s_count = 0;
 
@@ -47,8 +47,6 @@ public class RuleDoc
 
 	private String m_action = "";
 	private HashSet<LexerStateDoc> m_states = new HashSet<LexerStateDoc> ();
-
-	private Object m_userObject;
 
 	public RuleDoc (LexerDoc lexer)
 	{
@@ -127,15 +125,5 @@ public class RuleDoc
 	public LexerStateDoc[] getStates ()
 	{
 		return m_states.toArray (new LexerStateDoc[m_states.size ()]);
-	}
-
-	public Object getUserObject ()
-	{
-		return m_userObject;
-	}
-
-	public void setUserObject (Object userObject)
-	{
-		m_userObject = userObject;
 	}
 }

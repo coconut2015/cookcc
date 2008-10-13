@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  * @author Heng Yuan
  * @version $Id$
  */
-public class Document
+public class Document extends TreeDoc
 {
 	private boolean m_unicode;
 	private StringBuffer m_header = new StringBuffer ();

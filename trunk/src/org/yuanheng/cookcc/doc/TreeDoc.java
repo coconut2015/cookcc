@@ -30,28 +30,17 @@ package org.yuanheng.cookcc.doc;
  * @author Heng Yuan
  * @version $Id$
  */
-public class ShortcutDoc extends TreeDoc
+public abstract class TreeDoc
 {
-	private String m_name;
-	private String m_pattern;
+	private Object m_userObject;
 
-	public String getName ()
+	public Object getUserObject ()
 	{
-		return m_name;
+		return m_userObject;
 	}
 
-	public void setName (String name)
+	public void setUserObject (Object userObject)
 	{
-		m_name = name;
-	}
-
-	public String getPattern ()
-	{
-		return m_pattern;
-	}
-
-	public void setPattern (String pattern)
-	{
-		m_pattern = pattern;
+		m_userObject = userObject;
 	}
 }

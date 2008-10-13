@@ -30,6 +30,6 @@ package org.yuanheng.cookcc.doc;
  * @author Heng Yuan
  * @version $Id$
  */
-public class ParserDoc
+public class ParserDoc extends TreeDoc
 {
 }

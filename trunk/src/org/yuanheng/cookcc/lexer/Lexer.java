@@ -73,6 +73,16 @@ public class Lexer
 		return m_caseCount++;
 	}
 
+	public ECS getECS ()
+	{
+		return m_nfaFactory.getECS ();
+	}
+
+	public CCL getCCL ()
+	{
+		return m_nfaFactory.getCCL ();
+	}
+
 	NFAFactory getNFAFactory ()
 	{
 		return m_nfaFactory;
@@ -289,7 +299,7 @@ public class Lexer
 
 		int j, a;
 
-		ECS ecs = m_nfaFactory.getECS ();
+		ECS ecs = getECS ();
 		int groupCount = ecs.getGroupCount ();
 
 		DFARow row = new DFARow (new char[groupCount]);

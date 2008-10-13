@@ -34,7 +34,7 @@ import java.util.HashMap;
  * @author Heng Yuan
  * @version $Id$
  */
-class ECS
+public class ECS
 {
 	private int m_groupCount;
 	private final int[] m_groups;

@@ -63,6 +63,11 @@ public class Lexer
 		m_nfaFactory = doc.isUnicode () ? new NFAFactory (this, CCL.getCharacterCCL ()) : new NFAFactory (this, CCL.getByteCCL ());
 	}
 
+	public Document getDocument ()
+	{
+		return m_doc;
+	}
+
 	public int getCaseCount ()
 	{
 		return m_caseCount;

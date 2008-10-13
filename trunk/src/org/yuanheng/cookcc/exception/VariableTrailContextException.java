@@ -36,8 +36,8 @@ public class VariableTrailContextException extends InvalidRegExException
 {
 	public static MessageFormat ERROR_MSG = new MessageFormat ("variable head and tail trail context used: {0}");
 
-	public VariableTrailContextException (int lineNumber, char[] regex)
+	public VariableTrailContextException (int lineNumber, String input)
 	{
-		super (lineNumber, ERROR_MSG.format (new Object[]{ new String (regex) }), regex);
+		super (lineNumber, ERROR_MSG.format (new Object[]{ input }), input);
 	}
 }

@@ -24,24 +24,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc;
+package org.yuanheng.cookcc.exception;
 
-import org.yuanheng.cookcc.codegen.tabledump.FullTableDump;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.input.xml.XmlParser;
+import java.text.MessageFormat;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class Main
+public class UnknownNameException extends InvalidRegExException
 {
-	public static void main (String[] args) throws Exception
+	public static MessageFormat ERROR_MSG = new MessageFormat ("unknown name: {0}");
+
+	public UnknownNameException (int lineNumber, String name, String input)
 	{
-		if (args.length != 1)
-			return;
-		Document doc = XmlParser.parseXml (args[0]);
-//		new XmlOutput ().generateOutput (doc, System.out);
-		new FullTableDump ().generateOutput (doc, System.out);
+		super (lineNumber, ERROR_MSG.format (new Object[]{ name }), input);
 	}
 }

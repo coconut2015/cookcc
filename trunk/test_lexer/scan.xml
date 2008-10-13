@@ -1,0 +1,598 @@
+<cookcc>
+	<!-- header is the general header such as copyright notice for the generated output file -->
+	<header>/*
+ * Copyright (c) 2008, Heng Yuan
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of the Heng Yuan nor the
+ *       names of its contributors may be used to endorse or promote products
+ *       derived from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY Heng Yuan ''AS IS'' AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL Heng Yuan BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */</header>
+	<lexer outfile="Scan.java">
+		<header>
+		</header>
+		<tokens>
+			SECT2 SECT2PROLOG SECT3 CODEBLOCK PICKUPDEF SC CARETISBOL NUM QUOTE
+			FIRSTCCL CCL ACTION COMMENT ACTION_STRING PERCENT_BRACE_ACTION
+			OPTION LINEDIR
+		</tokens>
+		<shortcut name="WS" value="[[:blank:]]+"/>
+		<shortcut name="OPTWS" value="[[:blank:]]*"/>
+		<shortcut name="NOT_WS" value="[^[:blank:]\n]"/>
+		<shortcut name="NL" value="\r?\n"/>
+		<shortcut name="NAME" value="([[:alpha:]_][[:alnum:]_-]*)"/>
+		<shortcut name="NOT_NAME" value="[^[:alpha:]_*\n]+"/>
+
+		<shortcut name="SCNAME" value="{NAME}"/>
+
+		<shortcut name="ESCSEQ" value="(\\([^\n]|[0-7]{1,3}|x[[:xdigit:]]{1,2}))"/>
+
+		<shortcut name="FIRST_CCL_CHAR" value="([^\\\n]|{ESCSEQ})"/>
+		<shortcut name="CCL_CHAR" value="([^\\\n\]]|{ESCSEQ})"/>
+		<shortcut name="CCL_EXPR" value="(&quot;[:&quot;[[:alpha:]]+&quot;:]&quot;)"/>
+		<shortcut name="LEXOPT" value="[aceknopr]"/>
+
+		<classdecl>
+	int bracelevel = 0;
+	boolean indented_code;
+	boolean namedefined;
+	boolean doing_rule_action = false;
+
+	boolean doing_codeblock = false;
+	int i;
+	String name;
+		</classdecl>
+		<prolog>
+		</prolog>
+		<state name="initial">
+			<pattern type="^{OPTWS}{NL}">
+				++_lexLineNum;	 // allows blank lines in section 1
+			</pattern>
+
+			<!-- all two types of comments -->
+			<pattern type="^{OPTWS}//.*">
+				echo ();
+			</pattern>
+			<pattern type="^{OPTWS}/*">
+				echo ();
+				pushstate (COMMENT);
+			</pattern>
+			<pattern type="^#{OPTWS}line{WS}">
+				pushstate (LINEDIR);
+			</pattern>
+			<pattern type="^%s{NAME}?">
+				return SCDECL;
+			</pattern>
+			<pattern type="^%x{NAME}?">
+				return XSCDECL;
+			</pattern>
+			<pattern type="^%option">
+				BEGIN (OPTION);
+				return OPTION_OP;
+			</pattern>
+			<pattern type="^%{.*{NL}">
+				// all codes in CODEBLOCK will be put in the beginning
+				// of the generated .cc file.
+
+				g_content.newBlock (_lexName, _lexLineNum);
+				++_lexLineNum;
+				g_content.append (yystr = yytext + 2, true);
+
+				indented_code = false;
+				BEGIN (CODEBLOCK);
+			</pattern>
+			<pattern type="^%%.*">
+				sectnum = 2;
+				bracelevel = 0;
+
+				DEBUGMSG ("SECTION 1 ENDED");
+
+				BEGIN (SECT2PROLOG);
+				return SECTEND;
+			</pattern>
+			<pattern type="^%[^oxs].*">
+				DEBUGMSG (string ("options: ") + yytext);
+			</pattern>
+			<pattern type="^{NAME}">
+				name = yytext;
+				namedefined = false;
+				BEGIN (PICKUPDEF);
+			</pattern>
+			<pattern type="^{WS}">
+				indented_code = true; BEGIN (CODEBLOCK);
+			</pattern>
+			<pattern type="{SCNAME}">
+				RETURNNAME;
+			</pattern>
+			<pattern type="{WS}">
+				// discard
+			</pattern>
+			<pattern type="{OPTWS}{NL}">
+ 				// maybe end of comment line
+				++_lexLineNum;
+				g_content.append (yystr = yytext, true);
+			</pattern>
+		</state>
+		<state name="OPTION">
+			<pattern type="{OPTWS}">
+				// ignore
+			</pattern>
+			<pattern type="=">
+				return '=';
+			</pattern>
+			<pattern type="nowarn">
+				_noWarn = true;		// do not generate warnning messages
+			</pattern>
+			<pattern type="nocase">
+				_noCase = true;		// case in-sensitive lex
+			</pattern>
+			<pattern type="\&quot;[^&quot;\n]*\&quot;">
+				yystr = yytext + 1;
+				// I miss SGI version of string which can do just
+				// yystr.pop_back (), a vector like function
+				yystr.erase (yystr.end () - 1);
+
+				g_strValue = (yytext + 1);
+				g_strValue.erase (g_strValue.end () - 1);
+				return NAME;
+			</pattern>
+			<pattern type="[A-Za-z0-9]+">
+				g_strOption = yytext;
+				return OPT_NAME;
+			</pattern>
+			<pattern type="{NL}">
+				++_lexLineNum; BEGIN (INITIAL);
+			</pattern>
+			<pattern type=".">
+				// can't do much
+			</pattern>
+		</state>
+		<!-- this condition will be used by both SECT1 and SECT2 -->
+		<state name="COMMENT">
+			<pattern type="*/">
+				echo ();
+				popstate ();
+			</pattern>
+			<pattern type="*" combine="true">
+			</pattern>
+			<pattern type="[^*\n]+">
+				echo ();
+			</pattern>
+			<pattern type="[^*\n]*{NL}">
+				++_lexLineNum;
+				g_content.append (yystr = yytext, true);
+			</pattern>
+		</state>
+		<state name="LINEDIR">
+			<pattern type="\n">
+				g_content.newLine (); popstate();
+			</pattern>
+			<pattern type="[[:digit:]]+">
+				_lexLineNum = atoi (yytext);
+				g_content.newBlock (_lexName, _lexLineNum);
+			</pattern>
+			<pattern type="\&quot;[^&quot;\n]*\&quot;">
+				_lexName = yytext;
+			</pattern>
+			<pattern type=".">
+				// ignore spurious characters
+			</pattern>
+		</state>
+		<state name="CODEBLOCK">
+			<pattern type="^&quot;%}&quot;.*{NL}">
+				++_lexLineNum;
+				g_content.newLine ();
+				BEGIN (INITIAL);
+			</pattern>
+			<pattern type="{NL}">
+				++_lexLineNum;
+				g_content.newLine ();
+				if (indented_code)
+				  {
+					indented_code = false;
+					BEGIN (INITIAL);
+				  }
+			</pattern>
+			<pattern type=".*">
+				echo ();
+			</pattern>
+		</state>
+		<state name="PICKUPDEF">
+			<pattern type="{WS}">
+				// separates name and definition
+			</pattern>
+			<pattern type="{NOT_WS}.*">
+				string str (yytext);
+				// remove tailing blanks
+				str.resize (str.find_last_not_of (" \t") + 1);
+				deftable[name] = str;
+				namedefined = true;
+				// DEBUGMSG (string ("\t[" + name + "] = ") + str);
+			</pattern>
+			<pattern type="{NL}">
+				++_lexLineNum;
+				if (!namedefined)
+				  {
+					SYNTAXERROR ("incomplete name definition");
+				  }
+				BEGIN (INITIAL);
+			</pattern>
+		</state>
+		<state name="SECT2PROLOG">
+			<pattern type="^&quot;%{&quot;.*">
+				++bracelevel;
+				yyless (2);	/* eat only %{ */
+			</pattern>
+			<pattern type="^&quot;%}&quot;.*">
+				--bracelevel; yyless (2);	/* eat only %} */
+			</pattern>
+			<pattern type="^{WS}.*">
+				echo ();
+			</pattern>
+			<pattern type="^{NOT_WS}.*"><![CDATA[
+				if (bracelevel <= 0)
+				  { // oops, it should be SECT2 stuff now
+					yyless (0);     // tell scanner to rescan
+					yy_set_bol (1);
+					dispcondstart ();
+					BEGIN (SECT2);
+				  }
+				else
+				  echo ();
+			]]></pattern>
+			<pattern type=".*">
+				echo ();
+			</pattern>
+			<pattern type="{NL}">
+				++_lexLineNum; g_content.newLine ();
+			</pattern>
+			<pattern type="<<EOF>>">
+				// mark_prolog ();
+				SYNTAXERROR ("no rules found");
+				sectnum = 0;
+				yyterminate (); // to stop the parser
+			</pattern>
+			<pattern type="">
+			</pattern>
+			<pattern type="">
+			</pattern>
+			<pattern type="">
+			</pattern>
+		</state>
+		<state name="SECT2">
+			<pattern type="^{OPTWS}{NL}">
+				++_lexLineNum; /* allow blank lines in section 2 */
+			</pattern>
+			<pattern type="^{OPTWS}&quot;%{&quot;">
+				indented_code = false;
+				doing_codeblock = true;
+				bracelevel = 1;
+				BEGIN (PERCENT_BRACE_ACTION);
+			</pattern>
+			<pattern type="^{OPTWS}<"><![CDATA[
+				BEGIN (SC); return '<';
+			]]></pattern>
+			<pattern type="^{OPTWS}&quot;^&quot;">
+				return '^';
+			</pattern>
+			<pattern type="\&quot;">
+				BEGIN (QUOTE); return '"';
+			</pattern>
+			<pattern type="&quot;{&quot;/[[:digit:]]">
+				BEGIN (NUM); return '{';
+			</pattern>
+			<pattern type="&quot;$&quot;/([[:blank:]]|{NL})">
+				return '$';
+			</pattern>
+			<pattern type="{WS}&quot;%{&quot;">
+				bracelevel = 1;
+				BEGIN (PERCENT_BRACE_ACTION);
+			</pattern>
+			<pattern type="{WS}&quot;|&quot;.*{NL}">
+				nobreak = true;  // hide the "\tbreak;" statement
+				++_lexLineNum;
+				return '\n';
+			</pattern>
+			<pattern type="^{WS}&quot;//&quot;.*{NL}">
+				++_lexLineNum;
+				g_content.append (yystr = yytext, true);
+			</pattern>
+			<pattern type="^{WS}&quot;/*&quot;">
+				yyless (yyleng - 2 );	/* put back '/', '*' */
+				bracelevel = 0;
+				BEGIN (ACTION);
+			</pattern>
+			<pattern type="^{WS}">
+				/* allow indented rules */
+			</pattern>
+			<pattern type="{WS}">
+				/* This rule is separate from the one below because
+				 * otherwise we get variable trailing context, so
+				 * we can't build the scanner using -{f,F}.
+				 */
+				bracelevel = 0;
+				BEGIN (ACTION);
+
+				if (inrule)
+				  {
+					inrule = false;
+					return '\n';      // force parser to wrap up
+						  // the nfa state
+				  }
+			</pattern>
+			<pattern type="{OPTWS}{NL}"><![CDATA[
+				bracelevel = 0;
+				BEGIN (ACTION);
+				unput( '\n' );	/* so <ACTION> sees it */
+			]]></pattern>
+			<pattern type="^{OPTWS}&quot;<<EOF>>&quot;">
+				return EOF_OP;
+			</pattern>
+			<pattern type="^&quot;%%&quot;.*">
+				sectnum = 3;
+
+				dispcondend ();
+				endsect2 ();
+
+				g_content.setBlockFactory (new DefaultBlockFactory ("code"));
+				g_content.newBlock (_lexName, _lexLineNum);
+
+				BEGIN (SECT3);
+				// yyterminate(); /* to stop the parser */
+			</pattern>
+			<pattern type="&quot;[&quot;({FIRST_CCL_CHAR}|{CCL_EXPR})({CCL_CHAR}|{CCL_EXPR})*">
+				yystr = yytext;
+
+				yyless (1);
+
+				BEGIN (FIRSTCCL);
+				return '[';
+			</pattern>
+			<pattern type="&quot;{&quot;{NAME}&quot;}&quot;"><![CDATA[
+				map<string,string>::iterator f;
+				string def;
+				// get rid of the surrounding { }
+				yystr = yytext + 1;
+				yystr.erase (yystr.end () - 1);
+				if ((f = deftable.find (yystr)) == deftable.end ())
+				  {
+					SYNTAXERROR ("undefined definition " << yystr);
+				  }
+				def = (*f).second;
+				// okay, we found the definition, but we
+				// must tell the scanner to scan it before
+				// the rest of the string is read
+				int len = def.size ();
+				if (def[0] == '^' ||
+					(len > 0 && def[len - 1] == '$'))
+				  { // these cases don't need () around them
+					PUT_BACK_STRING (def, 0);
+					if (def[0] == '^')
+				  BEGIN (CARETISBOL);
+				  }
+				else // push back name and surround by ()'s
+				  {
+					unput(')');
+					PUT_BACK_STRING (def, 0);
+					unput('(');
+				  }
+			]]></pattern>
+			<pattern type="[/|*+?.(){}]">
+				return (unsigned char)yytext[0];
+			</pattern>
+			<pattern type=".">
+				inrule = true;
+				RETURNCHAR;
+			</pattern>
+		</state>
+		<epilog>
+		</epilog>
+	</lexer>
+	<parser>
+	</parser>
+<![CDATA[
+<SC>{
+	[,*]		return (unsigned char)yytext[0];
+	">"		BEGIN (SECT2); return '>';
+	">"/^		BEGIN (CARETISBOL); return '>';
+	{SCNAME}	{
+			  // DEBUGMSG (string ("<") + yytext + ">");
+			  RETURNNAME;
+			}
+	.		SYNTAXERROR ("bad <start condition>: " << yytext);
+}
+
+<CARETISBOL>"^"		BEGIN (SECT2); return '^';
+
+
+<QUOTE>{
+	[^"\n]		RETURNCHAR;
+	\"		BEGIN (SECT2); return '"';
+
+	{NL}		{
+			  ++_lexLineNum;
+			  SYNTAXERROR ("missing quote");
+			  BEGIN (SECT2);
+			  return '"';
+			}
+}
+
+
+<FIRSTCCL>{
+	"^"/[^-\]\n]	BEGIN (CCL); return '^';
+	"^"/("-"|"]")	return '^';
+	.		BEGIN (CCL); RETURNCHAR;
+}
+
+<CCL>{
+	-/[^\]\n]	return '-';
+	[^\]\n]		RETURNCHAR;
+	"]"		BEGIN (SECT2); return ']';
+	.|{NL}		{
+			  SYNTAXERROR ("bad character class");
+			  BEGIN (SECT2);
+			  return ']';
+			}
+}
+
+<FIRSTCCL,CCL>{
+	"[:alnum:]"	BEGIN (CCL); return CCE_ALNUM;
+	"[:alpha:]"	BEGIN (CCL); return CCE_ALPHA;
+	"[:blank:]"	BEGIN (CCL); return CCE_BLANK;
+	"[:cntrl:]"	BEGIN (CCL); return CCE_CNTRL;
+	"[:digit:]"	BEGIN (CCL); return CCE_DIGIT;
+	"[:graph:]"	BEGIN (CCL); return CCE_GRAPH;
+	"[:lower:]"	BEGIN (CCL); return CCE_LOWER;
+	"[:print:]"	BEGIN (CCL); return CCE_PRINT;
+	"[:punct:]"	BEGIN (CCL); return CCE_PUNCT;
+	"[:space:]"	BEGIN (CCL); return CCE_SPACE;
+	"[:upper:]"	BEGIN (CCL); return CCE_UPPER;
+	"[:xdigit:]"	BEGIN (CCL); return CCE_XDIGIT;
+	{CCL_EXPR}	{
+			  SYNTAXERROR (string ("bad character class expression: ") + yytext );
+			  BEGIN (CCL); return CCE_ALNUM;
+			}
+}
+
+<NUM>{
+	[[:digit:]]+	{
+			  yylval = atoi (yytext);
+			  return NUMBER;
+			}
+
+	","		return ',';
+	"}"		BEGIN (SECT2); return '}';
+
+	.		{
+			  SYNTAXERROR ("bad character inside {}'s");
+			  BEGIN (SECT2);
+			  return '}';
+			}
+
+	{NL}		{
+			  ++_lexLineNum;
+			  SYNTAXERROR ("missing }");
+			  BEGIN (SECT2);
+			  return '}';
+			}
+}
+
+
+<PERCENT_BRACE_ACTION>{
+	{OPTWS}"%}".*		bracelevel = 0;
+
+	<ACTION>"//".*		echo ();
+	<ACTION>"/*"		echo (); pushstate (COMMENT);
+
+	{NAME}|{NOT_NAME}|.	echo ();
+	{NL}		{
+			  ++_lexLineNum;
+			  g_content.newLine ();
+			  if (bracelevel == 0 ||
+			      (doing_codeblock && indented_code))
+			    {
+			      if (doing_rule_action)
+				echoline ("\tYY_BREAK");
+
+			      doing_rule_action = doing_codeblock = false;
+			      BEGIN (SECT2);
+			   }
+			}
+}
+
+
+<ACTION>{
+	"{"		echo (); ++bracelevel;
+	"}"		echo (); --bracelevel;
+	[^[:alpha:]_{}"'/\n]+	echo ();
+	{NAME}		echo ();
+	"'"([^'\\\n]|\\.)*"'"	echo (); /* character constant */
+	\"		echo (); BEGIN (ACTION_STRING);
+	{NL}		{
+			  ++_lexLineNum;
+			  echoline ("");
+			  if (bracelevel == 0)
+			    {
+			      if (doing_rule_action)
+				echoline ( "\tYY_BREAK" );
+
+			      doing_rule_action = false;
+			      BEGIN (SECT2);
+			    }
+			}
+	.		echo ();
+}
+
+<ACTION_STRING>{
+	[^"\\\n]+	echo ();
+	\\.		echo ();
+	{NL}		++_lexLineNum; echoline ("");
+	\"		echo (); BEGIN (ACTION);
+	.		echo ();
+}
+
+<COMMENT,ACTION,ACTION_STRING><<EOF>>	{
+			  SYNTAXERROR ("EOF encountered inside an action");
+			  yyterminate ();
+			}
+
+
+<SECT2,QUOTE,FIRSTCCL,CCL>{ESCSEQ}	{
+			  yylval = esc (yytext);
+
+			  if (YY_START == FIRSTCCL)
+			    BEGIN (CCL);
+
+			  return CHAR;
+			}
+
+
+<SECT3>{
+	.*(\n?)		g_content.append (yystr = yytext, true);	// no need to track _lexLineNum anymore
+	<<EOF>>		sectnum = 0; yyterminate ();
+}
+
+
+%%
+
+int yywrap ()
+{
+  return 1;
+}
+
+void pushstate (int state)
+{
+  statestack.push (YY_START);
+  BEGIN (state);
+}
+
+void popstate ()
+{
+  if (statestack.empty ())
+    {
+      FATALERROR ("poping empty stack");
+    }
+  BEGIN (statestack.top ());
+  statestack.pop ();
+}
+]]>
+
+</cookcc>

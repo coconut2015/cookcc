@@ -38,16 +38,16 @@ public class InvalidRegExException extends ParserException
 
 	private final String m_regex;
 
-	public InvalidRegExException (int lineNumber, String msg, char[] regex)
+	public InvalidRegExException (int lineNumber, String msg, String input)
 	{
 		super (lineNumber, msg);
-		m_regex = new String (regex);
+		m_regex = input;
 	}
 
-	public InvalidRegExException (int lineNumber, char[] regex)
+	public InvalidRegExException (int lineNumber, String input)
 	{
-		super (lineNumber, ERROR_MSG.format (new Object[]{ new String (regex) }));
-		m_regex = new String (regex);
+		super (lineNumber, ERROR_MSG.format (new Object[]{ input }));
+		m_regex = input;
 	}
 
 	public String getRegex ()

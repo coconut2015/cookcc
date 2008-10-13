@@ -36,8 +36,8 @@ public class MultipleTrailContextException extends InvalidRegExException
 {
 	public static MessageFormat ERROR_MSG = new MessageFormat ("multiple trail context used: {0}");
 
-	public MultipleTrailContextException (int lineNumber, char[] regex)
+	public MultipleTrailContextException (int lineNumber, String input)
 	{
-		super (lineNumber, ERROR_MSG.format (new Object[]{ new String (regex) }), regex);
+		super (lineNumber, ERROR_MSG.format (new Object[]{ input }), input);
 	}
 }

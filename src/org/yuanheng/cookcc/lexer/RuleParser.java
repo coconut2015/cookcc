@@ -26,6 +26,10 @@
  */
 package org.yuanheng.cookcc.lexer;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yuanheng.cookcc.doc.ShortcutDoc;
 import org.yuanheng.cookcc.exception.*;
 
 /**
@@ -36,6 +40,8 @@ import org.yuanheng.cookcc.exception.*;
  */
 public class RuleParser
 {
+	private final static Pattern m_replaceName = Pattern.compile ("[{][a-zA-Z_][a-zA-Z0-9_-]*[}]");
+
 	private final Lexer m_lexer;
 	private final NFAFactory m_nfaFactory;
 	private final CCL m_ccl;
@@ -47,6 +53,96 @@ public class RuleParser
 
 	private boolean[] m_singletonCharSet;
 	private boolean[] m_cclCharSet;
+
+	private RuleLexer m_lex;
+	private int m_lineNumber;
+
+	private class RuleLexer
+	{
+		private String m_input;
+		private String m_currentStr;
+		private int m_pos;
+
+		public RuleLexer (String input)
+		{
+			m_input = input;
+			m_currentStr = input;
+			m_pos = 0;
+		}
+
+		public boolean ifMatchReplaceName ()
+		{
+			if (!ifMatch ('{'))
+				return false;
+			--m_pos;		// rewind the forward;
+			m_currentStr = m_currentStr.substring (m_pos);
+			m_pos = 0;
+			Matcher matcher = m_replaceName.matcher (m_currentStr);
+			if (!matcher.find (0))
+				return false;
+			int index = m_currentStr.indexOf ('}');
+			String name = m_currentStr.substring (1, index);
+			ShortcutDoc shortcut = m_lexer.getDocument ().getLexer ().getShortcut (name);
+			if (shortcut == null)
+				throw new UnknownNameException (m_lineNumber, name, m_input);
+			m_currentStr = shortcut.getPattern () + m_currentStr.substring (index + 1);
+			return true;
+		}
+
+		public void unread (String str)
+		{
+			m_currentStr = str + m_currentStr.substring (m_pos);
+			m_pos = 0;
+		}
+
+		public boolean ifMatch (String str)
+		{
+			if ((m_currentStr.length () - m_pos) < str.length ())
+				return false;
+			int len = str.length ();
+			int offset = m_pos;
+			for (int i = 0; i < len; ++i)
+				if (m_currentStr.charAt (offset++) != str.charAt (i))
+					return false;
+			m_pos = offset;
+			return true;
+		}
+
+		public boolean ifMatch (char ch)
+		{
+			if (m_pos >= m_currentStr.length () || m_currentStr.charAt (m_pos) != ch)
+				return false;
+			++m_pos;
+			return true;
+		}
+
+		public Character ifMatch (boolean[] charSet)
+		{
+			Character ch;
+			if (m_pos >= m_currentStr.length () || !charSet[m_currentStr.charAt (m_pos)])
+				return null;
+			ch = new Character (m_currentStr.charAt (m_pos));
+			++m_pos;
+			return ch;
+		}
+
+		public void match (char ch)
+		{
+			if (m_pos >= m_currentStr.length () || m_currentStr.charAt (m_pos) != ch)
+				throw new LookaheadException (m_lineNumber, m_ccl, ch, m_input, m_pos);
+			++m_pos;
+		}
+
+		public String getInput ()
+		{
+			return m_input;
+		}
+
+		public int getPos ()
+		{
+			return m_pos;
+		}
+	}
 
 	public RuleParser (Lexer lexer, NFAFactory nfaFactory)
 	{
@@ -75,26 +171,26 @@ public class RuleParser
 
 	public NFA parse (int lineNumber, String input)
 	{
-		char[] inputChars = input.toCharArray ();
-		int[] pos = new int[1];
+		m_lineNumber = lineNumber;
+		m_lex = new RuleLexer (input);
 
-		if (ifMatch (inputChars, pos, '^'))
+		if (m_lex.ifMatch ('^'))
 			m_bol = true;
 
-		NFA head = parseRegex (lineNumber, inputChars, pos);
+		NFA head = parseRegex ();
 		if (head == null)
-			throw new InvalidRegExException (lineNumber, inputChars);
+			throw new InvalidRegExException (lineNumber, input);
 
-		if (ifMatch (inputChars, pos, '/'))
+		if (m_lex.ifMatch ('/'))
 		{
 			if (NFA.hasTrail (m_trailContext))
-				throw new MultipleTrailContextException (lineNumber, inputChars);
+				throw new MultipleTrailContextException (lineNumber, input);
 			if (m_varLen)
 				m_ruleLen = 0;
 			m_trailContext = NFA.setTrailContext (m_ruleLen, !m_varLen, false);
 
-			NFA tail = parseRegex (lineNumber, inputChars, pos);
-			if (ifMatch (inputChars, pos, '$'))
+			NFA tail = parseRegex ();
+			if (m_lex.ifMatch ('$'))
 			{
 				NFA eol = m_nfaFactory.getEOL ();
 				if (tail == null)
@@ -108,16 +204,16 @@ public class RuleParser
 			if ((m_trailContext & NFA.TRAIL_MASK) != NFA.TRAIL_FIXHEAD)
 			{
 				if (m_varLen)
-					throw new VariableTrailContextException (lineNumber, inputChars);
+					throw new VariableTrailContextException (lineNumber, input);
 				else
 					m_trailContext = NFA.setTrailContext (m_ruleLen, false, true);
 			}
 			head = head.cat (tail);
 		}
-		else if (ifMatch (inputChars, pos, '$'))
+		else if (m_lex.ifMatch ('$'))
 		{
 			if (NFA.hasTrail (m_trailContext))
-				throw new MultipleTrailContextException (lineNumber, inputChars);
+				throw new MultipleTrailContextException (lineNumber, input);
 			m_trailContext = NFA.setTrailContext (1, false, true);
 			head = head.cat (m_nfaFactory.createNFA ('\n', null));
 		}
@@ -126,71 +222,72 @@ public class RuleParser
 		return head;
 	}
 
-	private NFA parseRegex (int lineNumber, char[] inputChars, int[] pos)
+	private NFA parseRegex ()
 	{
 		m_varLen = false;
 		m_ruleLen = 0;
-		NFA head = parseSeries (lineNumber, inputChars, pos);
+		NFA head = parseSeries ();
 		if (head == null)
-			throw new InvalidRegExException (lineNumber, inputChars);
-		while (ifMatch (inputChars, pos, '|'))
+			throw new InvalidRegExException (m_lineNumber, m_lex.getInput ());
+		while (m_lex.ifMatch ('|'))
 		{
-			NFA tail = parseSeries (lineNumber, inputChars, pos);
+			NFA tail = parseSeries ();
 			if (tail == null)
-				throw new InvalidRegExException (lineNumber, inputChars);
+				throw new InvalidRegExException (m_lineNumber, m_lex.getInput ());
 			head = head.or (tail);
 		}
 
 		return head;
 	}
 
-	private NFA parseSeries (int lineNumber, char[] inputChars, int[] pos)
+	private NFA parseSeries ()
 	{
-		NFA head = parseSingleton (lineNumber, inputChars, pos, null);
+		NFA head = parseSingleton (null);
 		if (head == null)
-			throw new InvalidRegExException (lineNumber, inputChars);
+			throw new InvalidRegExException (m_lineNumber, m_lex.getInput ());
 		NFA tail;
-		while ((tail = parseSingleton (lineNumber, inputChars, pos, null)) != null)
+		while ((tail = parseSingleton (null)) != null)
 			head = head.cat (tail);
 		return head;
 	}
 
-	private NFA parseSingleton (int lineNumber, char[] inputChars, int[] pos, NFA head)
+	private NFA parseSingleton (NFA head)
 	{
 		while (true)
 		{
 			if (head == null)
 			{
-				if (pos[0] >= inputChars.length)
-					return null;
-
 				boolean[] ccl;
 				Character ch;
-				if (ifMatch (inputChars, pos, '.'))
+				if (m_lex.ifMatch ('.'))
 				{
 					++m_ruleLen;
 					head = m_nfaFactory.createNFA (NFA.ISCCL, m_ccl.ANY);
 				}
-				else if ((ccl = parseFullCCL (lineNumber, inputChars, pos)) != null)
+				if (m_lex.ifMatchReplaceName ())
+				{
+					continue;
+				}
+				else if ((ccl = parseFullCCL ()) != null)
 				{
 					++m_ruleLen;
 					head = m_nfaFactory.createNFA (NFA.ISCCL, ccl);
 				}
-				else if (ifMatch (inputChars, pos, '"'))
+				else if (m_lex.ifMatch ('"'))
 				{
-					head = parseString (lineNumber, inputChars, pos);
+					head = parseString ();
 					if (head == null)
-						throw new InvalidRegExException (lineNumber, inputChars);
-					match (lineNumber, inputChars, pos, '"');
+						throw new InvalidRegExException (m_lineNumber, m_lex.getInput ());
+					m_lex.match ('"');
 				}
-				else if (ifMatch (inputChars, pos, '('))
+				else if (m_lex.ifMatch ('('))
 				{
-					head = parseRegex (lineNumber, inputChars, pos);
+					head = parseRegex ();
 					if (head == null)
-						throw new InvalidRegExException (lineNumber, inputChars);
-					match (lineNumber, inputChars, pos, ')');
+						throw new InvalidRegExException (m_lineNumber, m_lex.getInput ());
+					m_lex.match (')');
 				}
-				else if ((ch = parseChar (lineNumber, inputChars, pos, m_singletonCharSet)) != null)
+				else if ((ch = parseChar (m_singletonCharSet)) != null)
 				{
 					++m_ruleLen;
 					if (m_nocase)
@@ -212,40 +309,44 @@ public class RuleParser
 			}
 			else
 			{
-				if (ifMatch (inputChars, pos, '*'))
+				if (m_lex.ifMatch ('*'))
 				{
 					m_varLen = true;
 					head = head.star ();
 				}
-				else if (ifMatch (inputChars, pos, '+'))
+				else if (m_lex.ifMatch ('+'))
 				{
 					m_varLen = true;
 					head = head.plus ();
 				}
-				else if (ifMatch (inputChars, pos, '?'))
+				else if (m_lex.ifMatch ('?'))
 				{
 					m_varLen = true;
 					head = head.q ();
 				}
-				else if (ifMatch (inputChars, pos, '{'))
+				if (m_lex.ifMatchReplaceName ())
 				{
-					Integer number = parseNumber (lineNumber, inputChars, pos);
+					continue;
+				}
+				else if (m_lex.ifMatch ('{'))
+				{
+					Integer number = parseNumber ();
 					if (number == null || number.intValue () < 0)
-						throw new BadIterationException (lineNumber, number);
-					if (ifMatch (inputChars, pos, '}'))
+						throw new BadIterationException (m_lineNumber, number);
+					if (m_lex.ifMatch ('}'))
 						head = head.repeat (number);
 					else
 					{
 						int min, max;
 						min = number.intValue ();
-						match (lineNumber, inputChars, pos, ',');
-						number = parseNumber (lineNumber, inputChars, pos);
+						m_lex.match (',');
+						number = parseNumber ();
 						if (number == null)
 							max = -1;
 						else
 							max = number.intValue ();
 						head = head.repeat (min, max);
-						match (lineNumber, inputChars, pos, '}');
+						m_lex.match ('}');
 					}
 				}
 				else
@@ -255,37 +356,33 @@ public class RuleParser
 		return head;
 	}
 
-	private Character parseChar (int lineNumber, char[] inputChars, int[] pos, boolean[] charSet)
+	private Character parseChar (boolean[] charSet)
 	{
-		if (pos[0] >= inputChars.length || !charSet[inputChars[pos[0]]])
-			return null;
-		Character ch = new Character (inputChars[pos[0]]);
-		++pos[0];
-		return ch;
+		return m_lex.ifMatch (charSet);
 	}
 
-	private Integer parseNumber (int lineNumber, char[] inputChars, int[] pos)
+	private Integer parseNumber ()
 	{
 		Character ch;
 		boolean neg = false;
-		if (ifMatch (inputChars, pos, '-'))
+		if (m_lex.ifMatch ('-'))
 			neg = true;
 		int number;
-		if ((ch = parseChar (lineNumber, inputChars, pos, m_ccl.DIGIT)) == null)
-			throw new LookaheadException (lineNumber, m_ccl, m_ccl.DIGIT, inputChars, pos[0]);
+		if ((ch = parseChar (m_ccl.DIGIT)) == null)
+			throw new LookaheadException (m_lineNumber, m_ccl, m_ccl.DIGIT, m_lex.getInput (), m_lex.getPos ());
 		number = ch.charValue () - '0';
-		while ((ch = parseChar (lineNumber, inputChars, pos, m_ccl.DIGIT)) != null)
+		while ((ch = parseChar (m_ccl.DIGIT)) != null)
 			number = number * 10 + ch.charValue () - '0';
 		if (neg)
 			number = -number;
 		return new Integer (number);
 	}
 
-	private NFA parseString (int lineNumber, char[] inputChars, int[] pos)
+	private NFA parseString ()
 	{
 		NFA head = null;
 		Character ch;
-		while ((ch = parseChar (lineNumber, inputChars, pos, m_singletonCharSet)) != null)
+		while ((ch = parseChar (m_singletonCharSet)) != null)
 		{
 			++m_ruleLen;
 			NFA tail;
@@ -310,19 +407,15 @@ public class RuleParser
 		return head;
 	}
 
-	private boolean[] parseFullCCL (int lineNumber, char[] inputChars, int[] pos)
+	private boolean[] parseFullCCL ()
 	{
-		if (inputChars[pos[0]] != '[')
+		if (!m_lex.ifMatch ('['))
 			return null;
-		++pos[0];
 		boolean neg = false;
-		if (inputChars[pos[0]] == '^')
-		{
+		if (m_lex.ifMatch ('^'))
 			neg = true;
-			++pos[0];
-		}
 		boolean[] ccl = m_ccl.EMPTY.clone ();
-		ccl = parseCCL (lineNumber, inputChars, pos, ccl);
+		ccl = parseCCL (ccl);
 		if (m_nocase)
 		{
 			for (int i = 'a'; i <= 'z'; ++i)
@@ -335,92 +428,64 @@ public class RuleParser
 		}
 		if (neg)
 			CCL.negate (ccl);
-		match (lineNumber, inputChars, pos, ']');
+		m_lex.match (']');
 		return ccl;
 	}
 
-	private boolean[] parseCCL (int lineNumber, char[] inputChars, int[] pos, boolean[] ccl)
+	private boolean[] parseCCL (boolean[] ccl)
 	{
-		while (parseCCE (inputChars, pos, ccl) != null ||
-			   parseCCLChar (lineNumber, inputChars, pos, ccl) != null)
+		while (parseCCE (ccl) != null ||
+			   parseCCLChar (ccl) != null)
 			;
 		return ccl;
 	}
 
-	private boolean[] parseCCLChar (int lineNumber, char[] inputChars, int[] pos, boolean[] ccl)
+	private boolean[] parseCCLChar (boolean[] ccl)
 	{
-		Character start = parseChar (lineNumber, inputChars, pos, m_cclCharSet);
+		Character start = parseChar (m_cclCharSet);
 		if (start == null)
 			return null;
-		if (!ifMatch (inputChars, pos, '-'))
+		if (!m_lex.ifMatch ('-'))
 		{
 			ccl[start.charValue ()] = true;
 			return ccl;
 		}
-		Character end = parseChar (lineNumber, inputChars, pos, m_cclCharSet);
+		Character end = parseChar (m_cclCharSet);
 		if (end == null)
-			throw new LookaheadException (lineNumber, m_ccl, m_cclCharSet, inputChars, pos[0]);
+			throw new LookaheadException (m_lineNumber, m_ccl, m_cclCharSet, m_lex.getInput (), m_lex.getPos ());
 		for (int i = start.charValue (); i <= end.charValue (); ++i)
 			ccl[i] = true;
 		return ccl;
 	}
 
-	private boolean[] parseCCE (char[] inputChars, int[] pos, boolean[] ccl)
+	private boolean[] parseCCE (boolean[] ccl)
 	{
-		if (ifMatch (inputChars, pos, "[:lower:]"))
+		if (m_lex.ifMatch ("[:lower:]"))
 			return CCL.merge (ccl, m_ccl.LOWER);
-		if (ifMatch (inputChars, pos, "[:upper:]"))
+		if (m_lex.ifMatch ("[:upper:]"))
 			return CCL.merge (ccl, m_ccl.UPPER);
-		if (ifMatch (inputChars, pos, "[:ascii:]"))
+		if (m_lex.ifMatch ("[:ascii:]"))
 			return CCL.merge (ccl, m_ccl.ASCII);
-		if (ifMatch (inputChars, pos, "[:alpha:]"))
+		if (m_lex.ifMatch ("[:alpha:]"))
 			return CCL.merge (ccl, m_ccl.ALPHA);
-		if (ifMatch (inputChars, pos, "[:digit:]"))
+		if (m_lex.ifMatch ("[:digit:]"))
 			return CCL.merge (ccl, m_ccl.DIGIT);
-		if (ifMatch (inputChars, pos, "[:alnum:]"))
+		if (m_lex.ifMatch ("[:alnum:]"))
 			return CCL.merge (ccl, m_ccl.ALNUM);
-		if (ifMatch (inputChars, pos, "[:punct:]"))
+		if (m_lex.ifMatch ("[:punct:]"))
 			return CCL.merge (ccl, m_ccl.PUNCT);
-		if (ifMatch (inputChars, pos, "[:graph:]"))
+		if (m_lex.ifMatch ("[:graph:]"))
 			return CCL.merge (ccl, m_ccl.GRAPH);
-		if (ifMatch (inputChars, pos, "[:print:]"))
+		if (m_lex.ifMatch ("[:print:]"))
 			return CCL.merge (ccl, m_ccl.PRINT);
-		if (ifMatch (inputChars, pos, "[:blank:]"))
+		if (m_lex.ifMatch ("[:blank:]"))
 			return CCL.merge (ccl, m_ccl.BLANK);
-		if (ifMatch (inputChars, pos, "[:cntrl:]"))
+		if (m_lex.ifMatch ("[:cntrl:]"))
 			return CCL.merge (ccl, m_ccl.CNTRL);
-		if (ifMatch (inputChars, pos, "[:xdigit:]"))
+		if (m_lex.ifMatch ("[:xdigit:]"))
 			return CCL.merge (ccl, m_ccl.XDIGIT);
-		if (ifMatch (inputChars, pos, "[:space:]"))
+		if (m_lex.ifMatch ("[:space:]"))
 			return CCL.merge (ccl, m_ccl.SPACE);
 		return null;
-	}
-
-	private boolean ifMatch (char[] inputChars, int[] pos, String str)
-	{
-		if (inputChars.length - pos[0] < str.length ())
-			return false;
-		int len = str.length ();
-		int offset = pos[0];
-		for (int i = 0; i < len; ++i)
-			if (inputChars[offset++] != str.charAt (i))
-				return false;
-		pos[0] = offset;
-		return true;
-	}
-
-	private boolean ifMatch (char[] inputChars, int[] pos, char ch)
-	{
-		if (pos[0] >= inputChars.length || inputChars[pos[0]] != ch)
-			return false;
-		++pos[0];
-		return true;
-	}
-
-	private void match (int lineNumber, char[] inputChars, int[] pos, char ch)
-	{
-		if (pos[0] >= inputChars.length || inputChars[pos[0]] != ch)
-			throw new LookaheadException (lineNumber, m_ccl, ch, inputChars, pos[0]);
-		++pos[0];
 	}
 }

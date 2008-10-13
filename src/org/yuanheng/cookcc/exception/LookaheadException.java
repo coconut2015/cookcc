@@ -43,22 +43,22 @@ public class LookaheadException extends ParserException
 	private final boolean[] m_charSet;
 	private final int m_lookahead;
 
-	public LookaheadException (int lineNumber, CCL ccl, boolean[] charSet, char[] inputChars, int pos)
+	public LookaheadException (int lineNumber, CCL ccl, boolean[] charSet, String input, int pos)
 	{
-		super (lineNumber, ERROR_MSG.format (new Object[]{ ccl.toString (charSet), pos >= inputChars.length ? "<<EOF>>" : "" + inputChars[pos]}));
+		super (lineNumber, ERROR_MSG.format (new Object[]{ ccl.toString (charSet), pos >= input.length () ? "<<EOF>>" : "" + input.charAt (pos)}));
 		m_expected = -1;
 		m_ccl = ccl;
 		m_charSet = charSet;
-		m_lookahead = pos >= inputChars.length ? -1 : inputChars[pos];
+		m_lookahead = pos >= input.length () ? -1 : input.charAt (pos);
 	}
 
-	public LookaheadException (int lineNumber, CCL ccl, int expected, char[] inputChars, int pos)
+	public LookaheadException (int lineNumber, CCL ccl, int expected, String input, int pos)
 	{
-		super (lineNumber, ERROR_MSG.format (new Object[]{ expected < 0 ? "<<EOF>>" : (ccl.PRINT[expected] ? "'" + (char)expected + "'" : new Integer (expected)), pos >= inputChars.length ? "<<EOF>>" : "" + inputChars[pos]}));
+		super (lineNumber, ERROR_MSG.format (new Object[]{ expected < 0 ? "<<EOF>>" : (ccl.PRINT[expected] ? "'" + (char)expected + "'" : new Integer (expected)), pos >= input.length () ? "<<EOF>>" : "" + input.charAt (pos)}));
 		m_expected = expected;
 		m_ccl = ccl;
 		m_charSet = null;
-		m_lookahead = pos >= inputChars.length ? -1 : inputChars[pos];
+		m_lookahead = pos >= input.length () ? -1 : input.charAt (pos);
 	}
 
 	public int getExpected ()
@@ -69,5 +69,15 @@ public class LookaheadException extends ParserException
 	public int getLookahead ()
 	{
 		return m_lookahead;
+	}
+
+	public CCL getCCL ()
+	{
+		return m_ccl;
+	}
+
+	public boolean[] getCharacterSet ()
+	{
+		return m_charSet;
 	}
 }

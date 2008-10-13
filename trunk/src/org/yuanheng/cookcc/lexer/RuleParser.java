@@ -36,12 +36,15 @@ import org.yuanheng.cookcc.exception.*;
  */
 public class RuleParser
 {
+	private static int s_caseCount = 0;
+
 	private final NFAFactory m_nfaFactory;
 	private final CCL m_ccl;
 	private final boolean m_nocase;
 	private int m_trailContext;
 	private boolean m_varLen;
 	private int m_ruleLen;
+	private boolean m_bol;
 
 	private boolean[] m_singletonCharSet;
 	private boolean[] m_cclCharSet;
@@ -59,6 +62,7 @@ public class RuleParser
 		m_trailContext = 0;
 		m_varLen = false;
 		m_ruleLen = 0;
+		m_bol = false;
 
 		m_singletonCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[/|*+?.(){}]]"));
 		m_cclCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[-\\]\\n]"));
@@ -68,9 +72,13 @@ public class RuleParser
 	{
 		char[] inputChars = input.toCharArray ();
 		int[] pos = new int[1];
+
+		if (ifMatch (inputChars, pos, '^'))
+			m_bol = true;
+
 		NFA head = parseRegex (lineNumber, inputChars, pos);
 		if (head == null)
-			return null;
+			throw new InvalidRegExException (lineNumber, inputChars);
 
 		if (ifMatch (inputChars, pos, '/'))
 		{
@@ -100,8 +108,6 @@ public class RuleParser
 					m_trailContext = NFA.setTrailContext (m_ruleLen, false, true);
 			}
 			head = head.cat (tail);
-
-
 		}
 		else if (ifMatch (inputChars, pos, '$'))
 		{
@@ -111,6 +117,7 @@ public class RuleParser
 			head = head.cat (m_nfaFactory.createNFA ('\n', null));
 		}
 
+		head.setState (s_caseCount++, m_trailContext, true);
 		return head;
 	}
 

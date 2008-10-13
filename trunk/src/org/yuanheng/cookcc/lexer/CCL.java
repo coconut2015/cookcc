@@ -35,6 +35,26 @@ import org.yuanheng.cookcc.exception.EscapeSequenceException;
  */
 public class CCL
 {
+	private static class ByteCCL
+	{
+		private final static CCL s_instance = new CCL (Byte.MAX_VALUE);
+	}
+
+	private static class CharacterCCL
+	{
+		private final static CCL s_instance = new CCL (Byte.MAX_VALUE);
+	}
+
+	public static CCL getByteCCL ()
+	{
+		return ByteCCL.s_instance;
+	}
+
+	public static CCL getCharacterCCL ()
+	{
+		return CharacterCCL.s_instance;
+	}
+
 	/* 0 to max, then add <<EOF>> as a token */
 	public final int MAX_SYMBOL;
 	public final int EOF;
@@ -57,7 +77,7 @@ public class CCL
 	public final boolean[] XDIGIT;
 	public final boolean[] SPACE;
 
-	public CCL (int maxSymbol)
+	private CCL (int maxSymbol)
 	{
 		MAX_SYMBOL = maxSymbol + 1;
 		EOF = MAX_SYMBOL;

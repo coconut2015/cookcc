@@ -27,6 +27,7 @@
 package org.yuanheng.cookcc.input.xml;
 
 import org.w3c.dom.Element;
+import org.yuanheng.cookcc.doc.PatternDoc;
 import org.yuanheng.cookcc.doc.RuleDoc;
 
 import cookxml.core.DecodeEngine;
@@ -42,12 +43,14 @@ class PatternCreator implements Creator
 	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
 	{
 		decodeEngine.setDoAdd (false);
-		return TextUtils.getText (elm);
+		PatternDoc pattern = new PatternDoc ();
+		pattern.setPattern (TextUtils.getText (elm));
+		return pattern;
 	}
 
 	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
 	{
-		((RuleDoc)parentObj).addPattern ((String)obj);
+		((RuleDoc)parentObj).addPattern ((PatternDoc)obj);
 		return obj;
 	}
 }

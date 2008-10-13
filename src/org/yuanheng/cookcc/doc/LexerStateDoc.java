@@ -32,12 +32,10 @@ import java.util.LinkedList;
  * @author Heng Yuan
  * @version $Id$
  */
-public class LexerStateDoc
+public class LexerStateDoc extends TreeDoc
 {
 	private final String m_name;
 	private final LinkedList<RuleDoc> m_rules = new LinkedList<RuleDoc> ();
-
-	private Object m_userObject;
 
 	public LexerStateDoc (String name)
 	{
@@ -58,15 +56,5 @@ public class LexerStateDoc
 	public RuleDoc[] getRules ()
 	{
 		return m_rules.toArray (new RuleDoc[m_rules.size ()]);
-	}
-
-	public Object getUserObject ()
-	{
-		return m_userObject;
-	}
-
-	public void setUserObject (Object userObject)
-	{
-		m_userObject = userObject;
 	}
 }

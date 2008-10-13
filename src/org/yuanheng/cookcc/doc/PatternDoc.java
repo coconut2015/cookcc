@@ -30,7 +30,7 @@ package org.yuanheng.cookcc.doc;
  * @author Heng Yuan
  * @version $Id$
  */
-public class PatternDoc
+public class PatternDoc extends TreeDoc
 {
 	private String m_pattern;
 	private boolean m_nocase;

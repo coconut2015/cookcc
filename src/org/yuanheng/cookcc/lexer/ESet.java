@@ -82,7 +82,7 @@ class ESet implements Comparable<ESet>
 			NFA n1 = i1.next ();
 			NFA n2 = i2.next ();
 			if (n1 != n2)
-				return n1.m_id - n2.m_id;
+				return n1.id - n2.id;
 		}
 		return 0;
 	}

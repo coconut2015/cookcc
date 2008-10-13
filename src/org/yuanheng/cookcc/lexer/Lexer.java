@@ -227,9 +227,9 @@ public class Lexer
 			// pop t, the top element, off of stack;
 			t = stack.get (Mark);
 			// for each state u with an edge from t to u labeled _e_ do
-			if (t.m_char == NFA.EPSILON)
+			if (t.thisChar == NFA.EPSILON)
 			{
-				if ((u = t.m_next) != null)
+				if ((u = t.next) != null)
 				{
 					// if u is not in e_closure (T)
 					if (!(u.mark))
@@ -238,7 +238,7 @@ public class Lexer
 						stack.add (u);  // push u onto stack
 					}
 				}
-				if ((u = t.m_next2) != null)
+				if ((u = t.next2) != null)
 				{
 					// if u is not in e_closure (T)
 					if (!(u.mark))
@@ -263,23 +263,23 @@ public class Lexer
 			t = stack.get (j);
 			//t->mark = false;
 
-			if (t.m_char == NFA.EPSILON)
+			if (t.thisChar == NFA.EPSILON)
 			{
 				//
 				// case by case eliminate unimportant NFA
 				//
-				if (t.m_next != null)
+				if (t.next != null)
 					continue;
 
 				if (lastAcceptNFA == null)
 					lastAcceptNFA = t;
 				else if (lastAcceptNFA == t)
 					continue;
-				else if (lastAcceptNFA.m_id < t.m_id && t.m_next2 == null)
+				else if (lastAcceptNFA.id < t.id && t.next2 == null)
 					continue;
-				else if (lastAcceptNFA.m_id > t.m_id)
+				else if (lastAcceptNFA.id > t.id)
 				{
-					if (lastAcceptNFA.m_next2 == null)
+					if (lastAcceptNFA.next2 == null)
 						st.getSet ().remove (lastAcceptNFA);
 					lastAcceptNFA = t;
 				}
@@ -299,16 +299,16 @@ public class Lexer
 
 		for (NFA n : T.getSet ())
 		{
-			if (n.m_char == a ||
-				(n.m_char == NFA.ISCCL && n.m_ccl[a]))
+			if (n.thisChar == a ||
+				(n.thisChar == NFA.ISCCL && n.charSet[a]))
 			{
-				if (n.m_next != null)
+				if (n.next != null)
 				{
-					s.add (n.m_next);
+					s.add (n.next);
 				}
-				if (n.m_next2 != null)
+				if (n.next2 != null)
 				{
-					s.add (n.m_next2);
+					s.add (n.next2);
 				}
 			}
 		}
@@ -323,8 +323,8 @@ public class Lexer
 
 		ECS ecs = getECS ();
 		int groupCount = ecs.getGroupCount ();
+		int[] lookup = ecs.getLookup ();
 
-		DFARow row = new DFARow (new char[groupCount]);
 		int Mark;
 
 		ESet s0 = eClosure (start);
@@ -353,9 +353,10 @@ public class Lexer
 
 			NFA n = T.isAccept ();
 
+			DFARow row = new DFARow (new char[groupCount]);
 			if (n != null) // set row accept conditions and values
 			{
-				row.setCaseValue (n.m_caseValue);
+				row.setCaseValue (n.caseValue);
 			}
 			else
 			{
@@ -375,16 +376,16 @@ public class Lexer
 						for (NFA nfa : T.getSet ())
 						{
 							NFA s = nfa.last ();
-							m_backupCases[s.m_caseValue] = true;
+							m_backupCases[s.caseValue] = true;
 						}
 					}
 				}
 			}
 
 			// for each input symbol a do
-			for (j = 0; j < groupCount; j++)
+			for (j = 0; j < groupCount; ++j)
 			{
-				a = ecs.getGroup (j);
+				a = lookup[j];
 
 				// U := e_closure (move (T, a));
 				U = eClosure (move (T, a));

@@ -70,6 +70,11 @@ public class RuleParser
 			m_pos = 0;
 		}
 
+		public boolean isEmpty ()
+		{
+			return m_pos == m_currentStr.length ();
+		}
+
 		public boolean ifMatchReplaceName ()
 		{
 			if (!ifMatch ('{'))
@@ -264,7 +269,14 @@ public class RuleParser
 					++m_ruleLen;
 					head = m_nfaFactory.createNFA (NFA.ISCCL, m_ccl.ANY);
 				}
-				if (m_lex.ifMatchReplaceName ())
+				else if (m_lex.ifMatch ("<<EOF>>"))
+				{
+					if (!m_lex.isEmpty ())
+						throw new LookaheadException (m_lineNumber, m_ccl, m_ccl.EOF, m_lex.getInput (), m_lex.getPos ());
+					++m_ruleLen;
+					head = m_nfaFactory.createNFA (m_ccl.EOF, null);
+				}
+				else if (m_lex.ifMatchReplaceName ())
 				{
 					continue;
 				}

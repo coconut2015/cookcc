@@ -49,76 +49,76 @@ class NFA
 	{
 		public int compare (NFA o1, NFA o2)
 		{
-			return o1.m_id - o2.m_id;
+			return o1.id - o2.id;
 		}
 	};
 
-	NFAFactory m_factory;
+	private NFAFactory m_factory;
 
-	int m_char;
-	boolean[] m_ccl;
-	int m_anchor;
-	int m_caseValue;
-	NFA m_next;
-	NFA m_next2;
+	int thisChar;
+	boolean[] charSet;
+	int anchor;
+	int caseValue;
+	NFA next;
+	NFA next2;
 	boolean mark;
 
-	final int m_id;
+	final int id;
 
 	NFA (NFAFactory factory)
 	{
-		m_id = factory.incNFACounter ();
+		id = factory.incNFACounter ();
 		m_factory = factory;
 		init ();
 	}
 
 	void init ()
 	{
-		m_char = EPSILON;
-		m_ccl = null;
-		m_anchor = 0;
-		m_caseValue = 0;
-		m_next = null;
-		m_next2 = null;
+		thisChar = EPSILON;
+		charSet = null;
+		anchor = 0;
+		caseValue = 0;
+		next = null;
+		next2 = null;
 	}
 
 	public void setState (int caseValue, int trail, boolean accept)
 	{
 		NFA end = last ();
-		end.m_caseValue = caseValue;
-		end.m_anchor = trail | (accept ? 1 : 0);
+		end.caseValue = caseValue;
+		end.anchor = trail | (accept ? 1 : 0);
 		if (trail != 0)
 		{
 			if ((trail & 7) != 6) 		// have const head or tail
 			{							// then remove extra memory positions
 				NFA t = this;
-				while ((t.m_anchor & 0x03) == 0)
-					t = t.m_next;
-				t.m_anchor = 0;
+				while ((t.anchor & 0x03) == 0)
+					t = t.next;
+				t.anchor = 0;
 			}
 		}
 	}
 
 	public boolean isAccept ()
 	{
-		return m_next == null;
+		return next == null;
 	}
 
 	private void copy (NFA other)
 	{
-		m_char = other.m_char;
-		m_ccl = other.m_ccl;
-		m_anchor = other.m_anchor;
-		m_caseValue = other.m_caseValue;
-		m_next = other.m_next;
-		m_next2 = other.m_next2;
+		thisChar = other.thisChar;
+		charSet = other.charSet;
+		anchor = other.anchor;
+		caseValue = other.caseValue;
+		next = other.next;
+		next2 = other.next2;
 	}
 
 	public NFA last ()
 	{
 		NFA n = this;
-		while (n.m_next != null)
-			n = n.m_next;
+		while (n.next != null)
+			n = n.next;
 		return n;
 	}
 
@@ -133,11 +133,11 @@ class NFA
 	public NFA or (NFA other)
 	{
 		NFA n = m_factory.createNFA ();
-		n.m_next = this;
-		n.m_next2 = other;
+		n.next = this;
+		n.next2 = other;
 		NFA e = m_factory.createNFA ();
-		last ().m_next = e;
-		other.last ().m_next = e;
+		last ().next = e;
+		other.last ().next = e;
 		return n;
 	}
 
@@ -146,10 +146,10 @@ class NFA
 		NFA n = m_factory.createNFA ();
 		NFA e = m_factory.createNFA ();
 		NFA oldend = last ();
-		n.m_next = this;
-		n.m_next2 = e;
-		oldend.m_next = e;
-		oldend.m_next2 = this;
+		n.next = this;
+		n.next2 = e;
+		oldend.next = e;
+		oldend.next2 = this;
 		return n;
 	}
 
@@ -157,9 +157,9 @@ class NFA
 	{
 		NFA n = m_factory.createNFA ();
 		NFA oldend = last ();
-		oldend.m_next = m_factory.createNFA ();
-		oldend.m_next2 = this;
-		n.m_next = this;
+		oldend.next = m_factory.createNFA ();
+		oldend.next2 = this;
+		n.next = this;
 		return n;
 	}
 
@@ -168,9 +168,9 @@ class NFA
 		NFA n = m_factory.createNFA ();
 		NFA oldend = last ();
 		NFA e = m_factory.createNFA ();
-		oldend.m_next = e;
-		n.m_next = this;
-		n.m_next2 = e;
+		oldend.next = e;
+		n.next = this;
+		n.next2 = e;
 		return n;
 	}
 
@@ -179,10 +179,10 @@ class NFA
 		if (nfaMap.containsKey (nfa))
 			return;
 		nfaMap.put (nfa, null);
-		if (nfa.m_next != null)
-			recursiveUpdateMap (nfa.m_next, nfaMap);
-		if (nfa.m_next2 != null)
-			recursiveUpdateMap (nfa.m_next2, nfaMap);
+		if (nfa.next != null)
+			recursiveUpdateMap (nfa.next, nfaMap);
+		if (nfa.next2 != null)
+			recursiveUpdateMap (nfa.next2, nfaMap);
 	}
 
 	/**
@@ -203,10 +203,10 @@ class NFA
 		for (int i = 0; i < keys.length; ++i)
 		{
 			NFA v = nfaMap.get (keys[i]);
-			if (keys[i].m_next != null)
-				v.m_next = nfaMap.get (keys[i].m_next);
-			if (keys[i].m_next2 != null)
-				v.m_next2 = nfaMap.get (keys[i].m_next2);
+			if (keys[i].next != null)
+				v.next = nfaMap.get (keys[i].next);
+			if (keys[i].next2 != null)
+				v.next2 = nfaMap.get (keys[i].next2);
 		}
 		return nfaMap.get (this);
 	}
@@ -249,13 +249,13 @@ class NFA
 
 	private void toString (StringBuffer buffer)
 	{
-		buffer.append ('[').append (m_id).append ("]: ");
+		buffer.append ('[').append (id).append ("]: ");
 
-		String cclStr = m_ccl == null ? null : m_factory.getCCL ().toString (m_ccl);
+		String cclStr = charSet == null ? null : m_factory.getCCL ().toString (charSet);
 
-		if (m_char >= 0)
-			buffer.append ('\'').append ((char)m_char).append ("' ");
-		else if (m_char == ISCCL)
+		if (thisChar >= 0)
+			buffer.append ('\'').append ((char)thisChar).append ("' ");
+		else if (thisChar == ISCCL)
 		{
 			if (cclStr.length () <= 3)
 				buffer.append (cclStr);
@@ -265,18 +265,18 @@ class NFA
 		else
 			buffer.append ("--- ");
 
-		if (m_next != null)
-			buffer.append ("next = ").append (m_next.m_id);
+		if (next != null)
+			buffer.append ("next = ").append (next.id);
 		else
 			buffer.append ("accept state ").append (isAccept ());
 
-		if (m_next2 != null)
-			buffer.append ("\tnext2 = ").append (m_next2.m_id);
+		if (next2 != null)
+			buffer.append ("\tnext2 = ").append (next2.id);
 		else
 			buffer.append ("\t\t");
 
 		if (cclStr != null && cclStr.length () > 3)
-			buffer.append ("\tCCL = ").append (m_factory.getCCL ().toString (m_ccl));
+			buffer.append ("\tCCL = ").append (m_factory.getCCL ().toString (charSet));
 		buffer.append ('\n');
 	}
 

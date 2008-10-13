@@ -42,7 +42,7 @@ public class Document
 {
 	private boolean m_unicode;
 	private StringBuffer m_header = new StringBuffer ();
-	private final Collection m_tokens = new LinkedList ();
+	private final Collection<String> m_tokens = new LinkedList<String> ();
 	private LexerDoc m_lexer;
 	private ParserDoc m_parser;
 
@@ -94,6 +94,6 @@ public class Document
 
 	public String[] getTokens ()
 	{
-		return (String[])m_tokens.toArray (new String[m_tokens.size ()]);
+		return m_tokens.toArray (new String[m_tokens.size ()]);
 	}
 }

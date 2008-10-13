@@ -35,14 +35,14 @@ import java.util.HashMap;
 public class LexerDoc
 {
 	public final static String INITIAL_STATE = "INITIAL";
-	private final HashMap m_stateMap = new HashMap ();
-	private final HashMap m_shortcutMap = new HashMap ();
+	private final HashMap<String, LexerStateDoc> m_stateMap = new HashMap<String, LexerStateDoc> ();
+	private final HashMap<String, ShortcutDoc> m_shortcutMap = new HashMap<String, ShortcutDoc> ();
 
 	public LexerStateDoc getLexerState (String stateName)
 	{
 		if (stateName == null || stateName.length () == 0)
 			stateName = INITIAL_STATE;
-		LexerStateDoc doc = (LexerStateDoc)m_stateMap.get (stateName);
+		LexerStateDoc doc = m_stateMap.get (stateName);
 		if (doc == null)
 		{
 			doc = new LexerStateDoc (stateName);
@@ -54,7 +54,7 @@ public class LexerDoc
 
 	public LexerStateDoc[] getLexerStates ()
 	{
-		return (LexerStateDoc[])m_stateMap.values ().toArray (new LexerStateDoc[m_stateMap.size ()]);
+		return m_stateMap.values ().toArray (new LexerStateDoc[m_stateMap.size ()]);
 	}
 
 	public void addShortcut (ShortcutDoc shortcut)
@@ -66,11 +66,11 @@ public class LexerDoc
 
 	public ShortcutDoc[] getShortcuts ()
 	{
-		return (ShortcutDoc[])m_shortcutMap.values ().toArray (new ShortcutDoc[m_shortcutMap.size ()]);
+		return m_shortcutMap.values ().toArray (new ShortcutDoc[m_shortcutMap.size ()]);
 	}
 
 	public ShortcutDoc getShortcut (String name)
 	{
-		return (ShortcutDoc)m_shortcutMap.get (name);
+		return m_shortcutMap.get (name);
 	}
 }

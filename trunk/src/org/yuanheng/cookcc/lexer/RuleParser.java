@@ -40,7 +40,7 @@ import org.yuanheng.cookcc.exception.*;
  */
 public class RuleParser
 {
-	private final static Pattern m_replaceName = Pattern.compile ("[{][a-zA-Z_][a-zA-Z0-9_-]*[}]");
+	private final static Pattern m_replaceName = Pattern.compile ("\\{[a-zA-Z_][a-zA-Z0-9_-]*[}]");
 
 	private final Lexer m_lexer;
 	private final NFAFactory m_nfaFactory;
@@ -78,7 +78,7 @@ public class RuleParser
 			m_currentStr = m_currentStr.substring (m_pos);
 			m_pos = 0;
 			Matcher matcher = m_replaceName.matcher (m_currentStr);
-			if (!matcher.find (0))
+			if (!matcher.find (0) || matcher.start () != 0)
 				return false;
 			int index = m_currentStr.indexOf ('}');
 			String name = m_currentStr.substring (1, index);

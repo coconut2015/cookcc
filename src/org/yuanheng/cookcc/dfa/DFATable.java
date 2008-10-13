@@ -55,4 +55,9 @@ public class DFATable
 	{
 		return m_table.toArray (new DFARow[m_table.size ()]);
 	}
+
+	public String toString ()
+	{
+		return "DFA states: " + size ();
+	}
 }

@@ -46,6 +46,11 @@ public class DFATable
 		return m_table.size ();
 	}
 
+	public DFARow getRow (int i)
+	{
+		return m_table.get (i);
+	}
+
 	public DFARow[] getRows ()
 	{
 		return m_table.toArray (new DFARow[m_table.size ()]);

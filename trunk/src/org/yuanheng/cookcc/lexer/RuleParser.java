@@ -43,7 +43,8 @@ public class RuleParser
 	private boolean m_varLen;
 	private int m_ruleLen;
 
-	private boolean[] m_singletonCCL;
+	private boolean[] m_singletonCharSet;
+	private boolean[] m_cclCharSet;
 
 	public RuleParser (NFAFactory nfaFactory)
 	{
@@ -59,7 +60,8 @@ public class RuleParser
 		m_varLen = false;
 		m_ruleLen = 0;
 
-		m_singletonCCL = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[/|*+?.(){}]]"));
+		m_singletonCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[/|*+?.(){}]]"));
+		m_cclCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[-\\]\\n]"));
 	}
 
 	public NFA parse (int lineNumber, String input)
@@ -176,7 +178,7 @@ public class RuleParser
 						throw new InvalidRegExException (lineNumber, inputChars);
 					match (lineNumber, inputChars, pos, ')');
 				}
-				else if ((ch = parseChar (lineNumber, inputChars, pos, m_singletonCCL)) != null)
+				else if ((ch = parseChar (lineNumber, inputChars, pos, m_singletonCharSet)) != null)
 				{
 					++m_ruleLen;
 					if (m_nocase)
@@ -252,12 +254,48 @@ public class RuleParser
 
 	private Integer parseNumber (int lineNumber, char[] inputChars, int[] pos)
 	{
-		return null;
+		Character ch;
+		boolean neg = false;
+		if (ifMatch (inputChars, pos, '-'))
+			neg = true;
+		int number;
+		if ((ch = parseChar (lineNumber, inputChars, pos, m_ccl.DIGIT)) == null)
+			throw new LookaheadException (lineNumber, m_ccl, m_ccl.DIGIT, inputChars, pos[0]);
+		number = ch.charValue () - '0';
+		while ((ch = parseChar (lineNumber, inputChars, pos, m_ccl.DIGIT)) != null)
+			number = number * 10 + ch.charValue () - '0';
+		if (neg)
+			number = -number;
+		return new Integer (number);
 	}
 
 	private NFA parseString (int lineNumber, char[] inputChars, int[] pos)
 	{
-		return null;
+		NFA head = null;
+		Character ch;
+		while ((ch = parseChar (lineNumber, inputChars, pos, m_singletonCharSet)) != null)
+		{
+			++m_ruleLen;
+			NFA tail;
+			if (m_nocase)
+			{
+				char c = ch.charValue ();
+				boolean[] ccl = m_ccl.EMPTY.clone ();
+				ccl[c] = true;
+				if (c >= 'a' && c <= 'z')
+					ccl[c - 'a' + 'A'] = true;
+				else if (c >= 'A' && c <= 'Z')
+					ccl[c - 'A' + 'a'] = true;
+				tail = m_nfaFactory.createNFA (NFA.ISCCL, ccl);
+			}
+			else
+				tail = m_nfaFactory.createNFA (ch.charValue (), null);
+			if (head == null)
+				head = tail;
+			else
+				head = head.cat (tail);
+		}
+		return head;
 	}
 
 	private boolean[] parseFullCCL (int lineNumber, char[] inputChars, int[] pos)
@@ -291,8 +329,27 @@ public class RuleParser
 
 	private boolean[] parseCCL (int lineNumber, char[] inputChars, int[] pos, boolean[] ccl)
 	{
-		if (parseCCE (inputChars, pos, ccl) == null)
+		while (parseCCE (inputChars, pos, ccl) != null ||
+			   parseCCLChar (lineNumber, inputChars, pos, ccl) != null)
+			;
+		return ccl;
+	}
+
+	private boolean[] parseCCLChar (int lineNumber, char[] inputChars, int[] pos, boolean[] ccl)
+	{
+		Character start = parseChar (lineNumber, inputChars, pos, m_cclCharSet);
+		if (start == null)
 			return null;
+		if (!ifMatch (inputChars, pos, '-'))
+		{
+			ccl[start.charValue ()] = true;
+			return ccl;
+		}
+		Character end = parseChar (lineNumber, inputChars, pos, m_cclCharSet);
+		if (end == null)
+			throw new LookaheadException (lineNumber, m_ccl, m_cclCharSet, inputChars, pos[0]);
+		for (int i = start.charValue (); i <= end.charValue (); ++i)
+			ccl[i] = true;
 		return ccl;
 	}
 
@@ -351,7 +408,7 @@ public class RuleParser
 	private void match (int lineNumber, char[] inputChars, int[] pos, char ch)
 	{
 		if (pos[0] >= inputChars.length || inputChars[pos[0]] != ch)
-			throw new LookaheadException (lineNumber, ch, inputChars[pos[0]]);
+			throw new LookaheadException (lineNumber, m_ccl, ch, inputChars, pos[0]);
 		++pos[0];
 	}
 }

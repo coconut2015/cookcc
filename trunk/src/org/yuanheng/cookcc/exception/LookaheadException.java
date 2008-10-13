@@ -28,6 +28,9 @@ package org.yuanheng.cookcc.exception;
 
 import java.text.MessageFormat;
 
+import org.yuanheng.cookcc.lexer.CCL;
+import org.yuanheng.cookcc.lexer.NFA;
+
 /**
  * @author Heng Yuan
  * @version $Id$
@@ -37,13 +40,26 @@ public class LookaheadException extends ParserException
 	public static MessageFormat ERROR_MSG = new MessageFormat ("expected token {0}, but found {1}");
 
 	private final int m_expected;
+	private final CCL m_ccl;
+	private final boolean[] m_charSet;
 	private final int m_lookahead;
 
-	public LookaheadException (int lineNumber, int expected, int lookahead)
+	public LookaheadException (int lineNumber, CCL ccl, boolean[] charSet, char[] inputChars, int pos)
 	{
-		super (lineNumber, ERROR_MSG.format (new Object[]{ new Integer (expected), new Integer (lookahead)}));
+		super (lineNumber, ERROR_MSG.format (new Object[]{ ccl.toString (charSet), pos >= inputChars.length ? "<<EOF>>" : "" + inputChars[pos]}));
+		m_expected = NFA.ISCCL;
+		m_ccl = ccl;
+		m_charSet = charSet;
+		m_lookahead = pos >= inputChars.length ? -1 : inputChars[pos];
+	}
+
+	public LookaheadException (int lineNumber, CCL ccl, int expected, char[] inputChars, int pos)
+	{
+		super (lineNumber, ERROR_MSG.format (new Object[]{ expected < 0 ? "<<EOF>>" : (ccl.PRINT[expected] ? "'" + (char)expected + "'" : new Integer (expected)), pos >= inputChars.length ? "<<EOF>>" : "" + inputChars[pos]}));
 		m_expected = expected;
-		m_lookahead = lookahead;
+		m_ccl = ccl;
+		m_charSet = null;
+		m_lookahead = pos >= inputChars.length ? -1 : inputChars[pos];
 	}
 
 	public int getExpected ()

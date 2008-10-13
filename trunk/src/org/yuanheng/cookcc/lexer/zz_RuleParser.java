@@ -27,6 +27,7 @@
 package org.yuanheng.cookcc.lexer;
 
 import org.junit.Test;
+import org.yuanheng.cookcc.doc.Document;
 
 /**
  * @author Heng Yuan
@@ -37,9 +38,11 @@ public class zz_RuleParser
 	@Test
 	public void testRuleParser ()
 	{
-		NFAFactory nfaFactory = NFAFactory.getByteNFAFactory ();
-		System.out.println (new RuleParser (nfaFactory).parse (1, "a|b"));
+		Document doc = new Document ();
+		Lexer lexer = new Lexer (doc);
+		NFAFactory nfaFactory = lexer.getNFAFactory ();
+		System.out.println (new RuleParser (lexer, nfaFactory).parse (1, "a|b"));
 
-		System.out.println (new RuleParser (nfaFactory).parse (1, "(a|b)*c/$"));
+		System.out.println (new RuleParser (lexer, nfaFactory).parse (1, "(a|b)*c/$"));
 	}
 }

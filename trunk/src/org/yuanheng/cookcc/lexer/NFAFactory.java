@@ -34,17 +34,7 @@ import java.util.LinkedList;
  */
 class NFAFactory
 {
-	public static NFAFactory getByteNFAFactory ()
-	{
-		return new NFAFactory (CCL.getByteCCL ());
-	}
-
-	public static NFAFactory getCharacterNFAFactory ()
-	{
-		return new NFAFactory (CCL.getCharacterCCL ());
-	}
-
-	private int m_nfaCounter = 0;
+	private final Lexer m_lexer;
 
 	private final CCL m_ccl;
 	/* for computing equivalent classes */
@@ -52,8 +42,11 @@ class NFAFactory
 	/* for recycling NFAs */
 	private final LinkedList<NFA> m_spareNFAs = new LinkedList<NFA> ();
 
-	private NFAFactory (CCL ccl)
+	private int m_nfaCounter = 0;
+
+	NFAFactory (Lexer lexer, CCL ccl)
 	{
+		m_lexer = lexer;
 		m_ccl = ccl;
 		m_ecs = new ECS (ccl.MAX_SYMBOL);
 	}
@@ -113,6 +106,6 @@ class NFAFactory
 
 	public NFA getEOL ()
 	{
-		return new RuleParser (this).parse (0, "(\\r?\\n)|<<EOF>>)");
+		return new RuleParser (m_lexer, this).parse (0, "(\\r?\\n)|<<EOF>>)");
 	}
 }

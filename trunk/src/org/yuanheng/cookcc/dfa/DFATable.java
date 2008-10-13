@@ -26,38 +26,28 @@
  */
 package org.yuanheng.cookcc.dfa;
 
+import java.util.Vector;
+
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class DFARow
+public class DFATable
 {
-	private int m_caseValue;
-	private final char[] m_column;
+	private Vector<DFARow> m_table = new Vector<DFARow> (512, 512);
 
-	public DFARow (char[] column)
+	public void add (DFARow row)
 	{
-		m_column = column.clone ();
+		m_table.add (row);
 	}
 
-	public DFARow (DFARow other)
+	public int size ()
 	{
-		m_caseValue = other.m_caseValue;
-		m_column = other.m_column.clone ();
+		return m_table.size ();
 	}
 
-	public void setState (int col, int state)
+	public DFARow[] getRows ()
 	{
-		m_column[col] = (char)state;
-	}
-
-	public void setCaseValue (int caseValue)
-	{
-		m_caseValue = caseValue;
-	}
-
-	public int getCaseValue ()
-	{
-		return m_caseValue;
+		return m_table.toArray (new DFARow[m_table.size ()]);
 	}
 }

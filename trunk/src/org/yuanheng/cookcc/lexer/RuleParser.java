@@ -36,8 +36,7 @@ import org.yuanheng.cookcc.exception.*;
  */
 public class RuleParser
 {
-	private static int s_caseCount = 0;
-
+	private final Lexer m_lexer;
 	private final NFAFactory m_nfaFactory;
 	private final CCL m_ccl;
 	private final boolean m_nocase;
@@ -49,13 +48,14 @@ public class RuleParser
 	private boolean[] m_singletonCharSet;
 	private boolean[] m_cclCharSet;
 
-	public RuleParser (NFAFactory nfaFactory)
+	public RuleParser (Lexer lexer, NFAFactory nfaFactory)
 	{
-		this (nfaFactory, false);
+		this (lexer, nfaFactory, false);
 	}
 
-	public RuleParser (NFAFactory nfaFactory, boolean nocase)
+	public RuleParser (Lexer lexer, NFAFactory nfaFactory, boolean nocase)
 	{
+		m_lexer = lexer;
 		m_nfaFactory = nfaFactory;
 		m_ccl = nfaFactory.getCCL ();
 		m_nocase = nocase;
@@ -122,7 +122,7 @@ public class RuleParser
 			head = head.cat (m_nfaFactory.createNFA ('\n', null));
 		}
 
-		head.setState (s_caseCount++, m_trailContext, true);
+		head.setState (m_lexer.incCaseCounter (), m_trailContext, true);
 		return head;
 	}
 

@@ -32,7 +32,7 @@ import java.util.LinkedList;
  * @author Heng Yuan
  * @version $Id$
  */
-public class NFAFactory
+class NFAFactory
 {
 	private static class ByteNFAFactory
 	{

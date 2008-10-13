@@ -29,7 +29,6 @@ package org.yuanheng.cookcc.exception;
 import java.text.MessageFormat;
 
 import org.yuanheng.cookcc.lexer.CCL;
-import org.yuanheng.cookcc.lexer.NFA;
 
 /**
  * @author Heng Yuan
@@ -47,7 +46,7 @@ public class LookaheadException extends ParserException
 	public LookaheadException (int lineNumber, CCL ccl, boolean[] charSet, char[] inputChars, int pos)
 	{
 		super (lineNumber, ERROR_MSG.format (new Object[]{ ccl.toString (charSet), pos >= inputChars.length ? "<<EOF>>" : "" + inputChars[pos]}));
-		m_expected = NFA.ISCCL;
+		m_expected = -1;
 		m_ccl = ccl;
 		m_charSet = charSet;
 		m_lookahead = pos >= inputChars.length ? -1 : inputChars[pos];

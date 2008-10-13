@@ -34,7 +34,7 @@ import org.yuanheng.cookcc.exception.EscapeSequenceException;
  * @author Heng Yuan
  * @version $Id$
  */
-public class TestCCL
+public class zz_CCL
 {
 	@Test
 	public void escTest () throws EscapeSequenceException

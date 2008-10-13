@@ -32,7 +32,7 @@ import org.junit.Test;
  * @author Heng Yuan
  * @version $Id$
  */
-public class TestRuleParser
+public class zz_RuleParser
 {
 	@Test
 	public void testRuleParser ()

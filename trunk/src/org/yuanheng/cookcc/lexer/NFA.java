@@ -34,7 +34,7 @@ import java.util.TreeSet;
  * @author Heng Yuan
  * @version $Id$
  */
-public class NFA
+class NFA
 {
 	public final static int EPSILON = -1;
 	public final static int ISCCL = -2;

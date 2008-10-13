@@ -1,0 +1,19 @@
+<!DOCTYPE cookcc [
+	<!ELEMENT cookcc (header?, tokens+, lexer?, parser?)>
+	<!ELEMENT header	(#PCDATA)>
+	<!ELEMENT tokens	(#PCDATA)>
+	<!ELEMENT lexer		(shortcut*, (state | rule)+)>
+	<!ELEMENT parser	(#PCDATA)>
+
+	<!ELEMENT shortcut	(#PCDATA)>
+	<!ELEMENT state		(rule+)>
+	<!ELEMENT rule		(pattern+, action)>
+	<!ELEMENT pattern	(#PCDATA)>
+	<!ELEMENT action	(#PCDATA)>
+
+	<!ATTLIST lexer		outputfile CDATA #IMPLIED>
+
+	<!ATTLIST shortcut	name CDATA #REQUIRED>
+	<!ATTLIST rule		state CDATA #IMPLIED>
+	<!ATTLIST rule		line CDATA #IMPLIED>
+]>

@@ -26,7 +26,7 @@
  */
 package org.yuanheng.cookcc;
 
-import org.yuanheng.cookcc.codegen.tabledump.FullTableDump;
+import org.yuanheng.cookcc.codegen.xml.XmlOutput;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.input.xml.XmlParser;
 
@@ -41,7 +41,7 @@ public class Main
 		if (args.length != 1)
 			return;
 		Document doc = XmlParser.parseXml (args[0]);
-		//new XmlOutput ().generateOutput (doc, System.out);
-		new FullTableDump ().generateOutput (doc, System.out);
+		new XmlOutput ().generateOutput (doc, System.out);
+//		new FullTableDump ().generateOutput (doc, System.out);
 	}
 }

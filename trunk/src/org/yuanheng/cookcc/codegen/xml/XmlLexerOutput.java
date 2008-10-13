@@ -57,7 +57,7 @@ class XmlLexerOutput
 				p.print (" bol=\"true\"");
 			if (pattern.isNocase ())
 				p.print (" nocase=\"true\"");
-			p.print (">" + Utils.translate (pattern.getPattern ()) + "</pattern>");
+			p.println (">" + Utils.translate (pattern.getPattern ()) + "</pattern>");
 		}
 		p.println ("\t\t\t\t<action>" + Utils.translate (rule.getAction ()) + "</action>");
 		p.println ("\t\t\t</rule>");

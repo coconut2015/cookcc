@@ -47,10 +47,10 @@ public class LexerStateDoc extends TreeDoc
 		return m_name;
 	}
 
-	public void addRule (RuleDoc patternDoc)
+	public void addRule (RuleDoc rule)
 	{
-		if (!m_rules.contains (patternDoc))
-			m_rules.add (patternDoc);
+		if (!m_rules.contains (rule))
+			m_rules.add (rule);
 	}
 
 	public RuleDoc[] getRules ()

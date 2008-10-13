@@ -87,6 +87,8 @@ public class Document extends TreeDoc
 		while (tokenizer.hasMoreTokens ())
 		{
 			String tok = tokenizer.nextToken ().trim ();
+			if (tok.length () == 0)
+				continue;
 			if (!m_tokens.contains (tok))
 				m_tokens.add (tok);
 		}

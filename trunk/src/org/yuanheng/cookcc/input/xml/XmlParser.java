@@ -74,6 +74,7 @@ public class XmlParser
 
 		tagLibrary.setCreator ("lexer", DefaultCreator.getCreator (LexerDoc.class));
 		tagLibrary.addAdder ("cookcc", new CallFunctionAdder ("setLexer", Document.class, LexerDoc.class));
+		tagLibrary.addAdder ("lexer", new RuleDocAdder ());
 		tagLibrary.addAdder ("lexer", new CallFunctionAdder ("addShortcut", LexerDoc.class, ShortcutDoc.class));
 		tagLibrary.setCreator ("shortcut", new ShortcutCreator ());
 		tagLibrary.setCreator ("state", new LexerStateCreator ());

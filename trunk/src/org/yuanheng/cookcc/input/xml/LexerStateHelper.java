@@ -50,8 +50,8 @@ public class LexerStateHelper implements NoAdd
 		m_name = name;
 	}
 
-	public void add (RuleDoc pattern)
+	public void add (RuleDoc ruleDoc)
 	{
-		pattern.addStates (m_name);
+		ruleDoc.addStates (m_name);
 	}
 }

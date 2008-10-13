@@ -26,11 +26,11 @@
  */
 package junit_tests;
 
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
+import org.yuanheng.cookcc.exception.EscapeSequenceException;
 import org.yuanheng.cookcc.lexer.CCL;
 import org.yuanheng.cookcc.lexer.NFAFactory;
-import org.yuanheng.cookcc.exception.EscapeSequenceException;
 
 /**
  * @author Heng Yuan

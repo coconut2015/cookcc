@@ -27,8 +27,8 @@
 package junit_tests;
 
 import org.junit.Test;
-import org.yuanheng.cookcc.lexer.RuleParser;
 import org.yuanheng.cookcc.lexer.NFAFactory;
+import org.yuanheng.cookcc.lexer.RuleParser;
 
 /**
  * @author Heng Yuan

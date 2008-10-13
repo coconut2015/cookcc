@@ -26,11 +26,9 @@
  */
 package org.yuanheng.cookcc.doc;
 
-import java.util.HashSet;
-import java.util.StringTokenizer;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.awt.*;
+import java.util.StringTokenizer;
 
 /**
  * This is the parsed tree from cookcc input.  It is the internal structure which lexer/parser

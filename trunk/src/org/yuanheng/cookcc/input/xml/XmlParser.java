@@ -26,8 +26,6 @@
  */
 package org.yuanheng.cookcc.input.xml;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Node;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.doc.LexerDoc;

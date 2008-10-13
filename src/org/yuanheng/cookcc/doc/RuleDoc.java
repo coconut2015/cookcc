@@ -46,7 +46,7 @@ public class RuleDoc
 	private final LinkedList<PatternDoc> m_patterns = new LinkedList<PatternDoc> ();
 
 	private String m_action = "";
-	private HashSet m_states = new HashSet ();
+	private HashSet<LexerStateDoc> m_states = new HashSet<LexerStateDoc> ();
 
 	private Object m_userObject;
 
@@ -126,7 +126,7 @@ public class RuleDoc
 
 	public LexerStateDoc[] getStates ()
 	{
-		return (LexerStateDoc[])m_states.toArray (new LexerStateDoc[m_states.size ()]);
+		return m_states.toArray (new LexerStateDoc[m_states.size ()]);
 	}
 
 	public Object getUserObject ()

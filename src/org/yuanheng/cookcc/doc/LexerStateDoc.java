@@ -35,7 +35,7 @@ import java.util.LinkedList;
 public class LexerStateDoc
 {
 	private final String m_name;
-	private final LinkedList m_rules = new LinkedList ();
+	private final LinkedList<RuleDoc> m_rules = new LinkedList<RuleDoc> ();
 
 	private Object m_userObject;
 
@@ -57,7 +57,7 @@ public class LexerStateDoc
 
 	public RuleDoc[] getRules ()
 	{
-		return (RuleDoc[])m_rules.toArray (new RuleDoc[m_rules.size ()]);
+		return m_rules.toArray (new RuleDoc[m_rules.size ()]);
 	}
 
 	public Object getUserObject ()

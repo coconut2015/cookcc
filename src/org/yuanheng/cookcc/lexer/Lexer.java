@@ -43,11 +43,23 @@ public class Lexer
 
 	private final Document m_doc;
 	private NFAFactory m_nfaFactory;
+	private boolean m_bol;
 
 	public Lexer (Document doc)
 	{
 		m_doc = doc;
 		m_nfaFactory = doc.isUnicode () ? NFAFactory.getCharacterNFAFactory () : NFAFactory.getByteNFAFactory ();
+	}
+
+	/**
+	 * After all the patterns have parsed, call this function to check if the lexer
+	 * has to be aware of beginning of the line condition.
+	 *
+	 * @return	if any of the NFAs has BOL requirements
+	 */
+	public boolean hasBOL ()
+	{
+		return m_bol;
 	}
 
 	public void warn (String msg)
@@ -79,9 +91,14 @@ public class Lexer
 				for (int k = 0; k < patterns.length; ++k)
 				{
 					PatternDoc pattern = patterns[k];
-					NFA nfa = new RuleParser (m_nfaFactory, pattern.isNocase ()).parse (rule.getLineNumber (), pattern.getPattern ());
+					RuleParser parser = new RuleParser (m_nfaFactory, pattern.isNocase ());
+					NFA nfa = parser.parse (rule.getLineNumber (), pattern.getPattern ());
+					if (parser.isBOL ())
+						pattern.setBOL (true);
 					pattern.setUserObject (nfa);
 					nfas.add (nfa);
+					if (pattern.isBOL ())
+						m_bol = true;
 				}
 			}
 

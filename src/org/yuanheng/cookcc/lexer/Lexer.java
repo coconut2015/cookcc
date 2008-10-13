@@ -28,7 +28,7 @@ package org.yuanheng.cookcc.lexer;
 
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import org.yuanheng.cookcc.dfa.DFARow;
@@ -55,7 +55,7 @@ public class Lexer
 
 	private final DFATable m_dfa = new DFATable ();
 	private Vector<ESet> _Dstates = new Vector<ESet> ();
-	private HashMap<ESet, Integer> _DstatesSet = new HashMap<ESet, Integer> ();
+	private TreeMap<ESet, Integer> _DstatesSet = new TreeMap<ESet, Integer> ();
 
 	public Lexer (Document doc)
 	{
@@ -162,10 +162,41 @@ public class Lexer
 
 			lexerStates[i].setUserObject (nfas);
 		}
-	}
 
-	public void buildDFA ()
-	{
+		// swap INITIAL state to the front if possible
+		LexerStateDoc lexerState = lexer.getLexerState (LexerDoc.INITIAL_STATE);
+		for (int i = 0; i < lexerStates.length; ++i)
+		{
+			if (lexerStates[i] == lexerState)
+			{
+				LexerStateDoc tmp = lexerStates[0];
+				lexerStates[0] = lexerState;
+				lexerStates[i] = tmp;
+				break;
+			}
+		}
+
+		for (int i = 0; i < lexerStates.length; ++i)
+		{
+			lexerState = lexerStates[i];
+			ESet start = (ESet)lexerState.getUserObject ();
+			ESet bolStart = new ESet ();
+
+			RuleDoc[] rules = lexerStates[i].getRules ();
+			for (int j = 0; j < rules.length; ++j)
+			{
+				RuleDoc rule = rules[j];
+				PatternDoc[] patterns = rule.getPatterns ();
+				for (int k = 0; k < patterns.length; ++k)
+				{
+					PatternDoc pattern = patterns[k];
+					if (pattern.isBOL ())
+						bolStart.add ((NFA)pattern.getUserObject ());
+				}
+			}
+
+			buildDFA (start, bolStart);
+		}
 	}
 
 	// just unmark a list of nfa states
@@ -284,21 +315,7 @@ public class Lexer
 		return s;
 	}
 
-	private int builddfa (DFATable dfa, Collection<NFA> nfalist, Collection<NFA> bollist)
-	{
-		ESet start = new ESet ();
-		ESet bolstart = new ESet ();
-
-		if (m_bol)
-			bolstart.getSet ().addAll (bollist);
-
-		start.getSet ().addAll (nfalist);
-		bolstart.getSet ().addAll (nfalist);
-
-		return builddfa (dfa, start, bolstart);
-	}
-
-	int builddfa (DFATable dfa, ESet start, ESet bolstart)
+	private int buildDFA (ESet start, ESet bolstart)
 	{
 		m_backupCases = new boolean[m_caseCount];
 
@@ -315,7 +332,7 @@ public class Lexer
 
 		ESet U = new ESet ();
 
-		int dfaBase = dfa.size ();
+		int dfaBase = m_dfa.size ();
 		int esetBase = _Dstates.size ();
 
 		// initially, e_closure (s0) is the only state in _Dstates and it is unmarked
@@ -399,7 +416,7 @@ public class Lexer
 				row.setState (j, toState);
 			}
 
-			dfa.add (row);		// add to the DFA table
+			m_dfa.add (row);		// add to the DFA table
 		}
 		return dfaBase;
 	}

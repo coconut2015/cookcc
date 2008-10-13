@@ -49,7 +49,7 @@ public class FullTableDump implements CodeGen
 		{
 			if ((i % 10) == 0 && i > 0)
 				p.print ("\n\t");
-			p.print ("\t" + array[i]);
+			p.print ("\t" + (int)array[i]);
 		}
 		p.print ("    }");
 	}
@@ -66,7 +66,6 @@ public class FullTableDump implements CodeGen
 		{
 			lexer = new Lexer (doc);
 			lexer.parse ();
-			lexer.buildDFA ();
 			lexerDoc.setUserObject (lexer);
 		}
 		else
@@ -99,5 +98,6 @@ public class FullTableDump implements CodeGen
 	{
 		PrintWriter p = new PrintWriter (os);
 		generateLexerOutput (doc, p);
+		p.flush ();
 	}
 }

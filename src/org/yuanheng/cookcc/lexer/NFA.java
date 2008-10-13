@@ -26,13 +26,15 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.IdentityHashMap;
+import java.util.TreeSet;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-class NFA
+public class NFA
 {
 	public final static int EPSILON = -1;
 	public final static int ISCCL = -2;

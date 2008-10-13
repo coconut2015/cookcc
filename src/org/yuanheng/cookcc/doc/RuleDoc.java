@@ -36,7 +36,11 @@ import java.util.StringTokenizer;
  */
 public class RuleDoc
 {
+	private static int s_count = 0;
+
 	private final LexerDoc m_lexer;
+	private final int m_id;
+
 	private int m_lineNumber;
 
 	private final LinkedList m_patterns = new LinkedList ();
@@ -47,6 +51,18 @@ public class RuleDoc
 	public RuleDoc (LexerDoc lexer)
 	{
 		m_lexer = lexer;
+		m_id = s_count++;
+	}
+
+	/**
+	 * The order of the rule is important, so it is necessary to have a sequential id
+	 * that determines the order of the rules.
+	 *
+	 * @return	the sequential id of the rule.
+	 */
+	public int getId ()
+	{
+		return m_id;
 	}
 
 	/**

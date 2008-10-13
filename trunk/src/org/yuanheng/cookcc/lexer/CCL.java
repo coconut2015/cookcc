@@ -37,12 +37,12 @@ public class CCL
 {
 	private static class ByteCCL
 	{
-		private final static CCL s_instance = new CCL (Byte.MAX_VALUE);
+		private final static CCL s_instance = new CCL (255);
 	}
 
 	private static class CharacterCCL
 	{
-		private final static CCL s_instance = new CCL (Byte.MAX_VALUE);
+		private final static CCL s_instance = new CCL (Character.MAX_VALUE);
 	}
 
 	public static CCL getByteCCL ()

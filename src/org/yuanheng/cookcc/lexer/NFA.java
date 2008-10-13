@@ -26,9 +26,7 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-import java.util.Comparator;
-import java.util.IdentityHashMap;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author Heng Yuan
@@ -291,7 +289,7 @@ class NFA
 
 		toString (buffer);
 		nfaMap.remove (this);
-		TreeSet<NFA> set = new TreeSet<NFA> (s_comparator);
+		Collection<NFA> set = getSortedSet ();
 		set.addAll (nfaMap.keySet ());
 
 		for (NFA n: set)
@@ -319,5 +317,10 @@ class NFA
 			return distance | TRAIL_FIXTAIL;
 		else
 			return distance | TRAIL_VAR;
+	}
+
+	public static Set<NFA> getSortedSet ()
+	{
+		return new TreeSet<NFA> (s_comparator);
 	}
 }

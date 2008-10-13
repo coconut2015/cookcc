@@ -108,4 +108,9 @@ class NFAFactory
 	{
 		return new RuleParser (m_lexer, this).parse (0, "(\\r?\\n)|<<EOF>>)");
 	}
+
+	public String toString ()
+	{
+		return "total NFAs: " + getTotalNFACount () + ", maximum NFAs: " + m_nfaCounter;
+	}
 }

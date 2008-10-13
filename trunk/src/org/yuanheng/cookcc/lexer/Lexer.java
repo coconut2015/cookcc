@@ -420,4 +420,14 @@ public class Lexer
 		}
 		return dfaBase;
 	}
+
+	public String toString ()
+	{
+		StringBuffer buffer = new StringBuffer ();
+		// print statistics
+		buffer.append ("// " + getECS () + "\n");
+		buffer.append ("// " + getNFAFactory () + "\n");
+		buffer.append ("// " + getDFA () + "\n");
+		return buffer.toString ();
+	}
 }

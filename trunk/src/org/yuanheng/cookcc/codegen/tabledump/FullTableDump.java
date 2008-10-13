@@ -93,6 +93,9 @@ public class FullTableDump implements CodeGen
 		}
 		p.println ();
 		p.println ("}");
+
+		p.println ();
+		p.println (lexer);
 	}
 
 	public void generateOutput (Document doc, OutputStream os)

@@ -119,4 +119,9 @@ public class ECS
 		}
 		m_lookup = null;
 	}
+
+	public String toString ()
+	{
+		return "equivalent classes: " + getGroupCount ();
+	}
 }

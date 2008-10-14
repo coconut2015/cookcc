@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.antlr.stringtemplate.AttributeRenderer;
 import org.yuanheng.cookcc.dfa.DFARow;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.*;
@@ -84,6 +85,24 @@ public class Lexer
 	private TreeMap<ESet, Integer> _DstatesSet = new TreeMap<ESet, Integer> ();
 	private LexerStateDoc[] m_lexerStates;
 	private int[] m_beginLocations;
+
+	private AttributeRenderer m_attributeRenderer = new AttributeRenderer ()
+	{
+		public String toString (Object o)
+		{
+			return toString (o, "// ");
+		}
+
+		public String toString (Object o, String ident)
+		{
+			StringBuffer buffer = new StringBuffer ();
+			// print statistics
+			buffer.append (ident + getECS () + "\n");
+			buffer.append (ident + getNFAFactory () + "\n");
+			buffer.append (ident + getDFA ());
+			return buffer.toString ();
+		}
+	};
 
 	public Lexer (Document doc)
 	{
@@ -457,13 +476,8 @@ public class Lexer
 		return dfaBase;
 	}
 
-	public String toString ()
+	public AttributeRenderer getAttributeRenderer ()
 	{
-		StringBuffer buffer = new StringBuffer ();
-		// print statistics
-		buffer.append ("// " + getECS () + "\n");
-		buffer.append ("// " + getNFAFactory () + "\n");
-		buffer.append ("// " + getDFA () + "\n");
-		return buffer.toString ();
+		return m_attributeRenderer;
 	}
 }

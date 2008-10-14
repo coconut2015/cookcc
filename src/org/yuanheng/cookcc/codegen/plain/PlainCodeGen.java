@@ -127,8 +127,6 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 
 		setup (st, doc);
 
-		st.setAttribute ("statistics", lexer);
-
 		String table = doc.getLexer ().getTable ();
 		if ("ecs".equals (table))
 		{

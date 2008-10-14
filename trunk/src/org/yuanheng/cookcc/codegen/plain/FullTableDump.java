@@ -24,29 +24,78 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.tabledump;
+package org.yuanheng.cookcc.codegen.plain;
 
-import org.antlr.stringtemplate.StringTemplate;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+
+import org.yuanheng.cookcc.OptionParser;
+import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
+import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.lexer.ECS;
 import org.yuanheng.cookcc.lexer.Lexer;
 
 /**
- * A utility class for code generators.
- *
  * @author Heng Yuan
  * @version $Id$
  */
-public abstract class TemplatedCodeGen
+public class FullTableDump implements CodeGen
 {
-	public void setup (StringTemplate st, Document doc)
+	private void printArray (char[] array, PrintWriter p)
+	{
+		p.print (" {");
+		for (int i = 0; i < array.length; ++i)
+		{
+			if ((i % 10) == 0 && i > 0)
+				p.print ("\n  ");
+			p.printf ("%6d", (int)array[i]);
+			//p.print ("\t" + (int)array[i]);
+		}
+		p.print (" }");
+	}
+
+	private void generateLexerOutput (Document doc, PrintWriter p)
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
-		if (lexer.hasBOL ())
-			st.setAttribute ("bol", Boolean.TRUE);
-		if (lexer.hasBackup ())
-			st.setAttribute ("backup", Boolean.TRUE);
-		st.setAttribute ("header", doc.getHeader ());
+
+		DFATable dfa = lexer.getDFA ();
+		ECS ecs = lexer.getECS ();
+		int[] groups = ecs.getGroups ();
+
+		int size = dfa.size ();
+		p.println ("DFA states: " + size);
+
+		char[] array = new char[lexer.getCCL ().MAX_SYMBOL + 1];
+		p.println ("dfa = ");
+		p.println ("{");
+		for (int i = 0; i < size; ++i)
+		{
+			char[] states = dfa.getRow (i).getStates ();
+			for (int j = 0; j < array.length; ++j)
+				array[j] = states[groups[j]];
+			if (i > 0)
+				p.println (",");
+			printArray (array, p);
+		}
+		p.println ();
+		p.println ("}");
+
+		p.println ();
+		p.println (lexer);
+	}
+
+	public void generateOutput (Document doc, OutputStream os)
+	{
+		PrintWriter p = new PrintWriter (os);
+		generateLexerOutput (doc, p);
+		p.flush ();
+	}
+
+	public OptionParser[] getOptionParsers ()
+	{
+		return new OptionParser[0];
 	}
 }

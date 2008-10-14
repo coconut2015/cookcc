@@ -29,6 +29,7 @@ package org.yuanheng.cookcc.codegen.tabledump;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import org.antlr.stringtemplate.AttributeRenderer;
 import org.antlr.stringtemplate.StringTemplate;
 import org.yuanheng.cookcc.OptionParser;
 import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
@@ -61,14 +62,65 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
-	private void printCharArray (char[] array, PrintWriter p)
+	private AttributeRenderer m_intArrayRenderer = new AttributeRenderer ()
 	{
-		for (int i = 0; i < array.length; ++i)
+		public String toString (Object o)
 		{
-			p.print ("\\u");
-			p.print (Integer.toHexString (array[i]));
+			int[] array = (int[])o;
+			StringBuffer buffer = new StringBuffer ();
+			for (int i = 0; i < array.length; ++i)
+			{
+				if (i > 0)
+					buffer.append (',');
+				buffer.append (Integer.toHexString (array[i]));
+			}
+			return buffer.toString ();
 		}
-	}
+		public String toString (Object o, String formatName)
+		{
+			return o.toString ();
+		}
+	};
+
+	private AttributeRenderer m_charArrayRenderer = new AttributeRenderer ()
+	{
+		public String toString (Object o)
+		{
+			char[] array = (char[])o;
+			StringBuffer buffer = new StringBuffer ();
+			for (int i = 0; i < array.length; ++i)
+			{
+				if (i > 0)
+					buffer.append (',');
+				buffer.append (Integer.toHexString (array[i]));
+			}
+			return buffer.toString ();
+		}
+		public String toString (Object o, String formatName)
+		{
+			return o.toString ();
+		}
+	};
+
+	private AttributeRenderer m_char3DArrayRenderer = new AttributeRenderer ()
+	{
+		public String toString (Object o)
+		{
+			char[][] array = (char[][])o;
+			StringBuffer buffer = new StringBuffer ();
+			for (int i = 0; i < array.length; ++i)
+			{
+				if (i > 0)
+					buffer.append ("\n");
+				buffer.append (m_char3DArrayRenderer.toString (array[i]));
+			}
+			return buffer.toString ();
+		}
+		public String toString (Object o, String formatName)
+		{
+			return o.toString ();
+		}
+	};
 
 	private void generateLexerOutput (Document doc, PrintWriter p)
 	{
@@ -79,7 +131,12 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		StringTemplate st = new StringTemplate (Resources.template);
 		setup (st, doc);
 
+		st.registerRenderer (int[].class, m_intArrayRenderer);
+		st.registerRenderer (char[].class, m_charArrayRenderer);
+		st.registerRenderer (char[][].class, m_char3DArrayRenderer);
+
 		st.setAttribute ("statistics", lexer);
+		st.setAttribute ("ecs", lexer.getECS ().getGroups ());
 
 		p.println (st);
 	}

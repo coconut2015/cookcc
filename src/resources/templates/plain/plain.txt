@@ -1,6 +1,8 @@
 # properties
 bol = $bol$
 backup = $backup$
+# ecs
+$ecs$
 # dfa
 $dfa$
 # states

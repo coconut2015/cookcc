@@ -32,11 +32,9 @@ import java.util.Properties;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.yuanheng.cookcc.codegen.plain.TemplatedCodeGen;
-import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.ECS;
 import org.yuanheng.cookcc.lexer.Lexer;
 
 import cookxml.core.util.TextUtils;
@@ -87,34 +85,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		st.setAttributes (Resources.defaults);
 		setup (st, doc);
 
-		st.setAttribute ("statistics", lexer);
-
 		p.println (st);
-
-		if (true)
-			return;
-
-
-		DFATable dfa = lexer.getDFA ();
-		ECS ecs = lexer.getECS ();
-		int[] groups = ecs.getGroups ();
-
-		int size = dfa.size ();
-		p.println ("DFA states: " + size);
-
-		char[] array = new char[lexer.getCCL ().MAX_SYMBOL + 1];
-		p.print ("dfa = \"");
-		for (int i = 0; i < size; ++i)
-		{
-			char[] states = dfa.getRow (i).getStates ();
-			for (int j = 0; j < array.length; ++j)
-				array[j] = states[groups[j]];
-			printCharArray (array, p);
-		}
-		p.println ("\";");
-
-		p.println ();
-		p.println (lexer);
 	}
 
 	public void generateOutput (Document doc, OutputStream os)

@@ -14,5 +14,5 @@ $lexerStates;separator=","$
 # lexer begins
 $lexerBegins;separator=","$
 # end
-# statistics
-# $statistics$
+# statistics:
+$statistics;format="# "$

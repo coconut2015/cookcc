@@ -47,5 +47,8 @@ public abstract class TemplatedCodeGen
 		st.setAttribute ("backup", Boolean.valueOf (lexer.hasBackup ()));
 		st.setAttribute ("header", doc.getHeader ());
 		st.setAttribute ("cases", lexer.getCaseCount ());
+
+		st.setAttribute ("statistics", lexer);
+		st.registerRenderer (Lexer.class, lexer.getAttributeRenderer ());
 	}
 }

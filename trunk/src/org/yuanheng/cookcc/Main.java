@@ -30,9 +30,10 @@ import java.lang.reflect.Constructor;
 import java.util.Properties;
 import java.util.Set;
 
-import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.input.xml.XmlParser;
+import org.yuanheng.cookcc.interfaces.CodeGen;
+import org.yuanheng.cookcc.interfaces.OptionParser;
 
 /**
  * @author Heng Yuan
@@ -94,7 +95,7 @@ public class Main
 		}
 	};
 
-	private static OptionParser s_langParser = new OptionParser ()
+	private static OptionParser s_langParser = new OptionParser()
 	{
 		public int handleOption (String[] args, int index) throws Exception
 		{

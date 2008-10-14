@@ -29,10 +29,10 @@ package org.yuanheng.cookcc.codegen.plain;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-import org.yuanheng.cookcc.OptionParser;
-import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.interfaces.CodeGen;
+import org.yuanheng.cookcc.interfaces.OptionParser;
 import org.yuanheng.cookcc.lexer.ECS;
 import org.yuanheng.cookcc.lexer.Lexer;
 

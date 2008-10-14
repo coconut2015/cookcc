@@ -336,23 +336,23 @@ public class CCL
 
 	public static boolean[] merge (boolean[] c1, boolean[] c2)
 	{
-		for (int i = 0; i < (c1.length - 1); ++i)	// don't count EOF
+		for (int i = 0; i < c1.length; ++i)
 			c1[i] |= c2[i];
 		return c1;
 	}
 
 	public static boolean[] subtract (boolean[] c1, boolean[] c2)
 	{
-		for (int i = 0; i < (c1.length - 1); ++i)	// don't count EOF
+		for (int i = 0; i < c1.length; ++i)
 			c1[i] &= !c2[i];
 		return c1;
 	}
 
-	public static boolean[] negate (boolean[] ccl)
+	public static boolean[] negate (boolean[] c)
 	{
-		for (int i = 0; i < (ccl.length - 1); ++i)	// don't count EOF
-			ccl[i] = !ccl[i];
-		return ccl;
+		for (int i = 0; i < (c.length - 1); ++i)	// does not count EOF
+			c[i] = !c[i];
+		return c;
 	}
 
 	private static String toString (char c)

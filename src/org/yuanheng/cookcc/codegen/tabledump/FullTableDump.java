@@ -29,6 +29,7 @@ package org.yuanheng.cookcc.codegen.tabledump;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import org.yuanheng.cookcc.OptionParser;
 import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.Document;
@@ -91,5 +92,10 @@ public class FullTableDump implements CodeGen
 		PrintWriter p = new PrintWriter (os);
 		generateLexerOutput (doc, p);
 		p.flush ();
+	}
+
+	public OptionParser[] getOptionParsers ()
+	{
+		return new OptionParser[0];
 	}
 }

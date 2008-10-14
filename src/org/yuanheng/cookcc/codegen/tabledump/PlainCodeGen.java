@@ -24,61 +24,75 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.xml;
+package org.yuanheng.cookcc.codegen.tabledump;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
+import org.antlr.stringtemplate.StringTemplate;
+import org.yuanheng.cookcc.OptionParser;
 import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.lexer.Lexer;
+
+import cookxml.core.util.TextUtils;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class XmlOutput implements CodeGen
+public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 {
-	private void printTokens (Document doc, PrintWriter p)
+	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
+
+	private static class Resources
 	{
-		String[] tokens = doc.getTokens ();
-		if (tokens.length == 0)
-			return;
-		p.print ("\t<tokens>");
-		for (int i = 0; i < tokens.length; ++i)
+		private static String template;
+		static
 		{
-			if ((i % 5)> 0)
-				p.print (" ");
-			else
+			try
 			{
-				p.println ();
-				p.print ("\t\t");
+				template = TextUtils.readText (TEMPLATE_URI, Resources.class.getClassLoader ());
 			}
-			p.print (tokens[i]);
+			catch (Exception ex)
+			{
+				ex.printStackTrace ();
+			}
 		}
-		p.println ();
-		p.println ("\t</tokens>");
 	}
 
-	private void printDocument (Document doc, PrintWriter p)
+	private void printCharArray (char[] array, PrintWriter p)
 	{
-		p.println ("<codecc>");
-		StringBuffer buffer = doc.getHeader ();
-		if (buffer.length () > 0)
+		for (int i = 0; i < array.length; ++i)
 		{
-			p.print ("\t<header>");
-			p.print (buffer);
-			p.println ("</header>");
+			p.print ("\\u");
+			p.print (Integer.toHexString (array[i]));
 		}
-		printTokens (doc, p);
-		new XmlLexerOutput ().printLexer (doc.getLexer (), p);
-		new XmlParserOutput ().printParserDoc (doc.getParser (), p);
-		p.println ("</codecc>");
+	}
+
+	private void generateLexerOutput (Document doc, PrintWriter p)
+	{
+		Lexer lexer = Lexer.getLexer (doc);
+		if (lexer == null)
+			return;
+
+		StringTemplate st = new StringTemplate (Resources.template);
+		setup (st, doc);
+
+		st.setAttribute ("statistics", lexer);
+
+		p.println (st);
 	}
 
 	public void generateOutput (Document doc, OutputStream os)
 	{
 		PrintWriter p = new PrintWriter (os);
-		printDocument (doc, p);
+		generateLexerOutput (doc, p);
 		p.flush ();
+	}
+
+	public OptionParser[] getOptionParsers ()
+	{
+		return new OptionParser[0];
 	}
 }

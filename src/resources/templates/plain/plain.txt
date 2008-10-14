@@ -1,0 +1,10 @@
+# properties
+bol = $bol$
+backup = $backup$
+# dfa
+$dfa$
+# states
+$states$
+# end
+# statistics
+# $statistics$

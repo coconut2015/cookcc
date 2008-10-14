@@ -24,20 +24,29 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.interfaces;
+package org.yuanheng.cookcc.codegen.tabledump;
 
-import java.io.OutputStream;
-
-import org.yuanheng.cookcc.OptionParser;
+import org.antlr.stringtemplate.StringTemplate;
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.lexer.Lexer;
 
 /**
+ * A utility class for code generators.
+ *
  * @author Heng Yuan
  * @version $Id$
  */
-public interface CodeGen
+public abstract class TemplatedCodeGen
 {
-	public void generateOutput (Document doc, OutputStream os);
-
-	public OptionParser[] getOptionParsers ();
+	public void setup (StringTemplate st, Document doc)
+	{
+		Lexer lexer = Lexer.getLexer (doc);
+		if (lexer == null)
+			return;
+		if (lexer.hasBOL ())
+			st.setAttribute ("bol", Boolean.TRUE);
+		if (lexer.hasBackup ())
+			st.setAttribute ("backup", Boolean.TRUE);
+		st.setAttribute ("header", doc.getHeader ());
+	}
 }

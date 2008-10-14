@@ -75,6 +75,17 @@ public class RuleParser
 			return m_pos == m_currentStr.length ();
 		}
 
+		public Character ifMatchEsc ()
+		{
+			if (!ifMatch ('\\'))
+				return null;
+			--m_pos;
+			int[] escPos = new int[]{ m_pos };
+			char ch = CCL.esc (m_currentStr, escPos);
+			m_pos = escPos[0];
+			return new Character (ch);
+		}
+
 		public boolean ifMatchReplaceName ()
 		{
 			if (!ifMatch ('{'))
@@ -370,7 +381,10 @@ public class RuleParser
 
 	private Character parseChar (boolean[] charSet)
 	{
-		return m_lex.ifMatch (charSet);
+		Character ch = m_lex.ifMatchEsc ();
+		if (ch == null)
+			ch = m_lex.ifMatch (charSet);
+		return ch;
 	}
 
 	private Integer parseNumber ()

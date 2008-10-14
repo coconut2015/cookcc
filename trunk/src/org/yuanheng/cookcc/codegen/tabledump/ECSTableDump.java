@@ -32,7 +32,6 @@ import java.io.PrintWriter;
 import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.LexerDoc;
 import org.yuanheng.cookcc.lexer.ECS;
 import org.yuanheng.cookcc.lexer.Lexer;
 
@@ -57,20 +56,9 @@ public class ECSTableDump implements CodeGen
 
 	private void generateLexerOutput (Document doc, PrintWriter p)
 	{
-		LexerDoc lexerDoc = doc.getLexer ();
-		if (lexerDoc == null)
+		Lexer lexer = Lexer.getLexer (doc);
+		if (lexer == null)
 			return;
-
-		Object obj = lexerDoc.getUserObject ();
-		Lexer lexer;
-		if (obj == null || !(obj instanceof Lexer))
-		{
-			lexer = new Lexer (doc);
-			lexer.parse ();
-			lexerDoc.setUserObject (lexer);
-		}
-		else
-			lexer = (Lexer)obj;
 
 		DFATable dfa = lexer.getDFA ();
 		ECS ecs = lexer.getECS ();
@@ -80,6 +68,15 @@ public class ECSTableDump implements CodeGen
 		p.println ("DFA states: " + size);
 
 		char[] array = new char[ecs.getGroupCount ()];
+
+		p.println ("ecs = ");
+		char[] ecsTable = new char[lexer.getCCL ().MAX_SYMBOL + 1];
+		for (int i = 0; i < ecsTable.length; ++i)
+			ecsTable[i] = (char)groups[i];
+		printArray (ecsTable, p);
+		p.println ();
+
+
 		p.println ("dfa = ");
 		p.println ("{");
 		for (int i = 0; i < size; ++i)

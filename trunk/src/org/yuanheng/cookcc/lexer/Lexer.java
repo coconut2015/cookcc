@@ -45,6 +45,32 @@ public class Lexer
 	public static MessageFormat WARN_MSG = new MessageFormat ("Warning: {0}");
 	public static MessageFormat WARN_NO_RULES = new MessageFormat ("no rules for state: {0}");
 
+	private final static String PROP_LEXER = "Lexer";
+	private final static String PROP_NFA = "NFA";
+
+	private final static String PROP_START_SET = "START_SET";
+	private final static String PROP_BOL_SET = "BOL_SET";
+
+	public static Lexer getLexer (Document doc)
+	{
+		if (doc == null)
+			return null;
+		LexerDoc lexerDoc = doc.getLexer ();
+		if (lexerDoc == null)
+			return null;
+		Object obj = lexerDoc.getProperty (PROP_LEXER);
+		Lexer lexer;
+		if (obj == null || !(obj instanceof Lexer))
+		{
+			lexer = new Lexer (doc);
+			lexer.parse ();
+			lexerDoc.setProperty (PROP_LEXER, lexer);
+		}
+		else
+			lexer = (Lexer)obj;
+		return lexer;
+	}
+
 	private final Document m_doc;
 	private NFAFactory m_nfaFactory;
 	private int m_caseCount;
@@ -140,7 +166,8 @@ public class Lexer
 			if (rules.length == 0)
 				warn (WARN_NO_RULES.format (new Object[]{ lexerStates[i].getName () }));
 
-			ESet nfas = new ESet ();
+			ESet startSet = new ESet ();
+			ESet bolSet = new ESet ();
 
 			for (int j = 0; j < rules.length; ++j)
 			{
@@ -153,14 +180,18 @@ public class Lexer
 					NFA nfa = parser.parse (rule.getLineNumber (), pattern.getPattern ());
 					if (parser.isBOL ())
 						pattern.setBOL (true);
-					pattern.setUserObject (nfa);
-					nfas.add (nfa);
+					pattern.setProperty (PROP_NFA, nfa);
+					startSet.add (nfa);
 					if (pattern.isBOL ())
+					{
 						m_bol = true;
+						bolSet.add (nfa);
+					}
 				}
 			}
 
-			lexerStates[i].setUserObject (nfas);
+			lexerStates[i].setProperty (PROP_START_SET, startSet);
+			lexerStates[i].setProperty (PROP_BOL_SET, bolSet);
 		}
 
 		// swap INITIAL state to the front if possible
@@ -178,24 +209,10 @@ public class Lexer
 
 		for (int i = 0; i < lexerStates.length; ++i)
 		{
-			lexerState = lexerStates[i];
-			ESet start = (ESet)lexerState.getUserObject ();
-			ESet bolStart = new ESet ();
+			ESet startSet = (ESet)lexerState.getProperty (PROP_START_SET);
+			ESet bolSet = (ESet)lexerState.getProperty (PROP_BOL_SET);
 
-			RuleDoc[] rules = lexerStates[i].getRules ();
-			for (int j = 0; j < rules.length; ++j)
-			{
-				RuleDoc rule = rules[j];
-				PatternDoc[] patterns = rule.getPatterns ();
-				for (int k = 0; k < patterns.length; ++k)
-				{
-					PatternDoc pattern = patterns[k];
-					if (pattern.isBOL ())
-						bolStart.add ((NFA)pattern.getUserObject ());
-				}
-			}
-
-			buildDFA (start, bolStart);
+			buildDFA (startSet, bolSet);
 		}
 	}
 
@@ -315,7 +332,7 @@ public class Lexer
 		return s;
 	}
 
-	private int buildDFA (ESet start, ESet bolstart)
+	private int buildDFA (ESet startSet, ESet bolSet)
 	{
 		m_backupCases = new boolean[m_caseCount];
 
@@ -327,8 +344,8 @@ public class Lexer
 
 		int Mark;
 
-		ESet s0 = eClosure (start);
-		ESet s1 = eClosure (bolstart);
+		ESet s0 = eClosure (startSet);
+		ESet s1 = eClosure (bolSet);
 
 		ESet U = new ESet ();
 

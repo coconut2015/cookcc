@@ -32,7 +32,6 @@ import java.io.PrintWriter;
 import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.LexerDoc;
 import org.yuanheng.cookcc.lexer.ECS;
 import org.yuanheng.cookcc.lexer.Lexer;
 
@@ -57,20 +56,9 @@ public class FullTableDump implements CodeGen
 
 	private void generateLexerOutput (Document doc, PrintWriter p)
 	{
-		LexerDoc lexerDoc = doc.getLexer ();
-		if (lexerDoc == null)
+		Lexer lexer = Lexer.getLexer (doc);
+		if (lexer == null)
 			return;
-
-		Object obj = lexerDoc.getUserObject ();
-		Lexer lexer;
-		if (obj == null || !(obj instanceof Lexer))
-		{
-			lexer = new Lexer (doc);
-			lexer.parse ();
-			lexerDoc.setUserObject (lexer);
-		}
-		else
-			lexer = (Lexer)obj;
 
 		DFATable dfa = lexer.getDFA ();
 		ECS ecs = lexer.getECS ();

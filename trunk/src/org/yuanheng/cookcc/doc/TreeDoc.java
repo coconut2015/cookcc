@@ -26,21 +26,32 @@
  */
 package org.yuanheng.cookcc.doc;
 
+import java.util.HashMap;
+
 /**
  * @author Heng Yuan
  * @version $Id$
  */
 public abstract class TreeDoc
 {
-	private Object m_userObject;
+	private HashMap<String,Object> m_properties;
 
-	public Object getUserObject ()
+	public void setProperty (String property, Object value)
 	{
-		return m_userObject;
+		if (property == null)
+			return;
+		if (m_properties == null)
+			m_properties = new HashMap<String,Object> ();
+		if (value == null)
+			m_properties.remove (value);
+		else
+			m_properties.put (property, value);
 	}
 
-	public void setUserObject (Object userObject)
+	public Object getProperty (String property)
 	{
-		m_userObject = userObject;
+		if (m_properties == null)
+			return null;
+		return m_properties.get (property);
 	}
 }

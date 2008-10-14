@@ -82,6 +82,8 @@ public class Lexer
 	private final DFATable m_dfa = new DFATable ();
 	private Vector<ESet> _Dstates = new Vector<ESet> ();
 	private TreeMap<ESet, Integer> _DstatesSet = new TreeMap<ESet, Integer> ();
+	private LexerStateDoc[] m_lexerStates;
+	private int[] m_beginLocations;
 
 	public Lexer (Document doc)
 	{
@@ -146,6 +148,16 @@ public class Lexer
 		return m_dfa;
 	}
 
+	public LexerStateDoc[] getLexerStates ()
+	{
+		return m_lexerStates;
+	}
+
+	public int[] getBeginLocations ()
+	{
+		return m_beginLocations;
+	}
+
 	public void warn (String msg)
 	{
 		System.out.println (WARN_MSG.format (new Object[]{ msg }));
@@ -207,10 +219,16 @@ public class Lexer
 			}
 		}
 
+		m_lexerStates = lexerStates;
+		m_beginLocations = new int[lexerStates.length];
+
 		for (int i = 0; i < lexerStates.length; ++i)
 		{
+			lexerState = lexerStates[i];
 			ESet startSet = (ESet)lexerState.getProperty (PROP_START_SET);
 			ESet bolSet = (ESet)lexerState.getProperty (PROP_BOL_SET);
+
+			m_beginLocations[i] = _Dstates.size ();
 
 			buildDFA (startSet, bolSet);
 		}

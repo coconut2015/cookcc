@@ -43,10 +43,9 @@ public abstract class TemplatedCodeGen
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
-		if (lexer.hasBOL ())
-			st.setAttribute ("bol", Boolean.TRUE);
-		if (lexer.hasBackup ())
-			st.setAttribute ("backup", Boolean.TRUE);
+		st.setAttribute ("bol", Boolean.valueOf (lexer.hasBOL ()));
+		st.setAttribute ("backup", Boolean.valueOf (lexer.hasBackup ()));
 		st.setAttribute ("header", doc.getHeader ());
+		st.setAttribute ("cases", lexer.getCaseCount ());
 	}
 }

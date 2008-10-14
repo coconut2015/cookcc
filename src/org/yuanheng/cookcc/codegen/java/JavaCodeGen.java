@@ -31,11 +31,11 @@ import java.io.PrintWriter;
 import java.util.Properties;
 
 import org.antlr.stringtemplate.StringTemplate;
-import org.yuanheng.cookcc.OptionParser;
-import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
 import org.yuanheng.cookcc.codegen.plain.TemplatedCodeGen;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.interfaces.CodeGen;
+import org.yuanheng.cookcc.interfaces.OptionParser;
 import org.yuanheng.cookcc.lexer.ECS;
 import org.yuanheng.cookcc.lexer.Lexer;
 

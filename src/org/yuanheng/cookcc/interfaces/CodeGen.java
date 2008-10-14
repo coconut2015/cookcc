@@ -24,11 +24,10 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.interfaces;
+package org.yuanheng.cookcc.interfaces;
 
 import java.io.OutputStream;
 
-import org.yuanheng.cookcc.OptionParser;
 import org.yuanheng.cookcc.doc.Document;
 
 /**

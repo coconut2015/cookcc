@@ -39,23 +39,23 @@ public class zz_CCL
 	@Test
 	public void escTest () throws EscapeSequenceException
 	{
-		Assert.assertEquals ('a', CCL.esc ("\\abc".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\b', CCL.esc ("\\bc".toCharArray (), new int[]{ 0 }));
+		Assert.assertEquals ('a', CCL.esc ("\\abc", new int[]{ 0 }));
+		Assert.assertEquals ('\b', CCL.esc ("\\bc", new int[]{ 0 }));
 
-		Assert.assertEquals ('\1', CCL.esc ("\\1".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\12', CCL.esc ("\\12".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\123".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\1234".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\123', CCL.esc ("\\123]".toCharArray (), new int[]{ 0 }));
+		Assert.assertEquals ('\1', CCL.esc ("\\1", new int[]{ 0 }));
+		Assert.assertEquals ('\12', CCL.esc ("\\12", new int[]{ 0 }));
+		Assert.assertEquals ('\123', CCL.esc ("\\123", new int[]{ 0 }));
+		Assert.assertEquals ('\123', CCL.esc ("\\1234", new int[]{ 0 }));
+		Assert.assertEquals ('\123', CCL.esc ("\\123]", new int[]{ 0 }));
 
-		Assert.assertEquals ('\b', CCL.esc ("\b".toCharArray (), new int[]{ 0 }));
+		Assert.assertEquals ('\b', CCL.esc ("\b", new int[]{ 0 }));
 
-		Assert.assertEquals (1, CCL.esc ("\\x1".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals (18, CCL.esc ("\\x12".toCharArray (), new int[]{ 0 }));
+		Assert.assertEquals (1, CCL.esc ("\\x1", new int[]{ 0 }));
+		Assert.assertEquals (18, CCL.esc ("\\x12", new int[]{ 0 }));
 
-		Assert.assertEquals ('\u655f', CCL.esc ("\\u655f".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\u1234', CCL.esc ("\\u12345".toCharArray (), new int[]{ 0 }));
-		Assert.assertEquals ('\u1234', CCL.esc ("\\u1234]".toCharArray (), new int[]{ 0 }));
+		Assert.assertEquals ('\u655f', CCL.esc ("\\u655f", new int[]{ 0 }));
+		Assert.assertEquals ('\u1234', CCL.esc ("\\u12345", new int[]{ 0 }));
+		Assert.assertEquals ('\u1234', CCL.esc ("\\u1234]", new int[]{ 0 }));
 	}
 
 	@Test

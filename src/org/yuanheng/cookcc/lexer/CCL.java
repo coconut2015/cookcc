@@ -105,31 +105,31 @@ public class CCL
 	/**
 	 * Compute the escape sequence character.
 	 *
-	 * @return	the character scanned, or -1 on error (end of input etc).  pos
-	 * 			also stores the scanned position.
-	 * @throws	org.yuanheng.cookcc.exception.EscapeSequenceException
-	 * 			when the input has invalid format or is empty
-	 * @param	inputChars
+	 * @param	input
 	 * 			input char array
 	 * @param	currentPos
 	 * 			an array size 1 of the current position to be scanned.  New
 	 * 			position after scan is stored back into this array.
+	 * @return	the character scanned, or -1 on error (end of input etc).  pos
+	 * 			also stores the scanned position.
+	 * @throws	org.yuanheng.cookcc.exception.EscapeSequenceException
+	 * 			when the input has invalid format or is empty
 	 */
-	public static char esc (char[] inputChars, int[] currentPos) throws EscapeSequenceException
+	public static char esc (String input, int[] currentPos) throws EscapeSequenceException
 	{
 		int start = currentPos[0];	// remember the original position for error reporting
 		int pos = currentPos[0];
-		if (inputChars[pos] != '\\')
+		if (input.charAt (pos) != '\\')
 		{
 			++currentPos[0];
-			return inputChars[pos];	// not a escape code
+			return input.charAt (pos);	// not a escape code
 		}
 		else
 		{
 			++pos;					// skip '\\'
-			if (pos >= inputChars.length)
+			if (pos >= input.length ())
 				throw new EscapeSequenceException (new String ("\\"));
-			char ch = inputChars[pos++];
+			char ch = input.charAt (pos++);
 			currentPos[0] = pos;
 			switch (ch)
 			{
@@ -158,9 +158,9 @@ public class CCL
 				{
 					int rval = 0;
 
-					if (pos >= inputChars.length)
-						throw new EscapeSequenceException (new String (inputChars, start, inputChars.length - start));
-					ch = inputChars[pos++];
+					if (pos >= input.length ())
+						throw new EscapeSequenceException (input.substring (start));
+					ch = input.charAt (pos++);
 					if ('0' <= ch && ch <= '9')
 						rval = ch - '0';
 					else if ('a' <= ch && ch <= 'f')
@@ -168,15 +168,15 @@ public class CCL
 					else if ('A' <= ch && ch <= 'F')
 						rval = ch - 'A' + 10;
 					else
-						throw new EscapeSequenceException (new String (inputChars, start, inputChars.length - start));
+						throw new EscapeSequenceException (input.substring (start));
 
-					if (pos >= inputChars.length)
+					if (pos >= input.length ())
 					{
 						currentPos[0] = pos;
 						return (char)rval;
 					}
 
-					ch = inputChars[pos++];
+					ch = input.charAt (pos++);
 					if ('0' <= ch && ch <= '9')
 						rval = (rval << 4) + ch - '0';
 					else if ('a' <= ch && ch <= 'f')
@@ -192,9 +192,9 @@ public class CCL
 				{
 					int rval = 0;
 
-					if (pos >= inputChars.length)
-						throw new EscapeSequenceException (new String (inputChars, start, inputChars.length - start));
-					ch = inputChars[pos++];
+					if (pos >= input.length ())
+						throw new EscapeSequenceException (input.substring (start));
+					ch = input.charAt (pos++);
 					if ('0' <= ch && ch <= '9')
 						rval = ch - '0';
 					else if ('a' <= ch && ch <= 'f')
@@ -202,17 +202,17 @@ public class CCL
 					else if ('A' <= ch && ch <= 'F')
 						rval = ch - 'A' + 10;
 					else
-						throw new EscapeSequenceException (new String (inputChars, start, inputChars.length - start));
+						throw new EscapeSequenceException (input.substring (start));
 
 					for (int i = 0; i < 3; ++i)
 					{
-						if (pos >= inputChars.length)
+						if (pos >= input.length ())
 						{
 							currentPos[0] = pos;
 							return (char)rval;
 						}
 
-						ch = inputChars[pos++];
+						ch = input.charAt (pos++);
 						if ('0' <= ch && ch <= '9')
 							rval = (rval << 4) + ch - '0';
 						else if ('a' <= ch && ch <= 'f')
@@ -237,13 +237,13 @@ public class CCL
 					{
 						int rval = ch - '0';
 
-						if (pos >= inputChars.length)
+						if (pos >= input.length ())
 						{
 							currentPos[0] = pos;
 							return (char)rval;
 						}
 
-						ch = inputChars[pos++];
+						ch = input.charAt (pos++);
 						if ('0' <= ch && ch <= '7')
 							rval = (rval << 3) + ch - '0';
 						else
@@ -252,13 +252,13 @@ public class CCL
 							return (char)rval;
 						}
 
-						if (pos >= inputChars.length)
+						if (pos >= input.length ())
 						{
 							currentPos[0] = pos;
 							return (char)rval;
 						}
 
-						ch = inputChars[pos++];
+						ch = input.charAt (pos++);
 						if ('0' <= ch && ch <= '7')
 							rval = (rval << 3) + ch - '0';
 						currentPos[0] = pos;
@@ -271,14 +271,13 @@ public class CCL
 
 	public boolean[] parseCCL (String input) throws CCLException
 	{
-		char[] inputChars = input.toCharArray ();
 		int[] escPos = new int[1];
 		int pos = 0;
 
 		boolean[] map = new boolean[MAX_SYMBOL + 1];
 
 		pos++;						// skip past the [
-		boolean negative = inputChars[pos] == '^';
+		boolean negative = input.charAt (pos) == '^';
 		if (negative)				// check for negative
 			pos++;
 
@@ -288,12 +287,12 @@ public class CCL
 		{
 			char first = '\0';
 			char ch;
-			while (pos < inputChars.length && (ch = inputChars[pos]) != ']')
+			while (pos < input.length () && (ch = input.charAt (pos)) != ']')
 			{
 				if (ch != '-')			// potentially the first side of a range
 				{
 					escPos[0] = pos;
-					first = esc (inputChars, escPos);	// check escape sequence
+					first = esc (input, escPos);	// check escape sequence
 					map[first] = true;
 					pos = escPos[0];
 				}
@@ -307,7 +306,7 @@ public class CCL
 					char last;
 					++pos;				// skip '-'
 					escPos[0] = pos;
-					last = esc (inputChars, escPos);	// check escape sequence
+					last = esc (input, escPos);	// check escape sequence
 					pos = escPos[0];
 					if (last < first)
 					{
@@ -325,33 +324,33 @@ public class CCL
 			throw new CCLException (input, ex);
 		}
 
-		if (inputChars[pos] != ']')
+		if (input.charAt (pos) != ']')
 			throw new CCLException (input);			// give error
 
 		if (negative)
-			for (int i = 0; i <= MAX_SYMBOL; ++i)
-				map[i] = !map[i];					// invert all bits
+			for (int i = 0; i < MAX_SYMBOL; ++i)	// don't count EOF
+				map[i] = !map[i];					// invert all bits except EOF
 
 		return map;
 	}
 
 	public static boolean[] merge (boolean[] c1, boolean[] c2)
 	{
-		for (int i = 0; i < c1.length; ++i)
+		for (int i = 0; i < (c1.length - 1); ++i)	// don't count EOF
 			c1[i] |= c2[i];
 		return c1;
 	}
 
 	public static boolean[] subtract (boolean[] c1, boolean[] c2)
 	{
-		for (int i = 0; i < c1.length; ++i)
+		for (int i = 0; i < (c1.length - 1); ++i)	// don't count EOF
 			c1[i] &= !c2[i];
 		return c1;
 	}
 
 	public static boolean[] negate (boolean[] ccl)
 	{
-		for (int i = 0; i < ccl.length; ++i)
+		for (int i = 0; i < (ccl.length - 1); ++i)	// don't count EOF
 			ccl[i] = !ccl[i];
 		return ccl;
 	}
@@ -404,7 +403,7 @@ public class CCL
 		int cont = 0;
 		int i;
 
-		for (i = 0; i <= MAX_SYMBOL; i++)
+		for (i = 0; i < MAX_SYMBOL; i++)		// don't count EOF
 		{
 			if (ccl[i])
 			{

@@ -89,7 +89,6 @@ public class ECS
 
 	public void add (boolean[] ccl)
 	{
-		System.out.println ("add ccl: " + CCL.getByteCCL ().toString (ccl));
 		int newGroup = ++m_groupCount;
 		for (int i = 0; i < ccl.length; ++i)
 			if (ccl[i])

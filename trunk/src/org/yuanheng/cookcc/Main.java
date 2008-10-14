@@ -68,6 +68,7 @@ public class Main
 		{
 			if (!OPTION_HELP.equals (args[index]))
 				return 0;
+			s_printUsage = true;
 			return 1;
 		}
 
@@ -166,6 +167,9 @@ public class Main
 		{
 			s_printUsage = false;
 
+			Package p = Package.getPackage ("org.yuanheng.cookcc");
+
+			System.out.println ("CookCC version " + p.getImplementationVersion ());
 			System.out.println ("Usage: cookcc [cookcc options] [language options] file");
 			for (int j = 0; j < s_optionParsers.length; ++j)
 				System.out.println (s_optionParsers[j]);

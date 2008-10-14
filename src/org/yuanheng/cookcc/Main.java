@@ -206,7 +206,7 @@ public class Main
 			return;
 		}
 
-		Document doc = XmlParser.parseXml (args[0]);
+		Document doc = XmlParser.parseXml (args[fileIndex]);
 		s_codeGen.generateOutput (doc, System.out);
 	}
 

@@ -1,11 +1,4 @@
 <cookcc>
-	<!-- header is the general header such as copyright notice for the generated output file -->
-	<header>
-/*
- *	This is a simple word count program.
- */</header>
-	<tokens>
-	</tokens>
 	<lexer>
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
@@ -26,6 +19,4 @@
 			<action></action>
 		</rule>
 	</lexer>
-	<parser>
-	</parser>
 </cookcc>

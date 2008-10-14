@@ -24,35 +24,57 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.tabledump;
+package org.yuanheng.cookcc.codegen.java;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Properties;
 
+import org.antlr.stringtemplate.StringTemplate;
 import org.yuanheng.cookcc.OptionParser;
 import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
+import org.yuanheng.cookcc.codegen.tabledump.TemplatedCodeGen;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.lexer.ECS;
 import org.yuanheng.cookcc.lexer.Lexer;
 
+import cookxml.core.util.TextUtils;
+
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class ECSTableDump implements CodeGen
+public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 {
-	private void printArray (char[] array, PrintWriter p)
+	public final static String DEFAULTS_URI = "/resources/templates/java/defaults.properties";
+	public final static String TEMPLATE_URI = "resources/templates/java/class.txt";
+
+	private static class Resources
 	{
-		p.print (" {");
+		private final static Properties defaults = new Properties ();
+		private static String template;
+		static
+		{
+			try
+			{
+				defaults.load (Resources.class.getResourceAsStream (DEFAULTS_URI));
+				template = TextUtils.readText (TEMPLATE_URI, Resources.class.getClassLoader ());
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace ();
+			}
+		}
+	}
+
+	private void printCharArray (char[] array, PrintWriter p)
+	{
 		for (int i = 0; i < array.length; ++i)
 		{
-			if ((i % 10) == 0 && i > 0)
-				p.print ("\n  ");
-			p.printf ("%6d", (int)array[i]);
-			//p.print ("\t" + (int)array[i]);
+			p.print ("\\u");
+			p.print (Integer.toHexString (array[i]));
 		}
-		p.print (" }");
 	}
 
 	private void generateLexerOutput (Document doc, PrintWriter p)
@@ -61,6 +83,18 @@ public class ECSTableDump implements CodeGen
 		if (lexer == null)
 			return;
 
+		StringTemplate st = new StringTemplate (Resources.template);
+		st.setAttributes (Resources.defaults);
+		setup (st, doc);
+
+		st.setAttribute ("statistics", lexer);
+
+		p.println (st);
+
+		if (true)
+			return;
+
+
 		DFATable dfa = lexer.getDFA ();
 		ECS ecs = lexer.getECS ();
 		int[] groups = ecs.getGroups ();
@@ -68,29 +102,16 @@ public class ECSTableDump implements CodeGen
 		int size = dfa.size ();
 		p.println ("DFA states: " + size);
 
-		char[] array = new char[ecs.getGroupCount ()];
-
-		p.println ("ecs = ");
-		char[] ecsTable = new char[lexer.getCCL ().MAX_SYMBOL + 1];
-		for (int i = 0; i < ecsTable.length; ++i)
-			ecsTable[i] = (char)groups[i];
-		printArray (ecsTable, p);
-		p.println ();
-
-
-		p.println ("dfa = ");
-		p.println ("{");
+		char[] array = new char[lexer.getCCL ().MAX_SYMBOL + 1];
+		p.print ("dfa = \"");
 		for (int i = 0; i < size; ++i)
 		{
 			char[] states = dfa.getRow (i).getStates ();
 			for (int j = 0; j < array.length; ++j)
-				array[j] = states[j];
-			if (i > 0)
-				p.println (",");
-			printArray (array, p);
+				array[j] = states[groups[j]];
+			printCharArray (array, p);
 		}
-		p.println ();
-		p.println ("}");
+		p.println ("\";");
 
 		p.println ();
 		p.println (lexer);

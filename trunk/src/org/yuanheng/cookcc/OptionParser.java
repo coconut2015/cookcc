@@ -24,20 +24,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.interfaces;
-
-import java.io.OutputStream;
-
-import org.yuanheng.cookcc.OptionParser;
-import org.yuanheng.cookcc.doc.Document;
+package org.yuanheng.cookcc;
 
 /**
+ * OptionParser is used in parsing user command line arguments.
+ * It's toString () function is used to print usage.
+ *
  * @author Heng Yuan
  * @version $Id$
  */
-public interface CodeGen
+public interface OptionParser
 {
-	public void generateOutput (Document doc, OutputStream os);
-
-	public OptionParser[] getOptionParsers ();
+	/**
+	 * This function parses the argument at the current index.
+	 * If this function recognizes the argument, it would return
+	 * the number of arguments being read.  Otherwise, just return
+	 * 0 to indicate that it was not handled.
+	 *
+	 * @param	args
+	 *			the command line arguments.
+	 * @param	index
+	 *			the current index of the argument being handled at.
+	 * @return	the number of arguments being processed.
+	 * @throws	Exception
+	 *			in case of error.
+	 */
+	public int handleOption (String[] args, int index) throws Exception;
 }

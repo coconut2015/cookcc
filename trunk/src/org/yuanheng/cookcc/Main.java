@@ -26,7 +26,11 @@
  */
 package org.yuanheng.cookcc;
 
-import org.yuanheng.cookcc.codegen.java.JavaCodeGen;
+import java.lang.reflect.Constructor;
+import java.util.Properties;
+import java.util.Set;
+
+import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.input.xml.XmlParser;
 
@@ -36,14 +40,180 @@ import org.yuanheng.cookcc.input.xml.XmlParser;
  */
 public class Main
 {
+	public static String OPTION_HELP = "-help";
+	public static String OPTION_QUIET = "-quiet";
+	public static String OPTION_LANG = "-lang";
+
+	private static Properties s_properties = new Properties ();
+	static
+	{
+		try
+		{
+			s_properties.load (Main.class.getClassLoader ().getResourceAsStream ("resources/codegen.properties"));
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace ();
+		}
+	}
+
+	private static boolean s_printUsage;
+	private static String s_lang = s_properties.getProperty ("default");
+	private static CodeGen s_codeGen;
+	private static boolean s_quiet;
+
+	private static OptionParser s_helpParser = new OptionParser ()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_HELP.equals (args[index]))
+				return 0;
+			return 1;
+		}
+
+		public String toString ()
+		{
+			return OPTION_HELP + "\t\t\t\tPrint this help message.";
+		}
+	};
+
+	private static OptionParser s_quietParser = new OptionParser ()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_QUIET.equals (args[index]))
+				return 0;
+			s_quiet = true;
+			return 1;
+		}
+
+		public String toString ()
+		{
+			return OPTION_QUIET + "\t\t\t\tSuppress console messages.";
+		}
+	};
+
+	private static OptionParser s_langParser = new OptionParser ()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_LANG.equals (args[index]))
+				return 0;
+			s_lang = args[index + 1];
+			return 2;
+		}
+
+		public String toString ()
+		{
+			StringBuffer buffer = new StringBuffer ();
+			buffer.append (OPTION_LANG + "\t\t\t\tSelect output language.  Default is ");
+			buffer.append (s_properties.getProperty ("default"));
+			buffer.append ("\t\tAvailable languages:\t");
+			Set<Object> keys = s_properties.keySet ();
+			keys.remove ("default");
+			buffer.append (keys);
+			return buffer.toString ();
+		}
+	};
+
+	private static OptionParser[] s_optionParsers = new OptionParser[]
+	{
+		s_helpParser,
+		s_langParser,
+		s_quietParser
+	};
+
+	private static int parseOptions (String[] args) throws Exception
+	{
+		OptionParser[] optionParsers = s_optionParsers;
+		int i;
+		for (i = 0; i < args.length;)
+		{
+			int j;
+			for (j = 0; j < optionParsers.length; ++j)
+			{
+				int count = optionParsers[j].handleOption (args, i);
+				if (count > 0)
+				{
+					i += count;
+					break;
+				}
+			}
+			if (j == optionParsers.length)
+				break;
+		}
+
+		CodeGen codeGen = getCodeGen ();
+		s_codeGen = codeGen;
+		optionParsers = codeGen.getOptionParsers ();
+		for (; i < args.length;)
+		{
+			int j;
+			for (j = 0; j < optionParsers.length; ++j)
+			{
+				int count = optionParsers[j].handleOption (args, i);
+				if (count > 0)
+				{
+					i += count;
+					break;
+				}
+			}
+			if (j == optionParsers.length)
+				break;
+		}
+
+		if (s_printUsage || args.length == 0)
+		{
+			s_printUsage = false;
+
+			System.out.println ("Usage: cookcc [cookcc options] [language options] file");
+			for (int j = 0; j < s_optionParsers.length; ++j)
+				System.out.println (s_optionParsers[j]);
+			System.out.println ();
+			System.out.println (s_lang + " options:");
+			for (int j = 0; j < optionParsers.length; ++j)
+				System.out.println (optionParsers[j]);
+			return -1;
+		}
+
+		return i;
+	}
+
+	private static CodeGen getCodeGen () throws Exception
+	{
+		if (s_lang == null)
+			throw new IllegalArgumentException ("output language not specified.");
+		String codeGen = (String)s_properties.get (s_lang);
+		if (codeGen == null)
+			throw new IllegalArgumentException ("unknown output language: " + s_lang);
+		Class codeGenClass = Class.forName (codeGen);
+		Constructor ctor = codeGenClass.getConstructor (new Class[0]);
+		if (ctor == null)
+			throw new IllegalArgumentException ("default constructor not found in the doclet class.");
+		return (CodeGen)ctor.newInstance (new Object[0]);
+	}
+
 	public static void main (String[] args) throws Exception
 	{
-		if (args.length != 1)
+		int fileIndex = parseOptions (args);
+
+		if (fileIndex < 0 || s_codeGen == null)
 			return;
+
+		if (fileIndex >= args.length)
+		{
+			error ("no input file specified.");
+			return;
+		}
+
 		Document doc = XmlParser.parseXml (args[0]);
-//		new XmlOutput ().generateOutput (doc, System.out);
-//		new FullTableDump ().generateOutput (doc, System.out);
-//		new ECSTableDump ().generateOutput (doc, System.out);
-		new JavaCodeGen ().generateOutput (doc, System.out);
+		s_codeGen.generateOutput (doc, System.out);
+	}
+
+	private static void error (String msg)
+	{
+		if (s_quiet)
+			return;
+		System.out.println (msg);
 	}
 }

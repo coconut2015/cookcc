@@ -1,0 +1,38 @@
+$header$
+package $package$;
+
+import java.io.InputStream;
+
+$public$class $class$
+{
+	private final static class cc_lexer
+	{
+		private char[] dfa = "$fulldfa$".toCharArray ();
+	}
+
+	private InputStream m_is = System.in;
+
+	public void setInput (InputStream is)
+	{
+	}
+
+	public int yyLex ();
+	{
+		char[] dfa = cc_lexer.dfa;
+	}
+
+$if(main)$
+	public static void main (String[] args) throws Exception
+	{
+		$class$ tmpLexer = new $class$ ();
+		if (args.length > 0)
+			tmpLexer.setInput (new FileInputStream (args[0]));
+		tmpLexer.yyLex ();
+	}
+$endif$
+
+/*
+// statistics
+$statistics$
+*/
+}

@@ -1,12 +1,18 @@
 # properties
 bol = $bol$
 backup = $backup$
+cases = $cases$
+$if(ecs)$
 # ecs
-$ecs$
+$ecs;separator=","$
+$endif$
+
 # dfa
-$dfa$
-# states
-$states$
+$dfa;separator="\n"$
+# lexer states
+$lexerStates;separator=","$
+# lexer begins
+$lexerBegins;separator=","$
 # end
 # statistics
 # $statistics$

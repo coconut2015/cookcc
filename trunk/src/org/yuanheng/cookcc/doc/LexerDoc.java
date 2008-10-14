@@ -35,6 +35,9 @@ import java.util.HashMap;
 public class LexerDoc extends TreeDoc
 {
 	public final static String INITIAL_STATE = "INITIAL";
+	public final static String PROP_TABLE_TYPE = "table";
+	public final static String DEFAULT_TABLE_TYPE = "ecs";
+
 	private final HashMap<String, LexerStateDoc> m_stateMap = new HashMap<String, LexerStateDoc> ();
 	private final HashMap<String, ShortcutDoc> m_shortcutMap = new HashMap<String, ShortcutDoc> ();
 
@@ -50,6 +53,19 @@ public class LexerDoc extends TreeDoc
 		}
 
 		return doc;
+	}
+
+	public void setTable (String type)
+	{
+		setProperty (PROP_TABLE_TYPE, type);
+	}
+
+	public String getTable ()
+	{
+		String type = (String)getProperty (PROP_TABLE_TYPE);
+		if (type == null)
+			type = DEFAULT_TABLE_TYPE;
+		return type;
 	}
 
 	public LexerStateDoc[] getLexerStates ()

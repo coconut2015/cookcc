@@ -33,6 +33,8 @@ import org.antlr.stringtemplate.AttributeRenderer;
 import org.antlr.stringtemplate.StringTemplate;
 import org.yuanheng.cookcc.OptionParser;
 import org.yuanheng.cookcc.codegen.interfaces.CodeGen;
+import org.yuanheng.cookcc.dfa.ECSTable;
+import org.yuanheng.cookcc.dfa.FullTable;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.lexer.Lexer;
 
@@ -62,6 +64,17 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
+	private AttributeRenderer m_intRenderer = new AttributeRenderer ()
+	{
+		public String toString (Object o)
+		{
+			return "\\u" + o;
+		}
+		public String toString (Object o, String formatName)
+		{
+			return toString (o);
+		}
+	};
 	private AttributeRenderer m_intArrayRenderer = new AttributeRenderer ()
 	{
 		public String toString (Object o)
@@ -72,37 +85,17 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 			{
 				if (i > 0)
 					buffer.append (',');
-				buffer.append (Integer.toHexString (array[i]));
+				buffer.append (array[i]);
 			}
 			return buffer.toString ();
 		}
 		public String toString (Object o, String formatName)
 		{
-			return o.toString ();
+			return toString (o);
 		}
 	};
 
-	private AttributeRenderer m_charArrayRenderer = new AttributeRenderer ()
-	{
-		public String toString (Object o)
-		{
-			char[] array = (char[])o;
-			StringBuffer buffer = new StringBuffer ();
-			for (int i = 0; i < array.length; ++i)
-			{
-				if (i > 0)
-					buffer.append (',');
-				buffer.append (Integer.toHexString (array[i]));
-			}
-			return buffer.toString ();
-		}
-		public String toString (Object o, String formatName)
-		{
-			return o.toString ();
-		}
-	};
-
-	private AttributeRenderer m_char3DArrayRenderer = new AttributeRenderer ()
+	private AttributeRenderer m_int3DArrayRenderer = new AttributeRenderer ()
 	{
 		public String toString (Object o)
 		{
@@ -112,13 +105,13 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 			{
 				if (i > 0)
 					buffer.append ("\n");
-				buffer.append (m_char3DArrayRenderer.toString (array[i]));
+				buffer.append (m_intArrayRenderer.toString (array[i]));
 			}
 			return buffer.toString ();
 		}
 		public String toString (Object o, String formatName)
 		{
-			return o.toString ();
+			return toString (o);
 		}
 	};
 
@@ -129,14 +122,24 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 			return;
 
 		StringTemplate st = new StringTemplate (Resources.template);
+		st.registerRenderer (int.class, m_intRenderer);
+		st.registerRenderer (int[].class, m_intArrayRenderer);
+
 		setup (st, doc);
 
-		st.registerRenderer (int[].class, m_intArrayRenderer);
-		st.registerRenderer (char[].class, m_charArrayRenderer);
-		st.registerRenderer (char[][].class, m_char3DArrayRenderer);
-
 		st.setAttribute ("statistics", lexer);
-		st.setAttribute ("ecs", lexer.getECS ().getGroups ());
+
+		String table = doc.getLexer ().getTable ();
+		if ("ecs".equals (table))
+		{
+			ECSTable ecsTable = new ECSTable (lexer);
+			ecsTable.setupTemplate (st);
+		}
+		else if ("full".equals (table))
+		{
+			FullTable fullTable = new FullTable (lexer);
+			fullTable.setupTemplate (st);
+		}
 
 		p.println (st);
 	}

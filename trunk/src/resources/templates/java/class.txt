@@ -43,6 +43,7 @@ ${header}
 
 	private String _yyText = null;
 	private int _yyTextStart;
+	private int _yyLength;
 
 <#if bol == true>
 	// we need to track beginning of line (BOL) status
@@ -51,6 +52,10 @@ ${header}
 </#if>
 
 	private boolean _yyReturnValue = true;
+
+<#if lexerProlog?has_content>
+	${lexerProlog}
+</#if>
 
 <#if maxSymbol &gt; 257>
 	public void setInput (Reader reader)
@@ -86,6 +91,11 @@ ${header}
 		if (_yyText == null)
 			_yyText = new String (_yyBuffer, _yyTextStart, _yyMatchStart - _yyTextStart);
 		return _yyText;
+	}
+
+	public int getLength ()
+	{
+		return _yyLength;
 	}
 
 	public void echo ()
@@ -206,6 +216,7 @@ ${header}
 				{
 					int lookPos = lookahead - _yyMatchStart;
 					boolean refresh = yyRefreshBuffer ();
+					buffer = _yyBuffer;
 					internalBufferEnd = _yyBufferEnd;
 					lookahead = _yyMatchStart + lookPos;
 					if (! refresh)
@@ -220,6 +231,7 @@ ${header}
 
 			_yyTextStart = _yyMatchStart;
 			_yyMatchStart += matchedLength;
+			_yyLength = matchedLength;
 
 <#if yytype != "void">
 			${yytype} val = yyLexCase (cc_accept[matchedState]);
@@ -236,18 +248,36 @@ ${header}
 </#if>
 
 <#if yytype != "void">
-			return val;
+			if (_yyReturnValue)
+				return val;
 </#if>
 		}
 	}
 
 	private ${yytype} yyLexCase (char yySwitch)
 	{
-<#if lexprolog?has_content>
-		${lexprolog}
+
+		switch (yySwitch)
+		{
+<#list lexerCases as i>
+<#list i.patterns as p>
+			case ${p.caseValue}:
+			{
+				${i.action}
+			}
+				break;
+</#list>
+</#list>
+			default:
+<#if yytype != "void">
+				return (${yytype})-1;
+<#else>
+				return;
 </#if>
+		}
 
 <#if yytype != "void">
+		_yyReturnValue = false;
 		return 0;
 </#if>
 	}
@@ -267,7 +297,19 @@ ${header}
 	}
 </#if>
 
+<#if code?has_content>
+${code}
+</#if>
+
 /*
- * statistics
+ * properties and statistics
+ * bol = ${bol?string}
+ * backup = ${backup?string}
+ * dfa states = ${dfa?size}
+<#if ecs?has_content>
+ * ecs = ${dfa[0]?size}
+ * eof = ${eof}
+ * max symbol value = ${maxSymbol}
+</#if>
  */
 }

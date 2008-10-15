@@ -40,6 +40,8 @@ class XmlParserOutput
 	{
 		if (doc == null)
 			return;
+		if (true)
+			return;
 		p.println ("\t<parser>");
 		p.println ("\t</parser>");
 	}

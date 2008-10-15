@@ -24,74 +24,30 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.xml;
+package org.yuanheng.cookcc.input.xml;
 
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import org.w3c.dom.Element;
+import org.yuanheng.cookcc.doc.LexerDoc;
 
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
+import cookxml.core.DecodeEngine;
+import cookxml.core.interfaces.Creator;
+import cookxml.core.util.TextUtils;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class XmlCodeGen implements CodeGen
+class PrologCreator implements Creator
 {
-	private void printTokens (Document doc, PrintWriter p)
+	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
 	{
-		String[] tokens = doc.getTokens ();
-		if (tokens.length == 0)
-			return;
-		p.print ("\t<tokens>");
-		for (int i = 0; i < tokens.length; ++i)
-		{
-			if ((i % 5) > 0)
-				p.print (" ");
-			else
-			{
-				p.println ();
-				p.print ("\t\t");
-			}
-			p.print (tokens[i]);
-		}
-		p.println ();
-		p.println ("\t</tokens>");
+		decodeEngine.setDoAdd (false);
+		return TextUtils.getText (elm);
 	}
 
-	private void printDocument (Document doc, PrintWriter p)
+	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
 	{
-		p.println ("<codecc>");
-		String str = doc.getHeader ();
-		if (str != null && str.length () > 0)
-		{
-			p.print ("\t<header>");
-			p.print (str);
-			p.println ("</header>");
-		}
-		printTokens (doc, p);
-		new XmlLexerOutput ().printLexer (doc.getLexer (), p);
-		new XmlParserOutput ().printParserDoc (doc.getParser (), p);
-		str = doc.getCode ();
-		if (str != null && str.length () > 0)
-		{
-			p.print ("\t<code>");
-			p.print (str);
-			p.println ("</code>");
-		}
-		p.println ("</codecc>");
-	}
-
-	public void generateOutput (Document doc, OutputStream os)
-	{
-		PrintWriter p = new PrintWriter (os);
-		printDocument (doc, p);
-		p.flush ();
-	}
-
-	public OptionParser[] getOptionParsers ()
-	{
-		return new OptionParser[0];
+		((LexerDoc)parentObj).setProlog (obj.toString ());
+		return obj;
 	}
 }

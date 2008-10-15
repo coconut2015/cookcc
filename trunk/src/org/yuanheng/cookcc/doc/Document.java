@@ -41,7 +41,8 @@ import java.util.StringTokenizer;
 public class Document extends TreeDoc
 {
 	private boolean m_unicode;
-	private StringBuffer m_header = new StringBuffer ();
+	private String m_header = "";
+	private String m_code = "";
 	private final Collection<String> m_tokens = new LinkedList<String> ();
 	private LexerDoc m_lexer;
 	private ParserDoc m_parser;
@@ -66,9 +67,24 @@ public class Document extends TreeDoc
 		m_parser = parserDoc;
 	}
 
-	public StringBuffer getHeader ()
+	public String getHeader ()
 	{
 		return m_header;
+	}
+
+	public void setHeader (String header)
+	{
+		m_header = header;
+	}
+
+	public String getCode ()
+	{
+		return m_code;
+	}
+
+	public void setCode (String code)
+	{
+		m_code = code;
 	}
 
 	public LexerDoc getLexer ()

@@ -110,6 +110,8 @@ public abstract class TemplatedCodeGen
 		map.put ("header", doc.getHeader ());
 		map.put ("cases", lexer.getCaseCount ());
 
+		map.put ("lexerProlog", doc.getLexer ().getProlog ());
+
 		map.put ("statistics", lexer);
 
 		map.put ("lexerCases", getLexerCases (doc));

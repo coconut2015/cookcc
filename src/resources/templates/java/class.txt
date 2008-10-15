@@ -21,9 +21,7 @@ ${header}
 <#if ecs?has_content>
 		private static char[] ecs = "<@intarray ecs/>".toCharArray ();
 </#if>
-<#if table == "full">
-		private static char[][] next = "<#list dfa as i><@intarray i/></#list>".toCharArray ();
-<#elseif table == "ecs">
+<#if table == "full" || table == "ecs">
 		private static char[][] next = {<#list dfa as i><#if i_index &gt; 0>,</#if>"<@intarray i/>".toCharArray ()</#list>};
 </#if>
 	}

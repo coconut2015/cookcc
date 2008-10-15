@@ -1,5 +1,5 @@
 <cookcc>
-	<lexer>
+	<lexer table="full">
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
 

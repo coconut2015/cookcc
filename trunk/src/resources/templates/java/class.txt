@@ -1,51 +1,56 @@
-method(type,name,args) ::= <<
-<type> <name>(<args; separator=",">) {
-  <statements; separator="\n">
-}
->>
-
-$header$
-$if(package)$
-package $package$;
-$endif$
+<#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
+<#macro intarray a><#list a as i>\u${i?hex(4)}</#list></#macro>
+<#if package?has_content>
+package ${package};
+<@array ecs/>
+</#if>
 
 import java.io.InputStream;
+import java.io.FileInputStream;
 
-$public$class $class$
+${header}
+<#if public?has_content && public?string == "true">public </#if>class ${ccclass}
 {
+
 	private final static class cc_lexer
 	{
-$if(ecs)$
-		private static char[] ecs = "$ecs;format="\\u%04x"$".toCharArray ();
-$endif$
-
-		private static char[][] dfa = {"\u$dfa;separator=","$".toCharArray ();
-		private static char[] accepts = "$accepts;format="\\u%04x"$".toCharArray ();
+		private static char[] accepts = "<@intarray accepts/>".toCharArray ();
+<#if ecs?has_content>
+		private static char[] ecs = "<@intarray ecs/>".toCharArray ();
+</#if>
+<#if table == "full">
+		private static char[][] dfa = "<#list dfa as i><@intarray i/></#list>".toCharArray ();
+<#elseif table == "ecs">
+		private static char[][] dfa = {<#list dfa as i><#if i_index &gt; 0>,</#if>"<@intarray i/>".toCharArray ()</#list>};
+</#if>
 	}
 
 	private InputStream m_is = System.in;
 
 	public void setInput (InputStream is)
 	{
+		m_is = is;
 	}
 
-	public int yyLex ();
+	public int yyLex ()
 	{
-		char[] dfa = cc_lexer.dfa;
+		char[][] dfa = cc_lexer.dfa;
+		char[] ecs = cc_lexer.ecs;
+		char[] accepts = cc_lexer.accepts;
+		return 0;
 	}
 
-$if(main)$
+<#if main?has_content && main?string == "true">
 	public static void main (String[] args) throws Exception
 	{
-		$class$ tmpLexer = new $class$ ();
+		${ccclass} tmpLexer = new ${ccclass} ();
 		if (args.length > 0)
 			tmpLexer.setInput (new FileInputStream (args[0]));
 		tmpLexer.yyLex ();
 	}
-$endif$
+</#if>
 
 /*
  * statistics
-$statistics;format=" * "$
  */
 }

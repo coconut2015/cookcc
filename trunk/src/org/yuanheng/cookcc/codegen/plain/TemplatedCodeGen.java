@@ -41,6 +41,7 @@ import org.yuanheng.cookcc.doc.RuleDoc;
 import org.yuanheng.cookcc.lexer.Lexer;
 
 import freemarker.cache.TemplateLoader;
+import freemarker.core.HexBI;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
@@ -57,6 +58,8 @@ public abstract class TemplatedCodeGen
 
 	static
 	{
+		HexBI.init ();
+
 		Configuration cfg = new Configuration ();
 		cfg.setTemplateLoader (new TemplateLoader()
 		{
@@ -79,7 +82,6 @@ public abstract class TemplatedCodeGen
 			{
 			}
 		});
-//		cfg.setObjectWrapper (ObjectWrapper.DEFAULT_WRAPPER);
 		cfg.setObjectWrapper (ObjectWrapper.BEANS_WRAPPER);
 		s_configuration = cfg;
 	}
@@ -97,31 +99,32 @@ public abstract class TemplatedCodeGen
 		}
 	}
 
-	public void setup (Map<String, Object> ctx, Document doc)
+	public void setup (Map<String, Object> map, Document doc)
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
-		ctx.put ("bol", Boolean.valueOf (lexer.hasBOL ()));
-		ctx.put ("backup", Boolean.valueOf (lexer.hasBackup ()));
-		ctx.put ("header", doc.getHeader ());
-		ctx.put ("cases", lexer.getCaseCount ());
+		map.put ("bol", Boolean.valueOf (lexer.hasBOL ()));
+		map.put ("backup", Boolean.valueOf (lexer.hasBackup ()));
+		map.put ("header", doc.getHeader ());
+		map.put ("cases", lexer.getCaseCount ());
 
-		ctx.put ("statistics", lexer);
+		map.put ("statistics", lexer);
 
-		ctx.put ("lexerCases", getLexerCases (doc));
-		ctx.put ("accepts", lexer.getDFA ().getAccepts ());
+		map.put ("lexerCases", getLexerCases (doc));
+		map.put ("accepts", lexer.getDFA ().getAccepts ());
 
 		String table = doc.getLexer ().getTable ();
+		map.put ("table", table);
 		if ("ecs".equals (table))
 		{
 			ECSTable ecsTable = new ECSTable (lexer);
-			ecsTable.setup (ctx);
+			ecsTable.setup (map);
 		}
 		else if ("full".equals (table))
 		{
 			FullTable fullTable = new FullTable (lexer);
-			fullTable.setup (ctx);
+			fullTable.setup (map);
 		}
 	}
 

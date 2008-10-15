@@ -31,7 +31,6 @@ import java.util.Collection;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import org.antlr.stringtemplate.AttributeRenderer;
 import org.yuanheng.cookcc.dfa.DFARow;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.*;

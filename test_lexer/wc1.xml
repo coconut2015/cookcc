@@ -2,13 +2,16 @@
 	<lexer>
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
+
+		<prolog>int cc = 0, wc = 0, lc = 0;</prolog>
+
 		<rule>
 			<pattern>{nonws}+</pattern>
-			<action>cc += yyleng; ++wc;</action>
+			<action>cc += _yyLength; ++wc;</action>
 		</rule>
 		<rule>
 			<pattern>{ws}+</pattern>
-			<action>cc += yyleng;</action>
+			<action>cc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern>\n+</pattern>
@@ -16,7 +19,7 @@
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>
-			<action></action>
+			<action>System.out.printf( "%8d %8d %8d\n", lc, wc, cc );</action>
 		</rule>
 	</lexer>
 </cookcc>

@@ -47,7 +47,7 @@ class HeaderCreator implements Creator
 
 	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
 	{
-		((Document)parentObj).getHeader ().append (obj);
+		((Document)parentObj).setHeader (obj.toString ());
 		return obj;
 	}
 }

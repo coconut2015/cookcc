@@ -1,11 +1,13 @@
 <!DOCTYPE cookcc [
-	<!ELEMENT cookcc (header?, tokens+, lexer?, parser?)>
+	<!ELEMENT cookcc (header?, tokens+, lexer?, parser?, code?)>
 	<!ELEMENT header	(#PCDATA)>
 	<!ELEMENT tokens	(#PCDATA)>
-	<!ELEMENT lexer		(shortcut*, (state | rule)+)>
+	<!ELEMENT lexer		(shortcut*, prolog?, (state | rule)+)>
 	<!ELEMENT parser	(#PCDATA)>
+	<!ELEMENT code		(#PCDATA)>
 
 	<!ELEMENT shortcut	(#PCDATA)>
+	<!ELEMENT prolog	(#PCDATA)>
 	<!ELEMENT state		(rule+)>
 	<!ELEMENT rule		(pattern+, action)>
 	<!ELEMENT pattern	(#PCDATA)>
@@ -13,6 +15,7 @@
 
 	<!ATTLIST lexer		source CDATA #IMPLIED>
 	<!ATTLIST lexer		target CDATA #IMPLIED>
+	<!ATTLIST lexer		table (full|ecs|compressed) #IMPLIED>
 
 	<!ATTLIST shortcut	name CDATA #REQUIRED>
 	<!ATTLIST rule		state CDATA #IMPLIED>

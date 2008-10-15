@@ -30,7 +30,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Properties;
 
-import org.antlr.stringtemplate.StringTemplate;
 import org.yuanheng.cookcc.codegen.plain.TemplatedCodeGen;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
@@ -52,6 +51,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	{
 		private final static Properties defaults = new Properties ();
 		private static String template;
+
 		static
 		{
 			try
@@ -66,26 +66,17 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
-	private void printCharArray (char[] array, PrintWriter p)
-	{
-		for (int i = 0; i < array.length; ++i)
-		{
-			p.print ("\\u");
-			p.print (Integer.toHexString (array[i]));
-		}
-	}
-
 	private void generateLexerOutput (Document doc, PrintWriter p)
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
 
-		StringTemplate st = new StringTemplate (Resources.template);
-		st.setAttributes (Resources.defaults);
-		setup (st, doc);
+//		StringTemplate st = new StringTemplate (Resources.template);
+//		st.setAttributes (Resources.defaults);
+//		setup (st, doc);
 
-		p.println (st);
+//		p.println (st);
 	}
 
 	public void generateOutput (Document doc, OutputStream os)

@@ -49,7 +49,7 @@ public class XmlCodeGen implements CodeGen
 		p.print ("\t<tokens>");
 		for (int i = 0; i < tokens.length; ++i)
 		{
-			if ((i % 5)> 0)
+			if ((i % 5) > 0)
 				p.print (" ");
 			else
 			{

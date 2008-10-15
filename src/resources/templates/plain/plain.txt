@@ -1,18 +1,40 @@
+<#macro intarray a>
+<#list a as i><#if i_index &gt; 0>,</#if>${i}</#list>
+</#macro>
+<#macro int3darray a>
+<#list a as i>
+	<@intarray i/>
+</#list>
+</#macro>
+<#macro binarray a>
+<#list a as i><#if i_index &gt; 0>,</#if>${i}</#list>
+</#macro>
 # properties
-bol = $bol$
-backup = $backup$
-cases = $cases$
-$if(ecs)$
+bol = ${bol?string}
+backup = ${backup?string}
+cases = ${cases}
+<#if ecs?has_content>
 # ecs
-$ecs;separator=","$
-$endif$
-
+<@intarray ecs/>
+</#if>
 # dfa
-$dfa;separator="\n"$
+<@int3darray dfa/>
 # lexer states
-$lexerStates;separator=","$
+<@intarray lexerStates/>
 # lexer begins
-$lexerBegins;separator=","$
+<@intarray lexerBegins/>
+# accepts
+<@intarray accepts/>
+# lexer cases
+<#list lexerCases as i>
+<#list i.patterns as p>
+case ${p.caseValue}
+${i.action}
+</#list>
+</#list>
 # end
 # statistics:
-$statistics;format="# "$
+# dfa states = ${dfa?size}
+<#if ecs?has_content>
+# ecs = ${dfa[0]?size}
+</#if>

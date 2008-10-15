@@ -1,5 +1,13 @@
+method(type,name,args) ::= <<
+<type> <name>(<args; separator=",">) {
+  <statements; separator="\n">
+}
+>>
+
 $header$
+$if(package)$
 package $package$;
+$endif$
 
 import java.io.InputStream;
 
@@ -7,7 +15,12 @@ $public$class $class$
 {
 	private final static class cc_lexer
 	{
-		private char[] dfa = "$fulldfa$".toCharArray ();
+$if(ecs)$
+		private static char[] ecs = "$ecs;format="\\u%04x"$".toCharArray ();
+$endif$
+
+		private static char[][] dfa = {"\u$dfa;separator=","$".toCharArray ();
+		private static char[] accepts = "$accepts;format="\\u%04x"$".toCharArray ();
 	}
 
 	private InputStream m_is = System.in;
@@ -32,7 +45,7 @@ $if(main)$
 $endif$
 
 /*
-// statistics
-$statistics$
-*/
+ * statistics
+$statistics;format=" * "$
+ */
 }

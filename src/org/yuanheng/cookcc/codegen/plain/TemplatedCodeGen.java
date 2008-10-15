@@ -26,9 +26,24 @@
  */
 package org.yuanheng.cookcc.codegen.plain;
 
-import org.antlr.stringtemplate.StringTemplate;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.URL;
+import java.util.LinkedList;
+import java.util.Map;
+
+import org.yuanheng.cookcc.dfa.ECSTable;
+import org.yuanheng.cookcc.dfa.FullTable;
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.doc.LexerStateDoc;
+import org.yuanheng.cookcc.doc.RuleDoc;
 import org.yuanheng.cookcc.lexer.Lexer;
+
+import freemarker.cache.TemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.Template;
 
 /**
  * A utility class for code generators.
@@ -38,17 +53,88 @@ import org.yuanheng.cookcc.lexer.Lexer;
  */
 public abstract class TemplatedCodeGen
 {
-	public void setup (StringTemplate st, Document doc)
+	private static Configuration s_configuration;
+
+	static
+	{
+		Configuration cfg = new Configuration ();
+		cfg.setTemplateLoader (new TemplateLoader()
+		{
+			public Object findTemplateSource (String name) throws IOException
+			{
+				return getClass ().getClassLoader ().getResource (name);
+			}
+
+			public long getLastModified (Object templateSource)
+			{
+				return 0;
+			}
+
+			public Reader getReader (Object templateSource, String encoding) throws IOException
+			{
+				return new InputStreamReader (((URL)templateSource).openStream ());
+			}
+
+			public void closeTemplateSource (Object templateSource) throws IOException
+			{
+			}
+		});
+//		cfg.setObjectWrapper (ObjectWrapper.DEFAULT_WRAPPER);
+		cfg.setObjectWrapper (ObjectWrapper.BEANS_WRAPPER);
+		s_configuration = cfg;
+	}
+
+	public static Template getTemplate (String source)
+	{
+		try
+		{
+			return s_configuration.getTemplate (source);
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace ();
+			return null;
+		}
+	}
+
+	public void setup (Map<String, Object> ctx, Document doc)
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
-		st.setAttribute ("bol", Boolean.valueOf (lexer.hasBOL ()));
-		st.setAttribute ("backup", Boolean.valueOf (lexer.hasBackup ()));
-		st.setAttribute ("header", doc.getHeader ());
-		st.setAttribute ("cases", lexer.getCaseCount ());
+		ctx.put ("bol", Boolean.valueOf (lexer.hasBOL ()));
+		ctx.put ("backup", Boolean.valueOf (lexer.hasBackup ()));
+		ctx.put ("header", doc.getHeader ());
+		ctx.put ("cases", lexer.getCaseCount ());
 
-		st.setAttribute ("statistics", lexer);
-		st.registerRenderer (Lexer.class, lexer.getAttributeRenderer ());
+		ctx.put ("statistics", lexer);
+
+		ctx.put ("lexerCases", getLexerCases (doc));
+		ctx.put ("accepts", lexer.getDFA ().getAccepts ());
+
+		String table = doc.getLexer ().getTable ();
+		if ("ecs".equals (table))
+		{
+			ECSTable ecsTable = new ECSTable (lexer);
+			ecsTable.setup (ctx);
+		}
+		else if ("full".equals (table))
+		{
+			FullTable fullTable = new FullTable (lexer);
+			fullTable.setup (ctx);
+		}
+	}
+
+	private RuleDoc[] getLexerCases (Document doc)
+	{
+		LinkedList<RuleDoc> rules = new LinkedList<RuleDoc> ();
+		LexerStateDoc[] lexerStates = doc.getLexer ().getLexerStates ();
+		for (int i = 0; i < lexerStates.length; ++i)
+		{
+			LexerStateDoc lexerState = lexerStates[i];
+			for (RuleDoc rule : lexerState.getRules ())
+				rules.add (rule);
+		}
+		return rules.toArray (new RuleDoc[rules.size ()]);
 	}
 }

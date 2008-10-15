@@ -35,6 +35,7 @@ public class PatternDoc extends TreeDoc
 	private String m_pattern;
 	private boolean m_nocase;
 	private boolean m_bol;
+	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
 
 	public PatternDoc ()
 	{
@@ -68,5 +69,24 @@ public class PatternDoc extends TreeDoc
 	public void setBOL (boolean bol)
 	{
 		m_bol = bol;
+	}
+
+	/**
+	 * Obtain the case value in the lexer.
+	 */
+	public int getCaseValue ()
+	{
+		return m_caseValue;
+	}
+
+	/**
+	 * Set the case value in the lexer.  This function is for internal use.
+	 *
+	 * @param	caseValue
+	 * 			Computed caes value in DFA.
+	 */
+	public void setCaseValue (int caseValue)
+	{
+		m_caseValue = caseValue;
 	}
 }

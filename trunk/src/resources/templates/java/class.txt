@@ -5,8 +5,11 @@ package ${package};
 <@array ecs/>
 </#if>
 
-import java.io.InputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.Reader;
 
 ${header}
 <#if public?has_content && public?string == "true">public </#if>class ${ccclass}
@@ -14,30 +17,239 @@ ${header}
 
 	private final static class cc_lexer
 	{
-		private static char[] accepts = "<@intarray accepts/>".toCharArray ();
+		private static char[] accept = "<@intarray accepts/>".toCharArray ();
 <#if ecs?has_content>
 		private static char[] ecs = "<@intarray ecs/>".toCharArray ();
 </#if>
 <#if table == "full">
-		private static char[][] dfa = "<#list dfa as i><@intarray i/></#list>".toCharArray ();
+		private static char[][] next = "<#list dfa as i><@intarray i/></#list>".toCharArray ();
 <#elseif table == "ecs">
-		private static char[][] dfa = {<#list dfa as i><#if i_index &gt; 0>,</#if>"<@intarray i/>".toCharArray ()</#list>};
+		private static char[][] next = {<#list dfa as i><#if i_index &gt; 0>,</#if>"<@intarray i/>".toCharArray ()</#list>};
 </#if>
 	}
 
-	private InputStream m_is = System.in;
+<#if maxSymbol &gt; 257>
+	private Reader _yyIs;
+	private char[] _yyBuffer;
+<#else>
+	private InputStream _yyIs;
+	private byte[] _yyBuffer;
+</#if>
+	private int _yyBufferSize = 4096;
+	private int _yyMatchStart;
+	private int _yyBufferEnd;
 
-	public void setInput (InputStream is)
+	private int _yyBaseState;
+
+	private String _yyText = null;
+	private int _yyTextStart;
+
+<#if bol == true>
+	// we need to track beginning of line (BOL) status
+	private boolean _yyIsNextBOL = true;
+	private boolean _yyBOL;
+</#if>
+
+	private boolean _yyReturnValue = true;
+
+<#if maxSymbol &gt; 257>
+	public void setInput (Reader reader)
 	{
-		m_is = is;
+		_yyIs = reader;
 	}
 
-	public int yyLex ()
+	public Reader getInput ()
 	{
-		char[][] dfa = cc_lexer.dfa;
-		char[] ecs = cc_lexer.ecs;
-		char[] accepts = cc_lexer.accepts;
+		return _yyIs;
+	}
+<#else>
+	public void setInput (InputStream is)
+	{
+		_yyIs = is;
+	}
+
+	public InputStream getInput ()
+	{
+		return _yyIs;
+	}
+</#if>
+
+<#if bol == true>
+	public boolean isBOL ()
+	{
+		return _yyBOL;
+	}
+</#if>
+
+	public String getText ()
+	{
+		if (_yyText == null)
+			_yyText = new String (_yyBuffer, _yyTextStart, _yyMatchStart - _yyTextStart);
+		return _yyText;
+	}
+
+	public void echo ()
+	{
+		System.out.print (getText ());
+	}
+
+	// set the current state machine
+	private void begin (int baseState)
+	{
+		_yyBaseState = baseState;
+	}
+
+	private boolean yyRefreshBuffer () throws IOException
+	{
+<#if maxSymbol &gt; 257>
+		if (_yyBuffer == null)
+			_yyBuffer = new char[_yyBufferSize];
+<#else>
+		if (_yyBuffer == null)
+			_yyBuffer = new byte[_yyBufferSize];
+</#if>
+		if (_yyMatchStart > 0)
+		{
+			if (_yyBufferEnd > _yyMatchStart)
+			{
+				System.arraycopy (_yyBuffer, _yyMatchStart, _yyBuffer, 0, _yyBufferEnd - _yyMatchStart);
+				_yyBufferEnd -= _yyMatchStart;
+				_yyMatchStart = 0;
+			}
+			else
+			{
+				_yyMatchStart = 0;
+				_yyBufferEnd = 0;
+			}
+		}
+		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBufferSize - _yyBufferEnd);
+		if (readSize > 0)
+			_yyBufferEnd += readSize;
+		return readSize >= 0;
+	}
+
+	public void setBufferSize (int bufferSize)
+	{
+		if (_yyBuffer == null)
+			_yyBufferSize = bufferSize;
+		else
+		{
+			if (bufferSize < _yyBufferSize)
+			{
+			}
+		}
+	}
+
+	public ${yytype} yyLex () throws IOException
+	{
+<#if table != "full">
+		char[] cc_ecs = cc_lexer.ecs;
+</#if>
+		char[][] cc_next = cc_lexer.next;
+		char[] cc_accept = cc_lexer.accept;
+
+<#if maxSymbol &gt; 257>
+		char[] buffer = _yyBuffer;
+<#else>
+		byte[] buffer = _yyBuffer;
+</#if>
+
+		while (true)
+		{
+			// initiate variables necessary for lookup
+<#if bol == true>
+			_yyBOL = _yyIsNextBOL;
+			_yyIsNextBOL = false;
+
+			int matchedState = _yyBaseState + (_yyBOL ? 1 : 0);
+<#else>
+			int matchedState = _yyBaseState;
+</#if>
+
+			int matchedLength = 0;
+
+			int internalBufferEnd = _yyBufferEnd;
+			int lookahead = _yyMatchStart;
+
+			// the DFA lookup
+			while (true)
+			{
+				// check buffer status
+				if (lookahead < internalBufferEnd)
+				{
+					// now okay to process the character
+					int currentState;
+<#if table == "full">
+					currentState = cc_next[matchedState][buffer[lookahead]];
+<#elseif table == "ecs">
+					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]]];
+<#else>
+					int symbol = cc_ecs[buffer[lookahead]];
+					currentState = matchedState;
+					while (yylex_check[symbol + yylex_base[currentState]] != currentState)
+					{
+						currentState = yylex_default[currentState];
+						if (currentState >= 18)
+							symbol = 0;
+					}
+					currentState = yylex_next[symbol + yylex_base[currentState]];
+</#if>
+
+					if (currentState == 0)
+						break;
+
+					matchedState = currentState;
+					++lookahead;
+					++matchedLength;
+				}
+				else
+				{
+					int lookPos = lookahead - _yyMatchStart;
+					boolean refresh = yyRefreshBuffer ();
+					internalBufferEnd = _yyBufferEnd;
+					lookahead = _yyMatchStart + lookPos;
+					if (! refresh)
+					{
+						// <<EOF>>
+						if (matchedLength == 0)
+							return yyLexCase (cc_accept[_yyBaseState]);
+						break;
+					}
+				}
+			}
+
+			_yyTextStart = _yyMatchStart;
+			_yyMatchStart += matchedLength;
+
+<#if yytype != "void">
+			${yytype} val = yyLexCase (cc_accept[matchedState]);
+<#else>
+			yyLexCase (cc_accept[matchedState]);
+</#if>
+
+<#if bol == true>
+			// check BOL here since '\n' may be unput back into the stream buffer
+
+			// specifically used _yyBuffer since it could be changed by user
+			if (_yyMatchStart > 0 && _yyBuffer[_yyMatchStart - 1] == '\n')
+				_yyIsNextBOL = true;
+</#if>
+
+<#if yytype != "void">
+			return val;
+</#if>
+		}
+	}
+
+	private ${yytype} yyLexCase (char yySwitch)
+	{
+<#if lexprolog?has_content>
+		${lexprolog}
+</#if>
+
+<#if yytype != "void">
 		return 0;
+</#if>
 	}
 
 <#if main?has_content && main?string == "true">
@@ -45,7 +257,12 @@ ${header}
 	{
 		${ccclass} tmpLexer = new ${ccclass} ();
 		if (args.length > 0)
+<#if maxSymbol &gt; 257>
+			tmpLexer.setInput (new InputStreamReader (FileInputStream (args[0])));
+<#else>
 			tmpLexer.setInput (new FileInputStream (args[0]));
+</#if>
+
 		tmpLexer.yyLex ();
 	}
 </#if>

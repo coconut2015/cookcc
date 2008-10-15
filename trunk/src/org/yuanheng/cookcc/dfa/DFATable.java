@@ -41,6 +41,14 @@ public class DFATable
 		m_table.add (row);
 	}
 
+	public int[] getAccepts ()
+	{
+		int[] accepts = new int[m_table.size ()];
+		for (int i = 0; i < accepts.length; ++i)
+			accepts[i] = m_table.get (i).getCaseValue ();
+		return accepts;
+	}
+
 	public int size ()
 	{
 		return m_table.size ();

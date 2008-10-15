@@ -24,69 +24,64 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.plain;
+package org.yuanheng.cookcc.dfa;
 
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
+import org.yuanheng.cookcc.doc.LexerStateDoc;
 import org.yuanheng.cookcc.lexer.Lexer;
 
-import freemarker.template.Template;
-
 /**
+ * Utility class that computes the full table.
+ *
  * @author Heng Yuan
  * @version $Id$
  */
-public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
+public class FullTable
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
+	private final Lexer m_lexer;
 
-	private static class Resources
+	public FullTable (Lexer lexer)
 	{
-		private static Template template;
-
-		static
-		{
-			template = getTemplate (TEMPLATE_URI);
-		}
+		m_lexer = lexer;
 	}
 
-	private void generateLexerOutput (Document doc, PrintWriter p)
+	public int[][] getTable ()
 	{
-		Lexer lexer = Lexer.getLexer (doc);
-		if (lexer == null)
-			return;
-
-		try
+		DFATable dfa = m_lexer.getDFA ();
+		int rows = dfa.size ();
+		int cols = m_lexer.getCCL ().MAX_SYMBOL + 1;
+		int[][] table = new int[rows][cols];
+		int[] groups = m_lexer.getECS ().getGroups ();
+		for (int i = 0; i < rows; ++i)
 		{
-			Map<String, Object> map = new HashMap<String, Object> ();
-			StringWriter sw = new StringWriter ();
-			setup (map, doc);
-//			map.put ("bol", new Integer (1));
-			Resources.template.process (map, sw);
-			p.println (sw);
+			char[] states = dfa.getRow (i).getStates ();
+			int[] array = table[i];
+			for (int j = 0; j < cols; ++j)
+				array[j] = states[groups[j]];
 		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace ();
-		}
+		return table;
 	}
 
-	public void generateOutput (Document doc, OutputStream os)
+	public String[] getLexerStates ()
 	{
-		PrintWriter p = new PrintWriter (os);
-		generateLexerOutput (doc, p);
-		p.flush ();
+		LexerStateDoc[] lexerStates = m_lexer.getLexerStates ();
+		String[] states = new String[lexerStates.length];
+		for (int i = 0; i < lexerStates.length; ++i)
+			states[i] = lexerStates[i].getName ();
+		return states;
 	}
 
-	public OptionParser[] getOptionParsers ()
+	public int[] getLexerBegins ()
 	{
-		return new OptionParser[0];
+		return m_lexer.getBeginLocations ();
+	}
+
+	public void setup (Map<String, Object> ctx)
+	{
+		ctx.put ("dfa", getTable ());
+
+		ctx.put ("lexerStates", getLexerStates ());
+		ctx.put ("lexerBegins", getLexerBegins ());
 	}
 }

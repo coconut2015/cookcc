@@ -86,24 +86,6 @@ public class Lexer
 	private LexerStateDoc[] m_lexerStates;
 	private int[] m_beginLocations;
 
-	private AttributeRenderer m_attributeRenderer = new AttributeRenderer ()
-	{
-		public String toString (Object o)
-		{
-			return toString (o, "// ");
-		}
-
-		public String toString (Object o, String ident)
-		{
-			StringBuffer buffer = new StringBuffer ();
-			// print statistics
-			buffer.append (ident + getECS () + "\n");
-			buffer.append (ident + getNFAFactory () + "\n");
-			buffer.append (ident + getDFA ());
-			return buffer.toString ();
-		}
-	};
-
 	public Lexer (Document doc)
 	{
 		m_doc = doc;
@@ -144,7 +126,7 @@ public class Lexer
 	 * After all the patterns have parsed, call this function to check if the lexer
 	 * has to be aware of beginning of the line condition.
 	 *
-	 * @return	if any of the NFAs has BOL requirements
+	 * @return if any of the NFAs has BOL requirements
 	 */
 	public boolean hasBOL ()
 	{
@@ -155,7 +137,7 @@ public class Lexer
 	 * After all the patterns have parsed, call this function to check if there are
 	 * backups in the statement (i.e. not all states are accepting states).
 	 *
-	 * @return	if backups are required in certain cases.
+	 * @return if backups are required in certain cases.
 	 */
 	public boolean hasBackup ()
 	{
@@ -209,6 +191,7 @@ public class Lexer
 					PatternDoc pattern = patterns[k];
 					RuleParser parser = new RuleParser (this, m_nfaFactory, pattern.isNocase ());
 					NFA nfa = parser.parse (rule.getLineNumber (), pattern.getPattern ());
+					pattern.setCaseValue (nfa.last ().caseValue);
 					if (parser.isBOL ())
 						pattern.setBOL (true);
 					pattern.setProperty (PROP_NFA, nfa);
@@ -403,7 +386,7 @@ public class Lexer
 		for (Mark = esetBase; Mark < _Dstates.size (); Mark++)
 		{
 			// mark T;
-			ESet T =_Dstates.get (Mark);
+			ESet T = _Dstates.get (Mark);
 
 			NFA n = T.isAccept ();
 
@@ -450,7 +433,6 @@ public class Lexer
 					continue;
 				}
 
-
 				// if U is not in _Dstates
 				// add U as an unmarked state to _Dstates
 				int toState;
@@ -474,10 +456,5 @@ public class Lexer
 			m_dfa.add (row);		// add to the DFA table
 		}
 		return dfaBase;
-	}
-
-	public AttributeRenderer getAttributeRenderer ()
-	{
-		return m_attributeRenderer;
 	}
 }

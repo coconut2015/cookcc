@@ -39,7 +39,7 @@ class XmlLexerOutput
 {
 	private void printShortcut (ShortcutDoc shortcut, PrintWriter p)
 	{
-		p.println ("\t\t<shortcut name=\"" + shortcut.getName ()+ "\">" + Utils.translate (shortcut.getPattern ()) + "</shortcut>");
+		p.println ("\t\t<shortcut name=\"" + shortcut.getName () + "\">" + Utils.translate (shortcut.getPattern ()) + "</shortcut>");
 	}
 
 	private void printRule (RuleDoc rule, HashSet printedPatterns, HashSet inLexerStates, PrintWriter p)

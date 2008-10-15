@@ -27,6 +27,7 @@
 package org.yuanheng.cookcc.doc;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * @author Heng Yuan
@@ -38,6 +39,8 @@ public class LexerDoc extends TreeDoc
 	public final static String PROP_TABLE_TYPE = "table";
 	public final static String DEFAULT_TABLE_TYPE = "ecs";
 
+	// we use linked list to keep the state being used in order, may be useful.
+	private final LinkedList<LexerStateDoc> m_stateList = new LinkedList<LexerStateDoc> ();
 	private final HashMap<String, LexerStateDoc> m_stateMap = new HashMap<String, LexerStateDoc> ();
 	private final HashMap<String, ShortcutDoc> m_shortcutMap = new HashMap<String, ShortcutDoc> ();
 
@@ -45,14 +48,15 @@ public class LexerDoc extends TreeDoc
 	{
 		if (stateName == null || stateName.length () == 0)
 			stateName = INITIAL_STATE;
-		LexerStateDoc doc = m_stateMap.get (stateName);
-		if (doc == null)
+		LexerStateDoc lexerState = m_stateMap.get (stateName);
+		if (lexerState == null)
 		{
-			doc = new LexerStateDoc (stateName);
-			m_stateMap.put (stateName, doc);
+			lexerState = new LexerStateDoc (stateName);
+			m_stateMap.put (stateName, lexerState);
+			m_stateList.add (lexerState);
 		}
 
-		return doc;
+		return lexerState;
 	}
 
 	public void setTable (String type)
@@ -70,7 +74,7 @@ public class LexerDoc extends TreeDoc
 
 	public LexerStateDoc[] getLexerStates ()
 	{
-		return m_stateMap.values ().toArray (new LexerStateDoc[m_stateMap.size ()]);
+		return m_stateList.toArray (new LexerStateDoc[m_stateList.size ()]);
 	}
 
 	public void addShortcut (ShortcutDoc shortcut)

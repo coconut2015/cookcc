@@ -1,0 +1,12 @@
+Describes the target languages of CookCC.
+
+= Target Languages =
+
+CookCC is written in Java to take the advantage of numerous tools available, such as the string template engine [http://freemarker.org/ FreeMarker], that makes it very easy to add new target languages.
+
+Currently, the following languages are currently supported.
+
+|| *Language* || *Description* ||
+|| *Java* || This is the main language output. ||
+|| XML || This is a debugging only output format that dumps the internal tree representation of the user input. ||
+|| Plain || This is a simple text format that produces computed tables in CSV format. ||

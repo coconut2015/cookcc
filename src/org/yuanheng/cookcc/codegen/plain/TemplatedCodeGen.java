@@ -104,6 +104,7 @@ public abstract class TemplatedCodeGen
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
+
 		map.put ("bol", Boolean.valueOf (lexer.hasBOL ()));
 		map.put ("backup", Boolean.valueOf (lexer.hasBackup ()));
 		map.put ("header", doc.getHeader ());
@@ -113,6 +114,9 @@ public abstract class TemplatedCodeGen
 
 		map.put ("lexerCases", getLexerCases (doc));
 		map.put ("accepts", lexer.getDFA ().getAccepts ());
+
+		map.put ("maxSymbol", new Integer (lexer.getCCL ().MAX_SYMBOL));
+		map.put ("eof", new Integer (lexer.getCCL ().MAX_SYMBOL));
 
 		String table = doc.getLexer ().getTable ();
 		map.put ("table", table);

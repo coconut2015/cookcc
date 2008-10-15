@@ -36,7 +36,7 @@ import org.yuanheng.cookcc.doc.Document;
  */
 public interface CodeGen
 {
-	public void generateOutput (Document doc, OutputStream os);
+	public void generateOutput (Document doc, OutputStream os) throws Exception;
 
 	public OptionParser[] getOptionParsers ();
 }

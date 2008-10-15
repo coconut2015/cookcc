@@ -57,28 +57,20 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
-	private void generateLexerOutput (Document doc, PrintWriter p)
+	private void generateLexerOutput (Document doc, PrintWriter p) throws Exception
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
 
-		try
-		{
-			Map<String, Object> map = new HashMap<String, Object> ();
-			StringWriter sw = new StringWriter ();
-			setup (map, doc);
-//			map.put ("bol", new Integer (1));
-			Resources.template.process (map, sw);
-			p.println (sw);
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace ();
-		}
+		Map<String, Object> map = new HashMap<String, Object> ();
+		StringWriter sw = new StringWriter ();
+		setup (map, doc);
+		Resources.template.process (map, sw);
+		p.println (sw);
 	}
 
-	public void generateOutput (Document doc, OutputStream os)
+	public void generateOutput (Document doc, OutputStream os) throws Exception
 	{
 		PrintWriter p = new PrintWriter (os);
 		generateLexerOutput (doc, p);

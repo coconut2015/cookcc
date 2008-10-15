@@ -1,13 +1,8 @@
-<#macro intarray a>
-<#list a as i><#if i_index &gt; 0>,</#if>${i}</#list>
-</#macro>
-<#macro int3darray a>
+<#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
+<#macro array3d a>
 <#list a as i>
-	<@intarray i/>
+	<@array i/>
 </#list>
-</#macro>
-<#macro binarray a>
-<#list a as i><#if i_index &gt; 0>,</#if>${i}</#list>
 </#macro>
 # properties
 bol = ${bol?string}
@@ -15,16 +10,16 @@ backup = ${backup?string}
 cases = ${cases}
 <#if ecs?has_content>
 # ecs
-<@intarray ecs/>
+<@array ecs/>
 </#if>
 # dfa
-<@int3darray dfa/>
+<@array3d dfa/>
 # lexer states
-<@intarray lexerStates/>
+<@array lexerStates/>
 # lexer begins
-<@intarray lexerBegins/>
+<@array lexerBegins/>
 # accepts
-<@intarray accepts/>
+<@array accepts/>
 # lexer cases
 <#list lexerCases as i>
 <#list i.patterns as p>

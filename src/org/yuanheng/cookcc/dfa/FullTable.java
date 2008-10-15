@@ -77,11 +77,11 @@ public class FullTable
 		return m_lexer.getBeginLocations ();
 	}
 
-	public void setup (Map<String, Object> ctx)
+	public void setup (Map<String, Object> map)
 	{
-		ctx.put ("dfa", getTable ());
+		map.put ("dfa", getTable ());
 
-		ctx.put ("lexerStates", getLexerStates ());
-		ctx.put ("lexerBegins", getLexerBegins ());
+		map.put ("lexerStates", getLexerStates ());
+		map.put ("lexerBegins", getLexerBegins ());
 	}
 }

@@ -28,6 +28,9 @@ package org.yuanheng.cookcc.codegen.java;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.yuanheng.cookcc.codegen.plain.TemplatedCodeGen;
@@ -36,7 +39,7 @@ import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
 import org.yuanheng.cookcc.lexer.Lexer;
 
-import cookxml.core.util.TextUtils;
+import freemarker.template.Template;
 
 /**
  * @author Heng Yuan
@@ -50,14 +53,14 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	private static class Resources
 	{
 		private final static Properties defaults = new Properties ();
-		private static String template;
+		private static Template template;
 
 		static
 		{
 			try
 			{
 				defaults.load (Resources.class.getResourceAsStream (DEFAULTS_URI));
-				template = TextUtils.readText (TEMPLATE_URI, Resources.class.getClassLoader ());
+				template = getTemplate (TEMPLATE_URI);
 			}
 			catch (Exception ex)
 			{
@@ -66,20 +69,22 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
-	private void generateLexerOutput (Document doc, PrintWriter p)
+	private void generateLexerOutput (Document doc, PrintWriter p) throws Exception
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
 
-//		StringTemplate st = new StringTemplate (Resources.template);
-//		st.setAttributes (Resources.defaults);
-//		setup (st, doc);
-
-//		p.println (st);
+		Map<String, Object> map = new HashMap<String, Object> ();
+		StringWriter sw = new StringWriter ();
+		for (Object key : Resources.defaults.keySet ())
+			map.put (key.toString (), Resources.defaults.getProperty (key.toString ()));
+		setup (map, doc);
+		Resources.template.process (map, sw);
+		p.println (sw);
 	}
 
-	public void generateOutput (Document doc, OutputStream os)
+	public void generateOutput (Document doc, OutputStream os) throws Exception
 	{
 		PrintWriter p = new PrintWriter (os);
 		generateLexerOutput (doc, p);

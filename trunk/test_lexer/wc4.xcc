@@ -1,56 +1,61 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
 <cookcc>
 	<lexer>
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
 		<shortcut name="word">{ws}*{nonws}+</shortcut>
 		<shortcut name="words">{word}{ws}+</shortcut>
+
+		<prolog>int cc = 0, wc = 0, lc = 0;</prolog>
+
 		<rule>
 			<pattern>{word}{ws}*</pattern>
-			<action>++wc; cc += yyleng;</action>
+			<action>++wc; cc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern>{word}{ws}*\n</pattern>
-			<action>++wc; cc += yyleng; ++lc;</action>
+			<action>++wc; cc += _yyLength; ++lc;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{word}{ws}*</pattern>
-			<action>wc += 2; cc += yyleng;</action>
+			<action>wc += 2; cc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{word}{ws}*\n</pattern>
-			<action>wc += 2; cc += yyleng; ++lc;</action>
+			<action>wc += 2; cc += _yyLength; ++lc;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{2}{word}{ws}*</pattern>
-			<action>wc += 3; cc += yyleng;</action>
+			<action>wc += 3; cc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{2}{word}{ws}*\n</pattern>
-			<action>wc += 3; cc += yyleng; ++lc;</action>
+			<action>wc += 3; cc += _yyLength; ++lc;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{3}{word}{ws}*</pattern>
-			<action>wc += 4; cc += yyleng;</action>
+			<action>wc += 4; cc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{3}{word}{ws}*\n</pattern>
-			<action>wc += 4; cc += yyleng; ++lc;</action>
+			<action>wc += 4; cc += _yyLength; ++lc;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{2}{word}{ws}*</pattern>
-			<action>wc += 3; cc += yyleng;</action>
+			<action>wc += 3; cc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern>{ws}+</pattern>
-			<action>cc += yyleng;</action>
+			<action>cc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern>\n+</pattern>
-			<action>cc += yyleng; lc += yyleng;</action>
+			<action>cc += _yyLength; lc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>
-			<action></action>
+			<action>System.out.println (lc + ", " + wc + ", " + cc ); return 0;</action>
 		</rule>
 	</lexer>
 </cookcc>

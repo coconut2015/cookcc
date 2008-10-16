@@ -10,6 +10,7 @@
 bol = ${bol?string}
 backup = ${backup?string}
 cases = ${cases}
+table = ${table}
 <#if ecs?has_content>
 # ecs
 <@array ecs/>

@@ -6,33 +6,38 @@
 	<@array i/>
 </#list>
 </#macro>
+<#if lexer?has_content>
+# lexer
 # properties
-bol = ${bol?string}
-backup = ${backup?string}
-cases = ${cases}
-table = ${table}
-<#if ecs?has_content>
+: unicode = ${unicode?string}
+: bol = ${lexer.bol?string}
+: backup = ${lexer.backup?string}
+: cases = ${lexer.caseCount}
+: table = ${lexer.table}
+<#if lexer.table == "ecs" || lexer.table == "compressed">
+: ecs = ${lexer.ecsGroupCount}
+</#if>
+: states = ${lexer.dfa.table?size}
+<#if lexer.table == "ecs" || lexer.table == "compressed">
 # ecs
-<@array ecs/>
+<@array lexer.dfa.ecs/>
 </#if>
 # dfa
-<@array3d dfa/>
-# lexer states
-<@array lexerStates/>
-# lexer begins
-<@array lexerBegins/>
+<#if lexer.table == "ecs" || lexer.table == "full">
+<@array3d lexer.dfa.table/>
+</#if>
+# states
+<@array lexer.states/>
+# begins
+<@array lexer.begins/>
 # accepts
-<@array accepts/>
-# lexer cases
-<#list lexerCases as i>
+<@array lexer.accept/>
+# cases
+<#list lexer.cases as i>
 <#list i.patterns as p>
 case ${p.caseValue}
-${i.action}
+{${i.action}}
 </#list>
 </#list>
 # end
-# statistics:
-# dfa states = ${dfa?size}
-<#if ecs?has_content>
-# ecs = ${dfa[0]?size}
 </#if>

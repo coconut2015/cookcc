@@ -30,15 +30,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
-import java.util.LinkedList;
 import java.util.Map;
 
-import org.yuanheng.cookcc.dfa.ECSTable;
-import org.yuanheng.cookcc.dfa.FullTable;
+import org.yuanheng.cookcc.dfa.LexerDFAInfo;
 import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.LexerStateDoc;
-import org.yuanheng.cookcc.doc.RuleDoc;
-import org.yuanheng.cookcc.lexer.Lexer;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.core.HexBI;
@@ -101,49 +96,11 @@ public abstract class TemplatedCodeGen
 
 	public void setup (Map<String, Object> map, Document doc)
 	{
-		Lexer lexer = Lexer.getLexer (doc);
-		if (lexer == null)
-			return;
-
-		map.put ("bol", Boolean.valueOf (lexer.hasBOL ()));
-		map.put ("backup", Boolean.valueOf (lexer.hasBackup ()));
 		map.put ("header", doc.getHeader ());
-		map.put ("cases", lexer.getCaseCount ());
+		map.put ("tokens", doc.getTokens ());
+		map.put ("code", doc.getCode ());
+		map.put ("unicode", Boolean.valueOf (doc.isUnicode ()));
 
-		map.put ("lexerProlog", doc.getLexer ().getProlog ());
-
-		map.put ("statistics", lexer);
-
-		map.put ("lexerCases", getLexerCases (doc));
-		map.put ("accepts", lexer.getDFA ().getAccepts ());
-
-		map.put ("maxSymbol", new Integer (lexer.getCCL ().MAX_SYMBOL));
-		map.put ("eof", new Integer (lexer.getCCL ().MAX_SYMBOL));
-
-		String table = doc.getLexer ().getTable ();
-		map.put ("table", table);
-		if ("ecs".equals (table))
-		{
-			ECSTable ecsTable = new ECSTable (lexer);
-			ecsTable.setup (map);
-		}
-		else if ("full".equals (table))
-		{
-			FullTable fullTable = new FullTable (lexer);
-			fullTable.setup (map);
-		}
-	}
-
-	private RuleDoc[] getLexerCases (Document doc)
-	{
-		LinkedList<RuleDoc> rules = new LinkedList<RuleDoc> ();
-		LexerStateDoc[] lexerStates = doc.getLexer ().getLexerStates ();
-		for (int i = 0; i < lexerStates.length; ++i)
-		{
-			LexerStateDoc lexerState = lexerStates[i];
-			for (RuleDoc rule : lexerState.getRules ())
-				rules.add (rule);
-		}
-		return rules.toArray (new RuleDoc[rules.size ()]);
+		map.put ("lexer", LexerDFAInfo.getLexerDFAInfo (doc));
 	}
 }

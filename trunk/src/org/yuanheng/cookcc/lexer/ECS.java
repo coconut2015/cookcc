@@ -97,6 +97,24 @@ public class ECS
 	}
 
 	/**
+	 * All non-zero values are treated as a group.  This function
+	 * is for computing DFA compression error group.
+	 *
+	 * @param	error
+	 * 			an error vector
+	 */
+	public void add (short[] error)				// for computing ecs for error array
+	{
+		int newGroup = ++m_groupCount;
+		for (int i = 0; i < error.length; i++)
+		{
+			if (error[i] != 0)
+				m_groups[i] += newGroup;
+		}
+		compute ();
+	}
+
+	/**
 	 * Not a particularly efficient method to compute equivalent classes.
 	 * It is quite memory consuming at present.
 	 */

@@ -26,9 +26,6 @@
  */
 package org.yuanheng.cookcc.dfa;
 
-import java.util.Map;
-
-import org.yuanheng.cookcc.doc.LexerStateDoc;
 import org.yuanheng.cookcc.lexer.Lexer;
 
 /**
@@ -61,27 +58,5 @@ public class FullTable
 				array[j] = states[groups[j]];
 		}
 		return table;
-	}
-
-	public String[] getLexerStates ()
-	{
-		LexerStateDoc[] lexerStates = m_lexer.getLexerStates ();
-		String[] states = new String[lexerStates.length];
-		for (int i = 0; i < lexerStates.length; ++i)
-			states[i] = lexerStates[i].getName ();
-		return states;
-	}
-
-	public int[] getLexerBegins ()
-	{
-		return m_lexer.getBeginLocations ();
-	}
-
-	public void setup (Map<String, Object> map)
-	{
-		map.put ("dfa", getTable ());
-
-		map.put ("lexerStates", getLexerStates ());
-		map.put ("lexerBegins", getLexerBegins ());
 	}
 }

@@ -126,6 +126,12 @@ class TableCompressor
 
 	private short[] resize (short[] src, int newSize, short fill)
 	{
+		if (src != null)
+		{
+			if (src.length == newSize)		// no need to do anything in this case.
+				return src;
+		}
+
 		short[] newArray = new short[newSize];
 		int start;
 		if (src != null)
@@ -659,7 +665,7 @@ class TableCompressor
 		if (bound > m_next.length)
 		{
 			m_next = resize (m_next, bound, SHRT_MIN);
-			m_check = resize (m_next, bound, SHRT_MIN);
+			m_check = resize (m_check, bound, SHRT_MIN);
 		}
 
 		m_base[state] = (short)pos;

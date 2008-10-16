@@ -103,7 +103,7 @@ public class Lexer
 
 	int incCaseCounter ()
 	{
-		return m_caseCount++;
+		return ++m_caseCount;
 	}
 
 	public ECS getECS ()

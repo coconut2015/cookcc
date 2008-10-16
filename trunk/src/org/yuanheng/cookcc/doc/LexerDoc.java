@@ -44,6 +44,7 @@ public class LexerDoc extends TreeDoc
 	private final HashMap<String, LexerStateDoc> m_stateMap = new HashMap<String, LexerStateDoc> ();
 	private final HashMap<String, ShortcutDoc> m_shortcutMap = new HashMap<String, ShortcutDoc> ();
 
+	private boolean m_bol;
 	private String m_prolog = "";
 
 	public LexerStateDoc getLexerState (String stateName)
@@ -104,5 +105,28 @@ public class LexerDoc extends TreeDoc
 	public void setProlog (String prolog)
 	{
 		m_prolog = prolog;
+	}
+
+	/**
+	 * Check if the user set a global option that checks BOL state in the lexer.
+	 *
+	 * @return	the global bol option
+	 */
+	public boolean isBol ()
+	{
+		return m_bol;
+	}
+
+	/**
+	 * Set a global option that checks BOL state in the lexer.  If set to true,
+	 * this option would force the generated code to maintain BOL status even
+	 * if no patterns required the BOL information.
+	 *
+	 * @param	bol
+	 * 			the global bol option
+	 */
+	public void setBol (boolean bol)
+	{
+		m_bol = bol;
 	}
 }

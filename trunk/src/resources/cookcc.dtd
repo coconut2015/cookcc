@@ -16,6 +16,7 @@
 	<!ATTLIST lexer		source CDATA #IMPLIED>
 	<!ATTLIST lexer		target CDATA #IMPLIED>
 	<!ATTLIST lexer		table (full|ecs|compressed) #IMPLIED>
+	<!ATTLIST lexer		bol (true|false) #IMPLIED>
 
 	<!ATTLIST shortcut	name CDATA #REQUIRED>
 	<!ATTLIST rule		state CDATA #IMPLIED>

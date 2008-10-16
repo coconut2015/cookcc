@@ -4,37 +4,40 @@
 		<shortcut name="nonws">[^ \t\n]</shortcut>
 		<shortcut name="word">{ws}*{nonws}+</shortcut>
 		<shortcut name="words">{word}{ws}+</shortcut>
+
+		<prolog>int cc = 0, wc = 0, lc = 0;</prolog>
+
 		<rule>
 			<pattern>{word}{ws}*</pattern>
-			<action>cc += yyleng; ++wc;</action>
+			<action>cc += _yyLength; ++wc;</action>
 		</rule>
 		<rule>
 			<pattern>{word}{ws}*\n</pattern>
-			<action>cc += yyleng; ++wc; ++lc;</action>
+			<action>cc += _yyLength; ++wc; ++lc;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{word}{ws}*</pattern>
-			<action>cc += yyleng; wc += 2;</action>
+			<action>cc += _yyLength; wc += 2;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{2}{word}{ws}*</pattern>
-			<action>cc += yyleng; wc += 3;</action>
+			<action>cc += _yyLength; wc += 3;</action>
 		</rule>
 		<rule>
 			<pattern>{words}{3}{word}{ws}*</pattern>
-			<action>cc += yyleng; wc += 4;</action>
+			<action>cc += _yyLength; wc += 4;</action>
 		</rule>
 		<rule>
 			<pattern>{ws}+</pattern>
-			<action>cc += yyleng;</action>
+			<action>cc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern>\n+</pattern>
-			<action>cc += yyleng; lc += yyleng;</action>
+			<action>cc += _yyLength; lc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>
-			<action></action>
+			<action>System.out.println (lc + ", " + wc + ", " + cc ); return 0;</action>
 		</rule>
 	</lexer>
 </cookcc>

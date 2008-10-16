@@ -55,7 +55,7 @@ public class FullTable
 		int[] groups = m_lexer.getECS ().getGroups ();
 		for (int i = 0; i < rows; ++i)
 		{
-			char[] states = dfa.getRow (i).getStates ();
+			short[] states = dfa.getRow (i).getStates ();
 			int[] array = table[i];
 			for (int j = 0; j < cols; ++j)
 				array[j] = states[groups[j]];

@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
 
-<#if maxSymbol &gt; 257>
+<#if unicode>
 import java.io.Reader;
 import java.io.InputStreamReader;
 </#if>
@@ -17,23 +17,23 @@ import java.io.InputStreamReader;
 ${header}
 <#if public?has_content && public?string == "true">public </#if>class ${ccclass}
 {
-<#list lexerStates as i>
-	protected final static int ${i} = ${lexerBegins[i_index]};
+<#list lexer.states as i>
+	protected final static int ${i} = ${lexer.begins[i_index]};
 </#list>
 
 	// an internal class for lazy initiation
 	private final static class cc_lexer
 	{
-		private static char[] accept = "<@intarray accepts/>".toCharArray ();
+		private static char[] accept = "<@intarray lexer.accept/>".toCharArray ();
 <#if ecs?has_content>
-		private static char[] ecs = "<@intarray ecs/>".toCharArray ();
+		private static char[] ecs = "<@intarray lexer.ecs/>".toCharArray ();
 </#if>
-<#if table == "full" || table == "ecs">
-		private static char[][] next = {<#list dfa as i><#if i_index &gt; 0>,</#if>"<@intarray i/>".toCharArray ()</#list>};
+<#if lexer.table == "full" || lexer.table == "ecs">
+		private static char[][] next = {<#list lexer.dfa.table as i><#if i_index &gt; 0>,</#if>"<@intarray i/>".toCharArray ()</#list>};
 </#if>
 	}
 
-<#if maxSymbol &gt; 257>
+<#if unicode>
 	private Reader _yyIs;
 	private char[] _yyBuffer;
 <#else>
@@ -50,13 +50,13 @@ ${header}
 	private int _yyTextStart;
 	private int _yyLength;
 
-<#if bol == true>
+<#if lexer.bol>
 	// we need to track beginning of line (BOL) status
 	private boolean _yyIsNextBOL = true;
 	private boolean _yyBOL;
 </#if>
 
-<#if maxSymbol &gt; 257>
+<#if unicode>
 	public void setInput (Reader reader)
 	{
 		_yyIs = reader;
@@ -78,7 +78,7 @@ ${header}
 	}
 </#if>
 
-<#if bol == true>
+<#if lexer.bol>
 	public boolean isBOL ()
 	{
 		return _yyBOL;
@@ -133,7 +133,7 @@ ${header}
 	// read more data from the input
 	private boolean yyRefreshBuffer () throws IOException
 	{
-<#if maxSymbol &gt; 257>
+<#if unicode>
 		if (_yyBuffer == null)
 			_yyBuffer = new char[_yyBufferSize];
 <#else>
@@ -185,7 +185,7 @@ ${header}
 		_yyMatchStart = 0;
 		_yyBufferEnd = 0;
 		if (_yyBuffer != null && bufferSize != _yyBuffer.length)
-<#if maxSymbol &gt; 257>
+<#if unicode>
 			_yyBuffer = new char[bufferSize];
 <#else>
 			_yyBuffer = new byte[bufferSize];
@@ -201,17 +201,17 @@ ${header}
 	 */
 	public ${yytype} yyLex () throws IOException
 	{
-<#if lexerProlog?has_content>
-	${lexerProlog}
+<#if lexer.prolog?has_content>
+	${lexer.prolog}
 </#if>
 
-<#if table != "full">
+<#if lexer.table != "full">
 		char[] cc_ecs = cc_lexer.ecs;
 </#if>
 		char[][] cc_next = cc_lexer.next;
 		char[] cc_accept = cc_lexer.accept;
 
-<#if maxSymbol &gt; 257>
+<#if unicode>
 		char[] buffer = _yyBuffer;
 <#else>
 		byte[] buffer = _yyBuffer;
@@ -220,7 +220,7 @@ ${header}
 		while (true)
 		{
 			// initiate variables necessary for lookup
-<#if bol == true>
+<#if lexer.bol>
 			_yyBOL = _yyIsNextBOL;
 			_yyIsNextBOL = false;
 
@@ -242,10 +242,10 @@ ${header}
 				{
 					// now okay to process the character
 					int currentState;
-<#if table == "full">
-					currentState = cc_next[matchedState][buffer[lookahead]<#if maxSymbol <= 257>& 0xff</#if>];
-<#elseif table == "ecs">
-					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]<#if maxSymbol <= 257>& 0xff</#if>]];
+<#if lexer.table == "full">
+					currentState = cc_next[matchedState][buffer[lookahead]<#if !unicode>& 0xff</#if>];
+<#elseif lexer.table == "ecs">
+					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]<#if !unicode>& 0xff</#if>]];
 <#else>
 					int symbol = cc_ecs[buffer[lookahead]];
 					currentState = matchedState;
@@ -276,10 +276,10 @@ ${header}
 					{
 						// <<EOF>>
 						if (matchedLength == 0)
-<#if table == "full">
-							matchedState = cc_next[matchedState][${eof}];
-<#elseif table == "ecs">
-							matchedState = cc_next[matchedState][cc_ecs[${eof}]];
+<#if lexer.table == "full">
+							matchedState = cc_next[matchedState][${lexer.eof}];
+<#elseif lexer.table == "ecs">
+							matchedState = cc_next[matchedState][cc_ecs[${lexer.eof}]];
 <#else>
 </#if>
 						break;
@@ -293,13 +293,13 @@ ${header}
 
 			switch (cc_accept[matchedState])
 			{
-<#list lexerCases as i>
+<#list lexer.cases as i>
 <#list i.patterns as p>
 				case ${p.caseValue}:
 				{
 					${i.action}
 				}
-				case ${p.caseValue + cases + 1}: break;
+				case ${p.caseValue + lexer.caseCount + 1}: break;
 </#list>
 </#list>
 				default:
@@ -310,7 +310,7 @@ ${header}
 </#if>
 			}
 
-<#if bol == true>
+<#if lexer.bol>
 			// check BOL here since '\n' may be unput back into the stream buffer
 
 			// specifically used _yyBuffer since it could be changed by user
@@ -335,7 +335,7 @@ ${header}
 	{
 		${ccclass} tmpLexer = new ${ccclass} ();
 		if (args.length > 0)
-<#if maxSymbol &gt; 257>
+<#if unicode>
 			tmpLexer.setInput (new InputStreamReader (FileInputStream (args[0])));
 <#else>
 			tmpLexer.setInput (new FileInputStream (args[0]));
@@ -351,13 +351,16 @@ ${code}
 
 /*
  * properties and statistics
- * bol = ${bol?string}
- * backup = ${backup?string}
- * dfa states = ${dfa?size}
-<#if ecs?has_content>
- * ecs = ${dfa[0]?size}
- * eof = ${eof}
- * max symbol value = ${maxSymbol}
+ * unicode = ${unicode?string}
+ * bol = ${lexer.bol?string}
+ * backup = ${lexer.backup?string}
+ * cases = ${lexer.caseCount}
+ * table = ${lexer.table}
+<#if lexer.table == "ecs" || lexer.table == "compressed">
+ * ecs = ${lexer.ecsGroupCount}
 </#if>
+ * states = ${lexer.dfa.table?size}
+ * max symbol value = ${lexer.maxSymbol}
  */
+
 }

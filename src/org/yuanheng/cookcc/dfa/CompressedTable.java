@@ -29,38 +29,67 @@ package org.yuanheng.cookcc.dfa;
 import org.yuanheng.cookcc.lexer.Lexer;
 
 /**
- * Utility class that computes the full table.
+ * Perform table compression
  *
  * @author Heng Yuan
  * @version $Id$
  */
-public class ECSTable
+public class CompressedTable
 {
 	private final Lexer m_lexer;
+	private boolean m_computed;
 
-	public ECSTable (Lexer lexer)
+	private short[] m_next;
+	private short[] m_check;
+	private short[] m_base;
+	private short[] m_default;
+
+	public CompressedTable (Lexer lexer)
 	{
 		m_lexer = lexer;
 	}
 
-	public int[] getEcs ()
+	private void compute ()
+	{
+		if (m_computed)
+			return;
+		m_computed = true;
+		TableCompressor compressor = new TableCompressor (m_lexer.getDFA ());
+
+		compressor.compute ();
+
+		m_next = compressor.getNext ();
+		m_check = compressor.getCheck ();
+		m_base = compressor.getBase ();
+		m_default = compressor.getDefault ();
+	}
+
+	public int[] getECS ()
 	{
 		return m_lexer.getECS ().getGroups ().clone ();
 	}
 
-	public int[][] getTable ()
+	public short[] getNext ()
 	{
-		DFATable dfa = m_lexer.getDFA ();
-		int rows = dfa.size ();
-		int cols = m_lexer.getECS ().getGroupCount ();
-		int[][] table = new int[rows][cols];
-		for (int i = 0; i < rows; ++i)
-		{
-			short[] states = dfa.getRow (i).getStates ();
-			int[] array = table[i];
-			for (int j = 0; j < cols; ++j)
-				array[j] = states[j];
-		}
-		return table;
+		compute ();
+		return m_next;
+	}
+
+	public short[] getCheck ()
+	{
+		compute ();
+		return m_check;
+	}
+
+	public short[] getBase ()
+	{
+		compute ();
+		return m_base;
+	}
+
+	public short[] getDefault ()
+	{
+		compute ();
+		return m_default;
 	}
 }

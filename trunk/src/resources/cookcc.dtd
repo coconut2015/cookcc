@@ -1,26 +1,24 @@
-<!DOCTYPE cookcc [
-	<!ELEMENT cookcc (header?, tokens+, lexer?, parser?, code?)>
-	<!ELEMENT header	(#PCDATA)>
-	<!ELEMENT tokens	(#PCDATA)>
-	<!ELEMENT lexer		(shortcut*, prolog?, (state | rule)+)>
-	<!ELEMENT parser	(#PCDATA)>
-	<!ELEMENT code		(#PCDATA)>
+<!ELEMENT cookcc (header?, tokens*, lexer?, parser?, code?)>
+<!ELEMENT header	(#PCDATA)>
+<!ELEMENT tokens	(#PCDATA)>
+<!ELEMENT lexer		(shortcut*, prolog?, (state | rule)+)>
+<!ELEMENT parser	(#PCDATA)>
+<!ELEMENT code		(#PCDATA)>
 
-	<!ELEMENT shortcut	(#PCDATA)>
-	<!ELEMENT prolog	(#PCDATA)>
-	<!ELEMENT state		(rule+)>
-	<!ELEMENT rule		(pattern+, action)>
-	<!ELEMENT pattern	(#PCDATA)>
-	<!ELEMENT action	(#PCDATA)>
+<!ELEMENT shortcut	(#PCDATA)>
+<!ELEMENT prolog	(#PCDATA)>
+<!ELEMENT state		(rule+)>
+<!ELEMENT rule		(pattern+, action)>
+<!ELEMENT pattern	(#PCDATA)>
+<!ELEMENT action	(#PCDATA)>
 
-	<!ATTLIST lexer		source CDATA #IMPLIED>
-	<!ATTLIST lexer		target CDATA #IMPLIED>
-	<!ATTLIST lexer		table (full|ecs|compressed) #IMPLIED>
-	<!ATTLIST lexer		bol (true|false) #IMPLIED>
+<!ATTLIST lexer		source CDATA #IMPLIED>
+<!ATTLIST lexer		target CDATA #IMPLIED>
+<!ATTLIST lexer		table (full|ecs|compressed) #IMPLIED>
+<!ATTLIST lexer		bol (true|false) #IMPLIED>
 
-	<!ATTLIST shortcut	name CDATA #REQUIRED>
-	<!ATTLIST rule		state CDATA #IMPLIED>
-	<!ATTLIST rule		line CDATA #IMPLIED>
-	<!ATTLIST pattern	bol (true|false) #IMPLIED>
-	<!ATTLIST pattern	nocase (true|false) #IMPLIED>
-]>
+<!ATTLIST shortcut	name CDATA #REQUIRED>
+<!ATTLIST rule		state CDATA #IMPLIED>
+<!ATTLIST rule		line CDATA #IMPLIED>
+<!ATTLIST pattern	bol (true|false) #IMPLIED>
+<!ATTLIST pattern	nocase (true|false) #IMPLIED>

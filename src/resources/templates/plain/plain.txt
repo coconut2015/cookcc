@@ -17,7 +17,7 @@
 <#if lexer.table == "ecs" || lexer.table == "compressed">
 : ecs = ${lexer.ecsGroupCount}
 </#if>
-: states = ${lexer.dfa.table?size}
+: states = ${lexer.dfa.size}
 <#if lexer.table == "ecs" || lexer.table == "compressed">
 # ecs
 <@array lexer.dfa.ecs/>
@@ -25,6 +25,25 @@
 # dfa
 <#if lexer.table == "ecs" || lexer.table == "full">
 <@array3d lexer.dfa.table/>
+</#if>
+<#if lexer.table == "compressed">
+# base
+<@array lexer.dfa.base/>
+# next
+<@array lexer.dfa.next/>
+# check
+<@array lexer.dfa.next/>
+<#if lexer.dfa.default?has_content>
+# default
+<@array lexer.dfa.default/>
+</#if>
+<#if lexer.dfa.error>
+: error = ${lexer.dfa.error?string}
+</#if>
+<#if lexer.dfa.meta?has_content>
+# meta
+<@array lexer.dfa.meta/>
+</#if>
 </#if>
 # states
 <@array lexer.states/>

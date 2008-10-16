@@ -63,4 +63,9 @@ public class ECSTable
 		}
 		return table;
 	}
+
+	public int getSize ()
+	{
+		return m_lexer.getDFA ().size ();
+	}
 }

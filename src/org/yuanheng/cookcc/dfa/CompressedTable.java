@@ -39,10 +39,13 @@ public class CompressedTable
 	private final Lexer m_lexer;
 	private boolean m_computed;
 
+	private short[] m_base;
 	private short[] m_next;
 	private short[] m_check;
-	private short[] m_base;
+
 	private short[] m_default;
+	private boolean m_error;
+	private short[] m_meta;
 
 	public CompressedTable (Lexer lexer)
 	{
@@ -58,15 +61,29 @@ public class CompressedTable
 
 		compressor.compute ();
 
+		m_base = compressor.getBase ();
 		m_next = compressor.getNext ();
 		m_check = compressor.getCheck ();
-		m_base = compressor.getBase ();
+
 		m_default = compressor.getDefault ();
+		m_error = compressor.getError ();
+		m_meta = compressor.getMeta ();
 	}
 
-	public int[] getECS ()
+	public int getSize ()
+	{
+		return m_lexer.getDFA ().size ();
+	}
+
+	public int[] getEcs ()
 	{
 		return m_lexer.getECS ().getGroups ().clone ();
+	}
+
+	public short[] getBase ()
+	{
+		compute ();
+		return m_base;
 	}
 
 	public short[] getNext ()
@@ -81,15 +98,21 @@ public class CompressedTable
 		return m_check;
 	}
 
-	public short[] getBase ()
-	{
-		compute ();
-		return m_base;
-	}
-
 	public short[] getDefault ()
 	{
 		compute ();
 		return m_default;
+	}
+
+	public boolean getError ()
+	{
+		compute ();
+		return m_error;
+	}
+
+	public short[] getMeta ()
+	{
+		compute ();
+		return m_meta;
 	}
 }

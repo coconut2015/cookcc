@@ -59,4 +59,9 @@ public class FullTable
 		}
 		return table;
 	}
+
+	public int getSize ()
+	{
+		return m_lexer.getDFA ().size ();
+	}
 }

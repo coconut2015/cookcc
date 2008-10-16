@@ -25,11 +25,22 @@ ${header}
 	private final static class cc_lexer
 	{
 		private static char[] accept = "<@intarray lexer.accept/>".toCharArray ();
-<#if ecs?has_content>
+<#if lexer.table == "ecs" || lexer.table == "compressed">
 		private static char[] ecs = "<@intarray lexer.ecs/>".toCharArray ();
 </#if>
 <#if lexer.table == "full" || lexer.table == "ecs">
 		private static char[][] next = {<#list lexer.dfa.table as i><#if i_index &gt; 0>,</#if>"<@intarray i/>".toCharArray ()</#list>};
+</#if>
+<#if lexer.table == "compressed">
+		private static char[] base = "<@intarray lexer.dfa.base/>".toCharArray ();
+		private static char[] next = "<@intarray lexer.dfa.next/>".toCharArray ();
+		private static char[] check = "<@intarray lexer.dfa.check/>".toCharArray ();
+	<#if lexer.dfa.default?has_content>
+		private static char[] defaults = "<@intarray lexer.dfa.default/>".toCharArray ();
+	</#if>
+	<#if lexer.dfa.meta?has_content>
+		private static char[] meta = "<@intarray lexer.dfa.meta/>".toCharArray ();
+	</#if>
 </#if>
 	}
 
@@ -205,10 +216,24 @@ ${header}
 	${lexer.prolog}
 </#if>
 
-<#if lexer.table != "full">
+<#if lexer.table == "ecs" || lexer.table == "compressed">
 		char[] cc_ecs = cc_lexer.ecs;
 </#if>
+<#if lexer.table == "ecs" || lexer.table == "full">
 		char[][] cc_next = cc_lexer.next;
+<#elseif lexer.table="compressed">
+		char[] cc_next = cc_lexer.next;
+		char[] cc_check = cc_lexer.check;
+	<#if lexer.dfa.base?has_content>
+		char[] cc_base = cc_lexer.base;
+	</#if>
+	<#if lexer.dfa.default?has_content>
+		char[] cc_default = cc_lexer.defaults;
+	</#if>
+	<#if lexer.dfa.meta?has_content>
+		char[] cc_meta = cc_lexer.meta;
+	</#if>
+</#if>
 		char[] cc_accept = cc_lexer.accept;
 
 <#if unicode>
@@ -243,19 +268,39 @@ ${header}
 					// now okay to process the character
 					int currentState;
 <#if lexer.table == "full">
-					currentState = cc_next[matchedState][buffer[lookahead]<#if !unicode>& 0xff</#if>];
+					currentState = cc_next[matchedState][buffer[lookahead]<#if !unicode> & 0xff</#if>];
 <#elseif lexer.table == "ecs">
-					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]<#if !unicode>& 0xff</#if>]];
+					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]<#if !unicode> & 0xff</#if>]];
 <#else>
-					int symbol = cc_ecs[buffer[lookahead]];
+					int symbol = cc_ecs[buffer[lookahead]<#if !unicode>& 0xff</#if>];
 					currentState = matchedState;
-					while (yylex_check[symbol + yylex_base[currentState]] != currentState)
+	<#if !lexer.dfa.default?has_content>
+					if (cc_check[symbol + cc_base[matchedState]] == matchedState)
+						currentState = cc_next[symbol + cc_base[matchedState]];
+					else
+						currentState = 0;
+	<#elseif !lexer.dfa.error?has_content>
+					if (cc_check[symbol + cc_base[matchedState]] == matchedState)
+						currentState = cc_next[symbol + cc_base[matchedState]];
+					else
+						currentState = cc_default[matchedState];
+	<#elseif !lexer.dfa.meta?has_content>
+					while (cc_check[symbol + cc_base[currentState]] != currentState)
 					{
-						currentState = yylex_default[currentState];
-						if (currentState >= 18)
+						currentState = cc_default[currentState];
+						if (currentState >= ${lexer.dfa.size})
 							symbol = 0;
 					}
-					currentState = yylex_next[symbol + yylex_base[currentState]];
+					currentState = cc_next[symbol + cc_base[currentState]];
+	<#else>
+					while (cc_check[symbol + cc_base[currentState]] != currentState)
+					{
+						currentState = cc_default[currentState];
+						if (currentState >= ${lexer.dfa.states})
+							symbol = cc_meta[symbol];
+					}
+					currentState = cc_next[symbol + cc_base[currentState]];
+	</#if>
 </#if>
 
 					if (currentState == 0)
@@ -280,7 +325,8 @@ ${header}
 							matchedState = cc_next[matchedState][${lexer.eof}];
 <#elseif lexer.table == "ecs">
 							matchedState = cc_next[matchedState][cc_ecs[${lexer.eof}]];
-<#else>
+<#elseif lexer.table == "compressed">
+							matchedState = _yyBaseState;
 </#if>
 						break;
 					}
@@ -359,8 +405,7 @@ ${code}
 <#if lexer.table == "ecs" || lexer.table == "compressed">
  * ecs = ${lexer.ecsGroupCount}
 </#if>
- * states = ${lexer.dfa.table?size}
+ * states = ${lexer.dfa.size}
  * max symbol value = ${lexer.maxSymbol}
  */
-
 }

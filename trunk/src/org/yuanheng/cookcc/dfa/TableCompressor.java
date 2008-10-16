@@ -736,6 +736,11 @@ class TableCompressor
 
 	void compute ()
 	{
+		m_next = new short[0];
+		m_check = new short[0];
+		m_default = resize (m_default, m_dfaCopy.size (), SHRT_MIN);
+		m_base = resize (m_base, m_dfaCopy.size (), (short)0);
+
 		processDFAStates ();
 
 		//
@@ -847,6 +852,8 @@ class TableCompressor
 						m_default[i] = m_error.get (m_default[i] - m_dfaCopy.size ()).getDefaultValue ();
 				}
 		}
+		else
+			m_default = null;
 
 		//
 		// process all SHRT_MIN in m_check and m_next to 0
@@ -880,23 +887,21 @@ class TableCompressor
 		return m_default;
 	}
 
-	boolean isUseDefault ()
+	short[] getMeta ()
 	{
-		return m_useDefault;
+		if (m_useDefault && m_useMeta)
+		{
+			short[] meta = new short[m_rowSize];
+			int[] groups = m_ecsError.getGroups ();
+			for (int i = 0; i < meta.length; ++i)
+				meta[i] = (short)groups[i];
+			return meta;
+		}
+		return null;
 	}
 
-	boolean isUseMeta ()
-	{
-		return m_useMeta;
-	}
-
-	boolean isUseError ()
+	boolean getError ()
 	{
 		return m_useError;
-	}
-
-	boolean isUseState ()
-	{
-		return m_useState;
 	}
 }

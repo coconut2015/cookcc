@@ -1,5 +1,5 @@
 <#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
-<#macro intarray a><#list a as i>\u${i?hex(4)}</#list></#macro>
+<#macro intarray a><#list a as i><#if i == 10>\n<#elseif i == 13>\r<#else>\u${i?hex(4)}</#if></#list></#macro>
 <#if package?has_content>
 package ${package};
 <@array ecs/>

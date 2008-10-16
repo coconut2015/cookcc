@@ -19,7 +19,7 @@
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>
-			<action>System.out.printf( "%8d %8d %8d\n", lc, wc, cc );</action>
+			<action>System.out.println (lc + ", " + wc + ", " + cc ); return 0;</action>
 		</rule>
 	</lexer>
 </cookcc>

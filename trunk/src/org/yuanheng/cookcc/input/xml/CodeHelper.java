@@ -26,28 +26,24 @@
  */
 package org.yuanheng.cookcc.input.xml;
 
-import org.w3c.dom.Element;
-import org.yuanheng.cookcc.doc.LexerDoc;
-
-import cookxml.core.DecodeEngine;
-import cookxml.core.interfaces.Creator;
-import cookxml.core.util.TextUtils;
+import cookxml.core.interfaces.NoAdd;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-class PrologCreator implements Creator
+public class CodeHelper implements NoAdd
 {
-	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
+	public String name = "default";
+	private String m_code;
+
+	public void addCode (String code)
 	{
-		decodeEngine.setDoAdd (false);
-		return TextUtils.getText (elm);
+		m_code = code;
 	}
 
-	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
+	public String getCode ()
 	{
-		((LexerDoc)parentObj).setProlog (obj.toString ());
-		return obj;
+		return m_code;
 	}
 }

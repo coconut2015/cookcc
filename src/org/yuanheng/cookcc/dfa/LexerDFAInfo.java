@@ -57,11 +57,6 @@ public class LexerDFAInfo
 		m_lexer = lexer;
 	}
 
-	public String getProlog ()
-	{
-		return m_lexerDoc.getProlog ();
-	}
-
 	public int getEof ()
 	{
 		return m_lexer.getCCL ().EOF;

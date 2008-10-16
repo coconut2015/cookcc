@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
 <cookcc>
+	<code name="lexerprolog">int cc = 0, wc = 0, lc = 0;</code>
+
 	<lexer>
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
 		<shortcut name="word">{ws}*{nonws}+</shortcut>
-
-		<prolog>int cc = 0, wc = 0, lc = 0;</prolog>
 
 		<rule>
 			<pattern>{word}{ws}*</pattern>

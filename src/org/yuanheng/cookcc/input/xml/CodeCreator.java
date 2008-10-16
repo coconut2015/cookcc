@@ -42,12 +42,22 @@ class CodeCreator implements Creator
 	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
 	{
 		decodeEngine.setDoAdd (false);
-		return TextUtils.getText (elm);
+		CodeHelper helper = new CodeHelper ();
+		helper.addCode (TextUtils.getText (elm));
+		return helper;
 	}
 
 	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
 	{
-		((Document)parentObj).setCode (obj.toString ());
+		CodeHelper helper = (CodeHelper)obj;
+		if (helper.getCode () == null)		// don't do anything
+			return obj;
+		Document doc = ((Document)parentObj);
+		String oldCode = doc.getCode ().get (helper.name);
+		if (oldCode == null)
+			((Document)parentObj).addCode (helper.name, helper.getCode ());
+		else
+			((Document)parentObj).addCode (helper.name, oldCode + helper.getCode ());
 		return obj;
 	}
 }

@@ -96,7 +96,6 @@ public abstract class TemplatedCodeGen
 
 	public void setup (Map<String, Object> map, Document doc)
 	{
-		map.put ("header", doc.getHeader ());
 		map.put ("tokens", doc.getTokens ());
 		map.put ("code", doc.getCode ());
 		map.put ("unicode", Boolean.valueOf (doc.isUnicode ()));

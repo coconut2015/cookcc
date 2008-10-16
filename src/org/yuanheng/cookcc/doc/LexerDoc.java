@@ -45,7 +45,6 @@ public class LexerDoc extends TreeDoc
 	private final HashMap<String, ShortcutDoc> m_shortcutMap = new HashMap<String, ShortcutDoc> ();
 
 	private boolean m_bol;
-	private String m_prolog = "";
 
 	public LexerStateDoc getLexerState (String stateName)
 	{
@@ -95,16 +94,6 @@ public class LexerDoc extends TreeDoc
 	public ShortcutDoc getShortcut (String name)
 	{
 		return m_shortcutMap.get (name);
-	}
-
-	public String getProlog ()
-	{
-		return m_prolog;
-	}
-
-	public void setProlog (String prolog)
-	{
-		m_prolog = prolog;
 	}
 
 	/**

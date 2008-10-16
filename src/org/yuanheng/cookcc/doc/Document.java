@@ -26,9 +26,7 @@
  */
 package org.yuanheng.cookcc.doc;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * This is the parsed tree from cookcc input.  It is the internal structure which lexer/parser
@@ -41,8 +39,7 @@ import java.util.StringTokenizer;
 public class Document extends TreeDoc
 {
 	private boolean m_unicode;
-	private String m_header = "";
-	private String m_code = "";
+	private final Map<String,String> m_code = new HashMap<String,String> ();
 	private final Collection<String> m_tokens = new LinkedList<String> ();
 	private LexerDoc m_lexer;
 	private ParserDoc m_parser;
@@ -67,24 +64,14 @@ public class Document extends TreeDoc
 		m_parser = parserDoc;
 	}
 
-	public String getHeader ()
-	{
-		return m_header;
-	}
-
-	public void setHeader (String header)
-	{
-		m_header = header;
-	}
-
-	public String getCode ()
+	public Map<String,String> getCode ()
 	{
 		return m_code;
 	}
 
-	public void setCode (String code)
+	public void addCode (String key, String code)
 	{
-		m_code = code;
+		m_code.put (key, code);
 	}
 
 	public LexerDoc getLexer ()

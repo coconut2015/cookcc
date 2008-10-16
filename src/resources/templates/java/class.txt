@@ -1,5 +1,8 @@
 <#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
 <#macro intarray a><#list a as i><#if i == 10>\n<#elseif i == 13>\r<#else>\u${i?hex(4)}</#if></#list></#macro>
+<#if code.copyright?has_content>
+${code.copyright}
+</#if>
 <#if package?has_content>
 package ${package};
 <@array ecs/>
@@ -14,7 +17,6 @@ import java.io.Reader;
 import java.io.InputStreamReader;
 </#if>
 
-${header}
 <#if public?has_content && public?string == "true">public </#if>class ${ccclass}
 {
 <#list lexer.states as i>
@@ -212,8 +214,8 @@ ${header}
 	 */
 	public ${yytype} yyLex () throws IOException
 	{
-<#if lexer.prolog?has_content>
-	${lexer.prolog}
+<#if code.lexerprolog?has_content>
+	${code.lexerprolog}
 </#if>
 
 <#if lexer.table == "ecs" || lexer.table == "compressed">
@@ -391,8 +393,8 @@ ${header}
 	}
 </#if>
 
-<#if code?has_content>
-${code}
+<#if code.default?has_content>
+${code.default}
 </#if>
 
 /*

@@ -28,6 +28,7 @@ package org.yuanheng.cookcc.codegen.xml;
 
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
@@ -63,23 +64,19 @@ public class XmlCodeGen implements CodeGen
 	private void printDocument (Document doc, PrintWriter p)
 	{
 		p.println ("<codecc>");
-		String str = doc.getHeader ();
-		if (str != null && str.length () > 0)
+
+		Map<String,String> codeMap = doc.getCode ();
+
+		for (String key : codeMap.keySet ())
 		{
-			p.print ("\t<header>");
-			p.print (str);
-			p.println ("</header>");
+			String code = codeMap.get (key);
+			if (code != null && code.length () > 0)
+				p.println ("\t<code name=\"" + key + "\">" + code + "</code>");
 		}
+
 		printTokens (doc, p);
 		new XmlLexerOutput ().printLexer (doc.getLexer (), p);
 		new XmlParserOutput ().printParserDoc (doc.getParser (), p);
-		str = doc.getCode ();
-		if (str != null && str.length () > 0)
-		{
-			p.print ("\t<code>");
-			p.print (str);
-			p.println ("</code>");
-		}
 		p.println ("</codecc>");
 	}
 

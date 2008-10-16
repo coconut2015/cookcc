@@ -74,11 +74,8 @@ public class XmlParser
 
 		// Tag Creators
 		tagLibrary.setCreator ("cookcc", DefaultCreator.getCreator (Document.class));
-		tagLibrary.setCreator ("header", new HeaderCreator ());
 		tagLibrary.setCreator ("code", new CodeCreator ());
 		tagLibrary.setCreator ("tokens", new TokensCreator ());
-
-		tagLibrary.setCreator ("prolog", new PrologCreator ());
 
 		tagLibrary.setCreator ("lexer", DefaultCreator.getCreator (LexerDoc.class));
 		tagLibrary.addAdder ("cookcc", new CallFunctionAdder ("setLexer", Document.class, LexerDoc.class));

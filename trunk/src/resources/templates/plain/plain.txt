@@ -1,4 +1,6 @@
-<#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
+<#macro array a>
+<#list a as i><#if i_index &gt; 0>,</#if>${i}</#list>
+</#macro>
 <#macro array3d a>
 <#list a as i>
 	<@array i/>

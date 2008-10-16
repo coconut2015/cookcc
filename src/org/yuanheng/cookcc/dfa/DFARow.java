@@ -33,27 +33,27 @@ package org.yuanheng.cookcc.dfa;
 public class DFARow
 {
 	private int m_caseValue;
-	private final char[] m_states;
+	private final short[] m_states;
 
-	public DFARow (char[] states)
+	public DFARow (int cols)
 	{
-		m_states = states.clone ();
+		m_states = new short[cols];
 	}
 
-	public DFARow (DFARow other)
+	private DFARow (DFARow other)
 	{
 		m_caseValue = other.m_caseValue;
 		m_states = other.m_states.clone ();
 	}
 
-	public char[] getStates ()
+	public short[] getStates ()
 	{
 		return m_states;
 	}
 
 	public void setState (int col, int state)
 	{
-		m_states[col] = (char)state;
+		m_states[col] = (short)state;
 	}
 
 	public void setCaseValue (int caseValue)
@@ -64,5 +64,10 @@ public class DFARow
 	public int getCaseValue ()
 	{
 		return m_caseValue;
+	}
+
+	public DFARow clone ()
+	{
+		return new DFARow (this);
 	}
 }

@@ -389,7 +389,7 @@ public class Lexer
 
 			NFA n = T.isAccept ();
 
-			DFARow row = new DFARow (new char[groupCount]);
+			DFARow row = new DFARow (groupCount);
 			if (n != null) // set row accept conditions and values
 			{
 				row.setCaseValue (n.caseValue);

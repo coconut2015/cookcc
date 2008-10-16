@@ -34,7 +34,20 @@ import java.util.Vector;
  */
 public class DFATable
 {
-	private Vector<DFARow> m_table = new Vector<DFARow> (512, 512);
+	private final Vector<DFARow> m_table;
+
+	public DFATable ()
+	{
+		m_table = new Vector<DFARow> (512, 512);
+	}
+
+	// create a deep copy of the other table
+	private DFATable (DFATable other)
+	{
+		m_table = new Vector<DFARow> (other.m_table.size ());
+		for (DFARow row : other.m_table)
+			m_table.add (row.clone ());
+	}
 
 	public void add (DFARow row)
 	{
@@ -67,5 +80,10 @@ public class DFATable
 	public String toString ()
 	{
 		return "DFA states: " + size ();
+	}
+
+	public DFATable clone ()
+	{
+		return new DFATable (this);
 	}
 }

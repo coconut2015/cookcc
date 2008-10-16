@@ -7,14 +7,21 @@ package ${package};
 
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
+
+<#if maxSymbol &gt; 257>
 import java.io.Reader;
+import java.io.InputStreamReader;
+</#if>
 
 ${header}
 <#if public?has_content && public?string == "true">public </#if>class ${ccclass}
 {
+<#list lexerStates as i>
+	protected final static int ${i} = ${lexerBegins[i_index]};
+</#list>
 
+	// an internal class for lazy initiation
 	private final static class cc_lexer
 	{
 		private static char[] accept = "<@intarray accepts/>".toCharArray ();
@@ -49,12 +56,6 @@ ${header}
 	private boolean _yyBOL;
 </#if>
 
-	private boolean _yyReturnValue = true;
-
-<#if lexerProlog?has_content>
-	${lexerProlog}
-</#if>
-
 <#if maxSymbol &gt; 257>
 	public void setInput (Reader reader)
 	{
@@ -84,6 +85,15 @@ ${header}
 	}
 </#if>
 
+	/**
+	 * Get the current token text.
+	 * <p>
+	 * Avoid calling this function unless it is absolutely necessary since it creates
+	 * a copy of the token string.  The string length can be found by reading _yyLength
+	 * or calling yyLength () function.
+	 *
+	 * @return	the current text token.
+	 */
 	public String getText ()
 	{
 		if (_yyText == null)
@@ -91,22 +101,36 @@ ${header}
 		return _yyText;
 	}
 
+	/**
+	 * Get the current text token's length.  Actions specified in the CookCC file
+	 * can directly access the variable
+	 * @return	the string token length
+	 */
 	public int getLength ()
 	{
 		return _yyLength;
 	}
 
+	/**
+	 * Print the current string token to the standard output.
+	 */
 	public void echo ()
 	{
 		System.out.print (getText ());
 	}
 
-	// set the current state machine
-	private void begin (int baseState)
+	/**
+	 * Set the lexer's current state.
+	 *
+	 * @param	baseState
+	 *			the base state index
+	 */
+	protected void begin (int baseState)
 	{
 		_yyBaseState = baseState;
 	}
 
+	// read more data from the input
 	private boolean yyRefreshBuffer () throws IOException
 	{
 <#if maxSymbol &gt; 257>
@@ -136,20 +160,51 @@ ${header}
 		return readSize >= 0;
 	}
 
-	public void setBufferSize (int bufferSize)
+	/**
+	 * Reset the internal buffer.
+	 */
+	public void resetBuffer ()
 	{
-		if (_yyBuffer == null)
-			_yyBufferSize = bufferSize;
-		else
-		{
-			if (bufferSize < _yyBufferSize)
-			{
-			}
-		}
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
 	}
 
+	/**
+	 * Set the internal buffer size.  This action can only be performed
+	 * when the buffer is empty.  Having a large buffer is useful to read
+	 * a whole file in to increase the performance sometimes.
+	 *
+	 * @param	bufferSize
+	 *			the new buffer size.
+	 */
+	public void setBufferSize (int bufferSize)
+	{
+		if (_yyBufferEnd > _yyMatchStart)
+			throw new IllegalArgumentException ("Cannot change lexer buffer size at this moment.");
+		_yyBufferSize = bufferSize;
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+		if (_yyBuffer != null && bufferSize != _yyBuffer.length)
+<#if maxSymbol &gt; 257>
+			_yyBuffer = new char[bufferSize];
+<#else>
+			_yyBuffer = new byte[bufferSize];
+</#if>
+	}
+
+	/**
+	 * Call this function to start the scanning of the input.
+	 *
+	 * @return	a token or status value.
+	 * @throws	IOException
+	 *			in case of I/O error.
+	 */
 	public ${yytype} yyLex () throws IOException
 	{
+<#if lexerProlog?has_content>
+	${lexerProlog}
+</#if>
+
 <#if table != "full">
 		char[] cc_ecs = cc_lexer.ecs;
 </#if>
@@ -188,9 +243,9 @@ ${header}
 					// now okay to process the character
 					int currentState;
 <#if table == "full">
-					currentState = cc_next[matchedState][buffer[lookahead]];
+					currentState = cc_next[matchedState][buffer[lookahead]<#if maxSymbol <= 257>& 0xff</#if>];
 <#elseif table == "ecs">
-					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]]];
+					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]<#if maxSymbol <= 257>& 0xff</#if>]];
 <#else>
 					int symbol = cc_ecs[buffer[lookahead]];
 					currentState = matchedState;
@@ -221,7 +276,12 @@ ${header}
 					{
 						// <<EOF>>
 						if (matchedLength == 0)
-							return yyLexCase (cc_accept[_yyBaseState]);
+<#if table == "full">
+							matchedState = cc_next[matchedState][${eof}];
+<#elseif table == "ecs">
+							matchedState = cc_next[matchedState][cc_ecs[${eof}]];
+<#else>
+</#if>
 						break;
 					}
 				}
@@ -231,11 +291,24 @@ ${header}
 			_yyMatchStart += matchedLength;
 			_yyLength = matchedLength;
 
+			switch (cc_accept[matchedState])
+			{
+<#list lexerCases as i>
+<#list i.patterns as p>
+				case ${p.caseValue}:
+				{
+					${i.action}
+				}
+				case ${p.caseValue + cases + 1}: break;
+</#list>
+</#list>
+				default:
 <#if yytype != "void">
-			${yytype} val = yyLexCase (cc_accept[matchedState]);
+					return (${yytype})-1;
 <#else>
-			yyLexCase (cc_accept[matchedState]);
+					return;
 </#if>
+			}
 
 <#if bol == true>
 			// check BOL here since '\n' may be unput back into the stream buffer
@@ -244,43 +317,20 @@ ${header}
 			if (_yyMatchStart > 0 && _yyBuffer[_yyMatchStart - 1] == '\n')
 				_yyIsNextBOL = true;
 </#if>
-
-<#if yytype != "void">
-			if (_yyReturnValue)
-				return val;
-</#if>
 		}
-	}
-
-	private ${yytype} yyLexCase (char yySwitch)
-	{
-
-		switch (yySwitch)
-		{
-<#list lexerCases as i>
-<#list i.patterns as p>
-			case ${p.caseValue}:
-			{
-				${i.action}
-			}
-				break;
-</#list>
-</#list>
-			default:
-<#if yytype != "void">
-				return (${yytype})-1;
-<#else>
-				return;
-</#if>
-		}
-
-<#if yytype != "void">
-		_yyReturnValue = false;
-		return 0;
-</#if>
 	}
 
 <#if main?has_content && main?string == "true">
+	/**
+	 * This is a stub main function that either reads the file that user specified
+	 * or from the standard input.
+	 *
+	 * @param	args
+	 *			command line arguments.
+	 *
+	 * @throws	Exception
+	 *			in case of any errors.
+	 */
 	public static void main (String[] args) throws Exception
 	{
 		${ccclass} tmpLexer = new ${ccclass} ();

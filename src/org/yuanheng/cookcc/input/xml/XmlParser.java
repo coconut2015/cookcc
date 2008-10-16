@@ -26,7 +26,12 @@
  */
 package org.yuanheng.cookcc.input.xml;
 
+import java.io.IOException;
+
 import org.w3c.dom.Node;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.doc.LexerDoc;
 import org.yuanheng.cookcc.doc.ParserDoc;
@@ -92,6 +97,13 @@ public class XmlParser
 
 	private static class Parser extends DOMParser
 	{
+		private EntityResolver m_entityResolver = new EntityResolver ()
+		{
+			public InputSource resolveEntity (String publicId, String systemId) throws SAXException, IOException
+			{
+				return new InputSource (getClass ().getClassLoader ().getResourceAsStream ("resources/cookcc.dtd"));
+			}
+		};
 		private XMLLocator m_locator;
 
 		public Parser ()
@@ -99,7 +111,7 @@ public class XmlParser
 			try
 			{
 				setFeature ("http://apache.org/xml/features/dom/defer-node-expansion", false);
-				//setFeature ("http://apache.org/xml/features/create-cdata-nodes", false);
+				setEntityResolver (m_entityResolver);
 			}
 			catch (Exception ex)
 			{

@@ -47,10 +47,10 @@ import java.io.InputStreamReader;
 	}
 
 <#if unicode>
-	private Reader _yyIs;
+	private Reader _yyIs = new InputStreamReader (System.in);
 	private char[] _yyBuffer;
 <#else>
-	private InputStream _yyIs;
+	private InputStream _yyIs = System.in;
 	private byte[] _yyBuffer;
 </#if>
 	private int _yyBufferSize = 4096;
@@ -382,10 +382,11 @@ import java.io.InputStreamReader;
 	public static void main (String[] args) throws Exception
 	{
 		${ccclass} tmpLexer = new ${ccclass} ();
-		if (args.length > 0)
 <#if unicode>
+		if (args.length > 0)
 			tmpLexer.setInput (new InputStreamReader (FileInputStream (args[0])));
 <#else>
+		if (args.length > 0)
 			tmpLexer.setInput (new FileInputStream (args[0]));
 </#if>
 

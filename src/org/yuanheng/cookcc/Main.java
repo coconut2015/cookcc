@@ -200,22 +200,42 @@ public class Main
 
 	public static void main (String[] args) throws Exception
 	{
-		int fileIndex = parseOptions (args);
-
-		if (fileIndex < 0 || s_codeGen == null)
-			return;
-
-		if (fileIndex >= args.length)
+		try
 		{
-			error ("no input file specified.");
-			return;
-		}
+			int fileIndex = parseOptions (args);
 
-		Document doc = XmlParser.parseXml (args[fileIndex]);
-		s_codeGen.generateOutput (doc, System.out);
+			if (fileIndex < 0 || s_codeGen == null)
+				return;
+
+			if (fileIndex >= args.length)
+				error ("no input file specified.");
+
+			Document doc = XmlParser.parseXml (args[fileIndex]);
+			s_codeGen.generateOutput (doc, System.out);
+		}
+		catch (Exception ex)
+		{
+			error (ex);
+		}
 	}
 
-	private static void error (String msg)
+	public static void error (Exception ex)
+	{
+		if (s_quiet)
+			return;
+		ex.printStackTrace (System.out);
+		System.exit (1);
+	}
+
+	public static void error (String msg)
+	{
+		if (s_quiet)
+			return;
+		System.out.println (msg);
+		System.exit (1);
+	}
+
+	public static void warn (String msg)
 	{
 		if (s_quiet)
 			return;

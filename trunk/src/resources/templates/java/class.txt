@@ -65,7 +65,7 @@ import java.io.InputStreamReader;
 <#if lexer.bol>
 	// we need to track beginning of line (BOL) status
 	private boolean _yyIsNextBOL = true;
-	private boolean _yyBOL;
+	private boolean _yyBOL = true;
 </#if>
 
 <#if unicode>
@@ -263,8 +263,11 @@ import java.io.InputStreamReader;
 <#if lexer.bol>
 			_yyBOL = _yyIsNextBOL;
 			_yyIsNextBOL = false;
-
+	<#if lexer.bolStates>
 			int matchedState = _yyBaseState + (_yyBOL ? 1 : 0);
+	<#else>
+			int matchedState = _yyBaseState;
+	</#if>
 <#else>
 			int matchedState = _yyBaseState;
 </#if>
@@ -377,21 +380,28 @@ import java.io.InputStreamReader;
 			switch (cc_accept[matchedState])
 			{
 <#list lexer.cases as i>
-<#list i.patterns as p>
+	<#if !i.internal>
+		<#list i.patterns as p>
 				case ${p.caseValue}:	// ${p.pattern}
 				{
-					<#if p.internal>
-					<#if p.pattern == "<<EOF>>">
-					return 0;			// default EOF action
-					<#else>
-					echo ();			// default character action
-					</#if>
-					<#else>
 					${i.action}
-					</#if>
 				}
 				case ${p.caseValue + lexer.caseCount + 1}: break;
-</#list>
+		</#list>
+	</#if>
+	<#if i_index == 0 && i.internal>
+		<#list i.patterns as p>
+				case ${p.caseValue}:	// ${p.pattern}
+				{
+			<#if p.pattern == "<<EOF>>">
+					return 0;			// default EOF action
+			<#else>
+					echo ();			// default character action
+			</#if>
+				}
+				case ${p.caseValue + lexer.caseCount + 1}: break;
+		</#list>
+	</#if>
 </#list>
 				default:
 <#if yytype != "void">

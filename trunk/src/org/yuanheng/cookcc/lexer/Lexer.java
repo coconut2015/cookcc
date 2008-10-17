@@ -107,7 +107,7 @@ public class Lexer
 	private NFAFactory m_nfaFactory;
 	private int m_caseCount;
 
-	private boolean m_bol;
+	private boolean m_bolStates;
 	private boolean m_backup;
 	private boolean[] m_backupCases;
 
@@ -172,9 +172,9 @@ public class Lexer
 	 *
 	 * @return if any of the NFAs has BOL requirements
 	 */
-	public boolean hasBOL ()
+	public boolean hasBolStates ()
 	{
-		return m_bol;
+		return m_bolStates;
 	}
 
 	/**
@@ -217,34 +217,30 @@ public class Lexer
 			throw new ParserException (0, "no initial states specified.");
 
 		LexerStateDoc[] lexerStates = lexer.getLexerStates ();
-		for (int i = 0; i < lexerStates.length; ++i)
+		for (LexerStateDoc lexerState : lexerStates)
 		{
-			lexerStates[i].addRule (m_defaultRule);
+			lexerState.addRule (m_defaultRule);
 
-			RuleDoc[] rules = lexerStates[i].getRules ();
+			RuleDoc[] rules = lexerState.getRules ();
 			if (rules.length == 0)
-				warn (WARN_NO_RULES.format (new Object[]{ lexerStates[i].getName () }));
+				warn (WARN_NO_RULES.format (new Object[]{ lexerState.getName () }));
 
 			ESet startSet = new ESet ();
 			ESet bolSet = new ESet ();
 
-			for (int j = 0; j < rules.length; ++j)
+			for (RuleDoc rule : rules)
 			{
-				RuleDoc rule = rules[j];
-				PatternDoc[] patterns = rule.getPatterns ();
-				for (int k = 0; k < patterns.length; ++k)
+				for (PatternDoc pattern : rule.getPatterns ())
 				{
-					PatternDoc pattern = patterns[k];
 					RuleParser parser = new RuleParser (this, m_nfaFactory, pattern.isNocase ());
 					NFA nfa = parser.parse (rule.getLineNumber (), pattern.getPattern ());
 					pattern.setCaseValue (nfa.last ().caseValue);
 					if (parser.isBOL ())
 						pattern.setBOL (true);
 					pattern.setProperty (PROP_NFA, nfa);
-					startSet.add (nfa);
 					if (pattern.isBOL ())
 					{
-						m_bol = true;
+						m_bolStates = true;
 						bolSet.add (nfa);
 					}
 					else
@@ -259,9 +255,8 @@ public class Lexer
 //					System.out.println (nfa);
 				}
 			}
-
-			lexerStates[i].setProperty (PROP_START_SET, startSet);
-			lexerStates[i].setProperty (PROP_BOL_SET, bolSet);
+			lexerState.setProperty (PROP_START_SET, startSet);
+			lexerState.setProperty (PROP_BOL_SET, bolSet);
 		}
 
 		// swap INITIAL state to the front if possible
@@ -493,7 +488,7 @@ public class Lexer
 		_Dstates.add (s0);
 		_DstatesSet.put (s0, new Integer (_Dstates.size () - 1));
 
-		if (m_bol)
+		if (m_bolStates)
 		{
 			_Dstates.add (s1);
 			_DstatesSet.put (s1, new Integer (_Dstates.size () - 1));
@@ -521,7 +516,7 @@ public class Lexer
 				// mark that there is a state that is non-accepting
 				if (Mark > esetBase)
 				{
-					if (Mark > esetBase + 1 || !m_bol)
+					if (Mark > esetBase + 1 || !m_bolStates)
 					{
 						m_backup = true;
 

@@ -234,6 +234,12 @@ public class RuleParser
 			head = head.cat (m_nfaFactory.createNFA ('\n', null));
 		}
 
+		// since we use a short cut to create NFA state machines (i.e. each singleton
+		// only uses a single NFA).  It is necessary to append an epsilon NFA to this
+		// singleton to make sure it doesn't function as the accept state as well.
+		if (head.last ().thisChar != NFA.EPSILON)
+			head.last ().appendEpsilon ();
+
 		head.setState (m_lexer.incCaseCounter (), lineNumber, m_trailContext, true);
 		return head;
 	}

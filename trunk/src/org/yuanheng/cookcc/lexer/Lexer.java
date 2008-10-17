@@ -68,16 +68,29 @@ public class Lexer
 			Set<LexerStateDoc> incompleteStates = lexer.getIncompleteStates ();
 			if (incompleteStates != null)
 			{
-				Main.warn ("Following states have do not have patterns that cover all character sets.");
-				Main.warn ("\t" + incompleteStates);
+				Main.warn ("Following states have do not have patterns that cover all character sets:");
+				Set<String> names = new TreeSet<String> ();
+				for (LexerStateDoc lexerState : incompleteStates)
+					names.add (lexerState.getName ());
+				Main.warn ("\t" + names);
 			}
 			Map<LexerStateDoc, Collection<PatternDoc>> unusedPatterns = lexer.getUnusedPatterns ();
 			if (unusedPatterns != null)
 			{
-				Main.warn ("Following patterns can never be matched.");
+				Main.warn ("Following patterns can never be matched:");
 				for (LexerStateDoc lexerStateDoc : unusedPatterns.keySet ())
 				{
 					for (PatternDoc patternDoc : unusedPatterns.get (lexerStateDoc))
+						Main.warn ("\t<" + lexerStateDoc.getName () + ">" + patternDoc.getPattern ());
+				}
+			}
+			if (lexer.hasBackup ())
+			{
+				Main.warn ("Following patterns require backup:");
+				Map<LexerStateDoc, Collection<PatternDoc>> backupPatterns = lexer.getBackupPatterns ();
+				for (LexerStateDoc lexerStateDoc : backupPatterns.keySet ())
+				{
+					for (PatternDoc patternDoc : backupPatterns.get (lexerStateDoc))
 						Main.warn ("\t<" + lexerStateDoc.getName () + ">" + patternDoc.getPattern ());
 				}
 			}
@@ -101,6 +114,7 @@ public class Lexer
 	private LexerStateDoc[] m_lexerStates;
 	private int[] m_beginLocations;
 
+	private Map<LexerStateDoc, Collection<PatternDoc>> m_backupPatterns;
 	private Map<LexerStateDoc,Collection<PatternDoc>> m_unusedPatterns;
 	private Set<LexerStateDoc> m_incompleteStates;
 
@@ -263,6 +277,8 @@ public class Lexer
 		m_lexerStates = lexerStates;
 		m_beginLocations = new int[lexerStates.length];
 
+		m_backupCases = new boolean[m_caseCount + 1];
+
 		for (int i = 0; i < lexerStates.length; ++i)
 		{
 			lexerState = lexerStates[i];
@@ -276,13 +292,10 @@ public class Lexer
 			// check shadowed patterns for each state
 			// we do it here because some rules may be used in multiple states
 			int[] accepts = m_dfa.getAccepts ();
-			RuleDoc[] rules = lexerStates[i].getRules ();
-			for (int j = 0; j < rules.length; ++j)
+			for (RuleDoc rule : lexerStates[i].getRules ())
 			{
-				PatternDoc[] patterns = rules[j].getPatterns ();
-				for (int k = 0; k < patterns.length; ++k)
+				for (PatternDoc pattern : rule.getPatterns ())
 				{
-					PatternDoc pattern = patterns[k];
 					// check if the pattern is shadowed
 					int caseValue = pattern.getCaseValue ();
 					int a;
@@ -309,6 +322,30 @@ public class Lexer
 							m_unusedPatterns.put (lexerStates[i], list);
 						}
 						list.add (pattern);
+					}
+				}
+			}
+		}
+
+		if (m_backup)
+		{
+			m_backupPatterns = new HashMap<LexerStateDoc, Collection<PatternDoc>> ();
+			for (int i = 0; i < lexerStates.length; ++i)
+			{
+				for (RuleDoc rule : lexerStates[i].getRules ())
+				{
+					for (PatternDoc pattern : rule.getPatterns ())
+					{
+						if (m_backupCases[pattern.getCaseValue ()])
+						{
+							Collection<PatternDoc> list = m_backupPatterns.get (lexerStates[i]);
+							if (list == null)
+							{
+								list = new LinkedList<PatternDoc> ();
+								m_backupPatterns.put (lexerStates[i], list);
+							}
+							list.add (pattern);
+						}
 					}
 				}
 			}
@@ -433,8 +470,6 @@ public class Lexer
 
 	private int buildDFA (ESet startSet, ESet bolSet)
 	{
-		m_backupCases = new boolean[m_caseCount];
-
 		int j, a;
 
 		ECS ecs = getECS ();
@@ -540,6 +575,11 @@ public class Lexer
 	public Map<LexerStateDoc, Collection<PatternDoc>> getUnusedPatterns ()
 	{
 		return m_unusedPatterns;
+	}
+
+	public Map<LexerStateDoc, Collection<PatternDoc>> getBackupPatterns ()
+	{
+		return m_backupPatterns;
 	}
 
 	public Set<LexerStateDoc> getIncompleteStates ()

@@ -18,3 +18,7 @@ do
 	time 	${JAVA_HOME}/java -cp . Lexer bible12.txt > /dev/null
 	time 	${JAVA_HOME}/java -cp . Lexer bible12.txt > /dev/null
 done
+
+rm -f Lexer.java
+rm -f Lexer*.class
+rm -f output

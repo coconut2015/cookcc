@@ -109,9 +109,9 @@ import java.io.InputStreamReader;
 	 */
 	public String getText ()
 	{
-		if (_yyText == null)
-			_yyText = new String (_yyBuffer, _yyTextStart, _yyMatchStart - _yyTextStart);
-		return _yyText;
+		if (_yyMatchStart == _yyTextStart)		// this is the case when we have EOF
+			return null;
+		return new String (_yyBuffer, _yyTextStart, _yyMatchStart - _yyTextStart);
 	}
 
 	/**

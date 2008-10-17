@@ -36,12 +36,28 @@ import java.util.StringTokenizer;
  */
 public class RuleDoc extends TreeDoc
 {
+	/**
+	 * There are two internal rules:
+	 * 		&lt;&lt;EOF&gt;&gt;
+	 * for dealing with unexpected end of the file and
+	 * 		.|\n
+	 * that covers all characters.  This two internal rules ensures that
+	 * all inputs have some meaningful
+	 *
+	 * @param	lexer
+	 *			the parent LexerDoc
+	 * @return	a rule that covers the internal patterns.
+	 */
 	public static RuleDoc createInternalRule (LexerDoc lexer)
 	{
 		RuleDoc rule = new RuleDoc (lexer);
 		rule.setInternal ();
 		PatternDoc pattern = new PatternDoc ();
 		pattern.setPattern (".|\\n");
+		pattern.setInternal ();
+		rule.addPattern (pattern);
+		pattern = new PatternDoc ();
+		pattern.setPattern ("<<EOF>>");
 		pattern.setInternal ();
 		rule.addPattern (pattern);
 		rule.setLineNumber (Integer.MAX_VALUE);

@@ -62,6 +62,7 @@ class NFA
 	NFA next;
 	NFA next2;
 	boolean mark;
+	int lineNumber = Integer.MAX_VALUE;
 
 	final int id;
 
@@ -82,10 +83,11 @@ class NFA
 		next2 = null;
 	}
 
-	public void setState (int caseValue, int trail, boolean accept)
+	public void setState (int caseValue, int lineNumber, int trail, boolean accept)
 	{
 		NFA end = last ();
 		end.caseValue = caseValue;
+		end.lineNumber = lineNumber;
 		end.anchor = trail | (accept ? 1 : 0);
 		if (trail != 0)
 		{

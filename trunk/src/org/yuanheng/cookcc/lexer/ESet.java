@@ -54,10 +54,14 @@ class ESet implements Comparable<ESet>
 
 	public NFA isAccept ()
 	{
+		NFA acceptState = null;
 		for (NFA n : m_set)
 			if (n.isAccept ())
-			return n;
-		return null;
+			{
+				if (acceptState == null || n.lineNumber < acceptState.lineNumber)
+					acceptState = n;
+			}
+		return acceptState;
 	}
 
 	public Set<NFA> getSet ()

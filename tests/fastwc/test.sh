@@ -12,4 +12,9 @@ do
 
 	${JAVA_HOME}/java -cp . Lexer bible12.txt > output
 	if [ $? -ne 0 ]; then echo test for $v failed; fi
+	time 	${JAVA_HOME}/java -cp . Lexer bible12.txt > /dev/null
+	time 	${JAVA_HOME}/java -cp . Lexer bible12.txt > /dev/null
+	time 	${JAVA_HOME}/java -cp . Lexer bible12.txt > /dev/null
+	time 	${JAVA_HOME}/java -cp . Lexer bible12.txt > /dev/null
+	time 	${JAVA_HOME}/java -cp . Lexer bible12.txt > /dev/null
 done

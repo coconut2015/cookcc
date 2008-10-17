@@ -43,6 +43,7 @@ public class ECS
 	public ECS (int maxSymbol)
 	{
 		m_groups = new int[maxSymbol + 1];
+		m_groupCount = 1;
 	}
 
 	public int getGroupCount ()

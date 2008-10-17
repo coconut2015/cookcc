@@ -200,6 +200,13 @@ public class Lexer
 						m_bol = true;
 						bolSet.add (nfa);
 					}
+					else
+					{
+						// NFA that do not have BOL status can start in normal
+						// or BOL cases.
+						bolSet.add (nfa);
+						startSet.add (nfa);
+					}
 				}
 			}
 
@@ -311,9 +318,9 @@ public class Lexer
 					lastAcceptNFA = t;
 				else if (lastAcceptNFA == t)
 					continue;
-				else if (lastAcceptNFA.id < t.id && t.next2 == null)
+				else if (lastAcceptNFA.lineNumber < t.lineNumber && t.next2 == null)
 					continue;
-				else if (lastAcceptNFA.id > t.id)
+				else if (lastAcceptNFA.lineNumber > t.lineNumber)
 				{
 					if (lastAcceptNFA.next2 == null)
 						st.getSet ().remove (lastAcceptNFA);

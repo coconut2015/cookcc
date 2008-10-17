@@ -356,10 +356,14 @@ import java.io.InputStreamReader;
 			{
 <#list lexer.cases as i>
 <#list i.patterns as p>
-				case ${p.caseValue}:
+				case ${p.caseValue}:	// ${p.pattern}
 				{
 					<#if p.internal>
-					echo ();
+					<#if p.pattern == "<<EOF>>">
+					return 0;			// default EOF action
+					<#else>
+					echo ();			// default character action
+					</#if>
 					<#else>
 					${i.action}
 					</#if>

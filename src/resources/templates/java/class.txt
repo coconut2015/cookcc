@@ -358,7 +358,11 @@ import java.io.InputStreamReader;
 <#list i.patterns as p>
 				case ${p.caseValue}:
 				{
+					<#if p.internal>
+					echo ();
+					<#else>
 					${i.action}
+					</#if>
 				}
 				case ${p.caseValue + lexer.caseCount + 1}: break;
 </#list>

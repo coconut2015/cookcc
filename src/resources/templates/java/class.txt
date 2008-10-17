@@ -274,6 +274,11 @@ import java.io.InputStreamReader;
 			int internalBufferEnd = _yyBufferEnd;
 			int lookahead = _yyMatchStart;
 
+<#if lexer.backup>
+			int cc_backupMatchedState = matchedState;
+			int cc_backupMatchedLength = 0;
+</#if>
+
 			// the DFA lookup
 			while (true)
 			{
@@ -318,12 +323,27 @@ import java.io.InputStreamReader;
 	</#if>
 </#if>
 
+<#if lexer.backup>
+					if (currentState == 0)
+					{
+						matchedState = cc_backupMatchedState;
+						matchedLength = cc_backupMatchedLength;
+						break;
+					}
+<#else>
 					if (currentState == 0)
 						break;
+</#if>
 
 					matchedState = currentState;
+<#if lexer.backup>
+					cc_backupMatchedState = currentState;
+</#if>
 					++lookahead;
 					++matchedLength;
+<#if lexer.backup>
+					cc_backupMatchedLength = matchedLength;
+</#if>
 				}
 				else
 				{

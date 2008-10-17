@@ -43,6 +43,9 @@ public class Lexer
 {
 	public static MessageFormat WARN_MSG = new MessageFormat ("Warning: {0}");
 	public static MessageFormat WARN_NO_RULES = new MessageFormat ("no rules for state: {0}");
+	public static String WARN_INCOMPLETE_STATE = "Following states have do not have patterns that cover all character sets:";
+	public static String WARN_CANNOT_MATCH = "Following patterns can never be matched:";
+	public static String WARN_BACKUP = "Following patterns require backup:";
 
 	private final static String PROP_LEXER = "Lexer";
 	private final static String PROP_NFA = "NFA";
@@ -68,7 +71,7 @@ public class Lexer
 			Set<LexerStateDoc> incompleteStates = lexer.getIncompleteStates ();
 			if (incompleteStates != null)
 			{
-				Main.warn ("Following states have do not have patterns that cover all character sets:");
+				Main.warn (WARN_INCOMPLETE_STATE);
 				Set<String> names = new TreeSet<String> ();
 				for (LexerStateDoc lexerState : incompleteStates)
 					names.add (lexerState.getName ());
@@ -77,7 +80,7 @@ public class Lexer
 			Map<LexerStateDoc, Collection<PatternDoc>> unusedPatterns = lexer.getUnusedPatterns ();
 			if (unusedPatterns != null)
 			{
-				Main.warn ("Following patterns can never be matched:");
+				Main.warn (WARN_CANNOT_MATCH);
 				for (LexerStateDoc lexerStateDoc : unusedPatterns.keySet ())
 				{
 					for (PatternDoc patternDoc : unusedPatterns.get (lexerStateDoc))
@@ -86,7 +89,7 @@ public class Lexer
 			}
 			if (lexer.hasBackup ())
 			{
-				Main.warn ("Following patterns require backup:");
+				Main.warn (WARN_BACKUP);
 				Map<LexerStateDoc, Collection<PatternDoc>> backupPatterns = lexer.getBackupPatterns ();
 				for (LexerStateDoc lexerStateDoc : backupPatterns.keySet ())
 				{

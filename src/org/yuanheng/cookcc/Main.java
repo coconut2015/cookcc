@@ -223,7 +223,7 @@ public class Main
 	{
 		if (s_quiet)
 			return;
-		ex.printStackTrace (System.out);
+		ex.printStackTrace (System.err);
 		System.exit (1);
 	}
 
@@ -231,7 +231,7 @@ public class Main
 	{
 		if (s_quiet)
 			return;
-		System.out.println (msg);
+		System.err.println (msg);
 		System.exit (1);
 	}
 
@@ -239,6 +239,6 @@ public class Main
 	{
 		if (s_quiet)
 			return;
-		System.out.println (msg);
+		System.err.println (msg);
 	}
 }

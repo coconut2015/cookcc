@@ -143,11 +143,6 @@ class NFA
 		return n;
 	}
 
-	public void appendEpsilon ()
-	{
-		next = m_factory.createNFA ();
-	}
-
 	public NFA star ()
 	{
 		NFA n = m_factory.createNFA ();
@@ -254,7 +249,12 @@ class NFA
 		return n.cat (copy.repeat (max - min));
 	}
 
-	private void toString (StringBuffer buffer)
+	/**
+	 * Debugging function.  Print only this NFA to the buffer.
+	 * @param	buffer
+	 * 			the output string buffer.
+	 */
+	void toString (StringBuffer buffer)
 	{
 		buffer.append ('[').append (id).append ("]: ");
 

@@ -90,4 +90,21 @@ class ESet implements Comparable<ESet>
 		}
 		return 0;
 	}
+
+	/**
+	 * Debugging function.
+	 * @return	debug info for this set.
+	 */
+	public String toString ()
+	{
+		if (m_set.size () == 0)
+			return "empty set";
+		StringBuffer buffer = new StringBuffer ();
+		for (NFA nfa : m_set)
+		{
+			nfa.toString (buffer);
+			buffer.append ("  ");
+		}
+		return buffer.toString ();
+	}
 }

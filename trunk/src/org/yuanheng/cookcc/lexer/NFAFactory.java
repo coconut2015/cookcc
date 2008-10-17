@@ -75,11 +75,7 @@ class NFAFactory
 
 	public NFA createNFA (int ch, boolean[] ccl)
 	{
-		NFA nfa;
-		if (m_spareNFAs.isEmpty ())
-			nfa = new NFA (this);
-		else
-			nfa = m_spareNFAs.removeFirst ();
+		NFA nfa = createNFA ();
 
 		nfa.thisChar = ch;
 		nfa.charSet = ccl;
@@ -87,6 +83,8 @@ class NFAFactory
 			m_ecs.add (ch);
 		else if (ch == NFA.ISCCL)
 			m_ecs.add (ccl);
+
+		nfa.next = createNFA ();
 		return nfa;
 	}
 

@@ -287,7 +287,7 @@ import java.io.InputStreamReader;
 <#elseif lexer.table == "ecs">
 					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]<#if !unicode> & 0xff</#if>]];
 <#else>
-					int symbol = cc_ecs[buffer[lookahead]<#if !unicode>& 0xff</#if>];
+					int symbol = cc_ecs[buffer[lookahead]<#if !unicode> & 0xff</#if>];
 					currentState = matchedState;
 	<#if !lexer.dfa.default?has_content>
 					if (cc_check[symbol + cc_base[matchedState]] == matchedState)
@@ -335,14 +335,16 @@ import java.io.InputStreamReader;
 					if (! refresh)
 					{
 						// <<EOF>>
-						if (matchedLength == 0)
+						int currentState;
 <#if lexer.table == "full">
-							matchedState = cc_next[matchedState][${lexer.eof}];
+						currentState = cc_next[matchedState][${lexer.eof}];
 <#elseif lexer.table == "ecs">
-							matchedState = cc_next[matchedState][cc_ecs[${lexer.eof}]];
+						currentState = cc_next[matchedState][cc_ecs[${lexer.eof}]];
 <#elseif lexer.table == "compressed">
-							matchedState = _yyBaseState;
+						currentState = _yyBaseState;
 </#if>
+						if (currentState != 0)
+							matchedState = currentState;
 						break;
 					}
 				}

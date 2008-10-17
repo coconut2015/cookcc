@@ -27,9 +27,7 @@
 package org.yuanheng.cookcc.lexer;
 
 import java.text.MessageFormat;
-import java.util.Collection;
-import java.util.TreeMap;
-import java.util.Vector;
+import java.util.*;
 
 import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.dfa.DFARow;
@@ -66,6 +64,23 @@ public class Lexer
 			lexer = new Lexer (doc);
 			lexer.parse ();
 			lexerDoc.setProperty (PROP_LEXER, lexer);
+
+			Set<LexerStateDoc> incompleteStates = lexer.getIncompleteStates ();
+			if (incompleteStates != null)
+			{
+				Main.warn ("Following states have do not have patterns that cover all character sets.");
+				Main.warn ("\t" + incompleteStates);
+			}
+			Map<LexerStateDoc, Collection<PatternDoc>> unusedPatterns = lexer.getUnusedPatterns ();
+			if (unusedPatterns != null)
+			{
+				Main.warn ("Following patterns can never be matched.");
+				for (LexerStateDoc lexerStateDoc : unusedPatterns.keySet ())
+				{
+					for (PatternDoc patternDoc : unusedPatterns.get (lexerStateDoc))
+						Main.warn ("\t<" + lexerStateDoc.getName () + ">" + patternDoc.getPattern ());
+				}
+			}
 		}
 		else
 			lexer = (Lexer)obj;
@@ -86,10 +101,17 @@ public class Lexer
 	private LexerStateDoc[] m_lexerStates;
 	private int[] m_beginLocations;
 
+	private Map<LexerStateDoc,Collection<PatternDoc>> m_unusedPatterns;
+	private Set<LexerStateDoc> m_incompleteStates;
+
+	private final RuleDoc m_defaultRule;
+
 	private Lexer (Document doc)
 	{
 		m_doc = doc;
 		m_nfaFactory = doc.isUnicode () ? new NFAFactory (CCL.getCharacterCCL ()) : new NFAFactory (CCL.getByteCCL ());
+
+		m_defaultRule = RuleDoc.createInternalRule (doc.getLexer ());
 	}
 
 	public Document getDocument ()
@@ -180,6 +202,8 @@ public class Lexer
 		LexerStateDoc[] lexerStates = lexer.getLexerStates ();
 		for (int i = 0; i < lexerStates.length; ++i)
 		{
+			lexerStates[i].addRule (m_defaultRule);
+
 			RuleDoc[] rules = lexerStates[i].getRules ();
 			if (rules.length == 0)
 				warn (WARN_NO_RULES.format (new Object[]{ lexerStates[i].getName () }));
@@ -248,12 +272,10 @@ public class Lexer
 			m_beginLocations[i] = _Dstates.size ();
 
 			buildDFA (startSet, bolSet);
-		}
 
-		// check shadowed patterns
-		int[] accepts = m_dfa.getAccepts ();
-		for (int i = 0; i < lexerStates.length; ++i)
-		{
+			// check shadowed patterns for each state
+			// we do it here because some rules may be used in multiple states
+			int[] accepts = m_dfa.getAccepts ();
 			RuleDoc[] rules = lexerStates[i].getRules ();
 			for (int j = 0; j < rules.length; ++j)
 			{
@@ -261,15 +283,33 @@ public class Lexer
 				for (int k = 0; k < patterns.length; ++k)
 				{
 					PatternDoc pattern = patterns[k];
-					if (pattern.isInternal ())
-						continue;
+					// check if the pattern is shadowed
 					int caseValue = pattern.getCaseValue ();
 					int a;
-					for (a = 0; a < accepts.length; ++a)
+					for (a = accepts[m_beginLocations[i]]; a < accepts.length; ++a)
 						if (accepts[a] == caseValue)
 							break;
-					if (a >= accepts.length)
-						Main.warn ("<" + lexerStates[i].getName () + ">" + pattern.getPattern () + " is never matched.");
+					if (pattern.isInternal ())
+					{
+						if (a < accepts.length)
+						{
+							if (m_incompleteStates == null)
+								m_incompleteStates = new HashSet<LexerStateDoc> ();
+							m_incompleteStates.add (lexerStates[i]);
+						}
+					}
+					else if (a >= accepts.length)
+					{
+						if (m_unusedPatterns == null)
+							m_unusedPatterns = new HashMap<LexerStateDoc, Collection<PatternDoc>> ();
+						Collection<PatternDoc> list = m_unusedPatterns.get (lexerStates[i]);
+						if (list == null)
+						{
+							list = new LinkedList<PatternDoc> ();
+							m_unusedPatterns.put (lexerStates[i], list);
+						}
+						list.add (pattern);
+					}
 				}
 			}
 		}
@@ -495,5 +535,15 @@ public class Lexer
 			m_dfa.add (row);		// add to the DFA table
 		}
 		return dfaBase;
+	}
+
+	public Map<LexerStateDoc, Collection<PatternDoc>> getUnusedPatterns ()
+	{
+		return m_unusedPatterns;
+	}
+
+	public Set<LexerStateDoc> getIncompleteStates ()
+	{
+		return m_incompleteStates;
 	}
 }

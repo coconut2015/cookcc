@@ -36,6 +36,18 @@ import java.util.StringTokenizer;
  */
 public class RuleDoc extends TreeDoc
 {
+	public static RuleDoc createInternalRule (LexerDoc lexer)
+	{
+		RuleDoc rule = new RuleDoc (lexer);
+		rule.setInternal ();
+		PatternDoc pattern = new PatternDoc ();
+		pattern.setPattern (".|\\n");
+		pattern.setInternal ();
+		rule.addPattern (pattern);
+		rule.setLineNumber (Integer.MAX_VALUE);
+		return rule;
+	}
+
 	private static int s_count = 0;
 
 	private final LexerDoc m_lexer;
@@ -47,6 +59,8 @@ public class RuleDoc extends TreeDoc
 
 	private String m_action = "";
 	private HashSet<LexerStateDoc> m_states = new HashSet<LexerStateDoc> ();
+
+	private boolean m_internal;
 
 	public RuleDoc (LexerDoc lexer)
 	{
@@ -125,5 +139,15 @@ public class RuleDoc extends TreeDoc
 	public LexerStateDoc[] getStates ()
 	{
 		return m_states.toArray (new LexerStateDoc[m_states.size ()]);
+	}
+
+	public boolean getInternal ()
+	{
+		return m_internal;
+	}
+
+	private void setInternal ()
+	{
+		m_internal = true;
 	}
 }

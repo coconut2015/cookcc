@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.dfa.DFARow;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.*;
@@ -247,6 +248,30 @@ public class Lexer
 			m_beginLocations[i] = _Dstates.size ();
 
 			buildDFA (startSet, bolSet);
+		}
+
+		// check shadowed patterns
+		int[] accepts = m_dfa.getAccepts ();
+		for (int i = 0; i < lexerStates.length; ++i)
+		{
+			RuleDoc[] rules = lexerStates[i].getRules ();
+			for (int j = 0; j < rules.length; ++j)
+			{
+				PatternDoc[] patterns = rules[j].getPatterns ();
+				for (int k = 0; k < patterns.length; ++k)
+				{
+					PatternDoc pattern = patterns[k];
+					if (pattern.isInternal ())
+						continue;
+					int caseValue = pattern.getCaseValue ();
+					int a;
+					for (a = 0; a < accepts.length; ++a)
+						if (accepts[a] == caseValue)
+							break;
+					if (a >= accepts.length)
+						Main.warn ("<" + lexerStates[i].getName () + ">" + pattern.getPattern () + " is never matched.");
+				}
+			}
 		}
 	}
 

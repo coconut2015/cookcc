@@ -36,6 +36,7 @@ public class PatternDoc extends TreeDoc
 	private boolean m_nocase;
 	private boolean m_bol;
 	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
+	private boolean m_internal;
 
 	public PatternDoc ()
 	{
@@ -88,5 +89,15 @@ public class PatternDoc extends TreeDoc
 	public void setCaseValue (int caseValue)
 	{
 		m_caseValue = caseValue;
+	}
+
+	public boolean isInternal ()
+	{
+		return m_internal;
+	}
+
+	public void setInternal ()
+	{
+		m_internal = true;
 	}
 }

@@ -42,9 +42,7 @@ public class LexerDFAInfo
 {
 	public static LexerDFAInfo getLexerDFAInfo (Document doc)
 	{
-		Lexer lexer = new Lexer (doc);
-		lexer.parse ();
-		return new LexerDFAInfo (doc.getLexer (), lexer);
+		return new LexerDFAInfo (doc.getLexer (), Lexer.getLexer (doc));
 	}
 
 	private final LexerDoc m_lexerDoc;

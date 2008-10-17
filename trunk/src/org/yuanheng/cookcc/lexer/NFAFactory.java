@@ -34,8 +34,6 @@ import java.util.LinkedList;
  */
 class NFAFactory
 {
-	private final Lexer m_lexer;
-
 	private final CCL m_ccl;
 	/* for computing equivalent classes */
 	private final ECS m_ecs;
@@ -44,9 +42,8 @@ class NFAFactory
 
 	private int m_nfaCounter = 0;
 
-	NFAFactory (Lexer lexer, CCL ccl)
+	NFAFactory (CCL ccl)
 	{
-		m_lexer = lexer;
 		m_ccl = ccl;
 		m_ecs = new ECS (ccl.MAX_SYMBOL);
 	}
@@ -102,11 +99,6 @@ class NFAFactory
 	{
 		nfa.init ();
 		m_spareNFAs.add (nfa);
-	}
-
-	public NFA getEOL ()
-	{
-		return new RuleParser (m_lexer, this).parse (0, "(\\r?\\n)|<<EOF>>)");
 	}
 
 	public String toString ()

@@ -208,7 +208,7 @@ public class RuleParser
 			NFA tail = parseRegex ();
 			if (m_lex.ifMatch ('$'))
 			{
-				NFA eol = m_nfaFactory.getEOL ();
+				NFA eol = m_lexer.getEOL ();
 				if (tail == null)
 					tail = eol;
 				else

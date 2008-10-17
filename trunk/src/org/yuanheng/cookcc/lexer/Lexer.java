@@ -85,10 +85,10 @@ public class Lexer
 	private LexerStateDoc[] m_lexerStates;
 	private int[] m_beginLocations;
 
-	public Lexer (Document doc)
+	private Lexer (Document doc)
 	{
 		m_doc = doc;
-		m_nfaFactory = doc.isUnicode () ? new NFAFactory (this, CCL.getCharacterCCL ()) : new NFAFactory (this, CCL.getByteCCL ());
+		m_nfaFactory = doc.isUnicode () ? new NFAFactory (CCL.getCharacterCCL ()) : new NFAFactory (CCL.getByteCCL ());
 	}
 
 	public Document getDocument ()
@@ -104,6 +104,11 @@ public class Lexer
 	int incCaseCounter ()
 	{
 		return ++m_caseCount;
+	}
+
+	NFA getEOL ()
+	{
+		return new RuleParser (this, m_nfaFactory).parse (0, "(\\r?\\n)|<<EOF>>)");
 	}
 
 	public ECS getECS ()

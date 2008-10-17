@@ -67,7 +67,12 @@ public class LexerDFAInfo
 
 	public boolean getBol ()
 	{
-		return m_lexer.hasBOL ();
+		return m_lexerDoc.isBol () || m_lexer.hasBolStates ();
+	}
+
+	public boolean getBolStates ()
+	{
+		return m_lexer.hasBolStates ();
 	}
 
 	public int[] getAccept ()

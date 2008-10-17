@@ -355,7 +355,7 @@ public class CCL
 		return c;
 	}
 
-	private static String toString (char c)
+	static String toString (char c)
 	{
 		int j = -1;
 		switch (c)

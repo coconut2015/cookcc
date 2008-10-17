@@ -212,6 +212,9 @@ public class Lexer
 						bolSet.add (nfa);
 						startSet.add (nfa);
 					}
+//					System.out.println ("case " + pattern.getCaseValue () + ": " + pattern.getPattern ());
+//					System.out.println ("NFA:");
+//					System.out.println (nfa);
 				}
 			}
 

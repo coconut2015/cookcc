@@ -143,6 +143,11 @@ class NFA
 		return n;
 	}
 
+	public void appendEpsilon ()
+	{
+		next = m_factory.createNFA ();
+	}
+
 	public NFA star ()
 	{
 		NFA n = m_factory.createNFA ();
@@ -255,8 +260,16 @@ class NFA
 
 		String cclStr = charSet == null ? null : m_factory.getCCL ().toString (charSet);
 
-		if (thisChar >= 0)
-			buffer.append ('\'').append ((char)thisChar).append ("' ");
+		if (thisChar == m_factory.getCCL ().EOF)
+			buffer.append ("EOF ");
+		else if (thisChar >= 0)
+		{
+			String str = CCL.toString ((char)thisChar);
+			if (str.length () == 1)
+				buffer.append ('\'').append (str).append ("' ");
+			else
+				buffer.append (str + "  ");
+		}
 		else if (thisChar == ISCCL)
 		{
 			if (cclStr.length () <= 3)

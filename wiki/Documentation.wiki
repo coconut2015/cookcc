@@ -14,6 +14,6 @@ http://chart.apis.google.com/chart?chtt=Word%20Count%20Performance&cht=bvg&chs=6
 
 There were several reasons why JFlex was so much slower than CookCC.  JFlex does not have local variable declaration section and thus all variables need to be instance variables.  It also does not have a yyLength variable and must call yylength () function instead.  Startup time of JFlex is probably also an issue.
 
-The file is too small to really show the differences among Flex's five different versions of word count for Flex, but the pattern shows quite noticeably for CookCC and the performance is expected.  JFlex on the other hand, actually had worse performance on the supposedly the fastest version (#4) of the word count, probably due to bigger table and thus much slower start up time.
+The file is too small to really show the differences among Flex's five different versions of word count for Flex, but the pattern shows quite noticeably for CookCC and the performance is expected (#1 to #4 has gradual improvements while #5 introduced backups and is actually slower).
 
 As a side note, ecs table and full table didn't make much of the difference for CookCC.

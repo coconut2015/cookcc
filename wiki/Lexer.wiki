@@ -16,7 +16,7 @@ Word count tests on large files (5 MB - 22 MB) have shown that *ecs* table has a
 
 == Pattern Warnings ==
 
-CookCC generates warnings on patterns that cause [http://code.google.com/p/cookcc/source/browse/trunk/tests/backup backup], patterns that were never reached, or states that have [http://code.google.com/p/cookcc/source/browse/trunk/tests/ incomplete pattnerns].
+CookCC generates warnings on patterns that cause [http://code.google.com/p/cookcc/source/browse/trunk/tests/backup backup], patterns that were never reached, or states that have [http://code.google.com/p/cookcc/source/browse/trunk/tests/incomplete incomplete pattnerns].
 
 
 == Trail Context ==

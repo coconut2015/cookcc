@@ -33,7 +33,7 @@ import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.dfa.DFARow;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.*;
-import org.yuanheng.cookcc.exception.ParserException;
+import org.yuanheng.cookcc.exception.NoInitialStateException;
 
 /**
  * @author Heng Yuan
@@ -214,7 +214,7 @@ public class Lexer
 		if (lexer == null)
 			return;
 		if (lexer.getLexerState (LexerDoc.INITIAL_STATE) == null)
-			throw new ParserException (0, "no initial states specified.");
+			throw new NoInitialStateException ();
 
 		LexerStateDoc[] lexerStates = lexer.getLexerStates ();
 		for (LexerStateDoc lexerState : lexerStates)

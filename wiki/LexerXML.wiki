@@ -25,9 +25,6 @@ A sample XML looks like:
 	<code name="lexerprolog">
 	// local variables within yyLex () function
 	int cc = 0, wc = 0, lc = 0;
-</code>
-	<code>
-	// some other pieces of code appended at the end of the class.
 	</code>
 	<lexer>
 		<shortcut name="ws">[ \t]</shortcut>
@@ -44,5 +41,11 @@ A sample XML looks like:
 			</rule>
 		</state>
 	</lexer>
+	<code>
+	// some other pieces of code appended at the end of the class.
+	public void doNothing ()
+	{
+	}
+	</code>
 </cookcc>
 }}}

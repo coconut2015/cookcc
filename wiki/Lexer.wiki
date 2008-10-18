@@ -1,0 +1,24 @@
+Documentation for the CookCC Lexer
+
+= Features =
+
+CookCC Lexer has the following features.
+
+== DFA Table Format ==
+
+CookCC supports both 8-bit and 16-bit DFA tables.  16-bit DFA tables are intended for unicode support.
+
+|| DFA Table Format ||
+|| *full* || A full table.  Very memory intensive. ||
+|| *ecs* || A much smaller table using equivalent classes. ||
+
+Word count tests on large files (5 MB - 22 MB) have shown that *ecs* table has about the same performance as the full table.
+
+== Pattern Warnings ==
+
+CookCC generates full reports on patterns that cause backup, or patterns that were never reached.
+
+
+== Trail Context ==
+
+CookCC at present only handles either fixed head (e.g., abc/xyz or abc/x*z) or tail trail contexts (e.g., a.*b/xyz).

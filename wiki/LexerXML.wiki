@@ -16,7 +16,7 @@ A sample XML looks like:
  * Copyright 2008 by ...
  *
  */	</code>
-	<code name="fileheader">
+	<code name="classheader">
 /**
  * Class header.
  *

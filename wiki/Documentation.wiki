@@ -8,7 +8,7 @@ The input to CookCC is currently limited to an XML ([http://code.google.com/p/co
 
 Currently, only the [Lexer lexer] part has been implemented.
 
-Here is a Lexer performance chart using Flex's fastwc examples (lower bar indicates better performance) on a simple 5 MB text file.  The following was tested using MinGW WC program, 5 version of word count under Flex (full table), CookCC (ecs table), and JFlex (ecs table).
+Here is a Lexer performance chart using Flex's fastwc examples (lower bar indicates better performance) on a simple 5 MB text file.  The following was tested using MinGW WC program, 5 version of word count under Flex (full table), CookCC (ecs table), and JFlex (ecs table).  MinGW WC was written and Flex generated C code, while CookCC and JFlex generated Java codes.
 
 http://chart.apis.google.com/chart?chtt=Word%20Count%20Performance&cht=bvg&chs=670x300&chf=bg,s,ffffff|c,s,ffffcc&chdl=MinGW%20WC|Flex|CookCC|JFlex&chco=ff0000,00ff00,0000ff,ff00ff&chxt=x,y&chxr=0,1,5|1,0,1&chxp=0,1,2,3,4,5|1,0,0.2,0.4,0.6000000000000001,0.8,1&chg=100,100,1,0&chd=t:12.9,12.9,12.9,12.9,12.9|15.7,15.5,15,15,15.1|51.2,46.2,42.9,41.7,46.3|74,75.9,74.1,77.3,74.9&nonsense=something_that_ends_with.png
 

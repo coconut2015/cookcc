@@ -1,3 +1,4 @@
-=== [TableOfContents] ===
-=== [Documentation] ===
+#summary Table Of Contents
+==== [TableOfContents] ====
+==== [Documentation] ====
 * [Lexer] *

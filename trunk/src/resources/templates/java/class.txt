@@ -406,8 +406,7 @@ import java.io.InputStreamReader;
 				}
 				case ${p.caseValue + lexer.caseCount + 1}: break;
 		</#list>
-	</#if>
-	<#if i_index == 0 && i.internal>
+	<#else>
 		<#list i.patterns as p>
 				case ${p.caseValue}:	// ${p.pattern}
 				{

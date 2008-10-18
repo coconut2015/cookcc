@@ -21,9 +21,7 @@ CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.htm
 || ×{{{"[xyz]\"foo"}}}* || the literal string: *[xyz]"foo* ||
 || *{{{\x}}}* || if x is an `a', `b', `f', `n', `r', `t', or `v', then the ANSI-C interpretation of \x. Otherwise, a literal `x' (used to escape operators such as `*') ||
 || *{{{\0}}}* || a NUL character (ASCII code 0) ||
-|| *{{{\123}}}* || the character with octal value 123 (maximum 3 digits) ||
-|| *{{{\x2a}}}* || the character with hexadecimal value 2a (maximum 2 digits) ||
-|| *{{{\u002a}}}* || the unicode character with hexadecimal value 2a (must be exactly 4 digits).  Only valid if Unicode character set is being used. ||
+digits).  Only valid if Unicode character set is being used. ||
 || *{{{(r)}}}* || match an r; parentheses are used to override precedence (see below) ||
 || *{{{rs}}}* || the concatenation of the regular expression *r* followed by the regular expression *s* ||
 || *{{{r|s}}}* || either an *r* or an *s* || 
@@ -32,7 +30,22 @@ CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.htm
 || *{{{r$}}}* || an *r* at the end of the line (\n), but not including the \n character ||
 || *{{{<<EOF>>}}}* || an end of file character.  This character is artificial.  ||
 
-Additionally, there are predefined POSIX character classes (ASCII only).
+Escape Characters:
+|| Code || Description ||
+|| *{{{\b}}}* || backspace ||
+|| *{{{\e}}} || escape {{{\033}} ||
+|| *{{{\f}}}* || form feed ||
+|| *{{{\n}}}* || line feed ||
+|| *{{{\r}}}* || carriage return ||
+|| *{{{\t}}} || tab ||
+|| *{{{\s}}} || space {{{' '}}} ||
+|| *{{{\\}}}* || back slash (\) ||
+|| *{{{\123}}}* || the character with octal value 123 (maximum 3 digits) ||
+|| *{{{\x2a}}}* || the character with hexadecimal value 2a (maximum 2 digits) ||
+|| *{{{\u002a}}}* || the unicode character with hexadecimal value 2a (exactly 4 digits) ||
+Escape sequences with {{{\}}} proceeds any character would treat treat that character as the literal character, rather than special characters.
+
+Additionally, there are predefined POSIX character classes (ASCII only):
 || *Class* || *Equivalent* ||
 || {{{[:alnum:]}}} || {{{[a-zA-Z0-9]}}} ||
 || {{{[:alpha:]}}} || {{{[a-zA-Z]}}} ||

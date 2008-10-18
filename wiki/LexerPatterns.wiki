@@ -32,7 +32,7 @@ CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.htm
 || *{{{r$}}}* || an *r* at the end of the line (\n), but not including the \n character ||
 || *{{{<<EOF>>}}}* || an end of file character.  This character is artificial.  ||
 
-Additionally, there are predefined character classes
+Additionally, there are predefined POSIX character classes (ASCII only).
 || {{{[:alnum:]}}} || {{{[a-zA-Z0-9]}}} ||
 || {{{[:alpha:]}}} || {{{[a-zA-Z]}}} ||
 || {{{[:blank:]}}} || {{{[ \t]}}} ||

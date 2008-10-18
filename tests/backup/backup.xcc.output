@@ -1,4 +1,5 @@
 ab
 *abc*d
 *abcde*f
-*abcde*f[[EOF]]
+*abcde*f
+*abc*d[[EOF]]

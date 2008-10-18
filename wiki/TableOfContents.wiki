@@ -1,3 +1,3 @@
-= [TableOfContents] =
-= [Documentation] =
+=== [TableOfContents] ===
+=== [Documentation] ===
 * [Lexer] *

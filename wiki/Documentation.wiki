@@ -6,4 +6,4 @@ CookCC is intended to be lexer and parser generator project, combined.  It is wr
 
 The input to CookCC is currently limited to an XML ([http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd DTD]) format.
 
-Currently, only the lexer part has been implemented.
+Currently, only the [Lexer lexer] part has been implemented.

@@ -232,7 +232,7 @@ public class Main
 		int index = fileName.lastIndexOf ('.');
 		if (index < 0)
 			return "";
-		return fileName.substring (index + 1);
+		return fileName.substring (index);
 	}
 
 	private static Class getParser (String extension)

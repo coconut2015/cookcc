@@ -1,0 +1,9 @@
+Project Documentation
+
+= Introduction =
+
+CookCC is intended to be lexer and parser generator project, combined.  It is written in Java, but the [TargetLanguages|target languages] can vary.  It uses a template approach to generate source codes, so it is quite easy to add a new target language.  CookCC also comes with a suite of test cases to assist creating and testing new target languages.
+
+The input to CookCC is currently limited to an XML (DTD) format.
+
+Currently, only the lexer part has been implemented.

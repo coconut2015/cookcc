@@ -339,13 +339,15 @@ import java.io.InputStreamReader;
 </#if>
 
 					matchedState = currentState;
-<#if lexer.backup>
-					cc_backupMatchedState = currentState;
-</#if>
 					++lookahead;
 					++matchedLength;
+
 <#if lexer.backup>
-					cc_backupMatchedLength = matchedLength;
+					if (cc_accept[matchedState] > 0)
+					{
+						cc_backupMatchedState = currentState;
+						cc_backupMatchedLength = matchedLength;
+					}
 </#if>
 				}
 				else

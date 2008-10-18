@@ -26,7 +26,8 @@
  */
 package org.yuanheng.cookcc.dfa;
 
-import java.util.LinkedList;
+import java.util.Comparator;
+import java.util.TreeSet;
 
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.doc.LexerDoc;
@@ -40,6 +41,14 @@ import org.yuanheng.cookcc.lexer.Lexer;
  */
 public class LexerDFAInfo
 {
+	private final static Comparator<RuleDoc> s_ruleComparator = new Comparator<RuleDoc>()
+	{
+		public int compare (RuleDoc o1, RuleDoc o2)
+		{
+			return o1.getId () - o2.getId ();
+		}
+	};
+
 	public static LexerDFAInfo getLexerDFAInfo (Document doc)
 	{
 		return new LexerDFAInfo (doc.getLexer (), Lexer.getLexer (doc));
@@ -116,7 +125,8 @@ public class LexerDFAInfo
 
 	public RuleDoc[] getCases ()
 	{
-		LinkedList<RuleDoc> rules = new LinkedList<RuleDoc> ();
+		TreeSet<RuleDoc> rules = new TreeSet<RuleDoc> (s_ruleComparator);
+
 		LexerStateDoc[] lexerStates = m_lexerDoc.getLexerStates ();
 		for (int i = 0; i < lexerStates.length; ++i)
 		{

@@ -1,0 +1,26 @@
+#summary Describes the Lexer XML format
+
+= XML Format =
+
+Currently, CookCC Lexer only accepts XML ([http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd DTD] input files.  The default extension is {{{*.xcc}}} .
+
+= Details =
+A sample XML looks like:
+
+{{{
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<code name="lexerprolog">int cc = 0, wc = 0, lc = 0;</code>
+	<lexer>
+		<shortcut name="ws">[ \t]</shortcut>
+		<shortcut name="nonws">[^ \t\n]</shortcut>
+		<state name="INITIAL">
+			<rule>
+				<pattern></pattern>
+				<action>/* code executed for the pattern */</action>
+			</rule>
+		</state>
+	</lexer>
+</cookcc>
+}}}

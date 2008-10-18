@@ -28,7 +28,7 @@ ${code.classheader}
 
 <#if tokens?has_content>
 <#list tokens as i>
-	protected final static int ${i} = ${eof + i_index};
+	protected final static int ${i} = ${eof + i_index + 1};
 </#list>
 </#if>
 

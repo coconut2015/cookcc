@@ -101,7 +101,7 @@ public class RuleParser
 			ShortcutDoc shortcut = m_lexer.getDocument ().getLexer ().getShortcut (name);
 			if (shortcut == null)
 				throw new UnknownNameException (m_lineNumber, name, m_input);
-			m_currentStr = shortcut.getPattern () + m_currentStr.substring (index + 1);
+			m_currentStr = "(" + shortcut.getPattern () + ")" + m_currentStr.substring (index + 1);
 			return true;
 		}
 

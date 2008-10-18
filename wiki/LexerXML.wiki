@@ -26,6 +26,9 @@ A sample XML looks like:
 	// local variables within yyLex () function
 	int wordCount = 0;
 	</code>
+	<tokens>
+	TOKEN1 TOKEN2 TOKEN3
+	</tokens>
 	<lexer table="ecs">
 		<shortcut name="nonws">[^ \t\r\n]</shortcut>
 		<shortcut name="word">{nonws}+</shortcut>
@@ -63,6 +66,9 @@ A sample XML looks like:
 = XML Tag Explanations =
 == {{{<code>}}} ==
 The {{{<code>}}} tag can specify any pieces of code and can locate any where directly under {{{<cookcc>}}} tag, before or after {{{<lexer>}}} tag.  The name of the code needs to be unique.  If the name is not specified, it is assumed to be {{{"default"}}}.  The exact usage of that code depends on the template being used.  For Java output, you can take a look at the [http://code.google.com/p/cookcc/source/browse/trunk/src/resources/templates/java/class.txt Java output template] to get a rough idea.
+
+== {{{<tokens>}}} ==
+Simply a list of string names.  They can be separated by comma, space, tab or new lines.
 
 == {{{<lexer>}}} ==
 Options for the lexer are specified as attributes of the {{{<lexer>}}} tag.

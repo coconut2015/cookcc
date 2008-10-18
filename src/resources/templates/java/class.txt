@@ -26,6 +26,12 @@ ${code.classheader}
 	protected final static int ${i} = ${lexer.begins[i_index]};
 </#list>
 
+<#if tokens?has_content>
+<#list tokens as i>
+	protected final static int ${i} = ${eof + i_index};
+</#list>
+</#if>
+
 	// an internal class for lazy initiation
 	private final static class cc_lexer
 	{

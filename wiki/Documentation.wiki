@@ -1,4 +1,4 @@
-Project Documentation
+#summary Project Documentation
 
 = Introduction =
 

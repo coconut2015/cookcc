@@ -24,15 +24,24 @@ A sample XML looks like:
  */	</code>
 	<code name="lexerprolog">
 	// local variables within yyLex () function
-	int cc = 0, wc = 0, lc = 0;
+	int wordCount = 0;
 	</code>
 	<lexer table="ecs">
-		<shortcut name="ws">[ \t]</shortcut>
-		<shortcut name="nonws">[^ \t\n]</shortcut>
+		<shortcut name="nonws">[^ \t\r\n]</shortcut>
+		<shortcut name="word">{nonws}+</shortcut>
 		<rule>
-			
+			<pattern>{word}</pattern>
+			<action>
+				++wordCount;
+			</action>
 		</rule>
 		<state name="INITIAL,TEST">
+			<rule>
+				<pattern>.|\n</pattern>
+				<action>
+					// ignore
+				</action>
+			</rule>
 			<rule state="ANOTHER_STATE">
 				<pattern><![CDATA[<<EOF>>]]></pattern>
 				<action>
@@ -50,16 +59,23 @@ A sample XML looks like:
 </cookcc>
 }}}
 
-== Explainations ==
-=== {{{<code>}}} Tag ===
+= Explainations =
+== {{{<code>}}} Tag ==
 The {{{<code>}}} tag can specify any pieces of code and can locate any where directly under {{{<cookcc>}}} tag, before or after {{{<lexer>}}} tag.  The name of the code needs to be unique.  The exact usage of that code depends on the template being used.  For Java, you can take a look at [http://code.google.com/p/cookcc/source/browse/trunk/src/resources/templates/java/class.txt Java output template] to get an rough idea.
-=== {{{<lexer>}}} Tag ===
+== {{{<lexer>}}} Tag ==
 Options for the lexer are specified as attributes of the {{{<lexer>}}} tag.
 || *Attribute* || *Description* ||
-|| *table* || The DFA table format.  Right now only {{{"ecs"}}} and {{{"full"}}} options are working properly.  "compressed" tables are coming soon. ||
-|| *bol* || Instruct the lexer to keep track of the BOL (beginning of line) information even when there are no patterns use that information. ||
+|| *{{{table}}}* || The DFA table format.  Right now only {{{"ecs"}}} and {{{"full"}}} options are working properly.  "compressed" tables are coming soon. ||
+|| *{{{bol}}}* || Instruct the lexer to keep track of the BOL (beginning of line) information even when there are no patterns use that information. ||
 
-=== {{{<state>}}} Tag ===
-{{{<state>}}} tags are used to indicate the state conditions.  It has only one attribute {{{name}}} to specify a comma separated list of state names.  All rules specified under this tag are automatically added to this particular state.
+== {{{<shortcut>}}} Tag ==
+This tag is used to specify frequently used subset of patterns.  In the above example, when the pattern {{{ {word} }}} is seen, it is replaced with {{{({nonws})}}}, which is in turn replaced with {{{([^ \t\r\n])}}}.  So the actual pattern is {{{[^ \t\r\n]+}}}.
 
-=== {{{<rule>}}} Tag ===
+== {{{<state>}}} Tag ==
+{{{<state>}}} tags are used to indicate the state conditions.  It has only one attribute {{{name}}} to specify a comma separated list of state names.  All rules specified under this tag are automatically added to this particular state.  If the {{{name}}} attribute is not specified, it is assumed to be {{{INITIAL}}, which is required as the initial state at the start of the lexer.
+
+== {{{<rule>}}} Tag ==
+Rule tags are used to specify 
+|| *Attribute* || *Description* ||
+|| *{{{state}}}* || A comma separated list of state names that this rule is in.  If the current rule is already under a {{{<state>}}} tag, then the rule is added to all of them. ||
+|| *{{{line}}}* || The line number of the {{{action}}} code.  Mainly used by converters that convert other input formats to CookCC XML format. ||

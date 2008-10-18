@@ -1,0 +1,54 @@
+#summary Description of patterns recognized by the CookCC lexer.
+
+= Patterns =
+
+CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.html Flex patterns], so this page is mostly a copy/paste of the referenced article.
+
+|| *Format* || *Description* ||
+|| *x* || matches the character *x* ||
+|| *.* || matches anything except \n character ||
+|| *[xyz] || a character class which includes *x*, *y*, and *z* ||
+|| *[abj-oZ] * || a "character class" with a range in it; matches an `a', a `b', any letter from `j' through `o', or a `Z' ||
+|| *[^A-Z]* || a "negated character class", i.e., any character but those in the class. In this case, any character EXCEPT an uppercase letter. ||
+|| *[^A-Z\n]* || any character EXCEPT an uppercase letter or a newline ||
+|| *r** || zero or more r's, where a is any regular expression ||
+|| *r+* || one or more r's ||
+|| *r?* || zero or one r's (that is, "an optional r") ||
+|| *r{2,5}* || anywhere from two to five r's ||
+|| *r{2,}* || two or more r's ||
+|| *r{4}* || exactly 4 r's ||
+|| *{name}* || the expansion of the "shortcut" definition ||
+|| ×"[xyz]\"foo"* || the literal string: *[xyz]"foo* ||
+|| *\x* || if x is an `a', `b', `f', `n', `r', `t', or `v', then the ANSI-C interpretation of \x. Otherwise, a literal `x' (used to escape operators such as `*') ||
+|| *\0* || a NUL character (ASCII code 0) ||
+|| *\123* || the character with octal value 123 (maximum 3 digits) ||
+|| *\x2a* || the character with hexadecimal value 2a (maximum 2 digits) ||
+|| *\u002a* || the unicode character with hexadecimal value 2a (must be exactly 4 digits).  Only valid if Unicode character set is being used. ||
+|| *(r)* || match an r; parentheses are used to override precedence (see below) ||
+|| *rs* || the concatenation of the regular expression *r* followed by the regular expression *s* ||
+|| *r|s* || either an *r* or an *s* || 
+|| *r/s* || *r* followed by *s*, but only obtains the *r* part ||
+|| ^r || an *r* at beginning of line, or the start of scan || 
+|| r$ || an *r* at the end of the line (\n), but not including the \n character ||
+|| *<<EOF>>* || an end of file character.  This character is artificial.  ||
+
+Additionally, there are predefined character classes
+|| [:alnum:] ||
+|| [:alpha:] ||
+|| [:blank:] ||
+|| [:cntrl:] ||
+|| [:digit:] ||
+|| [:graph:] ||
+|| [:lower:] ||
+|| [:print:] ||
+|| [:punct:] ||
+|| [:space:] ||
+|| [:upper:] ||
+|| [:xdigit:] ||
+
+For example, the following character classes are all equivalent:
+
+[[:alnum:]]
+[[:alpha:][:digit:]
+[[:alpha:]0-9]
+[a-zA-Z0-9]

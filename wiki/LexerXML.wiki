@@ -11,14 +11,36 @@ A sample XML looks like:
 <?xml version = "1.0" encoding="UTF-8"?>
 <!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
 <cookcc>
-	<code name="lexerprolog">int cc = 0, wc = 0, lc = 0;</code>
+	<code name="fileheader">
+/*
+ * Copyright 2008 by ...
+ *
+ */</code>
+	<code name="fileheader">
+/**
+ * Class header.
+ *
+ * @version $Id$
+ */</code>
+	<code name="lexerprolog">
+	// local variables within yyLex () function
+	int cc = 0, wc = 0, lc = 0;
+</code>
+	<code>
+	// some other pieces of code appended at the end of the class.
+	</code>
 	<lexer>
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
-		<state name="INITIAL">
-			<rule>
-				<pattern></pattern>
-				<action>/* code executed for the pattern */</action>
+		<rule>
+			
+		</rule>
+		<state name="INITIAL,TEST">
+			<rule state="ANOTHER_STATE">
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>
+					return 0;  /* exit lexer loop */
+				</action>
 			</rule>
 		</state>
 	</lexer>

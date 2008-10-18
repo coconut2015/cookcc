@@ -2,5 +2,6 @@
 ===== [TableOfContents] =====
 ===== [Documentation] =====
  * [Lexer]
+   * [LexerXMLFormat XML format]
    * [LexerPatterns Patterns]
    * [http://code.google.com/p/cookcc/source/browse/trunk/tests/ Test Cases]

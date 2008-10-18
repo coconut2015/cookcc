@@ -406,10 +406,7 @@ import java.io.InputStreamReader;
 	</#if>
 </#list>
 				default:
-<#if yytype != "void">
-					return (${yytype})-1;
-<#else>
-					return;
+					throw new IOExcepton ("Internal error in ${ccclass} lexer.");
 </#if>
 			}
 

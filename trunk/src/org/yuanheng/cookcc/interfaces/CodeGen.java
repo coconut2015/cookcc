@@ -26,8 +26,6 @@
  */
 package org.yuanheng.cookcc.interfaces;
 
-import java.io.OutputStream;
-
 import org.yuanheng.cookcc.doc.Document;
 
 /**
@@ -36,7 +34,7 @@ import org.yuanheng.cookcc.doc.Document;
  */
 public interface CodeGen
 {
-	public void generateOutput (Document doc, OutputStream os) throws Exception;
+	public void generateOutput (Document doc) throws Exception;
 
 	public OptionParser[] getOptionParsers ();
 }

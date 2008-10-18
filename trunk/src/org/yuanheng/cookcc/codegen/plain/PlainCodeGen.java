@@ -26,7 +26,6 @@
  */
 package org.yuanheng.cookcc.codegen.plain;
 
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -70,9 +69,9 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		p.println (sw);
 	}
 
-	public void generateOutput (Document doc, OutputStream os) throws Exception
+	public void generateOutput (Document doc) throws Exception
 	{
-		PrintWriter p = new PrintWriter (os);
+		PrintWriter p = new PrintWriter (System.out);
 		generateLexerOutput (doc, p);
 		p.flush ();
 	}

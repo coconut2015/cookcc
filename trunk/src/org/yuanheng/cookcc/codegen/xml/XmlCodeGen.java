@@ -26,7 +26,6 @@
  */
 package org.yuanheng.cookcc.codegen.xml;
 
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -80,9 +79,9 @@ public class XmlCodeGen implements CodeGen
 		p.println ("</codecc>");
 	}
 
-	public void generateOutput (Document doc, OutputStream os)
+	public void generateOutput (Document doc)
 	{
-		PrintWriter p = new PrintWriter (os);
+		PrintWriter p = new PrintWriter (System.out);
 		printDocument (doc, p);
 		p.flush ();
 	}

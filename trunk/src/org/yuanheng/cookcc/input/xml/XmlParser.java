@@ -26,6 +26,8 @@
  */
 package org.yuanheng.cookcc.input.xml;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 
 import org.w3c.dom.Node;
@@ -151,13 +153,13 @@ public class XmlParser
 		}
 	}
 
-	public static Document parseXml (String str)
+	public static Document parse (File file)
 	{
 		try
 		{
 			CookXml cookXml = new CookXml (null, s_tagLibrary, (Object)null);
 			Parser parser = new Parser ();
-			parser.parse (str);
+			parser.parse (new InputSource (new FileReader (file)));
 			return (Document)cookXml.xmlDecode (parser.getDocument ());
 		}
 		catch (Exception ex)

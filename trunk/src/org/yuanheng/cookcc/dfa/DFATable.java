@@ -29,6 +29,9 @@ package org.yuanheng.cookcc.dfa;
 import java.util.Vector;
 
 /**
+ * A simple wrapper for Vector&lt;DFARow> that provides some utility
+ * functions.
+ *
  * @author Heng Yuan
  * @version $Id$
  */
@@ -75,11 +78,6 @@ public class DFATable
 	public DFARow[] getRows ()
 	{
 		return m_table.toArray (new DFARow[m_table.size ()]);
-	}
-
-	public String toString ()
-	{
-		return "DFA states: " + size ();
 	}
 
 	public DFATable clone ()

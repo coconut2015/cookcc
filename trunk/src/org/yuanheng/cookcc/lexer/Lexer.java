@@ -146,11 +146,6 @@ public class Lexer
 		return ++m_caseCount;
 	}
 
-	NFA getEOL ()
-	{
-		return new RuleParser (this, m_nfaFactory).parse (0, "(\\r?\\n)|<<EOF>>)");
-	}
-
 	public ECS getECS ()
 	{
 		return m_nfaFactory.getECS ();

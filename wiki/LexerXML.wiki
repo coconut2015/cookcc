@@ -82,7 +82,6 @@ This tag is used to specify frequently used subset of patterns.  In the above ex
 Rule tags are used to specify patterns and their associated action codes.  It can have multiple {{{<pattern>}}} children, but one and only one {{{<action>}}} child.
 || *Attribute* || *Description* ||
 || *{{{state}}}* || A comma separated list of state names that this rule is in.  If the current rule is already under a {{{<state>}}} tag, then the rule is added to all of them. ||
-|| *{{{line}}}* || The line number of the {{{action}}} code.  Mainly used by converters that convert other input formats to CookCC XML format. ||
 
 == {{{<pattern>}}} ==
 || *Attribute* || *Description* ||

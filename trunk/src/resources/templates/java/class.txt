@@ -407,7 +407,6 @@ import java.io.InputStreamReader;
 </#list>
 				default:
 					throw new IOExcepton ("Internal error in ${ccclass} lexer.");
-</#if>
 			}
 
 <#if lexer.bol>

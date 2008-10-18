@@ -33,18 +33,18 @@ CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.htm
 || *{{{<<EOF>>}}}* || an end of file character.  This character is artificial.  ||
 
 Additionally, there are predefined character classes
-|| {{{[:alnum:]}}} ||
-|| {{{[:alpha:]}}} ||
-|| {{{[:blank:]}}} ||
-|| {{{[:cntrl:]}}} ||
-|| {{{[:digit:]}}} ||
-|| {{{[:graph:]}}} ||
-|| {{{[:lower:]}}} ||
-|| {{{[:print:]}}} ||
-|| {{{[:punct:]}}} ||
-|| {{{[:space:]}}} ||
-|| {{{[:upper:]}}} ||
-|| {{{[:xdigit:]}}} ||
+|| {{{[:alnum:]}}} || {{{[a-zA-Z0-9]}}} ||
+|| {{{[:alpha:]}}} || {{{[a-zA-Z]}}} ||
+|| {{{[:blank:]}}} || {{{[ \t]}}} ||
+|| {{{[:cntrl:]}}} || {{{[\x00-\x1f\x7f]}}}
+|| {{{[:digit:]}}} || {{{[0-9]}}} ||
+|| {{{[:graph:]}}} || {{{[[:alnum:][:punct:]]}}} ||
+|| {{{[:lower:]}}} || {{{[a-z]}}} ||
+|| {{{[:print:]}}} || {{{[[:graph:] ] ||
+|| {{{[:punct:]}}} || {{{[!"#$%&'()*+,-./:;<=>?@[\\\]^_`{|}~]}}} ||
+|| {{{[:space:]}}} || {{{[ \t\n\x0B\f\r]}}} ||
+|| {{{[:upper:]}}} || {{{[A-Z]}}} ||
+|| {{{[:xdigit:]}}} || {{{a-fA-F0-9}}} ||
 
 For example, the following character classes are all equivalent:
 

@@ -33,7 +33,7 @@ digits).  Only valid if Unicode character set is being used. ||
 Escape Characters:
 || Code || Description ||
 || *{{{\b}}}* || backspace ||
-|| *{{{\e}}} || escape {{{\033}} ||
+|| *{{{\e}}} || escape {{{\033}}} ||
 || *{{{\f}}}* || form feed ||
 || *{{{\n}}}* || line feed ||
 || *{{{\r}}}* || carriage return ||

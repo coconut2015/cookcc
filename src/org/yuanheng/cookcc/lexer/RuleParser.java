@@ -176,7 +176,7 @@ public class RuleParser
 		m_ruleLen = 0;
 		m_bol = false;
 
-		m_singletonCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[/|*+?.(){}]]"));
+		m_singletonCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[$/|*+?.(){}]]"));
 		m_cclCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[-\\]\\n]"));
 	}
 
@@ -208,11 +208,8 @@ public class RuleParser
 			NFA tail = parseRegex ();
 			if (m_lex.ifMatch ('$'))
 			{
-				NFA eol = m_lexer.getEOL ();
-				if (tail == null)
-					tail = eol;
-				else
-					tail = tail.cat (eol);
+				NFA eol = m_nfaFactory.createNFA ('\n', null);
+				tail = tail == null ? eol : tail.cat (eol);
 				++m_ruleLen;
 			}
 			if (tail == null)

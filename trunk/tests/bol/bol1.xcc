@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding="UTF-8"?>
 <!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
 <cookcc>
-	<lexer table="ecs" bol="true">
+	<lexer>
 		<rule>
 			<pattern>^abc</pattern>
 			<action>System.out.println ("*" + getText () + " " + isBOL () + "*");</action>

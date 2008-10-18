@@ -10,6 +10,8 @@
 <!ELEMENT pattern	(#PCDATA)>
 <!ELEMENT action	(#PCDATA)>
 
+<!ATTLIST cookcc	unicode (true|false) #IMPLIED>
+
 <!ATTLIST code		name CDATA #IMPLIED>
 
 <!ATTLIST state		name CDATA #IMPLIED>

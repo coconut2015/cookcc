@@ -64,7 +64,7 @@ A sample XML looks like:
 }}}
 
 = XML Tag Explanations =
-== {{{<cookcc}}} ==
+== {{{<cookcc>}}} ==
 This is the document root of the XML file.  It only a single attribute to indicate where or not the lexer parses unicode.  By default, unicode is false.
 
 == {{{<code>}}} ==

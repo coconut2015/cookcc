@@ -17,6 +17,9 @@ import java.io.Reader;
 import java.io.InputStreamReader;
 </#if>
 
+<#if code.classheader?has_content>
+${code.classheader}
+</#if>
 <#if public?has_content && public?string == "true">public </#if>class ${ccclass}
 {
 <#list lexer.states as i>

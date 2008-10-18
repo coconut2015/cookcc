@@ -1,7 +1,7 @@
 <#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
 <#macro intarray a><#list a as i><#if i == 10>\n<#elseif i == 13>\r<#else>\u${i?hex(4)}</#if></#list></#macro>
-<#if code.copyright?has_content>
-${code.copyright}
+<#if code.fileheader?has_content>
+${code.fileheader}
 </#if>
 <#if package?has_content>
 package ${package};

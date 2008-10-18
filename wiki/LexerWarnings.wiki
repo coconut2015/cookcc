@@ -6,7 +6,7 @@
 
 This situation happens when a pattern proceeds to match a relatively long string without intermediate states that are acceptable.
 
-You can take a look at a simple [http://code.google.com/p/cookcc/source/browse/trunk/?r=155#trunk/tests/backup example] that cause such a problem.
+You can take a look at a simple [http://code.google.com/p/cookcc/source/browse/trunk/?#trunk/tests/backup example] that cause such a problem.
 
 Backups can cause slight performance degradations, depending the target language.  For Java, the difference is not so noticeable.
 
@@ -18,10 +18,10 @@ One way to avoid such warning is add a pattern {{{.|\n}}} as the last pattern fo
 
 CookCC also requires user to specify {{{<<EOF>>}}} conditions for all states, just in case.
 
-Here are some [http://code.google.com/p/cookcc/source/browse/trunk/?r=155#trunk/tests/incomplete examples] that cause such a problem.
+Here are some [http://code.google.com/p/cookcc/source/browse/trunk/?#trunk/tests/incomplete examples] that cause such a problem.
 
 == Some Pattern Can Never Be Matched ==
 
 By default, patterns specified earlier have precedence patterns specified later.  Thus, for some patterns, the matchable strings could always be matched by other patterns first.
 
-Here are some [http://code.google.com/p/cookcc/source/browse/trunk/?r=155#trunk/tests/unreachable examples] that cause such a problem.
+Here are some [http://code.google.com/p/cookcc/source/browse/trunk/?#trunk/tests/unreachable examples] that cause such a problem.

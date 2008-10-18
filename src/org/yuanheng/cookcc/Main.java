@@ -26,12 +26,12 @@
  */
 package org.yuanheng.cookcc;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.Properties;
 import java.util.Set;
 
 import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.input.xml.XmlParser;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
 
@@ -45,12 +45,15 @@ public class Main
 	public static String OPTION_QUIET = "-quiet";
 	public static String OPTION_LANG = "-lang";
 
-	private static Properties s_properties = new Properties ();
+	private static Properties s_codeGenDrivers = new Properties ();
+	private static Properties s_inputParsers = new Properties ();
+
 	static
 	{
 		try
 		{
-			s_properties.load (Main.class.getClassLoader ().getResourceAsStream ("resources/codegen.properties"));
+			s_codeGenDrivers.load (Main.class.getClassLoader ().getResourceAsStream ("resources/codegen.properties"));
+			s_inputParsers.load (Main.class.getClassLoader ().getResourceAsStream ("resources/input.properties"));
 		}
 		catch (Exception ex)
 		{
@@ -59,7 +62,7 @@ public class Main
 	}
 
 	private static boolean s_printUsage;
-	private static String s_lang = s_properties.getProperty ("default");
+	private static String s_lang = s_codeGenDrivers.getProperty ("default");
 	private static CodeGen s_codeGen;
 	private static boolean s_quiet;
 
@@ -109,9 +112,9 @@ public class Main
 		{
 			StringBuffer buffer = new StringBuffer ();
 			buffer.append (OPTION_LANG + "\t\t\t\tSelect output language.  Default is ");
-			buffer.append (s_properties.getProperty ("default"));
+			buffer.append (s_codeGenDrivers.getProperty ("default"));
 			buffer.append ("\t\tAvailable languages:\t");
-			Set<Object> keys = s_properties.keySet ();
+			Set<Object> keys = s_codeGenDrivers.keySet ();
 			keys.remove ("default");
 			buffer.append (keys);
 			return buffer.toString ();
@@ -188,7 +191,7 @@ public class Main
 	{
 		if (s_lang == null)
 			throw new IllegalArgumentException ("output language not specified.");
-		String codeGen = (String)s_properties.get (s_lang);
+		String codeGen = (String)s_codeGenDrivers.get (s_lang);
 		if (codeGen == null)
 			throw new IllegalArgumentException ("unknown output language: " + s_lang);
 		Class codeGenClass = Class.forName (codeGen);
@@ -210,12 +213,40 @@ public class Main
 			if (fileIndex >= args.length)
 				error ("no input file specified.");
 
-			Document doc = XmlParser.parseXml (args[fileIndex]);
-			s_codeGen.generateOutput (doc, System.out);
+			File file = new File (args[fileIndex]);
+			Class parserClass = getParser (getExtension (file.getName ()));
+			if (parserClass == null)
+				error ("Unknown file type: " + args[fileIndex]);
+			Document doc = (Document)parserClass.getMethod ("parse", File.class).invoke (null, file);
+
+			s_codeGen.generateOutput (doc);
 		}
 		catch (Exception ex)
 		{
 			error (ex);
+		}
+	}
+
+	private static String getExtension (String fileName)
+	{
+		int index = fileName.lastIndexOf ('.');
+		if (index < 0)
+			return "";
+		return fileName.substring (index + 1);
+	}
+
+	private static Class getParser (String extension)
+	{
+		String className = s_inputParsers.getProperty (extension);
+		if (className == null)
+			return null;
+		try
+		{
+			return Class.forName (className);
+		}
+		catch (Throwable t)		// use throwable since sometimes fetal errors occur and they are not exceptions
+		{
+			return null;
 		}
 	}
 

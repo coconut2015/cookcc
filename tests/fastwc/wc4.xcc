@@ -42,10 +42,6 @@
 			<action>wc += 4; cc += _yyLength; ++lc;</action>
 		</rule>
 		<rule>
-			<pattern>{words}{2}{word}{ws}*</pattern>
-			<action>wc += 3; cc += _yyLength;</action>
-		</rule>
-		<rule>
 			<pattern>{ws}+</pattern>
 			<action>cc += _yyLength;</action>
 		</rule>

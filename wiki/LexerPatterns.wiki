@@ -30,7 +30,7 @@ CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.htm
 || *{{{<<EOF>>}}}* || an end of file character.  This character is artificial. ||
 
 Escape Characters:
-|| Code || Description ||
+|| *Code* || *Description* ||
 || *{{{\b}}}* || backspace ||
 || *{{{\e}}} || escape {{{\033}}} ||
 || *{{{\f}}}* || form feed ||
@@ -39,6 +39,8 @@ Escape Characters:
 || *{{{\t}}} || tab ||
 || *{{{\s}}} || space {{{' '}}} ||
 || *{{{\\}}}* || back slash (\) ||
+|| *{{{\"}}}* || double quote (") ||
+|| *{{{\'}}}* || single quote (') ||
 || *{{{\123}}}* || the character with octal value 123 (maximum 3 digits) ||
 || *{{{\x2a}}}* || the character with hexadecimal value 2a (maximum 2 digits) ||
 || *{{{\u002a}}}* || the unicode character with hexadecimal value 2a (exactly 4 digits) ||

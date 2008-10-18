@@ -15,13 +15,13 @@ A sample XML looks like:
 /*
  * Copyright 2008 by ...
  *
- */</code>
+ */	</code>
 	<code name="fileheader">
 /**
  * Class header.
  *
  * @version $Id$
- */</code>
+ */	</code>
 	<code name="lexerprolog">
 	// local variables within yyLex () function
 	int cc = 0, wc = 0, lc = 0;

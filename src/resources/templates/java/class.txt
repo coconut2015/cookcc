@@ -327,7 +327,7 @@ ${code.classheader}
 					while (cc_check[symbol + cc_base[currentState]] != currentState)
 					{
 						currentState = cc_default[currentState];
-						if (currentState >= ${lexer.dfa.states})
+						if (currentState >= ${lexer.dfa.size})
 							symbol = cc_meta[symbol];
 					}
 					currentState = cc_next[symbol + cc_base[currentState]];
@@ -374,7 +374,37 @@ ${code.classheader}
 <#elseif lexer.table == "ecs">
 						currentState = cc_next[matchedState][cc_ecs[${lexer.eof}]];
 <#elseif lexer.table == "compressed">
-						currentState = _yyBaseState;
+						int symbol = cc_ecs[${lexer.eof}];
+	<#if !lexer.dfa.default?has_content>
+						if (cc_check[symbol + cc_base[matchedState]] == matchedState)
+							currentState = cc_next[symbol + cc_base[matchedState]];
+						else
+							currentState = 0;
+	<#elseif !lexer.dfa.error?has_content>
+						if (cc_check[symbol + cc_base[matchedState]] == matchedState)
+							currentState = cc_next[symbol + cc_base[matchedState]];
+						else
+							currentState = cc_default[matchedState];
+	<#elseif !lexer.dfa.meta?has_content>
+						currentState = matchedState;
+						while (cc_check[symbol + cc_base[currentState]] != currentState)
+						{
+							currentState = cc_default[currentState];
+							if (currentState >= ${lexer.dfa.size})
+								symbol = 0;
+						}
+						currentState = cc_next[symbol + cc_base[currentState]];
+	<#else>
+						currentState = matchedState;
+						while (cc_check[symbol + cc_base[currentState]] != currentState)
+						{
+							currentState = cc_default[currentState];
+							if (currentState >= ${lexer.dfa.size})
+								symbol = cc_meta[symbol];
+						}
+						currentState = cc_next[symbol + cc_base[currentState]];
+	</#if>
+
 </#if>
 						if (currentState != 0)
 							matchedState = currentState;

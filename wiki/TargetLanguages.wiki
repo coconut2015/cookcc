@@ -1,4 +1,4 @@
-Describes the target languages of CookCC.
+#summary Describes the target languages of CookCC.
 
 = Target Languages =
 

@@ -26,7 +26,7 @@ A sample XML looks like:
 	// local variables within yyLex () function
 	int cc = 0, wc = 0, lc = 0;
 	</code>
-	<lexer>
+	<lexer table="ecs">
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
 		<rule>
@@ -53,3 +53,13 @@ A sample XML looks like:
 == Explainations ==
 === {{{<code>}}} Tag ===
 The {{{<code>}}} tag can specify any pieces of code and can locate any where directly under {{{<cookcc>}}} tag, before or after {{{<lexer>}}} tag.  The name of the code needs to be unique.  The exact usage of that code depends on the template being used.  For Java, you can take a look at [http://code.google.com/p/cookcc/source/browse/trunk/src/resources/templates/java/class.txt Java output template] to get an rough idea.
+=== {{{<lexer>}}} Tag ===
+Options for the lexer are specified as attributes of the {{{<lexer>}}} tag.
+|| *Attribute* || *Description* ||
+|| *table* || The DFA table format.  Right now only {{{"ecs"}}} and {{{"full"}}} options are working properly.  "compressed" tables are coming soon. ||
+|| *bol* || Instruct the lexer to keep track of the BOL (beginning of line) information even when there are no patterns use that information. ||
+
+=== {{{<state>}}} Tag ===
+{{{<state>}}} tags are used to indicate the state conditions.  It has only one attribute {{{name}}} to specify a comma separated list of state names.  All rules specified under this tag are automatically added to this particular state.
+
+=== {{{<rule>}}} Tag ===

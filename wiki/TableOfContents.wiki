@@ -5,3 +5,5 @@
    * [LexerXML Lexer XML]
    * [LexerPatterns Patterns]
    * [http://code.google.com/p/cookcc/source/browse/trunk/tests/ Test Cases]
+ * [Parser]
+   * Only an empty stub

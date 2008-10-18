@@ -3,7 +3,7 @@
 <cookcc>
 	<code name="lexerprolog">int cc = 0, wc = 0, lc = 0;</code>
 
-	<lexer table="full">
+	<lexer>
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
 		<shortcut name="word">{ws}*{nonws}+</shortcut>

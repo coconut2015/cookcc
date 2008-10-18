@@ -6,10 +6,28 @@
 	<lexer>
 		<shortcut name="ws">[ \t]</shortcut>
 		<shortcut name="nonws">[^ \t\n]</shortcut>
+		<shortcut name="word">{ws}*{nonws}+</shortcut>
+		<shortcut name="words">{word}{ws}+</shortcut>
 
 		<rule>
-			<pattern>{nonws}+</pattern>
+			<pattern>{word}{ws}*</pattern>
 			<action>cc += _yyLength; ++wc;</action>
+		</rule>
+		<rule>
+			<pattern>{word}{ws}*\n</pattern>
+			<action>cc += _yyLength; ++wc; ++lc;</action>
+		</rule>
+		<rule>
+			<pattern>{words}{word}</pattern>
+			<action>cc += _yyLength; wc += 2;</action>
+		</rule>
+		<rule>
+			<pattern>{words}{2}{word}{ws}*</pattern>
+			<action>cc += _yyLength; wc += 3;</action>
+		</rule>
+		<rule>
+			<pattern>{words}{3}{word}{ws}*</pattern>
+			<action>cc += _yyLength; wc += 4;</action>
 		</rule>
 		<rule>
 			<pattern>{ws}+</pattern>
@@ -17,7 +35,7 @@
 		</rule>
 		<rule>
 			<pattern>\n+</pattern>
-			<action>++lc; ++cc;</action>
+			<action>cc += _yyLength; lc += _yyLength;</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>

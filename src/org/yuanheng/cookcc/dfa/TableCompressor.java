@@ -918,9 +918,9 @@ class TableCompressor
 	{
 		if (m_useDefault && m_useMeta)
 		{
-			short[] meta = new short[m_rowSize];
 			int[] groups = m_ecsError.getGroups ();
-			for (int i = 0; i < meta.length; ++i)
+			short[] meta = new short[groups.length];
+			for (int i = 0; i < groups.length; ++i)
 				meta[i] = (short)groups[i];
 			return meta;
 		}

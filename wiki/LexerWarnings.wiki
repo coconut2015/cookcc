@@ -16,7 +16,7 @@ This situation happens when patterns concerning part of the character sets have 
 
 One way to avoid such warning is add a pattern {{{.|\n}}} as the last pattern for the state.  This is in fact the way internally CookCC does.
 
-CookCC also requires user to specify {{{<<EOF>>}} conditions for all states, just in case.
+CookCC also requires user to specify {{{<<EOF>>}}} conditions for all states, just in case.
 
 == Some Pattern Can Never Be Matched ==
 

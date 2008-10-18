@@ -26,6 +26,8 @@
  */
 package org.yuanheng.cookcc.codegen.java;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -49,6 +51,11 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	public final static String DEFAULTS_URI = "/resources/templates/java/defaults.properties";
 	public final static String TEMPLATE_URI = "resources/templates/java/class.txt";
 
+	public static String OPTION_OUTPUT_DIR = "-d";
+	public static String OPTION_TABLE = "-table";
+	public static String OPTION_CLASS = "-class";
+	public static String OPTION_PUBLIC = "-public";
+
 	private static class Resources
 	{
 		private final static Properties defaults = new Properties ();
@@ -68,6 +75,92 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
+	private static File m_outputDir = new File (".");
+	private static String m_table;
+	private static String m_class;
+	private static boolean m_public;
+
+	private OptionParser m_outputDirectoryParser = new OptionParser()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_OUTPUT_DIR.equals (args[index]))
+				return 0;
+			File file = new File (args[index + 1]);
+			if (!file.isDirectory () && !file.exists ())
+				throw new IllegalArgumentException (args[index + 1] + " does not exist.");
+			m_outputDir = file;
+			return 2;
+		}
+
+		public String toString ()
+		{
+			return OPTION_OUTPUT_DIR + "\t\t\t\tselect output directory.";
+		}
+	};
+
+	private OptionParser m_tableParser = new OptionParser()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_TABLE.equals (args[index]))
+				return 0;
+			String table = args[index + 1].toLowerCase ();
+			if (!"ecs".equals (table) &&
+				!"full".equals (table) &&
+				!"compressed".equals (table))
+				throw new IllegalArgumentException ("Invalid table choice: " + table);
+			m_table = table;
+			return 2;
+		}
+
+		public String toString ()
+		{
+			return OPTION_TABLE + "\t\t\t\tselect lexer DFA table format.\n" +
+					"\tAvailable formats:\t[ecs, full, compressed]";
+		}
+	};
+
+	private OptionParser m_classParser = new OptionParser()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_CLASS.equals (args[index]))
+				return 0;
+			m_class = args[index + 1];
+			return 2;
+		}
+
+		public String toString ()
+		{
+			return OPTION_CLASS + "\t\t\t\tset class name.";
+		}
+	};
+
+	private OptionParser m_publicParser = new OptionParser()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_PUBLIC.equals (args[index]))
+				return 0;
+			m_public = true;
+			return 1;
+		}
+
+		public String toString ()
+		{
+			return OPTION_PUBLIC + "\t\t\t\tset class scope to public.";
+		}
+	};
+
+	private OptionParser[] m_optionParsers = new OptionParser[]
+	{
+			m_outputDirectoryParser,
+			m_tableParser,
+			m_classParser,
+			m_publicParser
+	};
+
 	private void generateLexerOutput (Document doc, PrintWriter p) throws Exception
 	{
 		Lexer lexer = Lexer.getLexer (doc);
@@ -78,6 +171,12 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		StringWriter sw = new StringWriter ();
 		for (Object key : Resources.defaults.keySet ())
 			map.put (key.toString (), Resources.defaults.getProperty (key.toString ()));
+		if (m_class != null && m_class.length () > 0)
+			map.put ("ccclass", m_class);
+		if (m_public)
+			map.put ("public", Boolean.TRUE);
+		if (m_table != null)
+			doc.getLexer ().setTable (m_table);
 		setup (map, doc);
 		Resources.template.process (map, sw);
 		p.println (sw);
@@ -85,13 +184,15 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 	public void generateOutput (Document doc) throws Exception
 	{
-		PrintWriter p = new PrintWriter (System.out);
+		String className = m_class == null ? Resources.defaults.getProperty ("ccclass") : m_class;
+		PrintWriter p = new PrintWriter (new FileOutputStream (new File (m_outputDir, className + ".java")));
 		generateLexerOutput (doc, p);
 		p.flush ();
+		p.close ();
 	}
 
 	public OptionParser[] getOptionParsers ()
 	{
-		return new OptionParser[0];
+		return m_optionParsers;
 	}
 }

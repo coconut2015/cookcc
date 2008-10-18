@@ -20,7 +20,7 @@
 		</rule>
 		<rule>
 			<pattern>.|\n</pattern>
-			<action></action>
+			<action>echo ();</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>

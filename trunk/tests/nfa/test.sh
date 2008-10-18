@@ -11,16 +11,10 @@ do
 	if [ $? -ne 0 ]; then echo test for $v failed; break; fi
 	${JAVA_HOME}/java -cp . Lexer test.input > output
 	if [ $? -ne 0 ]; then echo test for $v failed; break; fi
-	diff output test.output > /dev/null
+	diff output ${v}.output > /dev/null
 	if [ $? -ne 0 ]; then echo test for $v failed; break; fi
 
-	time 	${JAVA_HOME}/java -cp . Lexer test.input > /dev/null
-	time 	${JAVA_HOME}/java -cp . Lexer test.input > /dev/null
-	time 	${JAVA_HOME}/java -cp . Lexer test.input > /dev/null
-	time 	${JAVA_HOME}/java -cp . Lexer test.input > /dev/null
-	time 	${JAVA_HOME}/java -cp . Lexer test.input > /dev/null
+	rm -f Lexer.java
+	rm -f Lexer*.class
+	rm -f output
 done
-
-rm -f Lexer.java
-rm -f Lexer*.class
-rm -f output

@@ -81,6 +81,8 @@ class NFA
 		caseValue = 0;
 		next = null;
 		next2 = null;
+		mark = false;
+		lineNumber = Integer.MAX_VALUE;
 	}
 
 	public void setState (int caseValue, int lineNumber, int trail, boolean accept)
@@ -114,6 +116,8 @@ class NFA
 		caseValue = other.caseValue;
 		next = other.next;
 		next2 = other.next2;
+		mark = other.mark;
+		lineNumber = other.lineNumber;
 	}
 
 	public NFA last ()
@@ -199,16 +203,20 @@ class NFA
 		recursiveUpdateMap (this, nfaMap);
 		// create a corresponding set of NFA
 		NFA[] keys = nfaMap.keySet ().toArray (new NFA[nfaMap.size ()]);
-		for (int i = 0; i < keys.length; ++i)
-			nfaMap.put (keys[i], m_factory.createNFA ());
-		// update branches
-		for (int i = 0; i < keys.length; ++i)
+		for (NFA key : keys)
 		{
-			NFA v = nfaMap.get (keys[i]);
-			if (keys[i].next != null)
-				v.next = nfaMap.get (keys[i].next);
-			if (keys[i].next2 != null)
-				v.next2 = nfaMap.get (keys[i].next2);
+			NFA copy = m_factory.createNFA ();
+			copy.copy (key);
+			nfaMap.put (key, copy);
+		}
+		// update branches
+		for (NFA key : keys)
+		{
+			NFA v = nfaMap.get (key);
+			if (key.next != null)
+				v.next = nfaMap.get (key.next);
+			if (key.next2 != null)
+				v.next2 = nfaMap.get (key.next2);
 		}
 		return nfaMap.get (this);
 	}
@@ -222,8 +230,8 @@ class NFA
 		NFA copy = duplicate ();
 		NFA n = this;
 		for (; count > 2; --count)
-			n = n.cat (copy.duplicate ());
-		return n.cat (copy);
+			n = copy.duplicate ().cat (n);
+		return copy.cat (n);
 	}
 
 	public NFA repeat (int min, int max)

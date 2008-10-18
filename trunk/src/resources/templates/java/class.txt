@@ -370,6 +370,13 @@ import java.io.InputStreamReader;
 </#if>
 						if (currentState != 0)
 							matchedState = currentState;
+<#if lexer.backup>
+						else
+						{
+							matchedState = cc_backupMatchedState;
+							matchedLength = cc_backupMatchedLength;
+						}
+</#if>
 						break;
 					}
 				}
@@ -386,6 +393,15 @@ import java.io.InputStreamReader;
 		<#list i.patterns as p>
 				case ${p.caseValue}:	// ${p.pattern}
 				{
+			<#if p.trailContext != 0 && p.trailContext != 3>
+				<#if (p.trailContext % 2) == 1>
+					_yyLength = ${p.trailLength};
+					_yyMatchStart = _yyTextStart + ${p.trailLength};
+				<#else>
+					_yyLength -= ${p.trailLength};
+					_yyMatchStart -= ${p.trailLength};
+				</#if>
+			</#if>
 					${i.action}
 				}
 				case ${p.caseValue + lexer.caseCount + 1}: break;

@@ -237,6 +237,8 @@ public class Lexer
 					pattern.setCaseValue (nfa.last ().caseValue);
 					if (parser.isBOL ())
 						pattern.setBOL (true);
+					if (nfa.anchor != 0)
+						pattern.setTrailContext (nfa.anchor);
 					pattern.setProperty (PROP_NFA, nfa);
 					if (pattern.isBOL ())
 					{

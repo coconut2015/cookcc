@@ -38,11 +38,11 @@ class NFA
 	public final static int ISCCL = -2;
 	public final static int EMPTY = -4;
 
-	public final static int TRAIL_MASK = 0x06;
+	public final static int TRAIL_MASK = 0x03;
 	public final static int TRAIL_NONE = 0;
-	public final static int TRAIL_FIXHEAD = 0x02;
-	public final static int TRAIL_FIXTAIL = 0x04;
-	public final static int TRAIL_VAR = 0x06;
+	public final static int TRAIL_FIXHEAD = 0x01;
+	public final static int TRAIL_FIXTAIL = 0x02;
+	public final static int TRAIL_VAR = 0x03;
 
 	/* for sorting NFA in printing */
 	private final static Comparator<NFA> s_comparator = new Comparator<NFA> ()
@@ -85,12 +85,14 @@ class NFA
 		lineNumber = Integer.MAX_VALUE;
 	}
 
-	public void setState (int caseValue, int lineNumber, int trail, boolean accept)
+	public void setState (int caseValue, int lineNumber, int trail)
 	{
+		anchor = trail;
 		NFA end = last ();
 		end.caseValue = caseValue;
 		end.lineNumber = lineNumber;
-		end.anchor = trail | (accept ? 1 : 0);
+		end.anchor = trail;
+		/*
 		if (trail != 0)
 		{
 			if ((trail & 7) != 6) 		// have const head or tail
@@ -101,6 +103,7 @@ class NFA
 				t.anchor = 0;
 			}
 		}
+		*/
 	}
 
 	public boolean isAccept ()
@@ -327,14 +330,9 @@ class NFA
 		return (flag & TRAIL_MASK) != 0;
 	}
 
-	public static int trailCount (int flag)
-	{
-		return flag >> 3;
-	}
-
 	public static int setTrailContext (int distance, boolean fixhead, boolean fixtail)
 	{
-		distance <<= 3;
+		distance <<= 2;
 		if (fixhead)
 			return distance | TRAIL_FIXHEAD;
 		else if (fixtail)

@@ -234,7 +234,7 @@ public class RuleParser
 			head = head.cat (m_nfaFactory.createNFA ('\n', null));
 		}
 
-		head.setState (m_lexer.incCaseCounter (), lineNumber, m_trailContext, true);
+		head.setState (m_lexer.incCaseCounter (), lineNumber, m_trailContext);
 		return head;
 	}
 

@@ -37,6 +37,7 @@ public class PatternDoc extends TreeDoc
 	private boolean m_bol;
 	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
 	private boolean m_internal;
+	private int m_trailContext;
 
 	public PatternDoc ()
 	{
@@ -91,13 +92,44 @@ public class PatternDoc extends TreeDoc
 		m_caseValue = caseValue;
 	}
 
+	/**
+	 * Check if this pattern is internally generaeted.
+	 *
+	 * @return	if the rule is internally generated.
+	 */
 	public boolean isInternal ()
 	{
 		return m_internal;
 	}
 
-	public void setInternal ()
+	void setInternal ()
 	{
 		m_internal = true;
+	}
+
+	/**
+	 * This is an internal function which is called after processing the pattern
+	 * to determine the trail context.
+	 *
+	 * @param	trailContext
+	 * 			the trail context of the pattern.
+	 */
+	public void setTrailContext (int trailContext)
+	{
+		m_trailContext = trailContext;
+	}
+
+	/**
+	 * Get the trail context of the pattern.
+	 * @return	the trail context of the pattern.
+	 */
+	public int getTrailContext ()
+	{
+		return m_trailContext;
+	}
+
+	public int getTrailLength ()
+	{
+		return m_trailContext >> 2;
 	}
 }

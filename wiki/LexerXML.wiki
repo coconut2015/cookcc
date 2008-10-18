@@ -61,7 +61,8 @@ A sample XML looks like:
 
 = Explainations =
 == {{{<code>}}} Tag ==
-The {{{<code>}}} tag can specify any pieces of code and can locate any where directly under {{{<cookcc>}}} tag, before or after {{{<lexer>}}} tag.  The name of the code needs to be unique.  The exact usage of that code depends on the template being used.  For Java, you can take a look at [http://code.google.com/p/cookcc/source/browse/trunk/src/resources/templates/java/class.txt Java output template] to get an rough idea.
+The {{{<code>}}} tag can specify any pieces of code and can locate any where directly under {{{<cookcc>}}} tag, before or after {{{<lexer>}}} tag.  The name of the code needs to be unique.  If the name is not specified, it is assumed to be {{{"default"}}}.  The exact usage of that code depends on the template being used.  For Java, you can take a look at the [http://code.google.com/p/cookcc/source/browse/trunk/src/resources/templates/java/class.txt Java output template] to get an rough idea.
+
 == {{{<lexer>}}} Tag ==
 Options for the lexer are specified as attributes of the {{{<lexer>}}} tag.
 || *Attribute* || *Description* ||

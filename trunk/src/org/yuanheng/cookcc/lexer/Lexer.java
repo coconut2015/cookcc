@@ -299,7 +299,7 @@ public class Lexer
 					// check if the pattern is shadowed
 					int caseValue = pattern.getCaseValue ();
 					int a;
-					for (a = accepts[m_beginLocations[i]]; a < accepts.length; ++a)
+					for (a = m_beginLocations[i]; a < accepts.length; ++a)
 						if (accepts[a] == caseValue)
 							break;
 					if (pattern.isInternal ())

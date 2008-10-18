@@ -87,7 +87,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 			if (!OPTION_OUTPUT_DIR.equals (args[index]))
 				return 0;
 			File file = new File (args[index + 1]);
-			if (!file.isDirectory () && !file.exists ())
+			if (!file.isDirectory ())
 				throw new IllegalArgumentException (args[index + 1] + " does not exist.");
 			m_outputDir = file;
 			return 2;
@@ -171,8 +171,15 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		StringWriter sw = new StringWriter ();
 		for (Object key : Resources.defaults.keySet ())
 			map.put (key.toString (), Resources.defaults.getProperty (key.toString ()));
+
 		if (m_class != null && m_class.length () > 0)
-			map.put ("ccclass", m_class);
+		{
+			String packageName = getPackageName (m_class);
+			String className = getClassName (m_class);
+			map.put ("ccclass", className);
+			if (packageName.length () > 0)
+				map.put ("package", packageName);
+		}
 		if (m_public)
 			map.put ("public", Boolean.TRUE);
 		if (m_table != null)
@@ -185,7 +192,29 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	public void generateOutput (Document doc) throws Exception
 	{
 		String className = m_class == null ? Resources.defaults.getProperty ("ccclass") : m_class;
-		PrintWriter p = new PrintWriter (new FileOutputStream (new File (m_outputDir, className + ".java")));
+		String packageName = getPackageName (className);
+		className = getClassName (className);
+
+		// now we check if we can create the directories of the package name
+		File dir = m_outputDir;
+		if (packageName.length () > 0)
+		{
+			String[] subDirs = packageName.split ("\\.");
+			for (String d : subDirs)
+			{
+				File subDir = new File (dir, d);
+				if (subDir.isDirectory () && subDir.exists ())
+				{
+					dir = subDir;
+					continue;
+				}
+				if (!subDir.mkdir ())
+					throw new IllegalArgumentException ("Unable to create directories for " + m_class);
+				dir = subDir;
+			}
+		}
+
+		PrintWriter p = new PrintWriter (new FileOutputStream (new File (dir, className + ".java")));
 		generateLexerOutput (doc, p);
 		p.flush ();
 		p.close ();
@@ -194,5 +223,23 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	public OptionParser[] getOptionParsers ()
 	{
 		return m_optionParsers;
+	}
+
+	private static String getClassName (String className)
+	{
+		int index = className.lastIndexOf ('.');
+		if (index < 0)
+			return className;
+		else
+			return className.substring (index + 1);
+	}
+
+	private static String getPackageName (String className)
+	{
+		int index = className.lastIndexOf ('.');
+		if (index < 0)
+			return "";
+		else
+			return className.substring (0, index);
 	}
 }

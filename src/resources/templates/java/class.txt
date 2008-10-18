@@ -5,7 +5,6 @@ ${code.fileheader}
 </#if>
 <#if package?has_content>
 package ${package};
-<@array ecs/>
 </#if>
 
 import java.io.FileInputStream;

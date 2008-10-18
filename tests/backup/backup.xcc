@@ -7,6 +7,10 @@
 			<action>System.out.print ("*" + getText () + "*");</action>
 		</rule>
 		<rule>
+			<pattern>abcde</pattern>
+			<action>System.out.print ("*" + getText () + "*");</action>
+		</rule>
+		<rule>
 			<pattern>.|\n</pattern>
 			<action>echo ();</action>
 		</rule>

@@ -38,6 +38,7 @@ public class PatternDoc extends TreeDoc
 	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
 	private boolean m_internal;
 	private int m_trailContext;
+	private int m_lineNumber;
 
 	public PatternDoc ()
 	{
@@ -131,5 +132,15 @@ public class PatternDoc extends TreeDoc
 	public int getTrailLength ()
 	{
 		return m_trailContext >> 2;
+	}
+
+	public int getLineNumber ()
+	{
+		return m_lineNumber;
+	}
+
+	public void setLineNumber (int lineNumber)
+	{
+		m_lineNumber = lineNumber;
 	}
 }

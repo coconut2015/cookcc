@@ -228,7 +228,7 @@ public class Lexer
 				for (PatternDoc pattern : rule.getPatterns ())
 				{
 					RuleParser parser = new RuleParser (this, m_nfaFactory, pattern.isNocase ());
-					NFA nfa = parser.parse (rule.getLineNumber (), pattern.getPattern ());
+					NFA nfa = parser.parse (pattern.getLineNumber (), pattern.getPattern ());
 					pattern.setCaseValue (nfa.last ().caseValue);
 					if (parser.isBOL ())
 						pattern.setBOL (true);

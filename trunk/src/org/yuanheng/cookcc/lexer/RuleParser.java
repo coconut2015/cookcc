@@ -53,6 +53,7 @@ public class RuleParser
 
 	private boolean[] m_singletonCharSet;
 	private boolean[] m_cclCharSet;
+	private boolean[] m_quoteCharSet;
 
 	private RuleLexer m_lex;
 	private int m_lineNumber;
@@ -178,6 +179,7 @@ public class RuleParser
 
 		m_singletonCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[$/|*+?.(){}]]"));
 		m_cclCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[-\\]\\n]"));
+		m_quoteCharSet = m_ccl.parseCCL ("[^\"\\n]");
 	}
 
 	public boolean isBOL ()
@@ -404,7 +406,7 @@ public class RuleParser
 	{
 		NFA head = null;
 		Character ch;
-		while ((ch = parseChar (m_singletonCharSet)) != null)
+		while ((ch = parseChar (m_quoteCharSet)) != null)
 		{
 			++m_ruleLen;
 			NFA tail;

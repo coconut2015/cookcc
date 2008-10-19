@@ -59,6 +59,11 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 
 	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
 
+	private OptionParser[] m_options = new OptionParser[]
+	{
+		m_lexerTableOption
+	};
+
 	private void generateLexerOutput (Document doc, PrintWriter p) throws Exception
 	{
 		Lexer lexer = Lexer.getLexer (doc);
@@ -84,6 +89,6 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 
 	public OptionParser[] getOptions ()
 	{
-		return new OptionParser[0];
+		return m_options;
 	}
 }

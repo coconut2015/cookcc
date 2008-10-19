@@ -289,7 +289,7 @@ public class RuleParser
 				{
 					continue;
 				}
-				else if ((ccl = parseFullCCL ()) != null)
+				else if ((ccl = parseFullCCL (true)) != null)
 				{
 					++m_ruleLen;
 					head = m_nfaFactory.createNFA (NFA.ISCCL, ccl);
@@ -431,7 +431,7 @@ public class RuleParser
 		return head;
 	}
 
-	private boolean[] parseFullCCL ()
+	private boolean[] parseFullCCL (boolean matchNext)
 	{
 		if (!m_lex.ifMatch ('['))
 			return null;
@@ -453,6 +453,16 @@ public class RuleParser
 		if (neg)
 			CCL.negate (ccl);
 		m_lex.match (']');
+		if (matchNext)
+		{
+			while (m_lex.ifMatch ("{-}"))
+			{
+				boolean[] sub = parseFullCCL (false);
+				if (sub == null)
+					throw new LookaheadException (m_lineNumber, null, '[', m_lex.getInput (), m_lex.getPos ());
+				ccl = CCL.subtract (ccl, sub);
+			}
+		}
 		return ccl;
 	}
 

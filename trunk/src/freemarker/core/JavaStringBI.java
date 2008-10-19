@@ -84,12 +84,14 @@ public class JavaStringBI extends BuiltIn
 					buffer.append ("\\r");
 				else if (value == '"')
 					buffer.append ("\\\"");
-				else if (value == '\\')
-					buffer.append ("\\\\");
-				else if (value < 32)
-					buffer.append ('\\').append (Integer.toOctalString (value));
 				else if (value < 127)
-					buffer.append ((char)value);
+				{
+					buffer.append ('\\');
+					String oct = Integer.toOctalString (value);
+					if (oct.length () < 3)
+						buffer.append ("000".substring (oct.length ()));
+					buffer.append (oct);
+				}
 				else
 				{
 					buffer.append ("\\u");

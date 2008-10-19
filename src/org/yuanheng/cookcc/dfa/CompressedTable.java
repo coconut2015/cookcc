@@ -47,8 +47,6 @@ public class CompressedTable
 	private boolean m_error;
 	private short[] m_meta;
 
-	private TableCompressor m_compressor;
-
 	public CompressedTable (Lexer lexer)
 	{
 		m_lexer = lexer;
@@ -70,8 +68,6 @@ public class CompressedTable
 		m_default = compressor.getDefault ();
 		m_error = compressor.getError ();
 		m_meta = compressor.getMeta ();
-
-		m_compressor = compressor;
 	}
 
 	public int getSize ()
@@ -140,6 +136,7 @@ public class CompressedTable
 			short[] row = dfa.getRow (state).getStates ();
 			for (int symbol = 0; symbol < numGroups; ++symbol)
 			{
+//				System.out.println ("state: " + state + ", sym: " + symbol);
 				int currentState;
 				if (defaults == null)
 				{
@@ -169,13 +166,14 @@ public class CompressedTable
 				else
 				{
 					currentState = state;
+					int e = symbol;
 					while (check[symbol + base[currentState]] != currentState)
 					{
 						currentState = defaults[currentState];
 						if (currentState >= numStates)
-							symbol = meta[symbol];
+							e = meta[e];
 					}
-					currentState = next[symbol + base[currentState]];
+					currentState = next[e + base[currentState]];
 				}
 				if (row[symbol] != currentState)
 					throw new RuntimeException ("Compressed table and ecs table do not match");

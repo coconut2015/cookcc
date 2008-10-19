@@ -1,5 +1,5 @@
 <#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
-<#macro intarray a><#list a as i><#if i == 10>\n<#elseif i == 13>\r<#else>\u${i?hex(4)}</#if></#list></#macro>
+<#macro intarray a>${a?javastring()}</#macro>
 <#if code.fileheader?has_content>
 ${code.fileheader}
 </#if>
@@ -34,22 +34,22 @@ ${code.classheader}
 	// an internal class for lazy initiation
 	private final static class cc_lexer
 	{
-		private static char[] accept = "<@intarray lexer.accept/>".toCharArray ();
+		private static char[] accept = <@intarray lexer.accept/>;
 <#if lexer.table == "ecs" || lexer.table == "compressed">
-		private static char[] ecs = "<@intarray lexer.ecs/>".toCharArray ();
+		private static char[] ecs = <@intarray lexer.ecs/>;
 </#if>
 <#if lexer.table == "full" || lexer.table == "ecs">
-		private static char[][] next = {<#list lexer.dfa.table as i><#if i_index &gt; 0>,</#if>"<@intarray i/>".toCharArray ()</#list>};
+		private static char[][] next = {<#list lexer.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
 </#if>
 <#if lexer.table == "compressed">
-		private static char[] base = "<@intarray lexer.dfa.base/>".toCharArray ();
-		private static char[] next = "<@intarray lexer.dfa.next/>".toCharArray ();
-		private static char[] check = "<@intarray lexer.dfa.check/>".toCharArray ();
+		private static char[] base = <@intarray lexer.dfa.base/>;
+		private static char[] next = <@intarray lexer.dfa.next/>;
+		private static char[] check = <@intarray lexer.dfa.check/>;
 	<#if lexer.dfa.default?has_content>
-		private static char[] defaults = "<@intarray lexer.dfa.default/>".toCharArray ();
+		private static char[] defaults = <@intarray lexer.dfa.default/>;
 	</#if>
 	<#if lexer.dfa.meta?has_content>
-		private static char[] meta = "<@intarray lexer.dfa.meta/>".toCharArray ();
+		private static char[] meta = <@intarray lexer.dfa.meta/>;
 	</#if>
 </#if>
 	}

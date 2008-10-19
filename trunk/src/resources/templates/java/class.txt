@@ -164,8 +164,20 @@ ${code.classheader}
 		_yyBaseState = baseState;
 	}
 
+	protected boolean debugLexer (int matchedState, int accept)
+	{
+		System.err.println ("lexer: " + _yyBaseState + ", " + matchedState + ", " + accept + ", " + getText ());
+		return true;
+	}
+
+	protected boolean debugLexerBackup (int backupState, String backupString)
+	{
+		System.err.println ("lexer backup: " + _yyBaseState + ", " + backupState + ", " + backupString);
+		return true;
+	}
+
 	// read more data from the input
-	private boolean yyRefreshBuffer () throws IOException
+	protected boolean yyRefreshBuffer () throws IOException
 	{
 <#if unicode>
 		if (_yyBuffer == null)
@@ -337,6 +349,9 @@ ${code.classheader}
 <#if lexer.backup>
 					if (currentState == 0)
 					{
+	<#if debug>
+						debugLexerBackup (matchedState, new String (_yyBuffer, _yyMatchStart, matchedLength));
+	</#if>
 						matchedState = cc_backupMatchedState;
 						matchedLength = cc_backupMatchedLength;
 						break;
@@ -423,6 +438,10 @@ ${code.classheader}
 			_yyTextStart = _yyMatchStart;
 			_yyMatchStart += matchedLength;
 			_yyLength = matchedLength;
+
+<#if debug>
+			debugLexer (matchedState, cc_accept[matchedState]);
+</#if>
 
 			switch (cc_accept[matchedState])
 			{

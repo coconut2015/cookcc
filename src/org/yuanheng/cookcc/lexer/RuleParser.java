@@ -532,6 +532,33 @@ public class RuleParser
 			return CCL.merge (ccl, m_ccl.XDIGIT);
 		if (m_lex.ifMatch ("[:space:]"))
 			return CCL.merge (ccl, m_ccl.SPACE);
+
+		if (m_lex.ifMatch ("[:^lower:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.LOWER));
+		if (m_lex.ifMatch ("[:^upper:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.UPPER));
+		if (m_lex.ifMatch ("[:^ascii:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.ASCII));
+		if (m_lex.ifMatch ("[:^alpha:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.ALPHA));
+		if (m_lex.ifMatch ("[:^digit:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.DIGIT));
+		if (m_lex.ifMatch ("[:^alnum:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.ALNUM));
+		if (m_lex.ifMatch ("[:^punct:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.PUNCT));
+		if (m_lex.ifMatch ("[:^graph:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.GRAPH));
+		if (m_lex.ifMatch ("[:^print:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.PRINT));
+		if (m_lex.ifMatch ("[:^blank:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.BLANK));
+		if (m_lex.ifMatch ("[:^cntrl:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.CNTRL));
+		if (m_lex.ifMatch ("[:^xdigit:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.XDIGIT));
+		if (m_lex.ifMatch ("[:^space:]"))
+			return CCL.merge (ccl, CCL.subtract (m_ccl.ANY.clone (), m_ccl.SPACE));
 		return null;
 	}
 }

@@ -47,6 +47,8 @@ public class CompressedTable
 	private boolean m_error;
 	private short[] m_meta;
 
+	private TableCompressor m_compressor;
+
 	public CompressedTable (Lexer lexer)
 	{
 		m_lexer = lexer;
@@ -68,6 +70,8 @@ public class CompressedTable
 		m_default = compressor.getDefault ();
 		m_error = compressor.getError ();
 		m_meta = compressor.getMeta ();
+
+		m_compressor = compressor;
 	}
 
 	public int getSize ()
@@ -114,5 +118,69 @@ public class CompressedTable
 	{
 		compute ();
 		return m_meta;
+	}
+
+
+	public boolean getVerify ()
+	{
+		// verify compressed tables are ok
+		short[] next = getNext ();
+		short[] check = getCheck ();
+		short[] base = getBase ();
+		short[] defaults = getDefault ();
+		short[] meta = getMeta ();
+		boolean error = getError ();
+
+		DFATable dfa = m_lexer.getDFA ();
+		int numStates = dfa.size ();
+		int numGroups = m_lexer.getECS ().getGroupCount ();
+
+		for (int state = 0; state < numStates; ++state)
+		{
+			short[] row = dfa.getRow (state).getStates ();
+			for (int symbol = 0; symbol < numGroups; ++symbol)
+			{
+				int currentState;
+				if (defaults == null)
+				{
+					if (check[symbol + base[state]] == state)
+						currentState = next[symbol + base[state]];
+					else
+						currentState = 0;
+				}
+				else if (!error)
+				{
+					if (check[symbol + base[state]] == state)
+						currentState = next[symbol + base[state]];
+					else
+						currentState = defaults[state];
+				}
+				else if (meta == null)
+				{
+					currentState = state;
+					while (check[symbol + base[currentState]] != currentState)
+					{
+						currentState = defaults[currentState];
+						if (currentState >= numStates)
+							symbol = 0;
+					}
+					currentState = next[symbol + base[currentState]];
+				}
+				else
+				{
+					currentState = state;
+					while (check[symbol + base[currentState]] != currentState)
+					{
+						currentState = defaults[currentState];
+						if (currentState >= numStates)
+							symbol = meta[symbol];
+					}
+					currentState = next[symbol + base[currentState]];
+				}
+				if (row[symbol] != currentState)
+					throw new RuntimeException ("Compressed table and ecs table do not match");
+			}
+		}
+		return true;
 	}
 }

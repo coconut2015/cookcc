@@ -69,12 +69,13 @@ public class JavaStringBI extends BuiltIn
 		public TemplateModel exec (List args) throws TemplateModelException
 		{
 			StringBuffer buffer = new StringBuffer ();
-			buffer.append ("(\"");
+//			buffer.append ("(\"");
+			buffer.append ('\"');
 			int size = m_seq.size ();
 			for (int i = 0; i < size; ++i)
 			{
-				if (i % MAX_ARRAY_LEN == 0 && i > 0)
-					buffer.append ("\" + \"");
+//				if (i % MAX_ARRAY_LEN == 0 && i > 0)
+//					buffer.append ("\" + \"");
 				TemplateNumberModel model = (TemplateNumberModel)m_seq.get (i);
 				int value = model.getAsNumber ().intValue ();
 				if (value == '\n')
@@ -99,7 +100,8 @@ public class JavaStringBI extends BuiltIn
 				}
 			}
 
-			buffer.append ("\").toCharArray ()");
+//			buffer.append ("\").toCharArray ()");
+			buffer.append ("\".toCharArray ()");
 
 			return new SimpleScalar (buffer.toString ());
 		}

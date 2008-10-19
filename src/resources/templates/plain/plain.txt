@@ -33,7 +33,7 @@
 # next
 <@array lexer.dfa.next/>
 # check
-<@array lexer.dfa.next/>
+<@array lexer.dfa.check/>
 <#if lexer.dfa.default?has_content>
 # default
 <@array lexer.dfa.default/>

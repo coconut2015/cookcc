@@ -26,8 +26,7 @@
  */
 package org.yuanheng.cookcc.codegen.plain;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +63,7 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		m_lexerTableOption
 	};
 
-	private void generateLexerOutput (Document doc, PrintWriter p) throws Exception
+	private void generateLexerOutput (Document doc) throws Exception
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
@@ -74,17 +73,15 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 			doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
 
 		Map<String, Object> map = new HashMap<String, Object> ();
-		StringWriter sw = new StringWriter ();
+		OutputStreamWriter sw = new OutputStreamWriter (System.out);
 		setup (map, doc);
 		Resources.template.process (map, sw);
-		p.println (sw);
+		sw.flush ();
 	}
 
 	public void generateOutput (Document doc) throws Exception
 	{
-		PrintWriter p = new PrintWriter (System.out);
-		generateLexerOutput (doc, p);
-		p.flush ();
+		generateLexerOutput (doc);
 	}
 
 	public OptionParser[] getOptions ()

@@ -45,6 +45,9 @@ class PatternCreator implements Creator
 		decodeEngine.setDoAdd (false);
 		PatternDoc pattern = new PatternDoc ();
 		pattern.setPattern (TextUtils.getText (elm));
+		Integer lineNum = (Integer)elm.getUserData ("line");
+		if (lineNum != null)
+			pattern.setLineNumber (lineNum.intValue ());
 		return pattern;
 	}
 

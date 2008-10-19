@@ -27,7 +27,7 @@
 <@array3d lexer.dfa.table/>
 </#if>
 <#if lexer.table == "compressed">
-# verify = ${lexer.dfa.verify}
+# verify = ${lexer.dfa.verify?string}
 # base
 <@array lexer.dfa.base/>
 # next

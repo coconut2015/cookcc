@@ -455,12 +455,22 @@ public class RuleParser
 		m_lex.match (']');
 		if (matchNext)
 		{
-			while (m_lex.ifMatch ("{-}"))
+			for (;;)
 			{
-				boolean[] sub = parseFullCCL (false);
-				if (sub == null)
-					throw new LookaheadException (m_lineNumber, null, '[', m_lex.getInput (), m_lex.getPos ());
-				ccl = CCL.subtract (ccl, sub);
+				if (m_lex.ifMatch ("{-}"))
+				{
+					boolean[] sub = parseFullCCL (false);
+					if (sub == null)
+						throw new LookaheadException (m_lineNumber, null, '[', m_lex.getInput (), m_lex.getPos ());
+					ccl = CCL.subtract (ccl, sub);
+				}
+				else if (m_lex.ifMatch ("{+}"))
+				{
+					boolean[] sub = parseFullCCL (false);
+					if (sub == null)
+						throw new LookaheadException (m_lineNumber, null, '[', m_lex.getInput (), m_lex.getPos ());
+					ccl = CCL.merge (ccl, sub);
+				}
 			}
 		}
 		return ccl;

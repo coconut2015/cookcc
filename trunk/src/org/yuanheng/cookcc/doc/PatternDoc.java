@@ -105,6 +105,7 @@ public class PatternDoc extends TreeDoc
 
 	void setInternal ()
 	{
+		m_lineNumber = Integer.MAX_VALUE;
 		m_internal = true;
 	}
 

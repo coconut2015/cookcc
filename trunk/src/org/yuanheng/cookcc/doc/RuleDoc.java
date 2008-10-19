@@ -60,7 +60,6 @@ public class RuleDoc extends TreeDoc
 		pattern.setPattern ("<<EOF>>");
 		pattern.setInternal ();
 		rule.addPattern (pattern);
-		rule.setLineNumber (Integer.MAX_VALUE);
 		return rule;
 	}
 
@@ -165,5 +164,6 @@ public class RuleDoc extends TreeDoc
 	private void setInternal ()
 	{
 		m_internal = true;
+		m_lineNumber = Integer.MAX_VALUE;
 	}
 }

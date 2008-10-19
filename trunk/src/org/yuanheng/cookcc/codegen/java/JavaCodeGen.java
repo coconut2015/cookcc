@@ -27,9 +27,7 @@
 package org.yuanheng.cookcc.codegen.java;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -161,14 +159,14 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 			m_publicParser
 	};
 
-	private void generateLexerOutput (Document doc, PrintWriter p) throws Exception
+	private void generateLexerOutput (Document doc, File file) throws Exception
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
 
 		Map<String, Object> map = new HashMap<String, Object> ();
-		StringWriter sw = new StringWriter ();
+		FileWriter fw = new FileWriter (file);
 		for (Object key : Resources.defaults.keySet ())
 			map.put (key.toString (), Resources.defaults.getProperty (key.toString ()));
 
@@ -185,8 +183,8 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		if (m_table != null)
 			doc.getLexer ().setTable (m_table);
 		setup (map, doc);
-		Resources.template.process (map, sw);
-		p.println (sw);
+		Resources.template.process (map, fw);
+		fw.close ();
 	}
 
 	public void generateOutput (Document doc) throws Exception
@@ -214,10 +212,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 			}
 		}
 
-		PrintWriter p = new PrintWriter (new FileOutputStream (new File (dir, className + ".java")));
-		generateLexerOutput (doc, p);
-		p.flush ();
-		p.close ();
+		generateLexerOutput (doc, new File (dir, className + ".java"));
 	}
 
 	public OptionParser[] getOptionParsers ()

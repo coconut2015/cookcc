@@ -19,7 +19,7 @@ CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.htm
 || *{{{r{4} }}}* || exactly 4 r's ||
 || *{{{ {name} }}}* || the expansion of the "shortcut" definition ||
 || *{{{"[xyz]\"foo"}}}* || the literal string: *{{{[xyz]"foo}}}* ||
-|| *{{{\x}}}* || if x is an `a', `b', `f', `n', `r', `t', or `v', then the ANSI-C interpretation of \x. Otherwise, a literal `x' (used to escape operators such as `*') ||
+|| *{{{\x}}}* || if x is an `a', `b', `f', `n', `r', `t', or `v', then the ANSI-C interpretation of \x. Otherwise, a literal `x' (used to escape operators such as `**') ||
 || *{{{\0}}}* || the character with 0 (ASCII code 0) ||
 || *{{{(r)}}}* || match an r ||
 || *{{{rs}}}* || the concatenation of the regular expression *r* followed by the regular expression *s* ||

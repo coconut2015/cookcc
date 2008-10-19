@@ -31,6 +31,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.yuanheng.cookcc.codegen.options.LexerTableOption;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
@@ -56,11 +57,16 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
+	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
+
 	private void generateLexerOutput (Document doc, PrintWriter p) throws Exception
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		if (lexer == null)
 			return;
+
+		if (m_lexerTableOption.getLexerTable () != null)
+			doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
 
 		Map<String, Object> map = new HashMap<String, Object> ();
 		StringWriter sw = new StringWriter ();
@@ -76,7 +82,7 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		p.flush ();
 	}
 
-	public OptionParser[] getOptionParsers ()
+	public OptionParser[] getOptions ()
 	{
 		return new OptionParser[0];
 	}

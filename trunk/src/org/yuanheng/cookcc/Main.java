@@ -68,7 +68,7 @@ public class Main
 	private static boolean s_quiet;
 	private static boolean s_debug;
 
-	private static OptionParser s_helpParser = new OptionParser ()
+	private static OptionParser s_helpOptioni = new OptionParser ()
 	{
 		public int handleOption (String[] args, int index) throws Exception
 		{
@@ -84,7 +84,7 @@ public class Main
 		}
 	};
 
-	private static OptionParser s_quietParser = new OptionParser ()
+	private static OptionParser s_quietOption = new OptionParser ()
 	{
 		public int handleOption (String[] args, int index) throws Exception
 		{
@@ -100,7 +100,7 @@ public class Main
 		}
 	};
 
-	private static OptionParser s_langParser = new OptionParser()
+	private static OptionParser s_langOption = new OptionParser()
 	{
 		public int handleOption (String[] args, int index) throws Exception
 		{
@@ -123,7 +123,7 @@ public class Main
 		}
 	};
 
-	private static OptionParser s_debugParser = new OptionParser()
+	private static OptionParser s_debugOption = new OptionParser()
 	{
 		public int handleOption (String[] args, int index) throws Exception
 		{
@@ -139,17 +139,17 @@ public class Main
 		}
 	};
 
-	private static OptionParser[] s_optionParsers = new OptionParser[]
+	private static OptionParser[] s_options = new OptionParser[]
 	{
-		s_helpParser,
-		s_langParser,
-		s_quietParser,
-		s_debugParser
+		s_helpOptioni,
+		s_langOption,
+		s_quietOption,
+		s_debugOption
 	};
 
 	private static int parseOptions (String[] args) throws Exception
 	{
-		OptionParser[] optionParsers = s_optionParsers;
+		OptionParser[] optionParsers = s_options;
 		int i;
 		for (i = 0; i < args.length;)
 		{
@@ -169,7 +169,7 @@ public class Main
 
 		CodeGen codeGen = getCodeGen ();
 		s_codeGen = codeGen;
-		optionParsers = codeGen.getOptionParsers ();
+		optionParsers = codeGen.getOptions ();
 		for (; i < args.length;)
 		{
 			int j;
@@ -194,8 +194,8 @@ public class Main
 
 			System.out.println ("CookCC version " + p.getImplementationVersion ());
 			System.out.println ("Usage: cookcc [cookcc options] [language options] file");
-			for (int j = 0; j < s_optionParsers.length; ++j)
-				System.out.println (s_optionParsers[j]);
+			for (int j = 0; j < s_options.length; ++j)
+				System.out.println (s_options[j]);
 			System.out.println ();
 			System.out.println (s_lang + " options:");
 			for (int j = 0; j < optionParsers.length; ++j)

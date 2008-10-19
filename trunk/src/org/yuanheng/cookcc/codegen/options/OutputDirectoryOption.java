@@ -24,17 +24,40 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.interfaces;
+package org.yuanheng.cookcc.codegen.options;
 
-import org.yuanheng.cookcc.doc.Document;
+import java.io.File;
+
+import org.yuanheng.cookcc.interfaces.OptionParser;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public interface CodeGen
+public class OutputDirectoryOption implements OptionParser
 {
-	public void generateOutput (Document doc) throws Exception;
+	public static String OPTION_OUTPUT_DIR = "-d";
 
-	public OptionParser[] getOptions ();
+	private static File m_outputDir = new File (".");
+
+	public int handleOption (String[] args, int index) throws Exception
+	{
+		if (!OPTION_OUTPUT_DIR.equals (args[index]))
+			return 0;
+		File file = new File (args[index + 1]);
+		if (!file.isDirectory ())
+			throw new IllegalArgumentException (args[index + 1] + " does not exist.");
+		m_outputDir = file;
+		return 2;
+	}
+
+	public String toString ()
+	{
+		return OPTION_OUTPUT_DIR + "\t\t\t\tselect output directory.";
+	}
+
+	public File getOutputDirectory ()
+	{
+		return m_outputDir;
+	}
 }

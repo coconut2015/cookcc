@@ -32,6 +32,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.yuanheng.cookcc.codegen.options.ClassOption;
+import org.yuanheng.cookcc.codegen.options.LexerTableOption;
+import org.yuanheng.cookcc.codegen.options.OutputDirectoryOption;
 import org.yuanheng.cookcc.codegen.plain.TemplatedCodeGen;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
@@ -49,9 +52,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	public final static String DEFAULTS_URI = "/resources/templates/java/defaults.properties";
 	public final static String TEMPLATE_URI = "resources/templates/java/class.txt";
 
-	public static String OPTION_OUTPUT_DIR = "-d";
-	public static String OPTION_LEXERTABLE = "-lexertable";
-	public static String OPTION_CLASS = "-class";
 	public static String OPTION_PUBLIC = "-public";
 
 	private static class Resources
@@ -73,69 +73,15 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
-	private static File m_outputDir = new File (".");
-	private static String m_class;
 	private static boolean m_public;
-	private static String m_lexerTable;
 
-	private OptionParser m_outputDirectoryParser = new OptionParser()
-	{
-		public int handleOption (String[] args, int index) throws Exception
-		{
-			if (!OPTION_OUTPUT_DIR.equals (args[index]))
-				return 0;
-			File file = new File (args[index + 1]);
-			if (!file.isDirectory ())
-				throw new IllegalArgumentException (args[index + 1] + " does not exist.");
-			m_outputDir = file;
-			return 2;
-		}
+	private OutputDirectoryOption m_outputDirectoryOption = new OutputDirectoryOption ();
 
-		public String toString ()
-		{
-			return OPTION_OUTPUT_DIR + "\t\t\t\tselect output directory.";
-		}
-	};
+	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
 
-	private OptionParser m_tableParser = new OptionParser()
-	{
-		public int handleOption (String[] args, int index) throws Exception
-		{
-			if (!OPTION_LEXERTABLE.equals (args[index]))
-				return 0;
-			String table = args[index + 1].toLowerCase ();
-			if (!"ecs".equals (table) &&
-				!"full".equals (table) &&
-				!"compressed".equals (table))
-				throw new IllegalArgumentException ("Invalid table choice: " + table);
-			m_lexerTable = table;
-			return 2;
-		}
+	private ClassOption m_classOption = new ClassOption ();
 
-		public String toString ()
-		{
-			return OPTION_LEXERTABLE + "\t\t\t\tselect lexer DFA table format.\n" +
-					"\tAvailable formats:\t[ecs, full, compressed]";
-		}
-	};
-
-	private OptionParser m_classParser = new OptionParser()
-	{
-		public int handleOption (String[] args, int index) throws Exception
-		{
-			if (!OPTION_CLASS.equals (args[index]))
-				return 0;
-			m_class = args[index + 1];
-			return 2;
-		}
-
-		public String toString ()
-		{
-			return OPTION_CLASS + "\t\t\t\tset class name.";
-		}
-	};
-
-	private OptionParser m_publicParser = new OptionParser()
+	private OptionParser m_publicOption = new OptionParser()
 	{
 		public int handleOption (String[] args, int index) throws Exception
 		{
@@ -151,12 +97,12 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	};
 
-	private OptionParser[] m_optionParsers = new OptionParser[]
+	private OptionParser[] m_options = new OptionParser[]
 	{
-			m_outputDirectoryParser,
-			m_tableParser,
-			m_classParser,
-			m_publicParser
+			m_outputDirectoryOption,
+			m_lexerTableOption,
+			m_classOption,
+			m_publicOption
 	};
 
 	private void generateLexerOutput (Document doc, File file) throws Exception
@@ -170,18 +116,20 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		for (Object key : Resources.defaults.keySet ())
 			map.put (key.toString (), Resources.defaults.getProperty (key.toString ()));
 
-		if (m_class != null && m_class.length () > 0)
+		String cl = m_classOption.getClassOption ();
+
+		if (cl != null && cl.length () > 0)
 		{
-			String packageName = getPackageName (m_class);
-			String className = getClassName (m_class);
+			String packageName = getPackageName (cl);
+			String className = getClassName (cl);
 			map.put ("ccclass", className);
 			if (packageName.length () > 0)
 				map.put ("package", packageName);
 		}
 		if (m_public)
 			map.put ("public", Boolean.TRUE);
-		if (m_lexerTable != null)
-			doc.getLexer ().setTable (m_lexerTable);
+		if (m_lexerTableOption.getLexerTable ()!= null)
+			doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
 		setup (map, doc);
 		Resources.template.process (map, fw);
 		fw.close ();
@@ -189,12 +137,13 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 	public void generateOutput (Document doc) throws Exception
 	{
-		String className = m_class == null ? Resources.defaults.getProperty ("ccclass") : m_class;
+		String cl = m_classOption.getClassOption ();
+		String className = cl == null ? Resources.defaults.getProperty ("ccclass") : cl;
 		String packageName = getPackageName (className);
 		className = getClassName (className);
 
 		// now we check if we can create the directories of the package name
-		File dir = m_outputDir;
+		File dir = m_outputDirectoryOption.getOutputDirectory ();
 		if (packageName.length () > 0)
 		{
 			String[] subDirs = packageName.split ("\\.");
@@ -207,7 +156,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 					continue;
 				}
 				if (!subDir.mkdir ())
-					throw new IllegalArgumentException ("Unable to create directories for " + m_class);
+					throw new IllegalArgumentException ("Unable to create directories for " + cl);
 				dir = subDir;
 			}
 		}
@@ -215,9 +164,9 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		generateLexerOutput (doc, new File (dir, className + ".java"));
 	}
 
-	public OptionParser[] getOptionParsers ()
+	public OptionParser[] getOptions ()
 	{
-		return m_optionParsers;
+		return m_options;
 	}
 
 	private static String getClassName (String className)

@@ -86,7 +86,7 @@ public class XmlCodeGen implements CodeGen
 		p.flush ();
 	}
 
-	public OptionParser[] getOptionParsers ()
+	public OptionParser[] getOptions ()
 	{
 		return new OptionParser[0];
 	}

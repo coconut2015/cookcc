@@ -50,7 +50,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	public final static String TEMPLATE_URI = "resources/templates/java/class.txt";
 
 	public static String OPTION_OUTPUT_DIR = "-d";
-	public static String OPTION_TABLE = "-table";
+	public static String OPTION_LEXERTABLE = "-lexertable";
 	public static String OPTION_CLASS = "-class";
 	public static String OPTION_PUBLIC = "-public";
 
@@ -74,9 +74,9 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	}
 
 	private static File m_outputDir = new File (".");
-	private static String m_table;
 	private static String m_class;
 	private static boolean m_public;
+	private static String m_lexerTable;
 
 	private OptionParser m_outputDirectoryParser = new OptionParser()
 	{
@@ -101,20 +101,20 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	{
 		public int handleOption (String[] args, int index) throws Exception
 		{
-			if (!OPTION_TABLE.equals (args[index]))
+			if (!OPTION_LEXERTABLE.equals (args[index]))
 				return 0;
 			String table = args[index + 1].toLowerCase ();
 			if (!"ecs".equals (table) &&
 				!"full".equals (table) &&
 				!"compressed".equals (table))
 				throw new IllegalArgumentException ("Invalid table choice: " + table);
-			m_table = table;
+			m_lexerTable = table;
 			return 2;
 		}
 
 		public String toString ()
 		{
-			return OPTION_TABLE + "\t\t\t\tselect lexer DFA table format.\n" +
+			return OPTION_LEXERTABLE + "\t\t\t\tselect lexer DFA table format.\n" +
 					"\tAvailable formats:\t[ecs, full, compressed]";
 		}
 	};
@@ -180,8 +180,8 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 		if (m_public)
 			map.put ("public", Boolean.TRUE);
-		if (m_table != null)
-			doc.getLexer ().setTable (m_table);
+		if (m_lexerTable != null)
+			doc.getLexer ().setTable (m_lexerTable);
 		setup (map, doc);
 		Resources.template.process (map, fw);
 		fw.close ();

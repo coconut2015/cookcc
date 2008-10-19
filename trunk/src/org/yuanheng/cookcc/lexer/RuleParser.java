@@ -471,6 +471,8 @@ public class RuleParser
 						throw new LookaheadException (m_lineNumber, null, '[', m_lex.getInput (), m_lex.getPos ());
 					ccl = CCL.merge (ccl, sub);
 				}
+				else
+					break;
 			}
 		}
 		return ccl;

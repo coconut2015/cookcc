@@ -123,11 +123,28 @@ public class Main
 		}
 	};
 
+	private static OptionParser s_debugParser = new OptionParser()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_DEBUG.equals (args[index]))
+				return 0;
+			s_debug = true;
+			return 1;
+		}
+
+		public String toString ()
+		{
+			return OPTION_DEBUG + "\t\t\t\tGenerate debug code.";
+		}
+	};
+
 	private static OptionParser[] s_optionParsers = new OptionParser[]
 	{
 		s_helpParser,
 		s_langParser,
-		s_quietParser
+		s_quietParser,
+		s_debugParser
 	};
 
 	private static int parseOptions (String[] args) throws Exception

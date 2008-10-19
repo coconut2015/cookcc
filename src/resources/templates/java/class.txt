@@ -395,7 +395,7 @@ ${code.classheader}
 							currentState = cc_next[symbol + cc_base[matchedState]];
 						else
 							currentState = 0;
-	<#elseif !lexer.dfa.error?has_content>
+	<#elseif !lexer.dfa.error>
 						if (cc_check[symbol + cc_base[matchedState]] == matchedState)
 							currentState = cc_next[symbol + cc_base[matchedState]];
 						else

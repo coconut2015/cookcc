@@ -44,6 +44,7 @@ public class Main
 	public static String OPTION_HELP = "-help";
 	public static String OPTION_QUIET = "-quiet";
 	public static String OPTION_LANG = "-lang";
+	public static String OPTION_DEBUG = "-debug";
 
 	private static Properties s_codeGenDrivers = new Properties ();
 	private static Properties s_inputParsers = new Properties ();
@@ -65,6 +66,7 @@ public class Main
 	private static String s_lang = s_codeGenDrivers.getProperty ("default");
 	private static CodeGen s_codeGen;
 	private static boolean s_quiet;
+	private static boolean s_debug;
 
 	private static OptionParser s_helpParser = new OptionParser ()
 	{
@@ -233,6 +235,11 @@ public class Main
 		if (index < 0)
 			return "";
 		return fileName.substring (index);
+	}
+
+	public static boolean isDebug ()
+	{
+		return s_debug;
 	}
 
 	private static Class getParser (String extension)

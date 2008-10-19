@@ -32,6 +32,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.Map;
 
+import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.dfa.LexerDFAInfo;
 import org.yuanheng.cookcc.doc.Document;
 
@@ -98,6 +99,7 @@ public abstract class TemplatedCodeGen
 
 	public void setup (Map<String, Object> map, Document doc)
 	{
+		map.put ("debug", Main.isDebug ());
 		map.put ("tokens", doc.getTokens ());
 		map.put ("code", doc.getCode ());
 		map.put ("unicode", Boolean.valueOf (doc.isUnicode ()));

@@ -24,17 +24,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.interfaces;
+package org.yuanheng.cookcc.codegen.options;
 
-import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.interfaces.OptionParser;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public interface CodeGen
+public class ClassOption implements OptionParser
 {
-	public void generateOutput (Document doc) throws Exception;
+	public static String OPTION_CLASS = "-class";
 
-	public OptionParser[] getOptions ();
+	private String m_class;
+
+	public int handleOption (String[] args, int index) throws Exception
+	{
+		if (!OPTION_CLASS.equals (args[index]))
+			return 0;
+		m_class = args[index + 1];
+		return 2;
+	}
+
+	public String toString ()
+	{
+		return OPTION_CLASS + "\t\t\t\tset class name.";
+	}
+
+	public String getClassOption ()
+	{
+		return m_class;
+	}
 }

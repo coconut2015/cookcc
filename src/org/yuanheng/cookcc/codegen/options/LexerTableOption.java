@@ -24,17 +24,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.interfaces;
+package org.yuanheng.cookcc.codegen.options;
 
-import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.interfaces.OptionParser;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public interface CodeGen
+public class LexerTableOption implements OptionParser
 {
-	public void generateOutput (Document doc) throws Exception;
+	public static String OPTION_LEXERTABLE = "-lexertable";
 
-	public OptionParser[] getOptions ();
+	private String m_lexerTable;
+
+	public int handleOption (String[] args, int index) throws Exception
+	{
+		if (!OPTION_LEXERTABLE.equals (args[index]))
+			return 0;
+		String table = args[index + 1].toLowerCase ();
+		if (!"ecs".equals (table) &&
+			!"full".equals (table) &&
+			!"compressed".equals (table))
+			throw new IllegalArgumentException ("Invalid table choice: " + table);
+		m_lexerTable = table;
+		return 2;
+	}
+
+	public String toString ()
+	{
+		return OPTION_LEXERTABLE + "\t\t\t\tselect lexer DFA table format.\n" +
+			   "\tAvailable formats:\t[ecs, full, compressed]";
+	}
+
+	public String getLexerTable ()
+	{
+		return m_lexerTable;
+	}
 }

@@ -16,7 +16,7 @@
 			<action>cc += _yyLength;</action>
 		</rule>
 		<rule>
-			<pattern>\n+</pattern>
+			<pattern>\n</pattern>
 			<action>++lc; ++cc;</action>
 		</rule>
 		<rule>

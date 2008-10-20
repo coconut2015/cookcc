@@ -498,7 +498,11 @@ public class RuleParser
 		}
 		Character end = parseChar (m_cclCharSet);
 		if (end == null)
-			throw new LookaheadException (m_lineNumber, m_ccl, m_cclCharSet, m_lex.getInput (), m_lex.getPos ());
+		{
+			// - is at the end, so just treat this character as a literal
+			ccl['-'] = true;
+			return ccl;
+		}
 		for (int i = start.charValue (); i <= end.charValue (); ++i)
 			ccl[i] = true;
 		return ccl;

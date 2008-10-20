@@ -78,13 +78,7 @@ public class JavaStringBI extends BuiltIn
 //					buffer.append ("\" + \"");
 				TemplateNumberModel model = (TemplateNumberModel)m_seq.get (i);
 				int value = model.getAsNumber ().intValue ();
-				if (value == '\n')
-					buffer.append ("\\n");
-				else if (value == '\r')
-					buffer.append ("\\r");
-				else if (value == '"')
-					buffer.append ("\\\"");
-				else if (value < 127)
+				if (value < 128)
 				{
 					buffer.append ('\\');
 					String oct = Integer.toOctalString (value);

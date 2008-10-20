@@ -49,6 +49,9 @@ class TableCompressor
 		{
 			m_error = row.getStates ().clone ();
 			m_defaultValue = defaultValue;
+
+			for (int i = 0; i < m_error.length; i++)
+				m_error[i] = (m_error[i] == 0) ? 0 : (m_error[i] == defaultValue) ? defaultValue : SHORT_MIN;
 		}
 
 		public short[] getError ()
@@ -74,10 +77,7 @@ class TableCompressor
 					other.m_error[i] == SHORT_MIN)
 					continue;
 
-				if (m_error[i] < other.m_error[i])
-					return -1;
-				if (m_error[i] > other.m_error[i])
-					return 1;
+				return m_error[i] - other.m_error[i];
 			}
 			return 0;
 		}
@@ -95,7 +95,7 @@ class TableCompressor
 	private final int GOODREPEAT;
 	private final int m_rowSize;
 
-	private Vector<ErrorVector> m_error = new Vector<ErrorVector> ();
+	private Vector<ErrorVector> m_errors = new Vector<ErrorVector> ();
 	private TreeMap<ErrorVector, Short> m_errorMap = new TreeMap<ErrorVector, Short> ();
 	private TreeMap<Integer, Vector<Short>> m_fillMap = new TreeMap<Integer, Vector<Short>> ();
 
@@ -200,7 +200,8 @@ class TableCompressor
 	{
 		short[] cols = m_dfaCopy.getRow (state).getStates ();
 		for (int i = 0; i < cols.length; ++i)
-			if (cols[i] == repeatValue || cols[i] == 0)
+//			if (cols[i] == repeatValue || cols[i] == 0)
+			if (cols[i] == repeatValue)
 				cols[i] = SHORT_MIN;
 	}
 
@@ -308,7 +309,7 @@ class TableCompressor
 	//
 	private int getErrorBlockSize (int state, int[] minMax)
 	{
-		short[] cols = m_error.get (state - m_dfaCopy.size ()).getError ();
+		short[] cols = m_errors.get (state - m_dfaCopy.size ()).getError ();
 		int size = cols.length;
 		int i;
 		for (i = 0; i < size; ++i)
@@ -339,7 +340,7 @@ class TableCompressor
 	private int getErrorHoleSize (int state, int min, int max)
 	{
 		int holes = 0;
-		short[] cols = m_error.get (state - m_dfaCopy.size ()).getError ();
+		short[] cols = m_errors.get (state - m_dfaCopy.size ()).getError ();
 		for (int i = min; i <= max; ++i)
 			if (cols[i] == SHORT_MIN)
 				++holes;
@@ -364,8 +365,6 @@ class TableCompressor
 		int size = cols.length;
 
 		// then find the highest repeated value
-		int errorCount = 0;
-
 		lastRepeat = 0;
 		lastRepeatCount = 0;
 		repeatCount = 1;
@@ -373,9 +372,7 @@ class TableCompressor
 		// count the error states first
 		for (i = 0; i < size; i++)
 		{
-			if (cols[i] == 0)
-				errorCount++;
-			else
+			if (cols[i] != 0)
 				break;
 		}
 
@@ -431,8 +428,6 @@ class TableCompressor
 		if (i == cols.length)
 			return SHORT_MIN;
 
-		m_error.add (ev);
-
 		//
 		// then check if the error state is already in the error array
 		//
@@ -443,7 +438,9 @@ class TableCompressor
 		//
 		// so the error is new
 		//
+		m_errors.add (ev);
 
+		/*
 		//
 		// give the insignificant values some value
 		//
@@ -452,6 +449,7 @@ class TableCompressor
 			if (cols[i] == SHORT_MIN)
 				cols[i] = defaultValue;
 		}
+		*/
 
 		//
 		// check if it creates new equivalent classes
@@ -461,7 +459,7 @@ class TableCompressor
 		//
 		// then add the array iterator to the search set
 		//
-		errorId = new Short ((short)(m_dfaCopy.size () + m_error.size () - 1));
+		errorId = new Short ((short)(m_dfaCopy.size () + m_errors.size () - 1));
 		m_errorMap.put (ev, errorId);
 		return errorId.shortValue ();
 	}
@@ -488,9 +486,9 @@ class TableCompressor
 	}
 
 	//
-	//   create block/hole information of thisState with a repeatValue
+	//   create block/hole information of state with a repeatValue
 	//
-	private void processStateRepeat (short thisState, short repeatValue, int repeatCount)
+	private void processStateRepeat (short state, short repeatValue, int repeatCount)
 	{
 		//
 		// check if there are enough repeats for the repeatValue.
@@ -502,17 +500,16 @@ class TableCompressor
 		if (repeatCount == 1 || repeatCount < GOODREPEAT)
 		{
 			repeatValue = 0;
-			m_default[thisState] = SHORT_MIN;
+			m_default[state] = SHORT_MIN;
 		}
 		else
 		{
 			// we calculate an error state as well
-			m_default[thisState] = addErrorState (thisState, repeatValue);
+			m_default[state] = addErrorState (state, repeatValue);
 		}
 
-		cleanStateRepeat (thisState, repeatValue);
-
-		addBlock (thisState);
+		cleanStateRepeat (state, repeatValue);
+		addBlock (state);
 	}
 
 	//
@@ -535,15 +532,16 @@ class TableCompressor
 	//
 	private void processErrorStates ()
 	{
-		int size = m_error.size ();
+		int size = m_errors.size ();
 		int[] minMax = new int[2];
 		for (int i = 0; i < size; ++i)
 		{
-			ErrorVector ev = m_error.get (i);
+			ErrorVector ev = m_errors.get (i);
 			int errorGroups = m_ecsError.getGroupCount ();
 			short[] cols = ev.getError ();
 			short[] newArray = new short[errorGroups];
-			int[] groups = m_ecsError.getGroups ();
+//			int[] groups = m_ecsError.getGroups ();
+			int[] groups = m_ecsError.getLookup ();
 			for (int j = 0; j < errorGroups; ++j)
 			{
 				if (cols[groups[j]] == 0)
@@ -551,6 +549,7 @@ class TableCompressor
 				else
 					newArray[j] = cols[groups[j]];
 			}
+			java.io.InputStreamReader r;
 			ev.setError (newArray);
 
 			int stateNum = i + m_dfaCopy.size ();
@@ -645,6 +644,7 @@ class TableCompressor
 
 			if (i == cmpState)
 				processStateRepeat (i, repeatValue[0], repeatCount);
+//				processStateRepeat (i, (short)0, 0);
 			else
 				processStateDiff (i, cmpState);
 		}
@@ -667,7 +667,7 @@ class TableCompressor
 		else
 		{
 			int bound = m_next.length;
-			short[] column = m_error.get (state - m_dfaCopy.size ()).getError ();
+			short[] column = m_errors.get (state - m_dfaCopy.size ()).getError ();
 			for (pos = pos + min; pos < bound && min <= max; ++pos, ++min)
 			{
 				if (column[min] != SHORT_MIN &&
@@ -709,7 +709,7 @@ class TableCompressor
 		}
 		else
 		{
-			short[] column = m_error.get (state - m_dfaCopy.size ()).getError ();
+			short[] column = m_errors.get (state - m_dfaCopy.size ()).getError ();
 			for (pos = pos + min; min <= max; ++pos, ++min)
 			{
 				if (column[min] != SHORT_MIN)
@@ -776,8 +776,8 @@ class TableCompressor
 		//
 		// expand the base/default array to count error vectors
 		//
-		m_base = resize (m_base, m_dfaCopy.size () + m_error.size (), (short)0);
-		m_default = resize (m_default, m_dfaCopy.size () + m_error.size (), SHORT_MIN);
+		m_base = resize (m_base, m_dfaCopy.size () + m_errors.size (), (short)0);
+		m_default = resize (m_default, m_dfaCopy.size () + m_errors.size (), SHORT_MIN);
 
 		//
 		// determine if _yy_meta is necessary
@@ -879,7 +879,7 @@ class TableCompressor
 					if (m_default[i] == SHORT_MIN)
 						m_default[i] = 0;
 					else
-						m_default[i] = m_error.get (m_default[i] - m_dfaCopy.size ()).getDefaultValue ();
+						m_default[i] = m_errors.get (m_default[i] - m_dfaCopy.size ()).getDefaultValue ();
 				}
 		}
 		else

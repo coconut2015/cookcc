@@ -32,8 +32,11 @@ import freemarker.ext.beans.ArrayModel;
 import freemarker.template.*;
 
 /**
- * This piece of code is from http://osdir.com/ml/web.freemarker.devel/2004-04/msg00010.html
- * by Mark van de Veerdonk.
+ * This code dumps a number array to Java character string.  This is function is
+ * necessary because of the fact that Java cannot handle certain \u00XX values
+ * correctly.  Namely \r \n \" and their corresponding values.  Thus it is
+ * necessary to use octal representation (which Java does handle correctly)
+ * for numbers smaller than 128, and the rest using \u notation.
  *
  * @author Heng Yuan
  * @version $Id$

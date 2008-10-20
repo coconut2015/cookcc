@@ -6,7 +6,7 @@ for v in *.xcc
 do
 	echo testing $v
 
-	$cookcc $v > Lexer.java
+	$cookcc $v
 	${JAVA_HOME}/javac Lexer.java > /dev/null 2> /dev/null
 	if [ $? -ne 0 ]; then echo test for $v failed; break; fi
 	${JAVA_HOME}/java -cp . Lexer test.input > output

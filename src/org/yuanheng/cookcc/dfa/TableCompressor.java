@@ -50,6 +50,9 @@ class TableCompressor
 			m_error = row.getStates ().clone ();
 			m_defaultValue = defaultValue;
 
+			// values that are not 0 and repeat values can be either 0 or
+			// repeat value in terms of error state calculation, thus
+			// SHORT_MIN is used here as a flag
 			for (int i = 0; i < m_error.length; i++)
 				m_error[i] = (m_error[i] == 0) ? 0 : (m_error[i] == defaultValue) ? defaultValue : SHORT_MIN;
 		}
@@ -73,7 +76,7 @@ class TableCompressor
 			for (int i = 0; i < size; ++i)
 			{
 				if (m_error[i] == other.m_error[i] ||
-					m_error[i] == SHORT_MIN ||
+//					m_error[i] == SHORT_MIN ||
 					other.m_error[i] == SHORT_MIN)
 					continue;
 
@@ -121,7 +124,7 @@ class TableCompressor
 		BALANCE = m_rowSize / 10;
 		GOODREPEAT = m_rowSize * MINREPEAT / 100;
 
-		m_ecsError = new ECS (m_rowSize);
+		m_ecsError = new ECS (m_rowSize - 1);
 
 		m_default = resize (null, m_dfaCopy.size (), SHORT_MIN);
 		m_base = new short[m_dfaCopy.size ()];
@@ -540,16 +543,15 @@ class TableCompressor
 			int errorGroups = m_ecsError.getGroupCount ();
 			short[] cols = ev.getError ();
 			short[] newArray = new short[errorGroups];
-//			int[] groups = m_ecsError.getGroups ();
 			int[] groups = m_ecsError.getLookup ();
 			for (int j = 0; j < errorGroups; ++j)
 			{
 				if (cols[groups[j]] == 0)
-					newArray[j] = SHORT_MIN;
+//					newArray[j] = SHORT_MIN;
+					newArray[j] = 0;
 				else
 					newArray[j] = cols[groups[j]];
 			}
-			java.io.InputStreamReader r;
 			ev.setError (newArray);
 
 			int stateNum = i + m_dfaCopy.size ();

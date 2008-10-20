@@ -117,7 +117,7 @@ public class CompressedTable
 	}
 
 
-	public boolean getVerify ()
+	public boolean getCorrect ()
 	{
 		// verify compressed tables are ok
 		short[] next = getNext ();
@@ -155,19 +155,20 @@ public class CompressedTable
 				else if (meta == null)
 				{
 					currentState = state;
-					while (check[symbol + base[currentState]] != currentState)
+					int e = symbol;
+					while (check[e + base[currentState]] != currentState)
 					{
 						currentState = defaults[currentState];
 						if (currentState >= numStates)
-							symbol = 0;
+							e = 0;
 					}
-					currentState = next[symbol + base[currentState]];
+					currentState = next[e + base[currentState]];
 				}
 				else
 				{
 					currentState = state;
 					int e = symbol;
-					while (check[symbol + base[currentState]] != currentState)
+					while (check[e + base[currentState]] != currentState)
 					{
 						currentState = defaults[currentState];
 						if (currentState >= numStates)
@@ -176,7 +177,8 @@ public class CompressedTable
 					currentState = next[e + base[currentState]];
 				}
 				if (row[symbol] != currentState)
-					throw new RuntimeException ("Compressed table and ecs table do not match");
+//					throw new RuntimeException ("Compressed table and ecs table do not match");
+					return false;
 			}
 		}
 		return true;

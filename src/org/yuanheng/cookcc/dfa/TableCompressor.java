@@ -92,6 +92,7 @@ class TableCompressor
 	// the number is used to tip the balance between choosing the
 	// state diff or using error state
 	private final int BALANCE;
+	private final int GOODREPEAT;
 	private final int m_rowSize;
 
 	private Vector<ErrorVector> m_error = new Vector<ErrorVector> ();
@@ -116,7 +117,9 @@ class TableCompressor
 		m_dfaCopy = dfa.clone ();
 
 		m_rowSize = dfa.getRow (0).getStates ().length;
+
 		BALANCE = m_rowSize / 10;
+		GOODREPEAT = m_rowSize * MINREPEAT / 100;
 
 		m_ecsError = new ECS (m_rowSize);
 
@@ -496,7 +499,7 @@ class TableCompressor
 		// reduces # of error state equivalent classes
 		//
 
-		if (repeatCount == 1 || ((repeatCount * 100) / m_rowSize < MINREPEAT))
+		if (repeatCount == 1 || repeatCount < GOODREPEAT)
 		{
 			repeatValue = 0;
 			m_default[thisState] = SHORT_MIN;
@@ -596,7 +599,7 @@ class TableCompressor
 			diff = getNonDefaultDiff (i, repeatValue[0]);
 			cmpState = i;
 
-			if ((repeatCount * 100) / m_rowSize < MINREPEAT)
+			if (repeatCount < GOODREPEAT)
 				diff = hardDiff;
 
 			// looking for a state that minimizes the

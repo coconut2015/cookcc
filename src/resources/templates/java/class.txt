@@ -27,7 +27,7 @@ ${code.classheader}
 
 <#if tokens?has_content>
 <#list tokens as i>
-	public final static int ${i} = ${eof + i_index + 1};
+	public final static int ${i} = ${lexer.eof + i_index + 1};
 </#list>
 </#if>
 

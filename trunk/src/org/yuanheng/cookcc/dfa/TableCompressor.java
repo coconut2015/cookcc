@@ -50,11 +50,10 @@ class TableCompressor
 			m_error = row.getStates ().clone ();
 			m_defaultValue = defaultValue;
 
-			// values that are not 0 and repeat values can be either 0 or
-			// repeat value in terms of error state calculation, thus
-			// SHORT_MIN is used here as a flag
+			// We can't use SHORT_MIN as a flag since we could potentially
+			// have values that are
 			for (int i = 0; i < m_error.length; i++)
-				m_error[i] = (m_error[i] == 0) ? 0 : (m_error[i] == defaultValue) ? defaultValue : SHORT_MIN;
+				m_error[i] = (m_error[i] == 0) ? 0 : (m_error[i] == defaultValue) ? defaultValue : 0;
 		}
 
 		public short[] getError ()
@@ -203,8 +202,7 @@ class TableCompressor
 	{
 		short[] cols = m_dfaCopy.getRow (state).getStates ();
 		for (int i = 0; i < cols.length; ++i)
-//			if (cols[i] == repeatValue || cols[i] == 0)
-			if (cols[i] == repeatValue)
+			if (cols[i] == repeatValue || cols[i] == 0)
 				cols[i] = SHORT_MIN;
 	}
 
@@ -547,8 +545,8 @@ class TableCompressor
 			for (int j = 0; j < errorGroups; ++j)
 			{
 				if (cols[groups[j]] == 0)
-//					newArray[j] = SHORT_MIN;
-					newArray[j] = 0;
+					newArray[j] = SHORT_MIN;
+//					newArray[j] = 0;
 				else
 					newArray[j] = cols[groups[j]];
 			}

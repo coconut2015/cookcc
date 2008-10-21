@@ -30,6 +30,7 @@ import java.io.PrintWriter;
 import java.util.Map;
 
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.doc.TokensDoc;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
 
@@ -41,23 +42,24 @@ public class XmlCodeGen implements CodeGen
 {
 	private void printTokens (Document doc, PrintWriter p)
 	{
-		String[] tokens = doc.getTokens ();
-		if (tokens.length == 0)
-			return;
-		p.print ("\t<tokens>");
-		for (int i = 0; i < tokens.length; ++i)
+		for (TokensDoc tokens : doc.getTokens ())
 		{
-			if ((i % 5) > 0)
-				p.print (" ");
-			else
+			p.print ("\t<tokens" + (tokens.getType () == null ? "" : " type=\"" + tokens.getType () + "\"") + "><![CDATA[");
+			String[] ts = tokens.getTokens ();
+			for (int i = 0; i < ts.length; ++i)
 			{
-				p.println ();
-				p.print ("\t\t");
+				if ((i % 5) > 0)
+					p.print (" ");
+				else
+				{
+					p.println ();
+					p.print ("\t\t");
+				}
+				p.print (ts[i]);
 			}
-			p.print (tokens[i]);
+			p.println ();
+			p.println ("\t]]></tokens>");
 		}
-		p.println ();
-		p.println ("\t</tokens>");
 	}
 
 	private void printDocument (Document doc, PrintWriter p)

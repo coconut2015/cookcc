@@ -28,7 +28,9 @@ package org.yuanheng.cookcc.codegen.xml;
 
 import java.io.PrintWriter;
 
+import org.yuanheng.cookcc.doc.GrammarDoc;
 import org.yuanheng.cookcc.doc.ParserDoc;
+import org.yuanheng.cookcc.doc.RhsDoc;
 
 /**
  * @author Heng Yuan
@@ -36,13 +38,29 @@ import org.yuanheng.cookcc.doc.ParserDoc;
  */
 class XmlParserOutput
 {
+	private void printRhs (RhsDoc rhs, PrintWriter p)
+	{
+		p.println ("\t\t\t<rhs>" + Utils.translate (rhs.getTerms ()) + "</rhs>");
+		p.println ("\t\t\t<action>" + Utils.translate (rhs.getAction ()) + "</action>");
+	}
+
+	private void printGrammar (GrammarDoc grammar, PrintWriter p)
+	{
+		p.println ("\t\t<grammar term=\"" + grammar.getTerm () + "\">");
+		for (RhsDoc rhs : grammar.getRhs ())
+			printRhs (rhs, p);
+		p.println ("\t\t</grammar>");
+	}
+
 	public void printParserDoc (ParserDoc doc, PrintWriter p)
 	{
 		if (doc == null)
 			return;
-		if (true)
-			return;
-		p.println ("\t<parser>");
+		p.println ("\t<parser" + (doc.getStart () == null ? "" : ( " start=\"" + doc.getStart () + "\")")) + ">");
+
+		for (GrammarDoc grammar : doc.getGrammars ())
+			printGrammar (grammar, p);
+
 		p.println ("\t</parser>");
 	}
 }

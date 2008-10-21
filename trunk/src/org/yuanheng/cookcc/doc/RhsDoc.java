@@ -24,22 +24,80 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.xml;
+package org.yuanheng.cookcc.doc;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-class Utils
+public class RhsDoc
 {
-	public static String translate (String inputStr)
+	private String m_terms;
+	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
+	private int m_lineNumber;
+	private int m_actionLineNumber;
+	private String m_action = "";
+
+	public RhsDoc ()
 	{
-		if (inputStr == null)
-			return "";
-		if (inputStr.indexOf ('<') >= 0 ||
-			inputStr.indexOf ("--") >= 0 ||
-			inputStr.indexOf ('&') >= 0)
-			return "<![CDATA[" + inputStr + "]]>";
-		return inputStr;
+	}
+
+	public void setTerms (String terms)
+	{
+		m_terms = terms;
+	}
+
+	public String getTerms ()
+	{
+		return m_terms;
+	}
+
+	/**
+	 * Obtain the case value in the lexer.
+	 */
+	public int getCaseValue ()
+	{
+		return m_caseValue;
+	}
+
+	/**
+	 * Set the case value in the parser.  This function is for internal use.
+	 *
+	 * @param	caseValue
+	 * 			Computed caes value in DFA.
+	 */
+	public void setCaseValue (int caseValue)
+	{
+		m_caseValue = caseValue;
+	}
+
+	public int getLineNumber ()
+	{
+		return m_lineNumber;
+	}
+
+	public void setLineNumber (int lineNumber)
+	{
+		m_lineNumber = lineNumber;
+	}
+
+	public int getActionLineNumber ()
+	{
+		return m_actionLineNumber;
+	}
+
+	public void setActionLineNumber (int actionLineNumber)
+	{
+		m_actionLineNumber = actionLineNumber;
+	}
+
+	public String getAction ()
+	{
+		return m_action;
+	}
+
+	public void setAction (String action)
+	{
+		m_action = action;
 	}
 }

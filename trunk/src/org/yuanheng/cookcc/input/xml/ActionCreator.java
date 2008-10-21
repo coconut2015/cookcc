@@ -47,10 +47,17 @@ class ActionCreator implements Creator
 
 	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
 	{
-		((RuleDoc)parentObj).setAction ((String)obj);
-		Integer lineNum = (Integer)elm.getUserData ("line");
-		if (lineNum != null)
-			((RuleDoc)parentObj).setLineNumber (lineNum.intValue ());
+		if (parentObj instanceof RuleDoc)
+		{
+			((RuleDoc)parentObj).setAction ((String)obj);
+			Integer lineNum = (Integer)elm.getUserData ("line");
+			if (lineNum != null)
+				((RuleDoc)parentObj).setLineNumber (lineNum.intValue ());
+		}
+		else if (parentObj instanceof GrammarHelper)
+		{
+			((GrammarHelper)parentObj).getGrammar ().getLastRhs ().setAction ((String)obj);
+		}
 		return obj;
 	}
 }

@@ -24,22 +24,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.xml;
+package org.yuanheng.cookcc.input.xml;
+
+import org.w3c.dom.Element;
+import org.yuanheng.cookcc.doc.RhsDoc;
+
+import cookxml.core.DecodeEngine;
+import cookxml.core.interfaces.Creator;
+import cookxml.core.util.TextUtils;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-class Utils
+public class RhsCreator implements Creator
 {
-	public static String translate (String inputStr)
+	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
 	{
-		if (inputStr == null)
-			return "";
-		if (inputStr.indexOf ('<') >= 0 ||
-			inputStr.indexOf ("--") >= 0 ||
-			inputStr.indexOf ('&') >= 0)
-			return "<![CDATA[" + inputStr + "]]>";
-		return inputStr;
+		RhsDoc rhs = new RhsDoc ();
+		Integer lineNum = (Integer)elm.getUserData ("line");
+		if (lineNum != null)
+			rhs.setLineNumber (lineNum.intValue ());
+		rhs.setTerms (TextUtils.getText (elm));
+		return rhs;
+	}
+
+	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
+	{
+		return obj;
 	}
 }

@@ -1,3 +1,4 @@
+<#setting number_format=0>
 <#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
 <#macro intarray a>${a?javastring()}</#macro>
 <#if code.fileheader?has_content>
@@ -390,7 +391,7 @@ ${code.classheader}
 <#elseif lexer.table == "ecs">
 						currentState = cc_next[matchedState][cc_ecs[${lexer.eof}]];
 <#elseif lexer.table == "compressed">
-						int symbol = cc_ecs[${lexer.eof?string(0)}];
+						int symbol = cc_ecs[${lexer.eof}];
 	<#if !lexer.dfa.default?has_content>
 						if (cc_check[symbol + cc_base[matchedState]] == matchedState)
 							currentState = cc_next[symbol + cc_base[matchedState]];

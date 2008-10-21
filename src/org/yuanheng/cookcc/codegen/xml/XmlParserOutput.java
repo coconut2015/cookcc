@@ -41,7 +41,9 @@ class XmlParserOutput
 	private void printRhs (RhsDoc rhs, PrintWriter p)
 	{
 		p.println ("\t\t\t<rhs>" + Utils.translate (rhs.getTerms ()) + "</rhs>");
-		p.println ("\t\t\t<action>" + Utils.translate (rhs.getAction ()) + "</action>");
+		String action = rhs.getAction ();
+		if (action != null && action.length () > 0)
+			p.println ("\t\t\t<action>" + Utils.translate (rhs.getAction ()) + "</action>");
 	}
 
 	private void printGrammar (GrammarDoc grammar, PrintWriter p)

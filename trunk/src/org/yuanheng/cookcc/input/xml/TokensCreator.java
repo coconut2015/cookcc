@@ -28,6 +28,7 @@ package org.yuanheng.cookcc.input.xml;
 
 import org.w3c.dom.Element;
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.doc.TokensDoc;
 
 import cookxml.core.DecodeEngine;
 import cookxml.core.interfaces.Creator;
@@ -42,12 +43,14 @@ public class TokensCreator implements Creator
 	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
 	{
 		decodeEngine.setDoAdd (false);
-		return TextUtils.getText (elm);
+		TokensDoc tokens = new TokensDoc ();
+		tokens.setTokens (TextUtils.getText (elm));
+		return tokens;
 	}
 
 	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
 	{
-		((Document)parentObj).addTokens ((String)obj);
+		((Document)parentObj).addTokens ((TokensDoc)obj);
 		return obj;
 	}
 }

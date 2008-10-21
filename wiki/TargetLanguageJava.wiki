@@ -7,7 +7,7 @@ Java is the default output language of CookCC.  It can also be selected using th
 
 Currently, only the lexer component has been finished.
 
-== Command Line Options
+== Command Line Options ==
 
 || {{{-d <directory>}}} || Select the output directory.  By default, it is the current directory. ||
 || {{{-lexertable <format>}}} || Select lexer DFA table format.  Available choices are {{{ecs}}}, {{{full}}}, and {{{compressed}}}. ||

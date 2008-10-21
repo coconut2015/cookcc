@@ -4,6 +4,8 @@
 
 CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.html Flex patterns], so this page is mostly a copy/paste of the referenced article.
 
+Some examples can be found in test cases for [http://code.google.com/p/cookcc/source/browse/trunk/tests/nfa/ NFA] and [http://code.google.com/p/cookcc/source/browse/trunk/tests/ccl/ CCL].
+
 || *Format* || *Description* ||
 || *{{{x}}}* || matches the character *x* ||
 || *{{{.}}}* || matches anything except \n character ||

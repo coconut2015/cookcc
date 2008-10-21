@@ -63,4 +63,4 @@ Additionally, there are predefined POSIX character classes (ASCII only):
 
 For example, the following character classes are all equivalent:
 
-|| {{{[[:alnum:]]}}} || {{{[[:alpha:][:digit:]}}} || {{{[[:alpha:]0-9]}}} || {{{[a-zA-Z0-9]}}} ||
+|| {{{[[:alnum:]]}}} || {{{[[:alpha:][:digit:]]}}} || {{{[[:alpha:]0-9]}}} || {{{[a-zA-Z0-9]}}} ||

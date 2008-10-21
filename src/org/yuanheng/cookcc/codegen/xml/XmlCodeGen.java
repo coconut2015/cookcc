@@ -62,6 +62,8 @@ public class XmlCodeGen implements CodeGen
 
 	private void printDocument (Document doc, PrintWriter p)
 	{
+		p.println ("<?xml version = \"1.0\" encoding=\"UTF-8\"?>");
+		p.println ("<!DOCTYPE cookcc PUBLIC \"-//CookCC//1.0\" \"http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd\">");
 		p.println ("<codecc>");
 
 		Map<String,String> codeMap = doc.getCode ();

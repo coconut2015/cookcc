@@ -6,7 +6,7 @@
 	<property name="build" value="${basedir}/cookcc_classes"/>
 
 	<property name="license" value="LICENSE_cookcc.txt"/>
-	<property name="version" value="1.0"/>
+	<property name="version" value="0.1"/>
 
 	<target name="init">
 		<mkdir dir="${dist}"/>

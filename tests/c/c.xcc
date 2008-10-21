@@ -1,0 +1,199 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<!-- C lexer, translated from
+		 ftp://ftp.uu.net/usenet/net.sources/ansi.c.grammar.Z
+	-->
+	<tokens>
+		IDENTIFIER CONSTANT STRING_LITERAL SIZEOF
+		PTR_OP INC_OP DEC_OP LEFT_OP RIGHT_OP LE_OP GE_OP EQ_OP NE_OP
+		AND_OP OR_OP MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
+		SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
+		XOR_ASSIGN OR_ASSIGN TYPE_NAME
+
+		TYPEDEF EXTERN STATIC AUTO REGISTER
+		CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID
+		STRUCT UNION ENUM ELIPSIS RANGE
+
+		CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN
+	</tokens>
+	<lexer table="ecs">
+		<shortcut name="D">[0-9]</shortcut>
+		<shortcut name="L">[a-zA-Z_]</shortcut>
+		<shortcut name="H">[a-fA-F0-9]</shortcut>
+		<shortcut name="E">[Ee][+-]?{D}+</shortcut>
+		<shortcut name="FS">(f|F|l|L)</shortcut>
+		<shortcut name="IS">(u|U|l|L)*</shortcut>
+		<rule>
+			<pattern>"/*"</pattern>
+			<action>count (); begin (BLOCKCOMMENT);</action>
+		</rule>
+		<rule><pattern>"auto"</pattern><action>count (); return AUTO;</action></rule>
+		<rule><pattern>"break"</pattern><action>count (); return BREAK;</action></rule>
+		<rule><pattern>"case"</pattern><action>count (); return CASE;</action></rule>
+		<rule><pattern>"char"</pattern><action>count (); return CHAR;</action></rule>
+		<rule><pattern>"const"</pattern><action>count (); return CONST;</action></rule>
+		<rule><pattern>"continue"</pattern><action>count (); return CONTINUE;</action></rule>
+		<rule><pattern>"default"</pattern><action>count (); return DEFAULT;</action></rule>
+		<rule><pattern>"do"</pattern><action>count (); return DO;</action></rule>
+		<rule><pattern>"double"</pattern><action>count (); return DOUBLE;</action></rule>
+		<rule><pattern>"else"</pattern><action>count (); return ELSE;</action></rule>
+		<rule><pattern>"enum"</pattern><action>count (); return ENUM;</action></rule>
+		<rule><pattern>"extern"</pattern><action>count (); return EXTERN;</action></rule>
+		<rule><pattern>"float"</pattern><action>count (); return FLOAT;</action></rule>
+		<rule><pattern>"for"</pattern><action>count (); return FOR;</action></rule>
+		<rule><pattern>"goto"</pattern><action>count (); return GOTO;</action></rule>
+		<rule><pattern>"if"</pattern><action>count (); return IF;</action></rule>
+		<rule><pattern>"int"</pattern><action>count (); return INT;</action></rule>
+		<rule><pattern>"long"</pattern><action>count (); return LONG;</action></rule>
+		<rule><pattern>"register"</pattern><action>count (); return REGISTER;</action></rule>
+		<rule><pattern>"return"</pattern><action>count (); return RETURN;</action></rule>
+		<rule><pattern>"short"</pattern><action>count (); return SHORT;</action></rule>
+		<rule><pattern>"signed"</pattern><action>count (); return SIGNED;</action></rule>
+		<rule><pattern>"sizeof"</pattern><action>count (); return SIZEOF;</action></rule>
+		<rule><pattern>"static"</pattern><action>count (); return STATIC;</action></rule>
+		<rule><pattern>"struct"</pattern><action>count (); return STRUCT;</action></rule>
+		<rule><pattern>"switch"</pattern><action>count (); return SWITCH;</action></rule>
+		<rule><pattern>"typedef"</pattern><action>count (); return TYPEDEF;</action></rule>
+		<rule><pattern>"union"</pattern><action>count (); return UNION;</action></rule>
+		<rule><pattern>"unsigned"</pattern><action>count (); return UNSIGNED;</action></rule>
+		<rule><pattern>"void"</pattern><action>count (); return VOID;</action></rule>
+		<rule><pattern>"volatile"</pattern><action>count (); return VOLATILE;</action></rule>
+		<rule><pattern>"while"</pattern><action>count (); return WHILE;</action></rule>
+		<rule>
+			<pattern>{L}({L}|{D})*</pattern>
+			<action>count (); return check_type ();</action>
+		</rule>
+		<rule>
+			<pattern>0[xX]{H}+{IS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>0{D}+{IS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>{D}+{IS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>{D}+{E}{FS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>{D}*"."{D}+({E})?{FS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>{D}+"."{D}*({E})?{FS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule><pattern>">>="</pattern><action>count (); return RIGHT_ASSIGN;</action></rule>
+		<rule><pattern><![CDATA["<<="]]></pattern><action>count (); return LEFT_ASSIGN;</action></rule>
+		<rule><pattern>"+="</pattern><action>count (); return ADD_ASSIGN;</action></rule>
+		<rule><pattern>"-="</pattern><action>count (); return SUB_ASSIGN;</action></rule>
+		<rule><pattern>"*="</pattern><action>count (); return MUL_ASSIGN;</action></rule>
+		<rule><pattern>"/="</pattern><action>count (); return DIV_ASSIGN;</action></rule>
+		<rule><pattern>"%="</pattern><action>count (); return MOD_ASSIGN;</action></rule>
+		<rule><pattern><![CDATA["&="]]></pattern><action>count (); return AND_ASSIGN;</action></rule>
+		<rule><pattern>"^="</pattern><action>count (); return XOR_ASSIGN;</action></rule>
+		<rule><pattern>"|="</pattern><action>count (); return OR_ASSIGN;</action></rule>
+		<rule><pattern>">>"</pattern><action>count (); return RIGHT_OP;</action></rule>
+		<rule><pattern><![CDATA["<<"]]></pattern><action>count (); return LEFT_OP;</action></rule>
+		<rule><pattern>"++"</pattern><action>count (); return INC_OP;</action></rule>
+		<rule><pattern>"--"</pattern><action>count (); return DEC_OP;</action></rule>
+		<rule><pattern>"->"</pattern><action>count (); return PTR_OP;</action></rule>
+		<rule><pattern><![CDATA["&&"]]></pattern><action>count (); return AND_OP;</action></rule>
+		<rule><pattern>"||"</pattern><action>count (); return OR_OP;</action></rule>
+		<rule><pattern><![CDATA["<="]]></pattern><action>count (); return LE_OP;</action></rule>
+		<rule><pattern>">="</pattern><action>count (); return GE_OP;</action></rule>
+		<rule><pattern>"=="</pattern><action>count (); return EQ_OP;</action></rule>
+		<rule><pattern>"!="</pattern><action>count (); return NE_OP;</action></rule>
+		<rule><pattern>";"</pattern><action>count (); return ';';</action></rule>
+		<rule><pattern>"{"</pattern><action>count (); return '{';</action></rule>
+		<rule><pattern>"}"</pattern><action>count (); return '}';</action></rule>
+		<rule><pattern>","</pattern><action>count (); return ',';</action></rule>
+		<rule><pattern>":"</pattern><action>count (); return ':';</action></rule>
+		<rule><pattern>"("</pattern><action>count (); return '(';</action></rule>
+		<rule><pattern>")"</pattern><action>count (); return ')';</action></rule>
+		<rule><pattern>"["</pattern><action>count (); return '[';</action></rule>
+		<rule><pattern>"]"</pattern><action>count (); return ']';</action></rule>
+		<rule><pattern>"."</pattern><action>count (); return '.';</action></rule>
+		<rule><pattern><![CDATA["&"]]></pattern><action><![CDATA[count (); return '&';]]></action></rule>
+		<rule><pattern>"!"</pattern><action>count (); return '!';</action></rule>
+		<rule><pattern>"~"</pattern><action>count (); return '~';</action></rule>
+		<rule><pattern>"-"</pattern><action>count (); return '-';</action></rule>
+		<rule><pattern>"+"</pattern><action>count (); return '+';</action></rule>
+		<rule><pattern>"*"</pattern><action>count (); return '*';</action></rule>
+		<rule><pattern>"/"</pattern><action>count (); return '/';</action></rule>
+		<rule><pattern>"%"</pattern><action>count (); return '%';</action></rule>
+		<rule><pattern><![CDATA["<"]]></pattern><action><![CDATA[count (); return '<';]]></action></rule>
+		<rule><pattern>">"</pattern><action>count (); return '>';</action></rule>
+		<rule><pattern>"|"</pattern><action>count (); return '|';</action></rule>
+		<rule><pattern>"?"</pattern><action>count (); return '?';</action></rule>
+		<rule>
+			<pattern>[ \t\v\n\f]</pattern>
+			<action>count ();</action>
+		</rule>
+		<rule>
+			<pattern>.</pattern>
+			<action>throw new IOException ("Invalid character: " + getText ());</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+		<state name="BLOCKCOMMENT">
+			<rule>
+				<pattern>[*]*"*/"</pattern><action>count (); begin (INITIAL);</action>
+			</rule>
+			<rule>
+				<pattern>[^*]+</pattern>
+				<pattern>.</pattern>
+				<action>count ();</action>
+			</rule>
+			<rule>
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>throw new IOException ("Unclosed block comment");</action>
+			</rule>
+		</state>
+	</lexer>
+	<code><![CDATA[
+		int column = 0;
+
+		void count()
+		{
+			String text = getText ();
+
+			for (int i = 0; i < text.length (); ++i)
+			{
+				char ch = text.charAt (i);
+				if (ch == '\n')
+					column = 0;
+				else if (ch == '\t')
+					column += 8 - (column % 8);
+				else
+					column++;
+			}
+			echo ();
+		}
+
+		int check_type()
+		{
+			/*
+			* pseudo code --- this is what it should check
+			*
+			*	if (yytext == type_name)
+			*		return(TYPE_NAME);
+			*
+			*	return(IDENTIFIER);
+			*/
+
+			/*
+			 *	it actually will only return IDENTIFIER
+			 */
+
+			return IDENTIFIER;
+		}
+	]]></code>
+</cookcc>

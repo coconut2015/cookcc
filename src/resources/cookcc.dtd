@@ -24,9 +24,8 @@
 <!ATTLIST pattern	bol (true|false) #IMPLIED>
 <!ATTLIST pattern	nocase (true|false) #IMPLIED>
 
-<!ELEMENT grammar	(rhs+, action)>
+<!ELEMENT grammar	((rhs,action?)+)>
 <!ELEMENT rhs		(#PCDATA)>
 
 <!ATTLIST parser	start CDATA #IMPLIED>
 <!ATTLIST grammar	term CDATA #REQUIRED>
-<!ATTLIST rhs		terms CDATA #REQUIRED>

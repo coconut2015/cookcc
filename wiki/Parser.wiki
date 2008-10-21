@@ -2,4 +2,4 @@
 
 = Parser =
 
-Current the parser generator has not being implemented.  The generated parser be [http://en.wikipedia.org/wiki/LALR_parser LALR(1)] and optionally [http://en.wikipedia.org/wiki/LR_parser LR(1)] (might be impractical).
+Currently the parser generator has not being implemented.  The generated parser be [http://en.wikipedia.org/wiki/LALR_parser LALR(1)] and optionally [http://en.wikipedia.org/wiki/LR_parser LR(1)] (might be impractical).

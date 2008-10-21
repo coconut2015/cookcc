@@ -39,7 +39,6 @@ import cookxml.core.interfaces.NoAdd;
 public class GrammarHelper implements NoAdd
 {
 	private final ParserDoc m_parser;
-	private String m_rule;
 	private GrammarDoc m_grammar;
 
 	public GrammarHelper (ParserDoc lexer)
@@ -49,7 +48,6 @@ public class GrammarHelper implements NoAdd
 
 	public void setRule (String rule)
 	{
-		m_rule = rule;
 		m_grammar = m_parser.getGrammar (rule);
 	}
 

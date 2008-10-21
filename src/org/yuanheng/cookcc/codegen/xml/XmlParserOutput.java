@@ -48,7 +48,7 @@ class XmlParserOutput
 
 	private void printGrammar (GrammarDoc grammar, PrintWriter p)
 	{
-		p.println ("\t\t<grammar term=\"" + grammar.getTerm () + "\">");
+		p.println ("\t\t<grammar rule=\"" + grammar.getRule () + "\">");
 		for (RhsDoc rhs : grammar.getRhs ())
 			printRhs (rhs, p);
 		p.println ("\t\t</grammar>");

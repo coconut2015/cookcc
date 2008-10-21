@@ -24,22 +24,42 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.xml;
+package org.yuanheng.cookcc.input.xml;
+
+import org.yuanheng.cookcc.doc.GrammarDoc;
+import org.yuanheng.cookcc.doc.ParserDoc;
+import org.yuanheng.cookcc.doc.RhsDoc;
+
+import cookxml.core.interfaces.NoAdd;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-class Utils
+public class GrammarHelper implements NoAdd
 {
-	public static String translate (String inputStr)
+	private final ParserDoc m_parser;
+	private String m_term;
+	private GrammarDoc m_grammar;
+
+	public GrammarHelper (ParserDoc lexer)
 	{
-		if (inputStr == null)
-			return "";
-		if (inputStr.indexOf ('<') >= 0 ||
-			inputStr.indexOf ("--") >= 0 ||
-			inputStr.indexOf ('&') >= 0)
-			return "<![CDATA[" + inputStr + "]]>";
-		return inputStr;
+		m_parser = lexer;
+	}
+
+	public void setTerm (String term)
+	{
+		m_term = term;
+		m_grammar = m_parser.getGrammar (term);
+	}
+
+	public void add (RhsDoc rhs)
+	{
+		m_grammar.addRhs (rhs);
+	}
+
+	public GrammarDoc getGrammar ()
+	{
+		return m_grammar;
 	}
 }

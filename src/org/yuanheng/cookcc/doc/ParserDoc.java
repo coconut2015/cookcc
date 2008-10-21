@@ -26,10 +26,69 @@
  */
 package org.yuanheng.cookcc.doc;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+
 /**
  * @author Heng Yuan
  * @version $Id$
  */
 public class ParserDoc extends TreeDoc
 {
+	public final static String PROP_TABLE_TYPE = "table";
+	public final static String DEFAULT_TABLE_TYPE = "ecs";
+
+	// we use linked list to keep the state being used in order, may be useful.
+	private final LinkedList<GrammarDoc> m_grammarList = new LinkedList<GrammarDoc> ();
+	private final HashMap<String, GrammarDoc> m_grammarMap = new HashMap<String, GrammarDoc> ();
+	private final HashMap<String, ShortcutDoc> m_shortcutMap = new HashMap<String, ShortcutDoc> ();
+
+	private String m_start;
+
+	public ParserDoc ()
+	{
+	}
+
+	public String getStart ()
+	{
+		return m_start;
+	}
+
+	public void setStart (String start)
+	{
+		m_start = start;
+	}
+
+	public GrammarDoc getGrammar (String term)
+	{
+		if (term == null || term.length () == 0)
+			throw new IllegalArgumentException ("term must not be empty.");
+		GrammarDoc grammarDoc = m_grammarMap.get (term);
+		if (grammarDoc == null)
+		{
+			grammarDoc = new GrammarDoc (term);
+			m_grammarMap.put (term, grammarDoc);
+			m_grammarList.add (grammarDoc);
+		}
+
+		return grammarDoc;
+	}
+
+	public void setTable (String type)
+	{
+		setProperty (PROP_TABLE_TYPE, type);
+	}
+
+	public String getTable ()
+	{
+		String type = (String)getProperty (PROP_TABLE_TYPE);
+		if (type == null)
+			type = DEFAULT_TABLE_TYPE;
+		return type;
+	}
+
+	public GrammarDoc[] getGrammars ()
+	{
+		return m_grammarList.toArray (new GrammarDoc[m_grammarList.size ()]);
+	}
 }

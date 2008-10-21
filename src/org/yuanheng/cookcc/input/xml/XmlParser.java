@@ -91,6 +91,8 @@ public class XmlParser
 
 		tagLibrary.setCreator ("parser", DefaultCreator.getCreator (ParserDoc.class));
 		tagLibrary.addAdder ("cookcc", new CallFunctionAdder ("setParser", Document.class, ParserDoc.class));
+		tagLibrary.setCreator ("grammar", new GrammarCreator ());
+		tagLibrary.setCreator ("rhs", new RhsCreator ());
 		s_tagLibrary = tagLibrary;
 	}
 

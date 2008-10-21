@@ -24,22 +24,49 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.xml;
+package org.yuanheng.cookcc.doc;
+
+import java.util.LinkedList;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-class Utils
+public class GrammarDoc extends TreeDoc
 {
-	public static String translate (String inputStr)
+	private final String m_term;
+
+	private final LinkedList<RhsDoc> m_rhs = new LinkedList<RhsDoc> ();
+
+	public GrammarDoc (String term)
 	{
-		if (inputStr == null)
-			return "";
-		if (inputStr.indexOf ('<') >= 0 ||
-			inputStr.indexOf ("--") >= 0 ||
-			inputStr.indexOf ('&') >= 0)
-			return "<![CDATA[" + inputStr + "]]>";
-		return inputStr;
+		if (term == null || term.length () == 0)
+			throw new IllegalArgumentException ("term must not be empty.");
+		m_term = term;
+	}
+
+	public String getTerm ()
+	{
+		return m_term;
+	}
+
+	public void addRhs (RhsDoc rhs)
+	{
+		m_rhs.add (rhs);
+	}
+
+	public RhsDoc[] getRhs ()
+	{
+		return m_rhs.toArray (new RhsDoc[m_rhs.size ()]);
+	}
+
+	/**
+	 * Internal use for parsing input.  Utility function.
+	 *
+	 * @return	the last RhsDoc added to this grammar.
+	 */
+	public RhsDoc getLastRhs ()
+	{
+		return m_rhs.getLast ();
 	}
 }

@@ -10,7 +10,7 @@ Currently, only the lexer component has been finished.
 == Command Line Options ==
 
 || {{{-d <directory>}}} || Select the output directory.  By default, it is the current directory. ||
-|| {{{-lexertable <format>}}} || Select lexer DFA table format.  Available choices are {{{ecs}}}, {{{full}}}, and {{{compressed}}}. ||
+|| {{{-lexertable <format>}}} || Select lexer DFA table format.  Available choices are {{{ecs}}}, {{{full}}}, and {{{compressed}}}.  This option will override the table choice specified in the input file. ||
 || {{{-class <className>}}} || Set the class name.  By default, the class name is {{{Lexer}}}. ||
 || {{{-public}}} || set class scope to {{{public}}}.  By default, the class generated is in the package scope. ||
 

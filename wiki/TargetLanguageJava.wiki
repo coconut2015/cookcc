@@ -1,6 +1,6 @@
 #summary Notes on Java Output
 
-= Target Language : {{{java}}} =
+= Target Language : Java =
 
 Java is the default output language of CookCC.  It can also be selected using the
 {{{-lang java}}}  command line option.

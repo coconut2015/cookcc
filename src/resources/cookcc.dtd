@@ -30,4 +30,4 @@
 <!ELEMENT rhs		(#PCDATA)>
 
 <!ATTLIST parser	start CDATA #IMPLIED>
-<!ATTLIST grammar	term CDATA #REQUIRED>
+<!ATTLIST grammar	rule CDATA #REQUIRED>

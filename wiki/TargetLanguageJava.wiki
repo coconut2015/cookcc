@@ -1,0 +1,23 @@
+#summary Notes on Java Output
+
+= Target Language : Java =
+
+Java is the default output language of CookCC.  It can also be selected using the
+{{{-lang java}}}  command line option.
+
+Currently, only the lexer component has been finished.
+
+== Command Line Options
+
+|| {{{-d <directory>}}} || Select the output directory.  By default, it is the current directory. ||
+|| {{{-lexertable <format>}}} || Select lexer DFA table format.  Available choices are {{{ecs}}}, {{{full}}}, and {{{compressed}}}. ||
+|| {{{-class <className>}}} || Set the class name.  By default, the class name is {{{Lexer}}}. ||
+|| {{{-public}}} || set class scope to {{{public}}}.  By default, the class generated is in the package scope. ||
+
+== Lexer ==
+
+
+
+=== Unicode Support ===
+
+CookCC can generate 16-bit tables.  However, due to the size of of the equivalent class table, Sun's Java compilers cannot handle it.  A work around is to use [http://www.eclipse.org/jdt/core/index.php ECJ (Eclipse Core Java compiler)] to compile the generated code.

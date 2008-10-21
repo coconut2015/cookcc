@@ -26,74 +26,49 @@
  */
 package org.yuanheng.cookcc.doc;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
- * This is the parsed tree from cookcc input.  It is the internal structure which lexer/parser
- * used as input for computing state machines.  It is also the structure for converting input
- * format from one to another.
- *
  * @author Heng Yuan
  * @version $Id$
  */
-public class Document extends TreeDoc
+public class TokensDoc extends TreeDoc
 {
-	private boolean m_unicode;
-	private final Map<String,String> m_code = new HashMap<String,String> ();
-	private final Collection<TokensDoc> m_tokens = new LinkedList<TokensDoc> ();
-	private LexerDoc m_lexer;
-	private ParserDoc m_parser;
+	private String m_type;
+	private String[] m_tokens;
 
-	public boolean isUnicode ()
+	public TokensDoc ()
 	{
-		return m_unicode;
 	}
 
-	public void setUnicode (boolean unicode)
+	public void setType (String type)
 	{
-		m_unicode = unicode;
+		m_type = type;
 	}
 
-	public void setLexer (LexerDoc lexerDoc)
+	public String getType ()
 	{
-		m_lexer = lexerDoc;
+		return m_type;
 	}
 
-	public void setParser (ParserDoc parserDoc)
+	public String[] getTokens ()
 	{
-		m_parser = parserDoc;
+		return m_tokens;
 	}
 
-	public Map<String,String> getCode ()
+	public void setTokens (String tokens)
 	{
-		return m_code;
-	}
-
-	public void addCode (String key, String code)
-	{
-		m_code.put (key, code);
-	}
-
-	public LexerDoc getLexer ()
-	{
-		return m_lexer;
-	}
-
-	public ParserDoc getParser ()
-	{
-		return m_parser;
-	}
-
-	public void addTokens (TokensDoc tokens)
-	{
-		m_tokens.add (tokens);
-	}
-
-	public TokensDoc[] getTokens ()
-	{
-		return m_tokens.toArray (new TokensDoc[m_tokens.size ()]);
+		StringTokenizer tokenizer = new StringTokenizer (tokens, ", \r\n");
+		LinkedList<String> list = new LinkedList<String> ();
+		while (tokenizer.hasMoreTokens ())
+		{
+			String tok = tokenizer.nextToken ().trim ();
+			if (tok.length () == 0)
+				continue;
+			if (!list.contains (tok))
+				list.add (tok);
+		}
+		m_tokens = list.toArray (new String[list.size ()]);
 	}
 }

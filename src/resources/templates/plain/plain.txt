@@ -1,8 +1,9 @@
+<#setting number_format=0>
 <#macro array a>
 <#list a as i><#if i_index &gt; 0>,</#if>${i}</#list>
 </#macro>
 <#macro intarray a>
-<#list a as i><#if i_index &gt; 0>,</#if>${i?string(0)}</#list>
+<#list a as i><#if i_index &gt; 0>,</#if>${i?string}</#list>
 </#macro>
 <#macro intarray3d b>
 <#list b as a>
@@ -15,28 +16,28 @@
 : unicode = ${unicode?string}
 : bol = ${lexer.bol?string}
 : backup = ${lexer.backup?string}
-: cases = ${lexer.caseCount?string(0)}
+: cases = ${lexer.caseCount?string}
 : table = ${lexer.table}
 <#if lexer.table == "ecs" || lexer.table == "compressed">
-: ecs = ${lexer.ecsGroupCount?string(0)}
+: ecs = ${lexer.ecsGroupCount?string}
 </#if>
-: states = ${lexer.dfa.size?string(0)}
+: states = ${lexer.dfa.size?string}
 # memory usage
-: full table = ${((lexer.eof + 1) * lexer.dfa.size)?string(0)}
+: full table = ${((lexer.eof + 1) * lexer.dfa.size)?string}
 <#if lexer.table == "ecs" || lexer.table == "compressed">
-: ecs table = ${(lexer.eof + 1 + lexer.ecsGroupCount * lexer.dfa.size)?string(0)}
+: ecs table = ${(lexer.eof + 1 + lexer.ecsGroupCount * lexer.dfa.size)?string}
 </#if>
 <#if lexer.table == "compressed">
-: next = ${lexer.dfa.next?size?string(0)}
-: check = ${lexer.dfa.check?size?string(0)}
+: next = ${lexer.dfa.next?size?string}
+: check = ${lexer.dfa.check?size?string}
 <#if !lexer.dfa.default?has_content>
-: compressed table = ${(lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size)?string(0)}
+: compressed table = ${(lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size)?string}
 <#else>
-: default = ${lexer.dfa.default?size?string(0)}
+: default = ${lexer.dfa.default?size?string}
 <#if !lexer.dfa.meta?has_content>
-: compressed table = ${(lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size + lexer.dfa.default?size)?string(0)}
+: compressed table = ${(lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size + lexer.dfa.default?size)?string}
 <#else>
-: meta = ${lexer.dfa.meta?size?string(0)}
+: meta = ${lexer.dfa.meta?size?string}
 : compressed table = ${lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size + lexer.dfa.default?size + lexer.dfa.meta?size}
 </#if>
 </#if>
@@ -78,7 +79,7 @@
 # cases
 <#list lexer.cases as i>
 <#list i.patterns as p>
-case ${p.caseValue?string(0)}
+case ${p.caseValue?string}
 {${i.action}}
 </#list>
 </#list>

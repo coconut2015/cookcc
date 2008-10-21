@@ -27,7 +27,6 @@
 package org.yuanheng.cookcc.codegen.xml;
 
 import java.io.PrintWriter;
-import java.util.HashSet;
 
 import org.yuanheng.cookcc.doc.*;
 
@@ -42,17 +41,15 @@ class XmlLexerOutput
 		p.println ("\t\t<shortcut name=\"" + shortcut.getName () + "\">" + Utils.translate (shortcut.getPattern ()) + "</shortcut>");
 	}
 
-	private void printRule (RuleDoc rule, HashSet printedPatterns, HashSet inLexerStates, PrintWriter p)
+	private void printRule (RuleDoc rule, PrintWriter p)
 	{
 		if (rule.getLineNumber () > 0)
 			p.println ("\t\t\t<rule line=\"" + rule.getLineNumber () + "\">");
 		else
 			p.println ("\t\t\t<rule>");
-		PatternDoc[] patterns = rule.getPatterns ();
-		for (int i = 0; i < patterns.length; ++i)
+		for (PatternDoc pattern : rule.getPatterns ())
 		{
 			p.print ("\t\t\t\t<pattern");
-			PatternDoc pattern = patterns[i];
 			if (pattern.isBOL ())
 				p.print (" bol=\"true\"");
 			if (pattern.isNocase ())
@@ -63,16 +60,13 @@ class XmlLexerOutput
 		p.println ("\t\t\t</rule>");
 	}
 
-	private void printLexerState (LexerStateDoc doc, HashSet printedPatterns, PrintWriter p)
+	private void printLexerState (LexerStateDoc doc, PrintWriter p)
 	{
 		p.println ("\t\t<state name=\"" + doc.getName () + "\">");
 		RuleDoc[] patterns = doc.getRules ();
 		for (int i = 0; i < patterns.length; ++i)
 		{
-			if (printedPatterns.contains (patterns[i]))
-				continue;
-			printRule (patterns[i], printedPatterns, null, p);
-			printedPatterns.add (patterns[i]);
+			printRule (patterns[i], p);
 		}
 
 		p.println ("\t\t</state>");
@@ -82,7 +76,6 @@ class XmlLexerOutput
 	{
 		if (lexer == null)
 			return;
-		HashSet printedPatterns = new HashSet ();
 		p.println ("\t<lexer>");
 
 		ShortcutDoc[] shortcuts = lexer.getShortcuts ();
@@ -91,7 +84,7 @@ class XmlLexerOutput
 
 		LexerStateDoc[] stateDocs = lexer.getLexerStates ();
 		for (int i = 0; i < stateDocs.length; ++i)
-			printLexerState (stateDocs[i], printedPatterns, p);
+			printLexerState (stateDocs[i], p);
 
 		p.println ("\t</lexer>");
 	}

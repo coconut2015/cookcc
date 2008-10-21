@@ -1,0 +1,5 @@
+#summary Notes on XML Output
+
+= Target Language : XML =
+
+The output from this language is simply an XML input ({{{*.xcc}}} format) for CookCC.  This output is both serving as a debugging function and a conversion tool when other input formats to CookCC is available.

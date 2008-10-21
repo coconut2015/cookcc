@@ -1,6 +1,16 @@
 #!/bin/sh
 
-cookcc="${JAVA_HOME}/java -jar ../../dist/cookcc-1.0.jar"
+if [ -z "$JAVA_HOME" ]; then
+	echo need to set JAVA_HOME env
+	exit 1
+fi
+
+if [ -z "$COOKCC" ]; then
+	echo need to set COOKCC
+	exit 1
+fi
+
+cookcc="${JAVA_HOME}/java -jar ${COOKCC}"
 
 for v in *.xcc
 do

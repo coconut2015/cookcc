@@ -17,6 +17,8 @@ A sample XML looks like:
  *
  */	</code>
 	<code name="classheader">
+import java.util.*;
+
 /**
  * Class header.
  *

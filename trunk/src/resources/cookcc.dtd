@@ -1,7 +1,7 @@
 <!ELEMENT cookcc ((code | tokens | lexer | parser)*)>
 <!ELEMENT tokens	(#PCDATA)>
 <!ELEMENT lexer		(shortcut*, (state | rule)+)>
-<!ELEMENT parser	(#PCDATA)>
+<!ELEMENT parser	(grammar+)>
 <!ELEMENT code		(#PCDATA)>
 
 <!ELEMENT shortcut	(#PCDATA)>
@@ -23,3 +23,10 @@
 <!ATTLIST rule		state CDATA #IMPLIED>
 <!ATTLIST pattern	bol (true|false) #IMPLIED>
 <!ATTLIST pattern	nocase (true|false) #IMPLIED>
+
+<!ELEMENT grammar	(rhs+, action)>
+<!ELEMENT rhs		(#PCDATA)>
+
+<!ATTLIST parser	start CDATA #IMPLIED>
+<!ATTLIST grammar	term CDATA #REQUIRED>
+<!ATTLIST rhs		terms CDATA #REQUIRED>

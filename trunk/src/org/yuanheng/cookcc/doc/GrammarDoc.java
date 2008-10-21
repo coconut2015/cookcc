@@ -34,20 +34,20 @@ import java.util.LinkedList;
  */
 public class GrammarDoc extends TreeDoc
 {
-	private final String m_term;
+	private final String m_rule;
 
 	private final LinkedList<RhsDoc> m_rhs = new LinkedList<RhsDoc> ();
 
-	public GrammarDoc (String term)
+	public GrammarDoc (String rule)
 	{
-		if (term == null || term.length () == 0)
-			throw new IllegalArgumentException ("term must not be empty.");
-		m_term = term;
+		if (rule == null || rule.length () == 0)
+			throw new IllegalArgumentException ("rule must not be empty.");
+		m_rule = rule;
 	}
 
-	public String getTerm ()
+	public String getRule ()
 	{
-		return m_term;
+		return m_rule;
 	}
 
 	public void addRhs (RhsDoc rhs)

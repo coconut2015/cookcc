@@ -4,14 +4,13 @@
 
 CookCC Lexer has the following features.
 
-== DFA Table Format ==
+== Lexer Table Format ==
 
-CookCC supports both 8-bit and 16-bit DFA tables.  16-bit DFA tables are intended for unicode support.
+CookCC supports both 8-bit and 16-bit DFA tables.  16-bit DFA tables are intended for unicode support.  Currently, the following table formats are supported.
 
-|| DFA Table Format ||
-|| *full* || A full table.  Very memory intensive. ||
-|| *ecs* || A much smaller table using equivalent classes. ||
-|| *compressed* || An even smaller table in most cases at some performance cost. ||
+|| {{{full}}} || A full table.  Very memory intensive. ||
+|| {{{ecs}}} || A much smaller table using equivalent classes. ||
+|| {{{compressed}}} || An even smaller table in most cases at some performance cost. ||
 
 == Pattern Warnings ==
 
@@ -21,3 +20,10 @@ CookCC generates warnings on patterns that cause [http://code.google.com/p/cookc
 == Trail Context ==
 
 CookCC at present only handles either fixed head (e.g., abc/xyz or abc/x*z) or tail trail contexts (e.g., a.*b/xyz).
+
+== TODO List ==
+
+The following features are yet to be implemented:
+|| yyMore || Make the current string available for the next time. ||
+|| REJECT || Reject a token and go to the next available accept case. ||
+|| Variable trail context || This feature is related to REJECT. ||

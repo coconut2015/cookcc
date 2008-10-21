@@ -522,7 +522,7 @@ ${code.default}
 </#if>
 
 /*
- * properties and statistics
+ * properties and statistics:
  * unicode = ${unicode?string}
  * bol = ${lexer.bol?string}
  * backup = ${lexer.backup?string}
@@ -533,5 +533,26 @@ ${code.default}
 </#if>
  * states = ${lexer.dfa.size}
  * max symbol value = ${lexer.maxSymbol}
+ *
+# memory usage
+ * full table = ${(lexer.eof + 1) * lexer.dfa.size}
+<#if lexer.table == "ecs" || lexer.table == "compressed">
+ * ecs table = ${lexer.eof + 1 + lexer.ecsGroupCount * lexer.dfa.size}
+</#if>
+<#if lexer.table == "compressed">
+ * next = ${lexer.dfa.next?size}
+ * check = ${lexer.dfa.check?size}
+<#if !lexer.dfa.default?has_content>
+ * compressed table = ${lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size}
+<#else>
+ * default = ${lexer.dfa.default?size}
+<#if !lexer.dfa.meta?has_content>
+ * compressed table = ${lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size + lexer.dfa.default?size}
+<#else>
+ * meta = ${lexer.dfa.meta?size}
+ * compressed table = ${lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size + lexer.dfa.default?size + lexer.dfa.meta?size}
+</#if>
+</#if>
+</#if>
  */
 }

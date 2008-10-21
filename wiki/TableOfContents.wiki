@@ -10,3 +10,5 @@
    * Only an empty stub
  * Target Languages
    * [TargetLanguageJava Java]
+   * [TargetLanguagePlain Plain]
+   * [TargetLanguageXML XML]

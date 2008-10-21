@@ -534,7 +534,7 @@ ${code.default}
  * states = ${lexer.dfa.size}
  * max symbol value = ${lexer.maxSymbol}
  *
-# memory usage
+ * memory usage:
  * full table = ${(lexer.eof + 1) * lexer.dfa.size}
 <#if lexer.table == "ecs" || lexer.table == "compressed">
  * ecs table = ${lexer.eof + 1 + lexer.ecsGroupCount * lexer.dfa.size}

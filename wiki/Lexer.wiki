@@ -11,6 +11,7 @@ CookCC supports both 8-bit and 16-bit DFA tables.  16-bit DFA tables are intende
 || DFA Table Format ||
 || *full* || A full table.  Very memory intensive. ||
 || *ecs* || A much smaller table using equivalent classes. ||
+|| *compressed* || An even smaller table in most cases at some performance cost. ||
 
 [http://code.google.com/p/cookcc/source/browse/trunk/tests/#tests/fastwc Word count tests] on large files (5 MB - 22 MB) have shown that *ecs* table has about the same performance as the full table for Java.
 

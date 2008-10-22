@@ -45,6 +45,9 @@ public class TokensCreator implements Creator
 		decodeEngine.setDoAdd (false);
 		TokensDoc tokens = new TokensDoc ();
 		tokens.setTokens (TextUtils.getText (elm));
+		Integer lineNum = (Integer)elm.getUserData ("line");
+		if (lineNum != null)
+			tokens.setLineNumber (lineNum.intValue ());
 		return tokens;
 	}
 

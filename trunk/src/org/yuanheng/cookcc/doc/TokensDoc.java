@@ -37,6 +37,7 @@ public class TokensDoc extends TreeDoc
 {
 	private String m_type;
 	private String[] m_tokens;
+	private int m_lineNumber;
 
 	public TokensDoc ()
 	{
@@ -70,5 +71,15 @@ public class TokensDoc extends TreeDoc
 				list.add (tok);
 		}
 		m_tokens = list.toArray (new String[list.size ()]);
+	}
+
+	public int getLineNumber ()
+	{
+		return m_lineNumber;
+	}
+
+	public void setLineNumber (int lineNumber)
+	{
+		m_lineNumber = lineNumber;
 	}
 }

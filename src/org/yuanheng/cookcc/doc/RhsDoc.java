@@ -32,7 +32,7 @@ package org.yuanheng.cookcc.doc;
  */
 public class RhsDoc
 {
-	private String m_terms;
+	private String m_terms = "";
 	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
 	private int m_lineNumber;
 	private int m_actionLineNumber;
@@ -44,6 +44,8 @@ public class RhsDoc
 
 	public void setTerms (String terms)
 	{
+		if (terms == null)
+			terms = "";
 		m_terms = terms;
 	}
 
@@ -98,6 +100,8 @@ public class RhsDoc
 
 	public void setAction (String action)
 	{
+		if (action == null)
+			action = "";
 		m_action = action;
 	}
 }

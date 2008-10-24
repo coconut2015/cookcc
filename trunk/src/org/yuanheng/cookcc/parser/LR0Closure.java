@@ -24,68 +24,53 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.plain;
-
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.Lexer;
-import org.yuanheng.cookcc.parser.Parser;
-
-import freemarker.template.Template;
+package org.yuanheng.cookcc.parser;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
+class LR0Closure implements Closure
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
+	private final Parser m_parser;
 
-	private static class Resources
+	public LR0Closure (Parser parser)
 	{
-		private static Template template;
+		m_parser = parser;
+	}
 
-		static
+	//
+	// does epsilon closure for LR(0) items
+	//
+	// only consider spontaneously generated tokens
+	//
+	public void closure (ItemSet itemSet)
+	{
+		for (Item item : itemSet.getItems ())
 		{
-			template = getTemplate (TEMPLATE_URI);
+			int[] production = item.getProduction ().getProduction ();
+			int pos = item.getPosition ();
+
+			if (pos >= production.length ||
+				production[pos] <= m_parser.m_maxTerminal)
+				continue;
+
+			//
+			// pre-compute the FIRST for the non-terminal to optimize things a little
+			//
+			m_parser.computeFirst (production, pos + 1, production.length, item.getFirst ());
+			TokenSet first = item.getFirst ().clone ();
+			first.setEpsilon (false);	// important, since the above computeFirst () does not
+										// have the lookahead tokens appeneded.
+
+			// okay a non-terminal is found,
+			// insert that terminal's production to this item set
+
+			int nonTerminal = production[pos];
+
+			Production[] table = m_parser.getProductionMap ().get (nonTerminal);
+			for (Production k : table)
+				itemSet.insertClosureItem (m_parser.createItem (k, 0, first));
 		}
-	}
-
-	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
-
-	private OptionParser[] m_options = new OptionParser[]
-	{
-		m_lexerTableOption
-	};
-
-	public void generateOutput (Document doc) throws Exception
-	{
-		Lexer lexer = Lexer.getLexer (doc);
-		Parser parser = Parser.getParser (doc);
-		if (lexer == null && parser == null)
-			return;
-
-		if (lexer != null)
-		{
-			if (m_lexerTableOption.getLexerTable () != null)
-				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
-		}
-
-		Map<String, Object> map = new HashMap<String, Object> ();
-		OutputStreamWriter sw = new OutputStreamWriter (System.out);
-		setup (map, doc);
-		Resources.template.process (map, sw);
-		sw.flush ();
-	}
-
-	public OptionParser[] getOptions ()
-	{
-		return m_options;
-	}
+}
 }

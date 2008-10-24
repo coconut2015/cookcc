@@ -34,6 +34,7 @@ import java.util.Map;
 
 import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.dfa.LexerDFAInfo;
+import org.yuanheng.cookcc.dfa.ParserDFAInfo;
 import org.yuanheng.cookcc.doc.Document;
 
 import freemarker.cache.TemplateLoader;
@@ -97,13 +98,16 @@ public abstract class TemplatedCodeGen
 		}
 	}
 
-	public void setup (Map<String, Object> map, Document doc)
+	public void setup (Map<String, Object> map, Document doc) throws IOException
 	{
 		map.put ("debug", Main.isDebug ());
 		map.put ("tokens", doc.getTokens ());
 		map.put ("code", doc.getCode ());
 		map.put ("unicode", Boolean.valueOf (doc.isUnicode ()));
 
-		map.put ("lexer", LexerDFAInfo.getLexerDFAInfo (doc));
+		if (doc.getLexer () != null)
+			map.put ("lexer", LexerDFAInfo.getLexerDFAInfo (doc));
+		if (doc.getParser () != null)
+			map.put ("parser", ParserDFAInfo.getParserDFAInfo (doc));
 	}
 }

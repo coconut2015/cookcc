@@ -24,68 +24,77 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.plain;
-
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.Lexer;
-import org.yuanheng.cookcc.parser.Parser;
-
-import freemarker.template.Template;
+package org.yuanheng.cookcc.parser;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
+class Production implements Comparable<Production>
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
+	private static short s_counter;
 
-	private static class Resources
+	private final short m_id;
+	private final int m_symbol;
+	private int[] m_production;
+	private Token m_precedence;
+	private int m_lineNumber;
+
+	public Production (int symbol)
 	{
-		private static Template template;
-
-		static
-		{
-			template = getTemplate (TEMPLATE_URI);
-		}
+		m_symbol = symbol;
+		m_id = ++s_counter;			// id start from 1 to avoid 0
 	}
 
-	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
-
-	private OptionParser[] m_options = new OptionParser[]
+	public short getId ()
 	{
-		m_lexerTableOption
-	};
-
-	public void generateOutput (Document doc) throws Exception
-	{
-		Lexer lexer = Lexer.getLexer (doc);
-		Parser parser = Parser.getParser (doc);
-		if (lexer == null && parser == null)
-			return;
-
-		if (lexer != null)
-		{
-			if (m_lexerTableOption.getLexerTable () != null)
-				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
-		}
-
-		Map<String, Object> map = new HashMap<String, Object> ();
-		OutputStreamWriter sw = new OutputStreamWriter (System.out);
-		setup (map, doc);
-		Resources.template.process (map, sw);
-		sw.flush ();
+		return m_id;
 	}
 
-	public OptionParser[] getOptions ()
+	public int size ()
 	{
-		return m_options;
+		return m_production.length;
+	}
+
+	public int[] getProduction ()
+	{
+		return m_production;
+	}
+
+	public void setProduction (int[] production)
+	{
+		m_production = production;
+	}
+
+	public int getSymbol ()
+	{
+		return m_symbol;
+	}
+
+	public Token getPrecedence ()
+	{
+		return m_precedence;
+	}
+
+	public void setPrecedence (Token precedence)
+	{
+		m_precedence = precedence;
+	}
+
+	public int getLineNumber ()
+	{
+		return m_lineNumber;
+	}
+
+	public void setLineNumber (int lineNumber)
+	{
+		m_lineNumber = lineNumber;
+	}
+
+	public int compareTo (Production o)
+	{
+		if (this == o)
+			return 0;
+		return m_id - o.m_id;
 	}
 }

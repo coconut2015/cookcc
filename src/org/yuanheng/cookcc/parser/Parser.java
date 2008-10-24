@@ -46,6 +46,8 @@ import org.yuanheng.cookcc.lexer.CCL;
  */
 public class Parser
 {
+	private final static String PROP_PARSER = "Parser";
+
 	private static Pattern s_tokenNamePattern = Pattern.compile ("[a-zA-Z_][a-zA-Z_0-9]*");
 
 	public static String START = "@start";
@@ -59,14 +61,29 @@ public class Parser
 
 	public static Parser getParser (Document doc) throws IOException
 	{
-		Parser parser = new Parser (doc);
-		parser.parse ();
+		if (doc == null)
+			return null;
+		ParserDoc parserDoc = doc.getParser ();
+		if (parserDoc == null)
+			return null;
+		Object obj = parserDoc.getProperty (PROP_PARSER);
+		Parser parser;
+		if (obj == null | !(obj instanceof Parser))
+		{
+			parser = new Parser (doc);
+			parser.parse ();
+			parserDoc.setProperty (PROP_PARSER, parser);
+		}
+		else
+			parser = (Parser)obj;
+
 		return parser;
 	}
 
 	int EPSILON = 0;
 	int m_maxTerminal;
 
+	private short m_productionIdCounter = 1;
 	private final Document m_doc;
 	private int m_terminalCount;
 	private int m_nonTerminalCount;
@@ -95,8 +112,8 @@ public class Parser
 	final Vector<ItemSet> _DFAStates = new Vector<ItemSet> ();
 	final Map<ItemSet, Short> _DFASet = new TreeMap<ItemSet, Short> ();
 
-	private int _reduceConflict;
-	private int _shiftConflict;
+	private int m_reduceConflict;
+	private int m_shiftConflict;
 
 	private PrintStream m_out;
 
@@ -137,7 +154,7 @@ public class Parser
 		parseProductions ();
 
 		// add start condition
-		Production startProduction = new Production (getNonterminal (START));
+		Production startProduction = new Production (getNonterminal (START), (short)m_productionIdCounter++);
 		ParserDoc parserDoc = m_doc.getParser ();
 		Integer startNonTerminal = parserDoc.getStart () == null ? m_productions.get (0).getSymbol () : m_nonTerminals.get (parserDoc.getStart ());
 		if (startNonTerminal == null)
@@ -158,9 +175,9 @@ public class Parser
 		m_usedSymbolCount = m_usedSymbols.length;
 		m_usedTerminalCount = m_usedSymbols.length - m_nonTerminalCount;
 
-		verboseSection ("symbols");
+		verboseSection ("used symbols");
 		for (int i = 0; i < m_usedSymbols.length; ++i)
-			verbose (i + " : " + m_usedSymbols[i] + " : " + m_symbolMap.get (m_usedSymbols[i]));
+			verbose (i + "\t:\t" + m_usedSymbols[i] + "\t:\t" + m_symbolMap.get (m_usedSymbols[i]));
 
 		verboseSection ("statistics");
 		verbose ("max terminal = " + m_maxTerminal);
@@ -168,7 +185,7 @@ public class Parser
 		verbose ("terminal count = " + m_terminalCount);
 		verbose ("used terminal count = " + m_usedTerminalCount);
 		verbose ("used symbol count = " + m_usedSymbolCount);
-		verbose ("symbol map = " + m_symbolMap);
+//		verbose ("symbol map = " + m_symbolMap);
 
 		verboseSection ("productions");
 		for (Production p : m_productions)
@@ -230,7 +247,7 @@ public class Parser
 			LinkedList<Production> prods = new LinkedList<Production> ();
 			for (RhsDoc rhs : grammar.getRhs ())
 			{
-				Production production = new Production (lhs);
+				Production production = new Production (lhs, m_productionIdCounter++);
 				LinkedList<Integer> symbolList = new LinkedList<Integer> ();
 				String terms = rhs.getTerms ().trim ();
 				int lineNumber = rhs.getLineNumber ();
@@ -254,7 +271,7 @@ public class Parser
 					{
 						int sym = parseTerm (lineNumber, terms, pos);
 						if (sym <= m_maxTerminal)
-							production.setPrecedence (m_terminals.get (sym));
+							production.setPrecedence (m_terminalMap.get (sym));
 						terms = terms.substring (pos[0]).trim ();
 						symbolList.add (sym);
 					}
@@ -397,17 +414,19 @@ public class Parser
 		first.setEpsilon (epsilon);
 	}
 
+	//
+	// This is a very expensive operation.  Need to find a way to optimize it
+	// later.
+	//
 	private void computeFirstSet ()
 	{
 		for (int i = 0; i < m_nonTerminalCount; ++i)
 			m_firstSetVal.put (m_maxTerminal + 1 + i, createTokenSet ());
 
-		boolean changed = true;
-
-		while (changed)
+		boolean changed;
+		do
 		{
 			changed = false;
-
 			for (Production production : m_productions)
 			{
 				int A = production.getSymbol ();
@@ -436,12 +455,10 @@ public class Parser
 
 				// determine if anything got changed
 				if (old.compareTo (current) != 0)
-				{
 					changed = true;
-					break;
-				}
 			}
 		}
+		while (changed);
 
 		for (int i = 0; i < m_nonTerminalCount; ++i)
 		{
@@ -456,6 +473,19 @@ public class Parser
 			int[] newVec = new int[count];
 			System.arraycopy (vec, 0, newVec, 0, count);
 			m_firstSet.put (sym, newVec);
+		}
+
+		if (m_out != null)
+		{
+			verboseSection ("First Sets");
+			for (int i = 0; i < m_nonTerminalCount; ++i)
+			{
+//				m_out.print ("FIRST(" + m_symbolMap.get (m_usedSymbols[m_usedTerminalCount + i]) + ") = {");
+//				for (int sym : m_firstSet.get (m_maxTerminal + 1 + i))
+//					m_out.print (" " + m_symbolMap.get (m_usedSymbols[sym]));
+//				m_out.println (" }");
+				m_out.println ("FIRST(" + m_symbolMap.get (m_usedSymbols[m_usedTerminalCount + i]) + ") = " + toString (m_firstSetVal.get (m_maxTerminal + 1 + i)) + (m_firstSetVal.get (m_maxTerminal + 1 + i).hasEpsilon () ? ", epsilon" : ""));
+			}
 		}
 	}
 
@@ -748,7 +778,7 @@ public class Parser
 		{
 			if (reduceSet.size () > 1)
 			{
-				++_reduceConflict;
+				++m_reduceConflict;
 			}
 			// pick the earlier rule to reduce
 			//return*(reduceSet.begin ());
@@ -764,7 +794,7 @@ public class Parser
 	// the reason to combine them is to produce conflicts message
 	//
 	boolean _compact = false;
-	void reduce ()
+	private void reduce ()
 	{
 		verboseSection ("DFA states: " + _DFAStates.size ());
 
@@ -795,7 +825,7 @@ public class Parser
 				{
 					// possible shift reduce error, try to resolve
 
-					Token shiftPrecedence = null;
+					Token shiftPrecedence = Token.DEFAULT;
 
 					// we need to check the precedence of the rules of the destination
 					// kernel (important!) set, not the how set.
@@ -841,13 +871,13 @@ public class Parser
 							{
 								verbose ("\tshift/reduce conflict on " + m_symbolMap.get (m_usedSymbols[j]));
 								reduceState = null;
-								++_shiftConflict;
+								++m_shiftConflict;
 							}
 						}
 						else // NONASSOC
 						{
-							Main.warn ("shift/reduce conflict on non-associativity terminal " + m_symbolMap.get (m_usedSymbols[j]));
-							++_shiftConflict;
+							verbose ("shift/reduce conflict on non-associativity terminal " + m_symbolMap.get (m_usedSymbols[j]));
+							++m_shiftConflict;
 						}
 					}
 				}
@@ -880,6 +910,9 @@ public class Parser
 				verbose ("");
 			}
 		}
+		if (m_shiftConflict > 0 || m_reduceConflict > 0)
+			Main.warn ("shift/reduce conflicts: " + m_shiftConflict + ", reduce/reduce conflicts: " + m_reduceConflict);
+		verbose ("shift/reduce conflicts: " + m_shiftConflict + ", reduce/reduce conflicts: " + m_reduceConflict);
 	}
 
 	Vector<Production> getProductions ()
@@ -968,7 +1001,7 @@ public class Parser
 	{
 		StringBuffer buffer = new StringBuffer ();
 		Production production = item.getProduction ();
-		buffer.append (m_symbolMap.get (production.getSymbol ())).append (" :");
+		buffer.append (m_symbolMap.get (production.getSymbol ())).append ("\t:");
 		int[] prods = production.getProduction ();
 		for (int i = 0; i < prods.length; ++i)
 		{
@@ -990,9 +1023,9 @@ public class Parser
 		for (Item item : itemSet.getItems ())
 		{
 			if (itemSet.isKernelItem (item))
-				buffer.append (" * ");
+				buffer.append (" *\t");
 			else
-				buffer.append (" - ");
+				buffer.append (" -\t");
 			buffer.append (toString (item)).append ("\n");
 		}
 		return buffer.toString ();

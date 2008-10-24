@@ -53,6 +53,11 @@ class ItemSet implements Comparable<ItemSet>
 		m_closureSet = (TreeMap<Item,Item>)other.m_closureSet.clone ();
 	}
 
+	public Item getItem (int index)
+	{
+		return m_itemList.get (index);
+	}
+
 	public Item[] getItems ()
 	{
 		return m_itemList.toArray (new Item[m_itemList.size ()]);

@@ -36,6 +36,8 @@ class Token
 	public final static int RIGHT = 2;
 	public final static int NONASSOC = 3;
 
+	public final static Token DEFAULT = new Token ("@default", 0, 0, Token.NONASSOC);
+
 	public final String name;
 	public final int level;
 	public final int value;

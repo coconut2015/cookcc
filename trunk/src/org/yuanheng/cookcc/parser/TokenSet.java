@@ -99,10 +99,10 @@ class TokenSet implements Comparable<TokenSet>
 	public int compareTo (TokenSet o)
 	{
 		if (m_epsilon != o.m_epsilon)
-			return m_epsilon ? 1 : 0;
+			return m_epsilon ? 1 : -1;
 		for (int i = 0; i < m_terminals.length; ++i)
 			if (m_terminals[i] != o.m_terminals[i])
-				return m_terminals[i] ? 1 : 0;
+				return m_terminals[i] ? 1 : -1;
 		return 0;
 	}
 }

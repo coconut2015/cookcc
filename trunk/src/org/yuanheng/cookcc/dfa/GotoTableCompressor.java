@@ -41,15 +41,15 @@ class GotoTableCompressor
 	private final Vector<short[]> m_dfa;
 	private final Vector<short[]> m_dfaCopy;
 
-	int _baseAdd;
+	int m_baseAdd;
 
-	private short[] _defaultArray;
+	private short[] m_default;
 
-	private short[] _nextArray;
-	private short[] _checkArray;
-	private short[] _baseArray;
+	private short[] m_next;
+	private short[] m_check;
+	private short[] m_base;
 
-	private Map<Integer, Vector<Short>> _fillList = new HashMap<Integer, Vector<Short>> ();
+	private Map<Integer, Vector<Short>> m_fillMap = new HashMap<Integer, Vector<Short>> ();
 
 	public GotoTableCompressor (Vector<short[]> gotoTable)
 	{
@@ -134,12 +134,12 @@ class GotoTableCompressor
 	//
 	boolean canFill (int row, int min, int max, int pos)
 	{
-		int bound = _nextArray.length;
+		int bound = m_next.length;
 		short[] column = m_dfaCopy.get (row);
 		for (; pos < bound && min <= max; ++pos, ++min)
 		{
 			if (column[min] != SHORT_MIN &&
-				_nextArray[pos] != SHORT_MIN)
+				m_next[pos] != SHORT_MIN)
 				return false;
 		}
 		return true;
@@ -152,16 +152,16 @@ class GotoTableCompressor
 	{
 		int bound = pos + max - min + 1;
 		// allocate space if necessary
-		if (bound > _nextArray.length)
+		if (bound > m_next.length)
 		{
 			//DEBUGMSG ("trying to resize to " << bound);
-			_nextArray = TableCompressor.resize (_nextArray, bound, SHORT_MIN);
-			_checkArray = TableCompressor.resize (_checkArray, bound, SHORT_MIN);
+			m_next = TableCompressor.resize (m_next, bound, SHORT_MIN);
+			m_check = TableCompressor.resize (m_check, bound, SHORT_MIN);
 		}
 
-		int rowIndex = row + _baseAdd;
+		int rowIndex = row + m_baseAdd;
 
-		_baseArray[rowIndex] = (short)(pos - min);
+		m_base[rowIndex] = (short)(pos - min);
 
 		// now do the fill
 		short[] column = m_dfaCopy.get (row);
@@ -169,8 +169,8 @@ class GotoTableCompressor
 		{
 			if (column[min] != SHORT_MIN)
 			{
-				_nextArray[pos] = column[min];
-				_checkArray[pos] = (short)rowIndex;
+				m_next[pos] = column[min];
+				m_check[pos] = (short)rowIndex;
 			}
 		}
 	}
@@ -184,7 +184,7 @@ class GotoTableCompressor
 		// just going through all the holes and see
 		// if there is an available position
 
-		int size = _nextArray.length;
+		int size = m_next.length;
 		// we start from min because we don't want to have any
 		// negative indices
 		for (int i = min; i < size; ++i)
@@ -195,12 +195,12 @@ class GotoTableCompressor
 				return;
 			}
 		}
-		doFill (row, min, max, _nextArray.length);
+		doFill (row, min, max, m_next.length);
 	}
 
 	void doInsertState (short state, short cmpState)
 	{
-		_defaultArray[state] = cmpState;
+		m_default[state] = cmpState;
 		cleanState (state, cmpState);
 
 		int[] minMax = new int[2];
@@ -211,11 +211,11 @@ class GotoTableCompressor
 
 		int holeSize = getHoleSize (state, minMax[0], minMax[1]);
 
-		Vector<Short> list = _fillList.get (holeSize);
+		Vector<Short> list = m_fillMap.get (holeSize);
 		if (list == null)
 		{
 			list = new Vector<Short> ();
-			_fillList.put (holeSize, list);
+			m_fillMap.put (holeSize, list);
 		}
 		list.add (state);
 	}
@@ -225,13 +225,13 @@ class GotoTableCompressor
 		int[] minMax = new int[2];
 
 
-		Integer[] holeSizes = _fillList.keySet ().toArray (new Integer[_fillList.size ()]);
+		Integer[] holeSizes = m_fillMap.keySet ().toArray (new Integer[m_fillMap.size ()]);
 
 		// fill the states from the biggest to the smallest
 		for (int i = holeSizes.length - 1; i >= 0; --i)
 		{
 			Integer holeSize = holeSizes[i];
-			for (Short state : _fillList.get (holeSize))
+			for (Short state : m_fillMap.get (holeSize))
 			{
 				getBlockSize (state, minMax);
 				//DEBUGMSG ("min = " << min << ", max = " << max);
@@ -251,10 +251,10 @@ class GotoTableCompressor
 	//
 	void compute ()
 	{
-		_baseAdd = _baseArray.length;
+		m_baseAdd = m_base.length;
 
-		_baseArray = TableCompressor.resize (_baseArray, _baseArray.length + m_dfaCopy.size (), SHORT_MIN);
-		_defaultArray = TableCompressor.resize (_defaultArray, m_dfaCopy.size (), SHORT_MIN);
+		m_base = TableCompressor.resize (m_base, m_base.length + m_dfaCopy.size (), SHORT_MIN);
+		m_default = TableCompressor.resize (m_default, m_dfaCopy.size (), SHORT_MIN);
 
 		for (short i = 0; i < m_dfaCopy.size (); ++i)
 		{
@@ -288,9 +288,9 @@ class GotoTableCompressor
 		doFillStates ();
 
 		// shrink base and default array to save some space
-		for (int i = _baseArray.length - 1; i > 0; --i)
+		for (int i = m_base.length - 1; i > 0; --i)
 		{
-			if (_baseArray[i] != SHORT_MIN)
+			if (m_base[i] != SHORT_MIN)
 			{
 //				_baseArray.resize (i + 1);
 //				_defaultArray.resize (i + 1 - _baseAdd);
@@ -302,27 +302,27 @@ class GotoTableCompressor
 		// process all SHORT_MIN in _checkArray and _nextArray to
 		// some less high magnitude value
 		//
-		for (int i = 0; i < _checkArray.length; ++i)
+		for (int i = 0; i < m_check.length; ++i)
 		{
-			if (_checkArray[i] == SHORT_MIN)
-				_checkArray[i] = -1;
-			if (_nextArray[i] == SHORT_MIN)
-				_nextArray[i] = 0;
+			if (m_check[i] == SHORT_MIN)
+				m_check[i] = -1;
+			if (m_next[i] == SHORT_MIN)
+				m_next[i] = 0;
 		}
 
 		//
 		// process all SHORT_MIN in _baseArray and _defaultArray
 		// as well
 		//
-		for (int i = _baseAdd; i < _baseArray.length; ++i)
+		for (int i = m_baseAdd; i < m_base.length; ++i)
 		{
-			if (_baseArray[i] == SHORT_MIN)
-				_baseArray[i] = 0;
+			if (m_base[i] == SHORT_MIN)
+				m_base[i] = 0;
 		}
-		for (int i = 0; i < _defaultArray.length; ++i)
+		for (int i = 0; i < m_default.length; ++i)
 		{
-			if (_defaultArray[i] == SHORT_MIN)
-				_defaultArray[i] = 0;
+			if (m_default[i] == SHORT_MIN)
+				m_default[i] = 0;
 		}
 
 		/*

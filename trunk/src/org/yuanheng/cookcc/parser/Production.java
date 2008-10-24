@@ -32,18 +32,17 @@ package org.yuanheng.cookcc.parser;
  */
 class Production implements Comparable<Production>
 {
-	private static short s_counter;
-
 	private final short m_id;
 	private final int m_symbol;
 	private int[] m_production;
 	private Token m_precedence;
 	private int m_lineNumber;
 
-	public Production (int symbol)
+	public Production (int symbol, short id)
 	{
 		m_symbol = symbol;
-		m_id = ++s_counter;			// id start from 1 to avoid 0
+		m_id = id;
+		m_precedence = Token.DEFAULT;
 	}
 
 	public short getId ()
@@ -78,6 +77,8 @@ class Production implements Comparable<Production>
 
 	public void setPrecedence (Token precedence)
 	{
+		if (precedence == null)
+			precedence = Token.DEFAULT;
 		m_precedence = precedence;
 	}
 

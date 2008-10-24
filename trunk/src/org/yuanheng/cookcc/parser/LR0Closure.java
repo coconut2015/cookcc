@@ -46,8 +46,9 @@ class LR0Closure implements Closure
 	//
 	public void closure (ItemSet itemSet)
 	{
-		for (Item item : itemSet.getItems ())
+		for (int i = 0; i < itemSet.size (); ++i)
 		{
+			Item item = itemSet.getItem (i);
 			int[] production = item.getProduction ().getProduction ();
 			int pos = item.getPosition ();
 

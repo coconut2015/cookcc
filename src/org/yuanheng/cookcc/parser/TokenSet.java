@@ -24,68 +24,85 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.plain;
-
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.Lexer;
-import org.yuanheng.cookcc.parser.Parser;
-
-import freemarker.template.Template;
+package org.yuanheng.cookcc.parser;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
+class TokenSet implements Comparable<TokenSet>
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
+	private final int[] m_terminalGroups;
+	private final int[] m_terminalLookup;
+	private final boolean[] m_terminals;
+	private boolean m_epsilon;
 
-	private static class Resources
+	TokenSet (int size, int[] terminalGroups, int[] terminalLookup)
 	{
-		private static Template template;
-
-		static
-		{
-			template = getTemplate (TEMPLATE_URI);
-		}
+		m_terminals = new boolean[size];
+		m_terminalGroups = terminalGroups;
+		m_terminalLookup = terminalLookup;
 	}
 
-	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
-
-	private OptionParser[] m_options = new OptionParser[]
+	private TokenSet (TokenSet o)
 	{
-		m_lexerTableOption
-	};
-
-	public void generateOutput (Document doc) throws Exception
-	{
-		Lexer lexer = Lexer.getLexer (doc);
-		Parser parser = Parser.getParser (doc);
-		if (lexer == null && parser == null)
-			return;
-
-		if (lexer != null)
-		{
-			if (m_lexerTableOption.getLexerTable () != null)
-				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
-		}
-
-		Map<String, Object> map = new HashMap<String, Object> ();
-		OutputStreamWriter sw = new OutputStreamWriter (System.out);
-		setup (map, doc);
-		Resources.template.process (map, sw);
-		sw.flush ();
+		m_terminals = o.m_terminals.clone ();
+		m_terminalGroups = o.m_terminalGroups;
+		m_terminalLookup = o.m_terminalLookup;
+		m_epsilon = o.m_epsilon;
 	}
 
-	public OptionParser[] getOptions ()
+	public void addSymbol (int symbol)
 	{
-		return m_options;
+		m_terminals[m_terminalGroups[symbol]] = true;
+	}
+
+	public boolean hasSymbol (int symbol)
+	{
+		return m_terminals[m_terminalGroups[symbol]];
+	}
+
+	public boolean hasEpsilon ()
+	{
+		return m_epsilon;
+	}
+
+	public void setEpsilon (boolean epsilon)
+	{
+		m_epsilon = epsilon;
+	}
+
+	/**
+	 * Perform or equals operation and check if anything changed.
+	 *
+	 * @param	tokenSet
+	 * 			the input token set
+	 * @return	true if any items has been changed
+	 */
+	boolean or (TokenSet tokenSet)
+	{
+		boolean changed = false;
+		for (int i = 0; i < m_terminals.length; ++i)
+		{
+			boolean b = m_terminals[i];
+			m_terminals[i] |= tokenSet.m_terminals[i];
+			changed |= b != m_terminals[i];
+		}
+		return changed;
+	}
+
+	public TokenSet clone ()
+	{
+		return new TokenSet (this);
+	}
+
+	public int compareTo (TokenSet o)
+	{
+		if (m_epsilon != o.m_epsilon)
+			return m_epsilon ? 1 : 0;
+		for (int i = 0; i < m_terminals.length; ++i)
+			if (m_terminals[i] != o.m_terminals[i])
+				return m_terminals[i] ? 1 : 0;
+		return 0;
 	}
 }

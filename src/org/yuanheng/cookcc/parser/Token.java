@@ -24,68 +24,41 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.plain;
-
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.Lexer;
-import org.yuanheng.cookcc.parser.Parser;
-
-import freemarker.template.Template;
+package org.yuanheng.cookcc.parser;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
+class Token
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
+	public final static int LEFT = 1;
+	public final static int RIGHT = 2;
+	public final static int NONASSOC = 3;
 
-	private static class Resources
+	public final String name;
+	public final int level;
+	public final int value;
+	public final int type;
+
+	public Token (String name, int level, int value, int type)
 	{
-		private static Template template;
-
-		static
-		{
-			template = getTemplate (TEMPLATE_URI);
-		}
+		this.name = name;
+		this.level = level;
+		this.value = value;
+		this.type = type;
 	}
 
-	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
-
-	private OptionParser[] m_options = new OptionParser[]
+	public Token (String name, int level, int value, String type)
 	{
-		m_lexerTableOption
-	};
-
-	public void generateOutput (Document doc) throws Exception
-	{
-		Lexer lexer = Lexer.getLexer (doc);
-		Parser parser = Parser.getParser (doc);
-		if (lexer == null && parser == null)
-			return;
-
-		if (lexer != null)
-		{
-			if (m_lexerTableOption.getLexerTable () != null)
-				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
-		}
-
-		Map<String, Object> map = new HashMap<String, Object> ();
-		OutputStreamWriter sw = new OutputStreamWriter (System.out);
-		setup (map, doc);
-		Resources.template.process (map, sw);
-		sw.flush ();
-	}
-
-	public OptionParser[] getOptions ()
-	{
-		return m_options;
+		this.name = name;
+		this.level = level;
+		this.value = value;
+		if (type == null || "nonassoc".equals (type))
+			this.type = NONASSOC;
+		else if ("left".equals (type))
+			this.type = LEFT;
+		else
+			this.type = RIGHT;
 	}
 }

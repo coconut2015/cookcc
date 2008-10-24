@@ -45,6 +45,7 @@ public class Main
 	public static String OPTION_QUIET = "-quiet";
 	public static String OPTION_LANG = "-lang";
 	public static String OPTION_DEBUG = "-debug";
+	public static String OPTION_ANALYSIS = "-analysis";
 
 	private static Properties s_codeGenDrivers = new Properties ();
 	private static Properties s_inputParsers = new Properties ();
@@ -67,6 +68,7 @@ public class Main
 	private static CodeGen s_codeGen;
 	private static boolean s_quiet;
 	private static boolean s_debug;
+	private static boolean s_analysis;
 
 	private static OptionParser s_helpOptioni = new OptionParser ()
 	{
@@ -97,6 +99,22 @@ public class Main
 		public String toString ()
 		{
 			return OPTION_QUIET + "\t\t\t\tSuppress console messages.";
+		}
+	};
+
+	private static OptionParser s_analysisOption = new OptionParser()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_ANALYSIS.equals (args[index]))
+				return 0;
+			s_analysis = true;
+			return 1;
+		}
+
+		public String toString ()
+		{
+			return OPTION_ANALYSIS + "\t\t\t\tGenerate analysis output for the parser.";
 		}
 	};
 
@@ -144,6 +162,7 @@ public class Main
 		s_helpOptioni,
 		s_langOption,
 		s_quietOption,
+		s_analysisOption,
 		s_debugOption
 	};
 
@@ -182,7 +201,18 @@ public class Main
 					break;
 				}
 			}
-			if (j == optionParsers.length)
+			if (j < optionParsers.length)
+				continue;
+			for (j = 0; j < s_options.length; ++j)
+			{
+				int count = s_options[j].handleOption (args, i);
+				if (count > 0)
+				{
+					i += count;
+					break;
+				}
+			}
+			if (j == s_options.length)
 				break;
 		}
 
@@ -295,5 +325,12 @@ public class Main
 		if (s_quiet)
 			return;
 		System.err.println (msg);
+	}
+
+	public static File getAnalysisFile ()
+	{
+		if (s_analysis)
+			return new File ("cookcc.parser.txt");
+		return null;
 	}
 }

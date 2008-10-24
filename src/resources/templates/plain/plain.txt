@@ -85,3 +85,12 @@ case ${p.caseValue}
 </#list>
 # end
 </#if>
+<#if parser?has_content>
+# parser
+# ecs
+<@intarray parser.dfa.ecs/>
+# table
+<@intarray3d parser.dfa.table/>
+# goto table
+<@intarray3d parser.dfa.goto/>
+</#if>

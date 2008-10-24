@@ -24,68 +24,40 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.plain;
+package org.yuanheng.cookcc.dfa;
 
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
 import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.Lexer;
+import org.yuanheng.cookcc.doc.ParserDoc;
 import org.yuanheng.cookcc.parser.Parser;
-
-import freemarker.template.Template;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
+public class ParserDFAInfo
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
-
-	private static class Resources
+	public static ParserDFAInfo getParserDFAInfo (Document doc) throws IOException
 	{
-		private static Template template;
-
-		static
-		{
-			template = getTemplate (TEMPLATE_URI);
-		}
+		return new ParserDFAInfo (doc.getParser (), Parser.getParser (doc));
 	}
 
-	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
+	private final ParserDoc m_parserDoc;
+	private final Parser m_parser;
+	private Object m_dfa;
 
-	private OptionParser[] m_options = new OptionParser[]
+	private ParserDFAInfo (ParserDoc ParserDoc, Parser Parser)
 	{
-		m_lexerTableOption
-	};
-
-	public void generateOutput (Document doc) throws Exception
-	{
-		Lexer lexer = Lexer.getLexer (doc);
-		Parser parser = Parser.getParser (doc);
-		if (lexer == null && parser == null)
-			return;
-
-		if (lexer != null)
-		{
-			if (m_lexerTableOption.getLexerTable () != null)
-				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
-		}
-
-		Map<String, Object> map = new HashMap<String, Object> ();
-		OutputStreamWriter sw = new OutputStreamWriter (System.out);
-		setup (map, doc);
-		Resources.template.process (map, sw);
-		sw.flush ();
+		m_parserDoc = ParserDoc;
+		m_parser = Parser;
 	}
 
-	public OptionParser[] getOptions ()
+	public Object getDfa ()
 	{
-		return m_options;
+		if (m_dfa != null)
+			return m_dfa;
+		m_dfa = new ParserTable (m_parser);
+		return m_dfa;
 	}
 }

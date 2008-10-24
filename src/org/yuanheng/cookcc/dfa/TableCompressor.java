@@ -129,7 +129,7 @@ class TableCompressor
 		m_base = new short[m_dfaCopy.size ()];
 	}
 
-	private short[] resize (short[] src, int newSize, short fill)
+	static short[] resize (short[] src, int newSize, short fill)
 	{
 		if (src != null)
 		{

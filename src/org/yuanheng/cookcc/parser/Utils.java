@@ -24,68 +24,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.plain;
-
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.Lexer;
-import org.yuanheng.cookcc.parser.Parser;
-
-import freemarker.template.Template;
+package org.yuanheng.cookcc.parser;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
+class Utils
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
-
-	private static class Resources
+	public static int compare (boolean[] b1, boolean[] b2)
 	{
-		private static Template template;
+		if (b1.length != b2.length)
+			return b1.length - b2.length;
 
-		static
-		{
-			template = getTemplate (TEMPLATE_URI);
-		}
+		for (int i = 0; i < b1.length; ++i)
+			if (b1[i] != b2[i])
+				return b1[i] ? 1 : -1;
+		return 0;
 	}
 
-	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
-
-	private OptionParser[] m_options = new OptionParser[]
+	public static int compare (int[] i1, int[] i2)
 	{
-		m_lexerTableOption
-	};
+		if (i1.length != i2.length)
+			return i1.length - i2.length;
 
-	public void generateOutput (Document doc) throws Exception
-	{
-		Lexer lexer = Lexer.getLexer (doc);
-		Parser parser = Parser.getParser (doc);
-		if (lexer == null && parser == null)
-			return;
-
-		if (lexer != null)
-		{
-			if (m_lexerTableOption.getLexerTable () != null)
-				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
-		}
-
-		Map<String, Object> map = new HashMap<String, Object> ();
-		OutputStreamWriter sw = new OutputStreamWriter (System.out);
-		setup (map, doc);
-		Resources.template.process (map, sw);
-		sw.flush ();
-	}
-
-	public OptionParser[] getOptions ()
-	{
-		return m_options;
+		for (int i = 0; i < i1.length; ++i)
+			if (i1[i] != i2[i])
+				return i1[i] - i2[i];
+		return 0;
 	}
 }

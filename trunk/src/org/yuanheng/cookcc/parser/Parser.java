@@ -586,16 +586,22 @@ public class Parser
 	//
 	// does move operation
 	//
-	void move (ItemSet dest, ItemSet src, int symbol)
+	ItemSet move (Comparator<Item> kernelSorter, ItemSet src, int symbol)
 	{
+		ItemSet dest = null;
 		for (Item item : src.getItems ())
 		{
 			int[] production = item.getProduction ().getProduction ();
 			int pos = item.getPosition ();
 
 			if (pos < production.length && production[pos] == symbol)
+			{
+				if (dest == null)
+					dest = new ItemSet (kernelSorter);
 				dest.insertKernelItem (new Item (item, pos + 1));
+			}
 		}
+		return dest;
 	}
 
 	//
@@ -646,11 +652,9 @@ public class Parser
 			for (int j = 0; j < m_usedSymbolCount; ++j)
 			{
 				//DEBUGMSG ("move/closure on symbol " << _tokens[j]);
-				ItemSet destSet = new ItemSet (kernelSorter);
+				ItemSet destSet = move (kernelSorter, srcSet, m_usedSymbols[j]);
 
-				move (destSet, srcSet, m_usedSymbols[j]);
-
-				if (destSet.size () == 0)
+				if (destSet == null)
 					continue;
 
 				//

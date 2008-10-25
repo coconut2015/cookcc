@@ -41,9 +41,9 @@ public class ParserDoc extends TreeDoc
 	// we use linked list to keep the state being used in order, may be useful.
 	private final LinkedList<GrammarDoc> m_grammarList = new LinkedList<GrammarDoc> ();
 	private final HashMap<String, GrammarDoc> m_grammarMap = new HashMap<String, GrammarDoc> ();
-	private final HashMap<String, ShortcutDoc> m_shortcutMap = new HashMap<String, ShortcutDoc> ();
 
 	private String m_start;
+	private boolean m_defaultReduce;
 
 	public ParserDoc ()
 	{
@@ -57,6 +57,16 @@ public class ParserDoc extends TreeDoc
 	public void setStart (String start)
 	{
 		m_start = start;
+	}
+
+	public void setDefaultReduce (boolean defaultReduce)
+	{
+		m_defaultReduce = defaultReduce;
+	}
+
+	public boolean getDefaultReduce ()
+	{
+		return m_defaultReduce;
 	}
 
 	public GrammarDoc getGrammar (String term)

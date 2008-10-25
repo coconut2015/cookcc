@@ -31,4 +31,5 @@
 
 <!ATTLIST parser	start CDATA #IMPLIED>
 <!ATTLIST parser	table (ecs|compressed) #IMPLIED>
+<!ATTLIST parser	defaultreduce (true|false) #IMPLIED>
 <!ATTLIST grammar	rule CDATA #REQUIRED>

@@ -1,5 +1,4 @@
 #summary Table Of Contents
-===== [TableOfContents] =====
 ===== [Documentation] =====
  * [Lexer]
    * [LexerXML Lexer XML]
@@ -12,3 +11,4 @@
    * [TargetLanguageJava Java]
    * [TargetLanguagePlain Plain]
    * [TargetLanguageXML XML]
+===== [http://www.yuanheng.org/forum/viewforum.php?f=6 Forum] =====

@@ -422,27 +422,17 @@ State 16:
  *	expr	: expr . EQ expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 17
-	precedence favors reduce on '*'
-	'*'	reduce to rule 17
-	precedence favors reduce on '+'
-	'+'	reduce to rule 17
-	precedence favors reduce on '-'
-	'-'	reduce to rule 17
-	precedence favors reduce on '/'
-	'/'	reduce to rule 17
+	'*'	reduce to rule 17, due to precedence
+	'+'	reduce to rule 17, due to precedence
+	'-'	reduce to rule 17, due to precedence
+	'/'	reduce to rule 17, due to precedence
 	';'	reduce to rule 17
-	precedence favors reduce on '<'
-	'<'	reduce to rule 17
-	precedence favors reduce on '>'
-	'>'	reduce to rule 17
-	precedence favors reduce on GE
-	GE	reduce to rule 17
-	precedence favors reduce on LE
-	LE	reduce to rule 17
-	precedence favors reduce on EQ
-	EQ	reduce to rule 17
-	precedence favors reduce on NE
-	NE	reduce to rule 17
+	'<'	reduce to rule 17, due to precedence
+	'>'	reduce to rule 17, due to precedence
+	GE	reduce to rule 17, due to precedence
+	LE	reduce to rule 17, due to precedence
+	EQ	reduce to rule 17, due to precedence
+	NE	reduce to rule 17, due to precedence
 
 
 State 17:
@@ -1018,27 +1008,17 @@ State 41:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 20
-	left associativity favors reduce on '*'
-	'*'	reduce to rule 20
-	precedence favors reduce on '+'
-	'+'	reduce to rule 20
-	precedence favors reduce on '-'
-	'-'	reduce to rule 20
-	left associativity favors reduce on '/'
-	'/'	reduce to rule 20
+	'*'	reduce to rule 20, due to left associativity
+	'+'	reduce to rule 20, due to precedence
+	'-'	reduce to rule 20, due to precedence
+	'/'	reduce to rule 20, due to left associativity
 	';'	reduce to rule 20
-	precedence favors reduce on '<'
-	'<'	reduce to rule 20
-	precedence favors reduce on '>'
-	'>'	reduce to rule 20
-	precedence favors reduce on GE
-	GE	reduce to rule 20
-	precedence favors reduce on LE
-	LE	reduce to rule 20
-	precedence favors reduce on EQ
-	EQ	reduce to rule 20
-	precedence favors reduce on NE
-	NE	reduce to rule 20
+	'<'	reduce to rule 20, due to precedence
+	'>'	reduce to rule 20, due to precedence
+	GE	reduce to rule 20, due to precedence
+	LE	reduce to rule 20, due to precedence
+	EQ	reduce to rule 20, due to precedence
+	NE	reduce to rule 20, due to precedence
 
 
 State 42:
@@ -1055,27 +1035,17 @@ State 42:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 18
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	left associativity favors reduce on '+'
-	'+'	reduce to rule 18
-	left associativity favors reduce on '-'
-	'-'	reduce to rule 18
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	reduce to rule 18, due to left associativity
+	'-'	reduce to rule 18, due to left associativity
+	'/'	shift, goto to state 26, due to precedence
 	';'	reduce to rule 18
-	precedence favors reduce on '<'
-	'<'	reduce to rule 18
-	precedence favors reduce on '>'
-	'>'	reduce to rule 18
-	precedence favors reduce on GE
-	GE	reduce to rule 18
-	precedence favors reduce on LE
-	LE	reduce to rule 18
-	precedence favors reduce on EQ
-	EQ	reduce to rule 18
-	precedence favors reduce on NE
-	NE	reduce to rule 18
+	'<'	reduce to rule 18, due to precedence
+	'>'	reduce to rule 18, due to precedence
+	GE	reduce to rule 18, due to precedence
+	LE	reduce to rule 18, due to precedence
+	EQ	reduce to rule 18, due to precedence
+	NE	reduce to rule 18, due to precedence
 
 
 State 43:
@@ -1092,27 +1062,17 @@ State 43:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 19
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	left associativity favors reduce on '+'
-	'+'	reduce to rule 19
-	left associativity favors reduce on '-'
-	'-'	reduce to rule 19
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	reduce to rule 19, due to left associativity
+	'-'	reduce to rule 19, due to left associativity
+	'/'	shift, goto to state 26, due to precedence
 	';'	reduce to rule 19
-	precedence favors reduce on '<'
-	'<'	reduce to rule 19
-	precedence favors reduce on '>'
-	'>'	reduce to rule 19
-	precedence favors reduce on GE
-	GE	reduce to rule 19
-	precedence favors reduce on LE
-	LE	reduce to rule 19
-	precedence favors reduce on EQ
-	EQ	reduce to rule 19
-	precedence favors reduce on NE
-	NE	reduce to rule 19
+	'<'	reduce to rule 19, due to precedence
+	'>'	reduce to rule 19, due to precedence
+	GE	reduce to rule 19, due to precedence
+	LE	reduce to rule 19, due to precedence
+	EQ	reduce to rule 19, due to precedence
+	NE	reduce to rule 19, due to precedence
 
 
 State 44:
@@ -1129,27 +1089,17 @@ State 44:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 21
-	left associativity favors reduce on '*'
-	'*'	reduce to rule 21
-	precedence favors reduce on '+'
-	'+'	reduce to rule 21
-	precedence favors reduce on '-'
-	'-'	reduce to rule 21
-	left associativity favors reduce on '/'
-	'/'	reduce to rule 21
+	'*'	reduce to rule 21, due to left associativity
+	'+'	reduce to rule 21, due to precedence
+	'-'	reduce to rule 21, due to precedence
+	'/'	reduce to rule 21, due to left associativity
 	';'	reduce to rule 21
-	precedence favors reduce on '<'
-	'<'	reduce to rule 21
-	precedence favors reduce on '>'
-	'>'	reduce to rule 21
-	precedence favors reduce on GE
-	GE	reduce to rule 21
-	precedence favors reduce on LE
-	LE	reduce to rule 21
-	precedence favors reduce on EQ
-	EQ	reduce to rule 21
-	precedence favors reduce on NE
-	NE	reduce to rule 21
+	'<'	reduce to rule 21, due to precedence
+	'>'	reduce to rule 21, due to precedence
+	GE	reduce to rule 21, due to precedence
+	LE	reduce to rule 21, due to precedence
+	EQ	reduce to rule 21, due to precedence
+	NE	reduce to rule 21, due to precedence
 
 
 State 45:
@@ -1166,27 +1116,17 @@ State 45:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 22
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	preducedence favors shift on '+'
-	'+'	shift, goto to state 24
-	preducedence favors shift on '-'
-	'-'	shift, goto to state 25
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
 	';'	reduce to rule 22
-	left associativity favors reduce on '<'
-	'<'	reduce to rule 22
-	left associativity favors reduce on '>'
-	'>'	reduce to rule 22
-	left associativity favors reduce on GE
-	GE	reduce to rule 22
-	left associativity favors reduce on LE
-	LE	reduce to rule 22
-	left associativity favors reduce on EQ
-	EQ	reduce to rule 22
-	left associativity favors reduce on NE
-	NE	reduce to rule 22
+	'<'	reduce to rule 22, due to left associativity
+	'>'	reduce to rule 22, due to left associativity
+	GE	reduce to rule 22, due to left associativity
+	LE	reduce to rule 22, due to left associativity
+	EQ	reduce to rule 22, due to left associativity
+	NE	reduce to rule 22, due to left associativity
 
 
 State 46:
@@ -1203,27 +1143,17 @@ State 46:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 23
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	preducedence favors shift on '+'
-	'+'	shift, goto to state 24
-	preducedence favors shift on '-'
-	'-'	shift, goto to state 25
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
 	';'	reduce to rule 23
-	left associativity favors reduce on '<'
-	'<'	reduce to rule 23
-	left associativity favors reduce on '>'
-	'>'	reduce to rule 23
-	left associativity favors reduce on GE
-	GE	reduce to rule 23
-	left associativity favors reduce on LE
-	LE	reduce to rule 23
-	left associativity favors reduce on EQ
-	EQ	reduce to rule 23
-	left associativity favors reduce on NE
-	NE	reduce to rule 23
+	'<'	reduce to rule 23, due to left associativity
+	'>'	reduce to rule 23, due to left associativity
+	GE	reduce to rule 23, due to left associativity
+	LE	reduce to rule 23, due to left associativity
+	EQ	reduce to rule 23, due to left associativity
+	NE	reduce to rule 23, due to left associativity
 
 
 State 47:
@@ -1240,27 +1170,17 @@ State 47:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 24
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	preducedence favors shift on '+'
-	'+'	shift, goto to state 24
-	preducedence favors shift on '-'
-	'-'	shift, goto to state 25
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
 	';'	reduce to rule 24
-	left associativity favors reduce on '<'
-	'<'	reduce to rule 24
-	left associativity favors reduce on '>'
-	'>'	reduce to rule 24
-	left associativity favors reduce on GE
-	GE	reduce to rule 24
-	left associativity favors reduce on LE
-	LE	reduce to rule 24
-	left associativity favors reduce on EQ
-	EQ	reduce to rule 24
-	left associativity favors reduce on NE
-	NE	reduce to rule 24
+	'<'	reduce to rule 24, due to left associativity
+	'>'	reduce to rule 24, due to left associativity
+	GE	reduce to rule 24, due to left associativity
+	LE	reduce to rule 24, due to left associativity
+	EQ	reduce to rule 24, due to left associativity
+	NE	reduce to rule 24, due to left associativity
 
 
 State 48:
@@ -1277,27 +1197,17 @@ State 48:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 25
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	preducedence favors shift on '+'
-	'+'	shift, goto to state 24
-	preducedence favors shift on '-'
-	'-'	shift, goto to state 25
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
 	';'	reduce to rule 25
-	left associativity favors reduce on '<'
-	'<'	reduce to rule 25
-	left associativity favors reduce on '>'
-	'>'	reduce to rule 25
-	left associativity favors reduce on GE
-	GE	reduce to rule 25
-	left associativity favors reduce on LE
-	LE	reduce to rule 25
-	left associativity favors reduce on EQ
-	EQ	reduce to rule 25
-	left associativity favors reduce on NE
-	NE	reduce to rule 25
+	'<'	reduce to rule 25, due to left associativity
+	'>'	reduce to rule 25, due to left associativity
+	GE	reduce to rule 25, due to left associativity
+	LE	reduce to rule 25, due to left associativity
+	EQ	reduce to rule 25, due to left associativity
+	NE	reduce to rule 25, due to left associativity
 
 
 State 49:
@@ -1314,27 +1224,17 @@ State 49:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 27
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	preducedence favors shift on '+'
-	'+'	shift, goto to state 24
-	preducedence favors shift on '-'
-	'-'	shift, goto to state 25
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
 	';'	reduce to rule 27
-	left associativity favors reduce on '<'
-	'<'	reduce to rule 27
-	left associativity favors reduce on '>'
-	'>'	reduce to rule 27
-	left associativity favors reduce on GE
-	GE	reduce to rule 27
-	left associativity favors reduce on LE
-	LE	reduce to rule 27
-	left associativity favors reduce on EQ
-	EQ	reduce to rule 27
-	left associativity favors reduce on NE
-	NE	reduce to rule 27
+	'<'	reduce to rule 27, due to left associativity
+	'>'	reduce to rule 27, due to left associativity
+	GE	reduce to rule 27, due to left associativity
+	LE	reduce to rule 27, due to left associativity
+	EQ	reduce to rule 27, due to left associativity
+	NE	reduce to rule 27, due to left associativity
 
 
 State 50:
@@ -1351,27 +1251,17 @@ State 50:
  *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 26
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	preducedence favors shift on '+'
-	'+'	shift, goto to state 24
-	preducedence favors shift on '-'
-	'-'	shift, goto to state 25
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
 	';'	reduce to rule 26
-	left associativity favors reduce on '<'
-	'<'	reduce to rule 26
-	left associativity favors reduce on '>'
-	'>'	reduce to rule 26
-	left associativity favors reduce on GE
-	GE	reduce to rule 26
-	left associativity favors reduce on LE
-	LE	reduce to rule 26
-	left associativity favors reduce on EQ
-	EQ	reduce to rule 26
-	left associativity favors reduce on NE
-	NE	reduce to rule 26
+	'<'	reduce to rule 26, due to left associativity
+	'>'	reduce to rule 26, due to left associativity
+	GE	reduce to rule 26, due to left associativity
+	LE	reduce to rule 26, due to left associativity
+	EQ	reduce to rule 26, due to left associativity
+	NE	reduce to rule 26, due to left associativity
 
 
 State 51:
@@ -1503,8 +1393,7 @@ State 55:
 	WHILE	reduce to rule 10
 	IF	reduce to rule 10
 	PRINT	reduce to rule 10
-	preducedence favors shift on ELSE
-	ELSE	shift, goto to state 56
+	ELSE	shift, goto to state 56, due to precedence
 
 
 State 56:

@@ -33,3 +33,4 @@
 <!ATTLIST parser	table (ecs|compressed) #IMPLIED>
 <!ATTLIST parser	defaultreduce (true|false) #IMPLIED>
 <!ATTLIST grammar	rule CDATA #REQUIRED>
+<!ATTLIST rhs		precedence CDATA #REQUIRED>

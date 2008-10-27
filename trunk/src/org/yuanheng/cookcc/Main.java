@@ -47,6 +47,8 @@ public class Main
 	public static String OPTION_DEBUG = "-debug";
 	public static String OPTION_ANALYSIS = "-analysis";
 
+	public static String ANALYSIS_FILE = "cookcc_parser_analysis.txt";
+
 	private static Properties s_codeGenDrivers = new Properties ();
 	private static Properties s_inputParsers = new Properties ();
 
@@ -330,7 +332,7 @@ public class Main
 	public static File getAnalysisFile ()
 	{
 		if (s_analysis)
-			return new File ("cookcc.parser.txt");
+			return new File (ANALYSIS_FILE);
 		return null;
 	}
 }

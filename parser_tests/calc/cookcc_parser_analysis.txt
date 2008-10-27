@@ -422,14 +422,14 @@ State 16:
  *	expr	: expr . EQ expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
 
 	')'	reduce to rule 17
-	preducedence favors shift on '*'
-	'*'	shift, goto to state 23
-	left associativity favors reduce on '+'
+	precedence favors reduce on '*'
+	'*'	reduce to rule 17
+	precedence favors reduce on '+'
 	'+'	reduce to rule 17
-	left associativity favors reduce on '-'
+	precedence favors reduce on '-'
 	'-'	reduce to rule 17
-	preducedence favors shift on '/'
-	'/'	shift, goto to state 26
+	precedence favors reduce on '/'
+	'/'	reduce to rule 17
 	';'	reduce to rule 17
 	precedence favors reduce on '<'
 	'<'	reduce to rule 17

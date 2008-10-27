@@ -114,7 +114,7 @@ public class Main
 
 		public String toString ()
 		{
-			return OPTION_ANALYSIS + "\t\t\t\tGenerate analysis output for the parser.";
+			return OPTION_ANALYSIS + "\t\t\tGenerate analysis output for the parser.";
 		}
 	};
 

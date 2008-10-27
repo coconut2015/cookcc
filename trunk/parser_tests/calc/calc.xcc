@@ -1,0 +1,82 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<tokens>VARIABLE INTEGER WHILE IF PRINT</tokens>
+	<tokens type="nonassoc">IFX</tokens>
+	<tokens type="nonassoc">ELSE</tokens>
+	<tokens type="left"><![CDATA[GE LE EQ NE '>' '<']]></tokens>
+	<tokens type="left">'+' '-'</tokens>
+	<tokens type="left">'*' '/'</tokens>
+	<tokens type="nonassoc">UMINUS</tokens>
+	<lexer>
+		<rule>
+			<pattern>[a-z]+</pattern>
+			<action>
+				_yyValue = getText ();
+				return VARIABLE;
+			</action>
+		</rule>
+		<rule>
+			<pattern>[0-9]+</pattern>
+			<action>
+				_yyValue = new Integer (Integer.parseInt (getText ()));
+				return INTEGER;
+			</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[[\-()<>=+*/;{}.]]]></pattern>
+			<action>return getText ().charAt (0);</action>
+		</rule>
+		<rule>
+			<pattern>[ \t\n]+</pattern>
+			<action>/* ignore white space */</action>
+		</rule>
+		<rule>
+			<pattern>.</pattern>
+			<action>throw new IOException ("Illegal character: " + getText ());</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+	</lexer>
+	<parser start="program">
+		<grammar rule="program">
+			<rhs>function</rhs>
+		</grammar>
+		<grammar rule="function">
+			<rhs>function stmt</rhs>
+			<rhs></rhs>
+		</grammar>
+		<grammar rule="stmt">
+			<rhs>';'</rhs>
+			<rhs>expr ';'</rhs>
+			<rhs>PRINT expr ';'</rhs>
+			<rhs>VARIABLE '=' expr ';'</rhs>
+			<rhs>WHILE '(' expr ')' stmt</rhs>
+			<rhs>IF '(' expr ')' stmt</rhs>
+			<rhs>IF '(' expr ')' stmt ELSE stmt</rhs>
+			<rhs>'{' stmt_list '}'</rhs>
+		</grammar>
+		<grammar rule="stmt_list">
+			<rhs>stmt</rhs>
+			<rhs>stmt_list stmt</rhs>
+		</grammar>
+		<grammar rule="expr">
+			<rhs>INTEGER</rhs>
+			<rhs>VARIABLE</rhs>
+			<rhs>'-' expr</rhs>
+			<rhs>expr '+' expr</rhs>
+			<rhs>expr '-' expr</rhs>
+			<rhs>expr '*' expr</rhs>
+			<rhs>expr '/' expr</rhs>
+			<rhs><![CDATA[expr '<' expr]]></rhs>
+			<rhs>expr '>' expr</rhs>
+			<rhs>expr GE expr</rhs>
+			<rhs>expr LE expr</rhs>
+			<rhs>expr NE expr</rhs>
+			<rhs>expr EQ expr</rhs>
+			<rhs>'(' expr ')'</rhs>
+		</grammar>
+	</parser>
+</cookcc>

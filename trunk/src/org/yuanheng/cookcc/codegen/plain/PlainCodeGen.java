@@ -45,7 +45,7 @@ import freemarker.template.Template;
  */
 public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.txt";
+	public final static String TEMPLATE_URI = "resources/templates/plain/plain.ftl";
 
 	private static class Resources
 	{

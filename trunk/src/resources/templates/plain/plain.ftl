@@ -79,7 +79,7 @@
 # cases
 <#list lexer.cases as i>
 <#list i.patterns as p>
-case ${p.caseValue}
+# case ${p.caseValue}
 {${i.action}}
 </#list>
 </#list>
@@ -89,8 +89,20 @@ case ${p.caseValue}
 # parser
 # ecs
 <@intarray parser.dfa.ecs/>
+<#if parser.table == "ecs">
 # table
 <@intarray3d parser.dfa.table/>
-# goto table
-<@intarray3d parser.dfa.goto/>
+<#else>
+</#if>
+# default reduce
+<@intarray parser.defaultReduce/>
+# rules
+<@intarray parser.rules/>
+# cases
+<#list parser.cases as i>
+<#list i.rhs as p>
+# case ${p.caseValue}
+{${p.action}}
+</#list>
+</#list>
 </#if>

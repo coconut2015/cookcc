@@ -26,83 +26,86 @@
  */
 package org.yuanheng.cookcc.dfa;
 
-import java.io.IOException;
 import java.util.Vector;
 
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.GrammarDoc;
-import org.yuanheng.cookcc.doc.ParserDoc;
 import org.yuanheng.cookcc.parser.Parser;
-import org.yuanheng.cookcc.parser.Production;
 
 /**
+ * Perform table compression
+ *
  * @author Heng Yuan
  * @version $Id$
  */
-public class ParserDFAInfo
+public class ECSParserTable
 {
-	public static ParserDFAInfo getParserDFAInfo (Document doc) throws IOException
-	{
-		return new ParserDFAInfo (doc.getParser (), Parser.getParser (doc));
-	}
-
-	private final ParserDoc m_parserDoc;
 	private final Parser m_parser;
-	private Object m_dfa;
+	private boolean m_computed;
 
-	private int[] m_rules;
+	private short[] m_base;
+	private short[] m_next;
+	private short[] m_check;
 
-	private short[] m_defaultReduce;
+	private short[] m_default;
+	private boolean m_error;
+	private short[] m_meta;
 
-	private ParserDFAInfo (ParserDoc parserDoc, Parser Parser)
+	public ECSParserTable (Parser lexer)
 	{
-		m_parserDoc = parserDoc;
-		m_parser = Parser;
+		m_parser = lexer;
 	}
 
-	public String getTable ()
+	private void compute ()
 	{
-		return m_parserDoc.getTable ();
+		if (m_computed)
+			return;
+		m_computed = true;
+		TableCompressor compressor = new TableCompressor (m_parser.getDFA ());
+
+		compressor.compute ();
+
+		m_base = compressor.getBase ();
+		m_next = compressor.getNext ();
+		m_check = compressor.getCheck ();
+
+		m_default = compressor.getDefault ();
+		m_error = compressor.getError ();
+		m_meta = compressor.getMeta ();
 	}
 
-	public GrammarDoc[] getCases ()
+	public int getSize ()
 	{
-		return m_parserDoc.getGrammars ();
+		return m_parser.getDFA ().size ();
 	}
 
-	public int getCaseCount ()
+	public int[] getEcs ()
 	{
-		return m_parser.getCaseCount ();
+		return m_parser.getSymbolGroups ();
 	}
 
-	public int[] getRules ()
+	public Vector<short[]> getGoto ()
 	{
-		if (m_rules != null)
-			return m_rules;
-		Vector<Production> rules = m_parser.getRules ();
-		m_rules = new int[rules.size ()];
-		for (int i = 0; i < m_rules.length; ++i)
-			m_rules[i] = rules.get (i).size ();
-
-		return m_rules;
+		return m_parser.getGoto ();
 	}
 
-	public Object getDfa ()
+	public int[][] getTable ()
 	{
-		if (m_dfa != null)
-			return m_dfa;
-		String table = getTable ();
-		if ("ecs".equals (table))
-			m_dfa = new ECSParserTable (m_parser);
-		else if ("compressed".equals (table))
-			m_dfa = new CompressedParserTable (m_parser);
-		return m_dfa;
-	}
-
-	public short[] getDefaultReduce ()
-	{
-		if (m_defaultReduce == null)
-			m_defaultReduce = m_parser.getDefaultReduces ();
-		return m_defaultReduce;
+		DFATable dfa = m_parser.getDFA ();
+		Vector<short[]> gotoTable = m_parser.getGoto ();
+		int rows = dfa.size ();
+		int usedTerminalCount = m_parser.getUsedTerminalCount ();
+		int nonTerminalCount = m_parser.getNonTerminalCount ();
+		int cols = usedTerminalCount + nonTerminalCount;
+		int[][] table = new int[rows][cols];
+		for (int i = 0; i < rows; ++i)
+		{
+			short[] states = dfa.getRow (i).getStates ();
+			short[] gotos = gotoTable.get (i);
+			int[] array = table[i];
+			for (int j = 0; j < usedTerminalCount; ++j)
+				array[j] = states[j];
+			for (int j = 0; j < nonTerminalCount; ++j)
+				array[j + usedTerminalCount] = gotos[j];
+		}
+		return table;
 	}
 }

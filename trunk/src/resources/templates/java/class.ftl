@@ -18,20 +18,26 @@ import java.io.InputStream;
 </#if>
 import java.io.IOException;
 
+<#if parser?has_content>
+import java.util.LinkedList;
+import java.util.Vector;
+</#if>
+
 <#if code.classheader?has_content>
 ${code.classheader}
 </#if>
 <#if public?has_content && public?string == "true">public </#if>class ${ccclass}
 {
-<#list lexer.states as i>
-	protected final static int ${i} = ${lexer.begins[i_index]};
-</#list>
-
 <#if tokens?has_content>
 <#list tokens as i>
 	public final static int ${i} = ${lexer.eof + i_index + 1};
 </#list>
 </#if>
+
+<#if lexer?has_content>
+<#list lexer.states as i>
+	protected final static int ${i} = ${lexer.begins[i_index]};
+</#list>
 
 	// an internal class for lazy initiation
 	private final static class cc_lexer
@@ -55,7 +61,60 @@ ${code.classheader}
 	</#if>
 </#if>
 	}
+</#if>
 
+<#if parser?has_content>
+	// an internal class for lazy initiation
+	private final static class cc_parser
+	{
+		private static char[] rule = <@intarray parser.rules/>;
+		private static char[] ecs = <@intarray parser.dfa.ecs/>;
+	<#if parser.table == "ecs">
+		private static char[][] next = {<#list parser.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
+	<#else>
+	</#if>
+		private static char[] reduce = <@intarray parser.defaultReduce/>;
+	}
+
+	private final static class ParserState	// internal tracking tool
+	{
+		int token;			// the current token type
+		Object value;		// the current value associated with token
+		short state;		// the current scan state
+
+		ParserState ()	// EOF token construction
+		{
+			this (0, null, (short)0);
+		}
+		ParserState (int token)
+		{
+			this (token, null, (short)0);
+		}
+		ParserState (int token, Object value)
+		{
+			this (token, value, (short)0);
+		}
+		ParserState (int token, Object value, short state)
+		{
+			this.token = token;
+			this.value = value;
+			this.state = state;
+		}
+	};
+
+	// lookahead stack for the parser
+	private final LinkedList _yyLookaheadStack = new LinkedList ();
+	// state stack for the parser
+	private final Vector _yyStateStack = new Vector (512, 512);
+	// flag that indicates error
+	private boolean _yyInError;
+	// internal track of the argument start
+	private int _yyArgStart;
+	// for passing value from lexer to parser
+	private Object _yyValue;
+</#if>
+
+<#if lexer?has_content>
 <#if unicode>
 	private Reader _yyIs = new InputStreamReader (System.in);
 	private char[] _yyBuffer;
@@ -77,7 +136,9 @@ ${code.classheader}
 	private boolean _yyIsNextBOL = true;
 	private boolean _yyBOL = true;
 </#if>
+</#if>
 
+<#if lexer?has_content>
 <#if unicode>
 	public void setInput (Reader reader)
 	{
@@ -492,6 +553,175 @@ ${code.classheader}
 </#if>
 		}
 	}
+</#if>
+<#if !lexer?has_content>
+	/**
+	 * Call this function to start the scanning of the input.  This abstraction function
+	 * is used internally by the parser.
+	 *
+	 * @return	a status value.
+	 * @throws	IOException
+	 *			in case of I/O error.
+	 */
+	protected abstract int yyLex () throws IOException;
+</#if>
+
+<#if parser?has_content>
+	/**
+	 * Call this function to start parsing.
+	 *
+	 * @return	0 if everything is okay, or 1 if an error occurred.
+	 * @throws	IOException
+	 *			in case of error
+	 */
+	public int yyParse () throws IOException
+	{
+		char[] cc_ecs = cc_parser.ecs;
+<#if parser.table == "ecs">
+		char[][] cc_next = cc_parser.next;
+</#if>
+		char[] cc_rule = cc_parser.rule;
+		char[] cc_reduce = cc_parser.reduce;
+
+		LinkedList cc_lookaheadStack = _yyLookaheadStack;
+		Vector cc_stateStack = _yyStateStack;
+
+		// begin with EOF token on the stack
+		if (cc_stateStack.size () == 0)
+			cc_stateStack.add (new ParserState ());
+
+		short cc_toState = 0;
+
+		for (;;)
+		{
+			ParserState cc_lookahead;
+
+			short cc_fromState;
+			char cc_ch;
+
+			if (cc_toState == 0)
+			{
+				//
+				// check if there are any lookahead tokens on stack
+				// if not, then call yyLex ()
+				//
+				if (cc_lookaheadStack.size () == 0)
+				{
+					_yyValue = null;
+					int val = yyLex ();
+					cc_lookahead = new ParserState (val, _yyValue);
+					cc_lookaheadStack.add (cc_lookahead);
+				}
+				else
+					cc_lookahead = (ParserState)cc_lookaheadStack.getLast ();
+
+				cc_ch = cc_ecs[cc_lookahead.token];
+				cc_fromState = ((ParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state;
+<#if parser.table == "ecs">
+				cc_toState = (short)cc_next[cc_fromState][cc_ch];
+<#else>
+</#if>
+			}
+
+			//
+			// first check if can reduce in case of error
+			//
+			if (_yyInError && cc_lookahead.token != 1)
+				cc_toState = (short)cc_reduce[((ParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state];
+
+			//
+			// check the value of toState and determine what to do
+			// with it
+			//
+			if (cc_toState > 0)
+			{
+				// shift
+				cc_lookahead.state = cc_toState;
+				cc_stateStack.add (cc_lookahead);
+				cc_lookaheadStack.removeLast ();
+				continue;
+			}
+			else if (cc_toState == 0 &&
+					 (!(_yyDefaultReduce || _yyInError) ||
+					  (cc_toState = (short)cc_reduce[cc_fromState]) == 0))
+			{
+				// error
+				if (yyParseError (cc_ch))
+					return 1;
+				continue;
+			}
+
+			// now the reduce action
+			short cc_ruleState = (short)-cc_toState;
+
+			//
+			// find the state that said need this non-terminal
+			//
+			cc_fromState = ((ParserState)cc_stateStack.get (cc_stateStack.size () - cc_rule[cc_ruleState] - 1)).state;
+
+			//
+			// find the state to goto after shifting the non-terminal
+			// onto the stack.
+			//
+			if (cc_ruleState == 1)
+				cc_toState = 0;
+			else
+				cc_toState = cc_ruleState;
+
+			ParserState cc_reduced = new ParserState (cc_reduce[cc_ruleState]);
+			cc_reduced.state = cc_toState;
+
+			cc_stateStack.setSize (cc_stateStack.size () - cc_rule[cc_ruleState]);
+			cc_stateStack.add (cc_reduced);
+
+			switch (cc_ruleState)
+			{
+				case 1:					// accept
+					return 0;
+<#list parser.cases as i>
+<#list i.rhs as p>
+				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
+				{
+					${p.action}
+				}
+				case ${p.caseValue + parser.caseCount}: break;
+</#list>
+</#list>
+				default:
+					throw new IOException ("Internal error in ${ccclass} parser.");
+			}
+		}
+
+	}
+
+	/**
+	 * This function reports error and return true if critical error occurred, or
+	 * false if the error has been successfully recovered.  IOException is an optional
+	 * choice of reporting error.
+	 *
+	 * @param	ecsToken
+	 *			this token is the ecs group id of the input token.
+	 * @return	true if irrecoverable error occurred.  Or simply throw an IOException.
+	 *			false if the parsing can be continued.
+	 * @throws	IOException
+	 *			in case of error.
+	 */
+	protected boolean yyParseError (char ecsToken) throws IOException
+	{
+		return true;
+	}
+
+	private Object yyGetValue (int arg)
+	{
+		return ((ParserState)_yyStateStack.get (_yyArgStart + arg)).value;
+	}
+
+	private void yySetValue (Object value)
+	{
+		((ParserState)_yyStateStack.get (_yyArgStart)).value = value;
+	}
+</#if>
+
 
 <#if main?has_content && main?string == "true">
 	/**
@@ -506,6 +736,9 @@ ${code.classheader}
 	 */
 	public static void main (String[] args) throws Exception
 	{
+<#if parser?has_content>
+		${ccclass} tmpParser = new ${ccclass} ();
+<#else>
 		${ccclass} tmpLexer = new ${ccclass} ();
 <#if unicode>
 		if (args.length > 0)
@@ -516,6 +749,7 @@ ${code.classheader}
 </#if>
 
 		tmpLexer.yyLex ();
+</#if>
 	}
 </#if>
 
@@ -526,6 +760,7 @@ ${code.default}
 /*
  * properties and statistics:
  * unicode = ${unicode?string}
+<#if lexer?has_content>
  * bol = ${lexer.bol?string}
  * backup = ${lexer.backup?string}
  * cases = ${lexer.caseCount}
@@ -555,6 +790,11 @@ ${code.default}
  * compressed table = ${lexer.eof + 1 + lexer.dfa.next?size + lexer.dfa.next?size + lexer.dfa.default?size + lexer.dfa.meta?size}
 </#if>
 </#if>
+</#if>
+<#else>
+</#if>
+ *
+<#if parser?has_content>
 </#if>
  */
 }

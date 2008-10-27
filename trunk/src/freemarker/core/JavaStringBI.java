@@ -80,7 +80,7 @@ public class JavaStringBI extends BuiltIn
 				if (i % MAX_ARRAY_LEN == 0 && i > 0)
 					buffer.append ("\" + \"");
 				TemplateNumberModel model = (TemplateNumberModel)m_seq.get (i);
-				int value = model.getAsNumber ().intValue ();
+				int value = model.getAsNumber ().shortValue () & 0xffff;
 				if (value < 128)
 				{
 					buffer.append ('\\');

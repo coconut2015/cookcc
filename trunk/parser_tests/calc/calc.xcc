@@ -65,7 +65,7 @@
 		<grammar rule="expr">
 			<rhs>INTEGER</rhs>
 			<rhs>VARIABLE</rhs>
-			<rhs>'-' expr</rhs>
+			<rhs precedence="UMINUS">'-' expr</rhs>
 			<rhs>expr '+' expr</rhs>
 			<rhs>expr '-' expr</rhs>
 			<rhs>expr '*' expr</rhs>

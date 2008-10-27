@@ -52,8 +52,8 @@ public class ParserTableOption implements OptionParser
 
 	public String toString ()
 	{
-		return OPTION_PARSERTABLE + "\t\t\tselect parser DFA table format.\n" +
-			   "\tAvailable formats:\t[ecs, compressed]";
+		return OPTION_PARSERTABLE + "\t\t\tSelect parser DFA table format.\n" +
+			   "\tAvailable formats:\t\t[ecs, compressed]";
 	}
 
 	public String getParserTable ()

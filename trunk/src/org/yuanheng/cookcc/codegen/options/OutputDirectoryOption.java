@@ -53,7 +53,7 @@ public class OutputDirectoryOption implements OptionParser
 
 	public String toString ()
 	{
-		return OPTION_OUTPUT_DIR + "\t\t\t\tselect output directory.";
+		return OPTION_OUTPUT_DIR + "\t\t\t\tSelect output directory.";
 	}
 
 	public File getOutputDirectory ()

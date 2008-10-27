@@ -53,8 +53,8 @@ public class LexerTableOption implements OptionParser
 
 	public String toString ()
 	{
-		return OPTION_LEXERTABLE + "\t\t\tselect lexer DFA table format.\n" +
-			   "\tAvailable formats:\t[ecs, full, compressed]";
+		return OPTION_LEXERTABLE + "\t\t\tSelect lexer DFA table format.\n" +
+			   "\tAvailable formats:\t\t[ecs, full, compressed]";
 	}
 
 	public String getLexerTable ()

@@ -32,14 +32,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.yuanheng.cookcc.codegen.options.ClassOption;
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
-import org.yuanheng.cookcc.codegen.options.OutputDirectoryOption;
+import org.yuanheng.cookcc.codegen.options.*;
 import org.yuanheng.cookcc.codegen.plain.TemplatedCodeGen;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
 import org.yuanheng.cookcc.lexer.Lexer;
+import org.yuanheng.cookcc.parser.Parser;
 
 import freemarker.template.Template;
 
@@ -50,7 +49,7 @@ import freemarker.template.Template;
 public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 {
 	public final static String DEFAULTS_URI = "/resources/templates/java/defaults.properties";
-	public final static String TEMPLATE_URI = "resources/templates/java/class.txt";
+	public final static String TEMPLATE_URI = "resources/templates/java/class.ftl";
 
 	public static String OPTION_PUBLIC = "-public";
 
@@ -78,6 +77,8 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	private OutputDirectoryOption m_outputDirectoryOption = new OutputDirectoryOption ();
 
 	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
+	private ParserTableOption m_parserTableOption = new ParserTableOption ();
+	private ParserDefaultReduceOption m_parserDefaultReduceOption = new ParserDefaultReduceOption ();
 
 	private ClassOption m_classOption = new ClassOption ();
 
@@ -93,7 +94,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 		public String toString ()
 		{
-			return OPTION_PUBLIC + "\t\t\t\tset class scope to public.";
+			return OPTION_PUBLIC + "\t\t\t\tSet class scope to public.";
 		}
 	};
 
@@ -101,14 +102,23 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	{
 			m_outputDirectoryOption,
 			m_lexerTableOption,
+			m_parserTableOption,
+			m_parserDefaultReduceOption,
 			m_classOption,
 			m_publicOption
 	};
 
-	private void generateLexerOutput (Document doc, File file) throws Exception
+	private void generateTemplateOutput (Document doc, File file) throws Exception
 	{
+		if (doc.getParser () != null)
+		{
+			if (m_parserDefaultReduceOption.getDefaultReduce ())
+				doc.getParser ().setDefaultReduce (true);
+		}
+
 		Lexer lexer = Lexer.getLexer (doc);
-		if (lexer == null)
+		Parser parser = Parser.getParser (doc);
+		if (lexer == null && parser == null)
 			return;
 
 		Map<String, Object> map = new HashMap<String, Object> ();
@@ -128,8 +138,16 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 		if (m_public)
 			map.put ("public", Boolean.TRUE);
-		if (m_lexerTableOption.getLexerTable ()!= null)
-			doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
+		if (lexer != null)
+		{
+			if (m_lexerTableOption.getLexerTable () != null)
+				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
+		}
+		if (parser != null)
+		{
+			if (m_parserTableOption.getParserTable () != null)
+				doc.getParser ().setTable (m_parserTableOption.getParserTable ());
+		}
 		setup (map, doc);
 		Resources.template.process (map, fw);
 		fw.close ();
@@ -161,7 +179,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 			}
 		}
 
-		generateLexerOutput (doc, new File (dir, className + ".java"));
+		generateTemplateOutput (doc, new File (dir, className + ".java"));
 	}
 
 	public OptionParser[] getOptions ()

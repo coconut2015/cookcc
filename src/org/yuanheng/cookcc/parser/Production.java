@@ -30,7 +30,7 @@ package org.yuanheng.cookcc.parser;
  * @author Heng Yuan
  * @version $Id$
  */
-class Production implements Comparable<Production>
+public class Production implements Comparable<Production>
 {
 	private final short m_id;
 	private final int m_symbol;
@@ -60,7 +60,7 @@ class Production implements Comparable<Production>
 		return m_production;
 	}
 
-	public void setProduction (int[] production)
+	void setProduction (int[] production)
 	{
 		m_production = production;
 	}
@@ -75,7 +75,7 @@ class Production implements Comparable<Production>
 		return m_precedence;
 	}
 
-	public void setPrecedence (Token precedence)
+	void setPrecedence (Token precedence)
 	{
 		if (precedence == null)
 			precedence = Token.DEFAULT;
@@ -87,7 +87,7 @@ class Production implements Comparable<Production>
 		return m_lineNumber;
 	}
 
-	public void setLineNumber (int lineNumber)
+	void setLineNumber (int lineNumber)
 	{
 		m_lineNumber = lineNumber;
 	}

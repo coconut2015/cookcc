@@ -52,8 +52,8 @@ public class Parser
 
 	public static String START = "@start";
 
-	public static int FINISH = 1;
-	public static int ERROR = 2;
+	public static int FINISH = 0;
+	public static int ERROR = 1;
 
 //	private static Token s_epsilon = new Token ("{e}", 0, EPSILON, Token.NONASSOC);
 	private static Token s_finish = new Token ("$", 0, FINISH, Token.NONASSOC);
@@ -80,7 +80,6 @@ public class Parser
 		return parser;
 	}
 
-	int EPSILON = 0;
 	int m_maxTerminal;
 
 	private short m_productionIdCounter = 1;
@@ -151,17 +150,18 @@ public class Parser
 
 		m_maxTerminal = parseTerminals ();
 
+		// add start condition
+		Production startProduction = new Production (getNonterminal (START), m_productionIdCounter++);
+		m_productions.add (startProduction);
+		m_productionMap.put (m_nonTerminals.get (START), new Production[]{ startProduction });
+
 		parseProductions ();
 
-		// add start condition
-		Production startProduction = new Production (getNonterminal (START), (short)m_productionIdCounter++);
 		ParserDoc parserDoc = m_doc.getParser ();
 		Integer startNonTerminal = parserDoc.getStart () == null ? m_productions.get (0).getSymbol () : m_nonTerminals.get (parserDoc.getStart ());
 		if (startNonTerminal == null)
 			throw new ParserException (0, "Unable to find the start symbol for the parser.");
 		startProduction.setProduction (new int[]{ startNonTerminal });
-		m_productions.add (startProduction);
-		m_productionMap.put (m_nonTerminals.get (START), new Production[]{ startProduction });
 
 		// now we need to add the internal symbols
 
@@ -254,34 +254,38 @@ public class Parser
 				while (terms.length () > 0)
 				{
 					pos[0] = 0;
-					if (terms.startsWith ("%prec"))
-					{
-						terms = terms.substring ("%prec".length ()).trim ();
-						if (terms.length () == 0)
-							throw new ParserException (lineNumber, "Unexpected end of the input after %prec.");
-						int sym = parseTerm (lineNumber, terms, pos);
-						terms = terms.substring (pos[0]).trim ();
-						Token tok = m_terminalMap.get (sym);
-						if (tok == null)
-							throw new ParserException (lineNumber, "Invalid terminal specified for %prec.");
-						production.setPrecedence (tok);
-						symbolList.add (sym);
-					}
-					else
-					{
-						int sym = parseTerm (lineNumber, terms, pos);
-						if (sym <= m_maxTerminal)
-							production.setPrecedence (m_terminalMap.get (sym));
-						terms = terms.substring (pos[0]).trim ();
-						symbolList.add (sym);
-					}
+					int sym = parseTerm (lineNumber, terms, pos);
+					if (sym <= m_maxTerminal)
+						production.setPrecedence (m_terminalMap.get (sym));
+					terms = terms.substring (pos[0]).trim ();
+					symbolList.add (sym);
 				}
 				int[] prod = new int[symbolList.size ()];
 				int i = 0;
 				for (Integer s : symbolList)
 					prod[i++] = s.intValue ();
 				production.setProduction (prod);
+
+				if (rhs.getPrecedence () != null)
+				{
+					String name = rhs.getPrecedence ().trim ();
+					if (name.length () > 0)
+					{
+						int[] value = new int[1];
+						checkTerminalName (lineNumber, name, value);
+						Token tok;
+						if (value[0] == 0)
+							tok = m_terminals.get (name);
+						else
+							tok = m_terminalMap.get (value[0]);
+						if (tok == null)
+							throw new ParserException (lineNumber, "Invalid terminal specified for %prec.");
+						production.setPrecedence (tok);
+					}
+				}
+
 				prods.add (production);
+				rhs.setCaseValue (production.getId ());
 				m_productions.add (production);
 			}
 			m_productionMap.put (lhs, prods.toArray (new Production[prods.size ()]));
@@ -787,16 +791,21 @@ public class Parser
 		return null;
 	}
 
+	public boolean getDefaultReduce ()
+	{
+		return m_doc.getParser ().getDefaultReduce ();
+	}
 
 	//
 	// check for reduced states and print states information.
 	//
 	// the reason to combine them is to produce conflicts message
 	//
-	boolean _compact = false;
 	private void reduce ()
 	{
 		verboseSection ("DFA states: " + _DFAStates.size ());
+		boolean defaultReduce = getDefaultReduce ();
+		verbose ("default reduce = " + defaultReduce);
 
 		for (int i = 0; i < _DFAStates.size (); ++i)
 		{
@@ -806,20 +815,21 @@ public class Parser
 
 			short[] column = m_dfa.getRow (i).getStates ();
 
-			if (_compact)
+			if (defaultReduce)
 			{
-				Production defaultReduce = hasDefaultReduce (_DFAStates.get (i));
-				if (defaultReduce != null)
+				Production reduceState = hasDefaultReduce (_DFAStates.get (i));
+				if (reduceState != null)
 				{
 					for (int j = 0; j < column.length; ++j)
 						if (column[j] == 0)
-							column[j] = (short)-defaultReduce.getId ();
+							column[j] = (short)-reduceState.getId ();
 				}
 			}
 
 			for (int j = 0; j < m_usedTerminalCount; ++j)
 			{
 				Production reduceState = hasReduce (_DFAStates.get (i), m_usedSymbols[j]);
+				String reason = "";
 
 				if (reduceState != null && column[j] > 0)
 				{
@@ -844,12 +854,12 @@ public class Parser
 					if (shiftPrecedence.level < reducePrecedence.level)
 					{
 						// we go for the reduce
-						verbose ("\tprecedence favors reduce on " + m_symbolMap.get (m_usedSymbols[j]));
+						reason = ", due to precedence";
 					}
 					else if (shiftPrecedence.level > reducePrecedence.level)
 					{
 						// we go for the shift
-						verbose ("\tpreducedence favors shift on " + m_symbolMap.get (m_usedSymbols[j]));
+						reason = ", due to precedence";
 						reduceState = null;
 					}
 					else
@@ -857,26 +867,26 @@ public class Parser
 						// now check associativity
 						if (shiftPrecedence.type == Token.LEFT)
 						{
-							verbose ("\tleft associativity favors reduce on " + m_symbolMap.get (m_usedSymbols[j]));
+							reason = ", due to left associativity";
 						}
 						else if (shiftPrecedence.type == Token.RIGHT)
 						{
 							// right associativity
 							if (shiftPrecedence.level > 0)
 							{
-								verbose ("\tright associativity favors shift on " + m_symbolMap.get (m_usedSymbols[j]));
+								reason = ", due to right associativity";
 								reduceState = null;
 							}
 							else
 							{
-								verbose ("\tshift/reduce conflict on " + m_symbolMap.get (m_usedSymbols[j]));
+								reason = ", due to shift/reduce conflict";
 								reduceState = null;
 								++m_shiftConflict;
 							}
 						}
 						else // NONASSOC
 						{
-							verbose ("shift/reduce conflict on non-associativity terminal " + m_symbolMap.get (m_usedSymbols[j]));
+							reason = ", due to shift/reduce conflict on non-associative terminal";
 							++m_shiftConflict;
 						}
 					}
@@ -890,9 +900,9 @@ public class Parser
 					{
 						m_out.print ('\t' + m_symbolMap.get (m_usedSymbols[j]));
 						if (column[j] > 0)
-							m_out.println ("\tshift, goto to state " + column[j]);
+							m_out.println ("\tshift, goto to state " + column[j] + reason);
 						else if (column[j] < -1)
-							m_out.println ("\treduce to rule " + (-column[j]));
+							m_out.println ("\treduce to rule " + (-column[j]) + reason);
 						else if (column[j] == -1)
 							m_out.println ("\tAccept");
 					}
@@ -940,6 +950,11 @@ public class Parser
 		return m_usedSymbols;
 	}
 
+	public int[] getSymbolGroups ()
+	{
+		return m_symbolGroups;
+	}
+
 	public int[] getUsedTerminals ()
 	{
 		int[] usedTerminals = new int[m_usedTerminalCount];
@@ -971,7 +986,8 @@ public class Parser
 	String toString (Production production)
 	{
 		StringBuffer buffer = new StringBuffer ();
-		buffer.append (m_symbolMap.get (production.getSymbol ())).append (" :");
+		buffer.append (production.getId ()).append ('\t');
+		buffer.append (m_symbolMap.get (production.getSymbol ())).append ("\t:\t");
 		for (int p : production.getProduction ())
 			buffer.append (" ").append (m_symbolMap.get (p));
 		return buffer.toString ();
@@ -1029,5 +1045,32 @@ public class Parser
 			buffer.append (toString (item)).append ("\n");
 		}
 		return buffer.toString ();
+	}
+
+	String toString (Token token)
+	{
+		return token.name + "[" + token.level + "]";
+	}
+
+	public Vector<Production> getRules ()
+	{
+		return m_productions;
+	}
+
+	public short[] getDefaultReduces ()
+	{
+		short[] reduceStates = new short[_DFAStates.size ()];
+		for (int i = 0; i < _DFAStates.size (); ++i)
+		{
+			Production reduceState = hasDefaultReduce (_DFAStates.get (i));
+			if (reduceState != null)
+				reduceStates[i] = reduceState.getId ();
+		}
+		return reduceStates;
+	}
+
+	public int getCaseCount ()
+	{
+		return m_productionIdCounter;
 	}
 }

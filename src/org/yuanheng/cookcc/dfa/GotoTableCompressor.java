@@ -249,8 +249,12 @@ class GotoTableCompressor
 	//
 	//
 	//
-	void compute ()
+	void compute (short[] base, short[] next, short[] check)
 	{
+		m_base = base;
+		m_next = next;
+		m_check = check;
+
 		m_baseAdd = m_base.length;
 
 		m_base = TableCompressor.resize (m_base, m_base.length + m_dfaCopy.size (), SHORT_MIN);
@@ -288,15 +292,15 @@ class GotoTableCompressor
 		doFillStates ();
 
 		// shrink base and default array to save some space
-		for (int i = m_base.length - 1; i > 0; --i)
-		{
-			if (m_base[i] != SHORT_MIN)
-			{
+//		for (int i = m_base.length - 1; i > 0; --i)
+//		{
+//			if (m_base[i] != SHORT_MIN)
+//			{
 //				_baseArray.resize (i + 1);
 //				_defaultArray.resize (i + 1 - _baseAdd);
-				break;
-			}
-		}
+//				break;
+//			}
+//		}
 
 		//
 		// process all SHORT_MIN in _checkArray and _nextArray to
@@ -324,31 +328,25 @@ class GotoTableCompressor
 			if (m_default[i] == SHORT_MIN)
 				m_default[i] = 0;
 		}
+	}
 
-		/*
-		_osSource << sizeType << ' ' << prefix << "_goto_default[" << _defaultArray.size () << "] =" << outEndl
-		<< _defaultArray << ";" << outEndl << outEndl;
+	short[] getNext ()
+	{
+		return m_next;
+	}
 
-		_osSource << sizeType << ' ' << prefix << "_base[" << _baseArray.size () << "] =" << outEndl
-		<< _baseArray << ";" << outEndl << outEndl;
-		_osSource << sizeType << ' ' << prefix << "_next[" << _nextArray.size () << "] =" << outEndl
-		<< _nextArray << ";" << outEndl << outEndl;
-		_osSource << sizeType << ' ' << prefix << "_check[" << _checkArray.size () << "] =" << outEndl
-		<< _checkArray << ";" << outEndl << outEndl;
+	short[] getCheck ()
+	{
+		return m_check;
+	}
 
-		_osSource << "/////////////////////////////////////////////////////////" << outEndl
-		<< "//" << outEndl
-		<< "// GOTO state lookup macro" << outEndl
-		<< "//" << outEndl
-		<< "/////////////////////////////////////////////////////////" << outEndl
-		<< outEndl
-		<< "#define " << macroName << "_BASEADD " << _baseAdd << outEndl
-		<< "#define " << macroName << "(outstate,instate,a)\tregister int e = a; \\" << outEndl
-		<< "\t\t\t\toutstate = instate + " << _baseAdd << "; \\" << outEndl
-		<< "\t\t\t\twhile (" << prefix << "_check[e + " << prefix << "_base[outstate]] != outstate) \\" << outEndl
-		<< "\t\t\t\t  outstate = " << prefix << "_goto_default[outstate]; \\" << outEndl
-		<< "\t\t\t\toutstate = " << prefix << "_next[e + " << prefix << "_base[outstate]];" << outEndl
-		<< outEndl;
-		*/
+	short[] getBase ()
+	{
+		return m_base;
+	}
+
+	short[] getDefault ()
+	{
+		return m_default;
 	}
 }

@@ -36,7 +36,7 @@ import org.yuanheng.cookcc.parser.Parser;
  * @author Heng Yuan
  * @version $Id$
  */
-public class ParserTable
+public class CompressedParserTable
 {
 	private final Parser m_parser;
 	private boolean m_computed;
@@ -49,7 +49,7 @@ public class ParserTable
 	private boolean m_error;
 	private short[] m_meta;
 
-	public ParserTable (Parser lexer)
+	public CompressedParserTable (Parser lexer)
 	{
 		m_parser = lexer;
 	}
@@ -79,7 +79,7 @@ public class ParserTable
 
 	public int[] getEcs ()
 	{
-		return m_parser.getUsedTerminals ();
+		return m_parser.getSymbolGroups ();
 	}
 
 	public Vector<short[]> getGoto ()

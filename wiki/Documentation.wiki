@@ -1,7 +1,7 @@
 #summary Project Documentation
 #labels Featured
 
-= Introduction =
+= CookCC Documentation =
 
 CookCC is intended to be a lexer and parser generator project, combined.  It is written in Java, but the [TargetLanguages target languages] can vary.  It uses a template approach to generate source codes, so it is quite easy to add a new target language.  CookCC also comes with a suite of [http://code.google.com/p/cookcc/source/browse/trunk/tests/ test cases] to assist creating and testing new target languages.
 
@@ -10,3 +10,15 @@ The input to CookCC is currently limited to an XML ([http://code.google.com/p/co
 Currently, the v0.1 release contains only the [Lexer lexer] generator.
 
 The [Parser parser] generator is being worked on.  The main work left is the Java code generator.
+
+== Command Line Options ==
+
+|| {{{-help}}} || Display available command line options. ||
+|| {{{-lang <language>}}} || Select output language.  Default is java.  ||
+|| {{{-quiet}}} || Suppress console messages. ||
+|| {{{-analysis}}} || Generate an [http://code.google.com/p/cookcc/source/browse/trunk/parser_tests/calc/cookcc_parser_analysis.txt analysis file] for the parser grammar.  The file name is fixed to {{{cookcc_parser_analysis.txt}}}. ||
+|| {{{-debug}}} || Generate debugging code.  The effect depends on the target language code generator. ||
+
+Language specific options can be found by specifying the language along with {{{-help}}}.  For example:
+
+{{{cookcc -help -lang java}}}

@@ -2,4 +2,19 @@
 
 = Parser =
 
-Currently the parser generator has not being implemented.  The generated parser should be [http://en.wikipedia.org/wiki/LALR_parser LALR(1)] and optionally [http://en.wikipedia.org/wiki/LR_parser LR(1)] (might be impractical).
+Currently, the parser generator is in the process of implementation.  The generated parser is [http://en.wikipedia.org/wiki/LALR_parser LALR(1)].
+
+== Parser Table Format ==
+
+Currently, the following table formats are supported.
+
+|| {{{ecs}}} || Good when there are not a lot symbols and states. ||
+|| {{{compressed}}} || A smaller table in most cases at some performance cost. ||
+
+== Default Reduce ==
+
+When this option is turned on, DFA states that contain a reduce state would convert all 0 entries to the reduce state.  This approach can make the compressed table more compact, at the expense of more difficult error recovery.
+
+== Analysis Output ==
+
+When the command line option {{{-analysis}}} is specified.  A file named [http://code.google.com/p/cookcc/source/browse/trunk/parser_tests/book/cookcc_parser_analysis.txt cookcc_parser_analysis.txt] is generated in the current directory that contains the detail of the parser.  It can be useful in analyzing the grammar.

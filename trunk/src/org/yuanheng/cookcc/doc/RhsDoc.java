@@ -37,6 +37,7 @@ public class RhsDoc
 	private int m_lineNumber;
 	private int m_actionLineNumber;
 	private String m_action = "";
+	private String m_precedence;
 
 	public RhsDoc ()
 	{
@@ -103,5 +104,15 @@ public class RhsDoc
 		if (action == null)
 			action = "";
 		m_action = action;
+	}
+
+	public String getPrecedence ()
+	{
+		return m_precedence;
+	}
+
+	public void setPrecedence (String precedence)
+	{
+		m_precedence = precedence;
 	}
 }

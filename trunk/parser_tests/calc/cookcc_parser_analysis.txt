@@ -39,34 +39,34 @@ used terminal count = 24
 used symbol count = 30
 
 ----------- productions ----------
-@start : program
-program : function
-function : function stmt
-function :
-stmt : ';'
-stmt : expr ';'
-stmt : PRINT expr ';'
-stmt : VARIABLE '=' expr ';'
-stmt : WHILE '(' expr ')' stmt
-stmt : IF '(' expr ')' stmt
-stmt : IF '(' expr ')' stmt ELSE stmt
-stmt : '{' stmt_list '}'
-stmt_list : stmt
-stmt_list : stmt_list stmt
-expr : INTEGER
-expr : VARIABLE
-expr : '-' expr
-expr : expr '+' expr
-expr : expr '-' expr
-expr : expr '*' expr
-expr : expr '/' expr
-expr : expr '<' expr
-expr : expr '>' expr
-expr : expr GE expr
-expr : expr LE expr
-expr : expr NE expr
-expr : expr EQ expr
-expr : '(' expr ')'
+1	@start	:	 program
+2	program	:	 function
+3	function	:	 function stmt
+4	function	:	
+5	stmt	:	 ';'
+6	stmt	:	 expr ';'
+7	stmt	:	 PRINT expr ';'
+8	stmt	:	 VARIABLE '=' expr ';'
+9	stmt	:	 WHILE '(' expr ')' stmt
+10	stmt	:	 IF '(' expr ')' stmt
+11	stmt	:	 IF '(' expr ')' stmt ELSE stmt
+12	stmt	:	 '{' stmt_list '}'
+13	stmt_list	:	 stmt
+14	stmt_list	:	 stmt_list stmt
+15	expr	:	 INTEGER
+16	expr	:	 VARIABLE
+17	expr	:	 '-' expr
+18	expr	:	 expr '+' expr
+19	expr	:	 expr '-' expr
+20	expr	:	 expr '*' expr
+21	expr	:	 expr '/' expr
+22	expr	:	 expr '<' expr
+23	expr	:	 expr '>' expr
+24	expr	:	 expr GE expr
+25	expr	:	 expr LE expr
+26	expr	:	 expr NE expr
+27	expr	:	 expr EQ expr
+28	expr	:	 '(' expr ')'
 
 ----------- First Sets ----------
 FIRST(@start) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]

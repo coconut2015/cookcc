@@ -1081,4 +1081,12 @@ public class Parser
 	{
 		return m_maxTerminal;
 	}
+
+	public String[] getSymbols ()
+	{
+		String[] symbols = new String[m_usedSymbolCount];
+		for (int i = 0; i < symbols.length; ++i)
+			symbols[i] = m_symbolMap.get (m_usedSymbols[i]);
+		return symbols;
+	}
 }

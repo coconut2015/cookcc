@@ -73,10 +73,10 @@ ${code.classheader}
 		private static char[][] next = {<#list parser.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
 	<#else>
 	</#if>
-<#if parser.defaultReduce?has_content>
-		private static char[] reduce = <@intarray parser.defaultReduce/>;
-</#if>
 		private static char[] lhs = <@intarray parser.lhs/>;
+	<#if debug>
+		private static String[] symbols = {<#list parser.symbols as i><#if i_index &gt; 0>,</#if>"${i}"</#list>};
+	</#if>
 	}
 
 	private final static class YYParserState	// internal tracking tool
@@ -239,6 +239,17 @@ ${code.classheader}
 	protected boolean debugLexerBackup (int backupState, String backupString)
 	{
 		System.err.println ("lexer backup: " + _yyBaseState + ", " + backupState + ", " + backupString);
+		return true;
+	}
+
+	protected boolean debugParser (int fromState, int toState, int ecsToken)
+	{
+		if (toState == 0)
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", error");
+		else if (toState < 0)
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", reduce");
+		else
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", shift");
 		return true;
 	}
 
@@ -587,9 +598,6 @@ ${code.classheader}
 		char[][] cc_next = cc_parser.next;
 </#if>
 		char[] cc_rule = cc_parser.rule;
-<#if parser.defaultReduce?has_content>
-		char[] cc_reduce = cc_parser.reduce;
-</#if>
 		char[] cc_lhs = cc_parser.lhs;
 
 		LinkedList cc_lookaheadStack = _yyLookaheadStack;
@@ -628,12 +636,8 @@ ${code.classheader}
 <#else>
 </#if>
 
-<#if parser.defaultReduce?has_content>
-			//
-			// first check if can reduce in case of error
-			//
-			if (_yyInError && cc_lookahead.token != 1)
-				cc_toState = (short)cc_reduce[((YYParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state];
+<#if debug>
+			debugParser (cc_fromState, cc_toState, cc_ch);
 </#if>
 
 			//
@@ -648,12 +652,7 @@ ${code.classheader}
 				cc_lookaheadStack.removeLast ();
 				continue;
 			}
-<#if parser.defaultReduce?has_content>
-			else if (cc_toState == 0 && !_yyInError &&
-					 (cc_toState = (short)cc_reduce[cc_fromState]) == 0)
-<#else>
 			else if (cc_toState == 0)
-</#if>
 			{
 				// error
 				if (yyParseError (cc_ch))

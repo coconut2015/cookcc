@@ -53,6 +53,8 @@ public class ParserDFAInfo
 	private int[] m_rules;
 
 	private short[] m_defaultReduce;
+	private int[] m_lhs;
+	private int[] m_ecs;
 
 	private ParserDFAInfo (ParserDoc parserDoc, Parser Parser)
 	{
@@ -75,16 +77,49 @@ public class ParserDFAInfo
 		return m_parser.getCaseCount ();
 	}
 
+	public int[] getEcs ()
+	{
+		if (m_ecs != null)
+			return m_ecs;
+		int maxTerminal = m_parser.getMaxTerminal ();
+		m_ecs = new int[maxTerminal + 1];
+		int[] symbols = m_parser.getSymbolGroups ();
+		System.arraycopy (symbols, 0, m_ecs, 0, maxTerminal);
+		return m_ecs;
+	}
+
+	public int getMaxTerminal ()
+	{
+		return m_parser.getMaxTerminal ();
+	}
+
 	public int[] getRules ()
 	{
 		if (m_rules != null)
 			return m_rules;
 		Vector<Production> rules = m_parser.getRules ();
-		m_rules = new int[rules.size ()];
-		for (int i = 0; i < m_rules.length; ++i)
-			m_rules[i] = rules.get (i).size ();
+
+		// plus 1 since our reduce states cannot be 0 (0 indicates no shifts or reduces)
+		m_rules = new int[rules.size () + 1];
+		for (int i = 0; i < rules.size (); ++i)
+			m_rules[i + 1] = rules.get (i).size ();
 
 		return m_rules;
+	}
+
+	public int[] getLhs ()
+	{
+		if (m_lhs != null)
+			return m_lhs;
+
+		Vector<Production> rules = m_parser.getRules ();
+		int[] groups = m_parser.getSymbolGroups ();
+		// plus 1 since our reduce states cannot be 0 (0 indicates no shifts or reduces)
+		m_lhs = new int[rules.size () + 1];
+		for (int i = 0; i < rules.size (); ++i)
+			m_lhs[i + 1] = groups[rules.get (i).getSymbol ()];
+
+		return m_lhs;
 	}
 
 	public Object getDfa ()

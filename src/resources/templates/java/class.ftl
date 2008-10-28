@@ -68,12 +68,15 @@ ${code.classheader}
 	private final static class cc_parser
 	{
 		private static char[] rule = <@intarray parser.rules/>;
-		private static char[] ecs = <@intarray parser.dfa.ecs/>;
+		private static char[] ecs = <@intarray parser.ecs/>;
 	<#if parser.table == "ecs">
 		private static char[][] next = {<#list parser.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
 	<#else>
 	</#if>
+<#if parser.defaultReduce?has_content>
 		private static char[] reduce = <@intarray parser.defaultReduce/>;
+</#if>
+		private static char[] lhs = <@intarray parser.lhs/>;
 	}
 
 	private final static class ParserState	// internal tracking tool
@@ -556,14 +559,17 @@ ${code.classheader}
 </#if>
 <#if !lexer?has_content>
 	/**
-	 * Call this function to start the scanning of the input.  This abstraction function
-	 * is used internally by the parser.
+	 * Override this function to start the scanning of the input.  This function
+	 * is used by the parser to scan the tokens.
 	 *
 	 * @return	a status value.
 	 * @throws	IOException
 	 *			in case of I/O error.
 	 */
-	protected abstract int yyLex () throws IOException;
+	protected int yyLex () throws IOException
+	{
+		return 0;
+	}
 </#if>
 
 <#if parser?has_content>
@@ -581,12 +587,14 @@ ${code.classheader}
 		char[][] cc_next = cc_parser.next;
 </#if>
 		char[] cc_rule = cc_parser.rule;
+<#if parser.defaultReduce?has_content>
 		char[] cc_reduce = cc_parser.reduce;
+</#if>
+		char[] cc_lhs = cc_parser.lhs;
 
 		LinkedList cc_lookaheadStack = _yyLookaheadStack;
 		Vector cc_stateStack = _yyStateStack;
 
-		// begin with EOF token on the stack
 		if (cc_stateStack.size () == 0)
 			cc_stateStack.add (new ParserState ());
 
@@ -599,35 +607,34 @@ ${code.classheader}
 			short cc_fromState;
 			char cc_ch;
 
-			if (cc_toState == 0)
+			//
+			// check if there are any lookahead tokens on stack
+			// if not, then call yyLex ()
+			//
+			if (cc_lookaheadStack.size () == 0)
 			{
-				//
-				// check if there are any lookahead tokens on stack
-				// if not, then call yyLex ()
-				//
-				if (cc_lookaheadStack.size () == 0)
-				{
-					_yyValue = null;
-					int val = yyLex ();
-					cc_lookahead = new ParserState (val, _yyValue);
-					cc_lookaheadStack.add (cc_lookahead);
-				}
-				else
-					cc_lookahead = (ParserState)cc_lookaheadStack.getLast ();
+				_yyValue = null;
+				int val = yyLex ();
+				cc_lookahead = new ParserState (val, _yyValue);
+				cc_lookaheadStack.add (cc_lookahead);
+			}
+			else
+				cc_lookahead = (ParserState)cc_lookaheadStack.getLast ();
 
-				cc_ch = cc_ecs[cc_lookahead.token];
-				cc_fromState = ((ParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state;
+			cc_ch = cc_ecs[cc_lookahead.token];
+			cc_fromState = ((ParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state;
 <#if parser.table == "ecs">
-				cc_toState = (short)cc_next[cc_fromState][cc_ch];
+			cc_toState = (short)cc_next[cc_fromState][cc_ch];
 <#else>
 </#if>
-			}
 
+<#if parser.defaultReduce?has_content>
 			//
 			// first check if can reduce in case of error
 			//
 			if (_yyInError && cc_lookahead.token != 1)
 				cc_toState = (short)cc_reduce[((ParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state];
+</#if>
 
 			//
 			// check the value of toState and determine what to do
@@ -641,9 +648,12 @@ ${code.classheader}
 				cc_lookaheadStack.removeLast ();
 				continue;
 			}
-			else if (cc_toState == 0 &&
-					 (!(_yyDefaultReduce || _yyInError) ||
-					  (cc_toState = (short)cc_reduce[cc_fromState]) == 0))
+<#if parser.defaultReduce?has_content>
+			else if (cc_toState == 0 && !_yyInError &&
+					 (cc_toState = (short)cc_reduce[cc_fromState]) == 0)
+<#else>
+			else if (cc_toState == 0)
+</#if>
 			{
 				// error
 				if (yyParseError (cc_ch))
@@ -654,25 +664,25 @@ ${code.classheader}
 			// now the reduce action
 			short cc_ruleState = (short)-cc_toState;
 
+			_yyArgStart = cc_stateStack.size () - cc_rule[cc_ruleState] - 1;
 			//
 			// find the state that said need this non-terminal
 			//
-			cc_fromState = ((ParserState)cc_stateStack.get (cc_stateStack.size () - cc_rule[cc_ruleState] - 1)).state;
+			cc_fromState = ((ParserState)cc_stateStack.get (_yyArgStart)).state;
 
 			//
 			// find the state to goto after shifting the non-terminal
 			// onto the stack.
 			//
 			if (cc_ruleState == 1)
-				cc_toState = 0;
+				cc_toState = 0;			// reset the parser
 			else
-				cc_toState = cc_ruleState;
+<#if parser.table == "ecs">
+				cc_toState = (short)cc_next[cc_fromState][cc_lhs[cc_ruleState]];
+<#else>
+</#if>
 
-			ParserState cc_reduced = new ParserState (cc_reduce[cc_ruleState]);
-			cc_reduced.state = cc_toState;
-
-			cc_stateStack.setSize (cc_stateStack.size () - cc_rule[cc_ruleState]);
-			cc_stateStack.add (cc_reduced);
+			_yyValue = null;
 
 			switch (cc_ruleState)
 			{
@@ -690,6 +700,11 @@ ${code.classheader}
 				default:
 					throw new IOException ("Internal error in ${ccclass} parser.");
 			}
+
+			//
+			ParserState cc_reduced = new ParserState (-cc_ruleState, _yyValue, cc_toState);
+			cc_stateStack.setSize (_yyArgStart + 1);
+			cc_stateStack.add (cc_reduced);
 		}
 
 	}
@@ -716,10 +731,6 @@ ${code.classheader}
 		return ((ParserState)_yyStateStack.get (_yyArgStart + arg)).value;
 	}
 
-	private void yySetValue (Object value)
-	{
-		((ParserState)_yyStateStack.get (_yyArgStart)).value = value;
-	}
 </#if>
 
 
@@ -738,15 +749,26 @@ ${code.classheader}
 	{
 <#if parser?has_content>
 		${ccclass} tmpParser = new ${ccclass} ();
+	<#if lexer?has_content>
+		<#if unicode>
+		if (args.length > 0)
+			tmpParser.setInput (new InputStreamReader (new FileInputStream (args[0])));
+		<#else>
+		if (args.length > 0)
+			tmpParser.setInput (new FileInputStream (args[0]));
+		</#if>
+	</#if>
+
+		tmpParser.yyParse ();
 <#else>
 		${ccclass} tmpLexer = new ${ccclass} ();
-<#if unicode>
+	<#if unicode>
 		if (args.length > 0)
 			tmpLexer.setInput (new InputStreamReader (new FileInputStream (args[0])));
-<#else>
+	<#else>
 		if (args.length > 0)
 			tmpLexer.setInput (new FileInputStream (args[0]));
-</#if>
+	</#if>
 
 		tmpLexer.yyLex ();
 </#if>

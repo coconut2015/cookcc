@@ -94,8 +94,10 @@
 <@intarray3d parser.dfa.table/>
 <#else>
 </#if>
+<#if parser.defaultReduce?has_content>
 # default reduce
 <@intarray parser.defaultReduce/>
+</#if>
 # rules
 <@intarray parser.rules/>
 # cases

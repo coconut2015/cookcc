@@ -96,7 +96,7 @@
 			<action>$$ = new PrintNode ($2);</action>
 
 			<rhs>VARIABLE '=' expr ';'</rhs>
-			<action>$$ = new AssignNode ((String)$1, $3);</action>
+			<action>$$ = new AssignNode ($1, $3);</action>
 
 			<rhs>WHILE '(' expr ')' stmt</rhs>
 			<action>$$ = new WhileNode ($3, $5);</action>
@@ -119,7 +119,7 @@
 		</grammar>
 		<grammar rule="expr">
 			<rhs>INTEGER</rhs>
-			<action>$$ = new ConstantNode ((Integer)$1);</action>
+			<action>$$ = new ConstantNode ($1);</action>
 
 			<rhs>VARIABLE</rhs>
 			<action>

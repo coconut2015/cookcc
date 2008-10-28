@@ -704,8 +704,8 @@ ${code.classheader}
 					throw new IOException ("Internal error in ${ccclass} parser.");
 			}
 
-			//
 			YYParserState cc_reduced = new YYParserState (-cc_ruleState, _yyValue, cc_toState);
+			_yyValue = null;
 			cc_stateStack.setSize (_yyArgStart + 1);
 			cc_stateStack.add (cc_reduced);
 		}

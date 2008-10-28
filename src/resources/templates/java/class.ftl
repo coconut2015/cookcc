@@ -662,7 +662,7 @@ ${code.classheader}
 			}
 
 			// now the reduce action
-			short cc_ruleState = (short)-cc_toState;
+			int cc_ruleState = -cc_toState;
 
 			_yyArgStart = cc_stateStack.size () - cc_rule[cc_ruleState] - 1;
 			//

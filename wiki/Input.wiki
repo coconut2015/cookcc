@@ -4,4 +4,4 @@
 
 Currently, only [CookCCXML XML] input files are accepted.
 
-CookCC is sensitive to the extension name since it uses file extension to match the internal input filter.
+Input files must have the exact file extensions since CookCC internally uses file extension to find the correct input filter.

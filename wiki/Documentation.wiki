@@ -14,10 +14,11 @@ The [Parser parser] generator is being worked on.  The main work left is the Jav
 == Command Line Options ==
 
 || {{{-help}}} || Display available command line options. ||
-|| {{{-lang <language>}}} || Select output language.  Default is java.  ||
+|| {{{-lang <language>}}} || Select the output language.  Default is java.  ||
 || {{{-quiet}}} || Suppress console messages. ||
-|| {{{-analysis}}} || Generate an [http://code.google.com/p/cookcc/source/browse/trunk/parser_tests/calc/cookcc_parser_analysis.txt analysis file] for the parser grammar.  The file name is fixed to {{{cookcc_parser_analysis.txt}}}. ||
 || {{{-debug}}} || Generate debugging code.  The effect depends on the target language code generator. ||
+|| {{{-analysis}}} || Generate an [http://code.google.com/p/cookcc/source/browse/trunk/parser_tests/calc/cookcc_parser_analysis.txt analysis file] for the parser grammar.  The file name is fixed to {{{cookcc_parser_analysis.txt}}}. ||
+|| {{{-defaultreduce}}} || Generate a compact parser table by assuming that entries would be reduced by default, even in cases of unwanted look ahead. ||
 
 Language specific options can be found by specifying the language along with {{{-help}}}.  For example:
 

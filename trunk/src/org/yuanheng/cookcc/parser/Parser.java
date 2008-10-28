@@ -208,8 +208,7 @@ public class Parser
 	{
 		int precedenceLevel = 0;
 		TokensDoc[] tokensDocs = m_doc.getTokens ();
-		CCL ccl = m_doc.isUnicode () ? CCL.getCharacterCCL () : CCL.getByteCCL ();
-		int maxTerminalValue = ccl.MAX_SYMBOL;
+		int maxTerminalValue = 255;
 
 		int[] checkValue = new int[1];
 		for (TokensDoc tokensDoc : tokensDocs)

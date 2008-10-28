@@ -32,8 +32,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
 import org.yuanheng.cookcc.codegen.options.*;
-import org.yuanheng.cookcc.codegen.plain.TemplatedCodeGen;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;

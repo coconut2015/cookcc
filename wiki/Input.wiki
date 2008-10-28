@@ -1,0 +1,7 @@
+#summary Describes CookCC input file formats.
+
+= CookCC Input Files =
+
+Currently, only [CookCCXML XML] input files are accepted.
+
+CookCC is sensitive to the extension name since it uses file extension to match the internal input filter.

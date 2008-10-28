@@ -70,7 +70,7 @@ For example, the following character classes are all equivalent:
 == Character Class Manipulations ==
 A character class can be manipulated in several ways:
 
-|| Operation || Description || Example ||
+|| *Operation* || *Description* || *Example* ||
 || {{{ {+} }}} || Merging two character classes. || {{{[A-Z]{+}[a-z]}}} is the same as {{{[A-Za-z]}}} ||
 || {{{ {-} }}} || Remove all characters in the second character class from the first character class || {{{[A-Za-z]{-}[a-z]}}} is the same as {{{[A-Z}}} ||
-|| {{{ ^ }}} || {{{[[:^alpha:]]}}} is the same as {{{[\0-\xff]{-}[a-zA-Z]}}} ||
+|| {{{ ^ }}} || Not operation || {{{[[:^alpha:]]}}} is the same as {{{[\0-\xff]{-}[a-zA-Z]}}} ||

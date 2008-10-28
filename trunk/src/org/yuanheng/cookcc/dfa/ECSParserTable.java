@@ -39,52 +39,15 @@ import org.yuanheng.cookcc.parser.Parser;
 public class ECSParserTable
 {
 	private final Parser m_parser;
-	private boolean m_computed;
-
-	private short[] m_base;
-	private short[] m_next;
-	private short[] m_check;
-
-	private short[] m_default;
-	private boolean m_error;
-	private short[] m_meta;
 
 	public ECSParserTable (Parser lexer)
 	{
 		m_parser = lexer;
 	}
 
-	private void compute ()
-	{
-		if (m_computed)
-			return;
-		m_computed = true;
-		TableCompressor compressor = new TableCompressor (m_parser.getDFA ());
-
-		compressor.compute ();
-
-		m_base = compressor.getBase ();
-		m_next = compressor.getNext ();
-		m_check = compressor.getCheck ();
-
-		m_default = compressor.getDefault ();
-		m_error = compressor.getError ();
-		m_meta = compressor.getMeta ();
-	}
-
 	public int getSize ()
 	{
 		return m_parser.getDFA ().size ();
-	}
-
-	public int[] getEcs ()
-	{
-		return m_parser.getSymbolGroups ();
-	}
-
-	public Vector<short[]> getGoto ()
-	{
-		return m_parser.getGoto ();
 	}
 
 	public int[][] getTable ()

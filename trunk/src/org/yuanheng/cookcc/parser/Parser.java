@@ -1059,6 +1059,8 @@ public class Parser
 
 	public short[] getDefaultReduces ()
 	{
+		if (!getDefaultReduce ())
+			return null;
 		short[] reduceStates = new short[_DFAStates.size ()];
 		for (int i = 0; i < _DFAStates.size (); ++i)
 		{
@@ -1072,5 +1074,11 @@ public class Parser
 	public int getCaseCount ()
 	{
 		return m_productionIdCounter;
+	}
+
+
+	public int getMaxTerminal ()
+	{
+		return m_maxTerminal;
 	}
 }

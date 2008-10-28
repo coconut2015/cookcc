@@ -106,7 +106,7 @@ public class Parser
 	private final DFATable m_dfa = new DFATable ();
 	private final Vector<short[]> m_goto = new Vector<short[]> ();
 
-	private final LinkedList<String> m_tokens = new LinkedList<String> ();
+	private final LinkedList<Token> m_tokens = new LinkedList<Token> ();
 
 	final Vector<ItemSet> _DFAStates = new Vector<ItemSet> ();
 	final Map<ItemSet, Short> _DFASet = new TreeMap<ItemSet, Short> ();
@@ -231,7 +231,7 @@ public class Parser
 				if (m_symbolMap.get (v) == null)
 					m_symbolMap.put (v, name);
 				if (checkValue[0] == 0)
-					m_tokens.add (name);
+					m_tokens.add (token);
 			}
 		}
 		return maxTerminalValue;
@@ -552,7 +552,7 @@ public class Parser
 	 * For output purpose.
 	 * @return	user defined tokens that needs value definitions.
 	 */
-	public LinkedList<String> getTokens ()
+	public LinkedList<Token> getTokens ()
 	{
 		return m_tokens;
 	}

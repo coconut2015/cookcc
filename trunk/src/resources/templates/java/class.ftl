@@ -28,9 +28,9 @@ ${code.classheader}
 </#if>
 <#if public?has_content && public?string == "true">public </#if>class ${ccclass}
 {
-<#if tokens?has_content>
-<#list tokens as i>
-	public final static int ${i} = ${lexer.eof + i_index + 1};
+<#if parser?has_content && parser.tokens?has_content>
+<#list parser.tokens as i>
+	protected final static int ${i.name} = ${i.value};
 </#list>
 </#if>
 

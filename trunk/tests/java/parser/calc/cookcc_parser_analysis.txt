@@ -14,25 +14,25 @@
 11	:	62	:	'>'
 12	:	123	:	'{'
 13	:	125	:	'}'
-14	:	257	:	VARIABLE
-15	:	258	:	INTEGER
-16	:	259	:	WHILE
-17	:	260	:	IF
-18	:	261	:	PRINT
-19	:	263	:	ELSE
-20	:	264	:	GE
-21	:	265	:	LE
-22	:	266	:	EQ
-23	:	267	:	NE
-24	:	269	:	@start
-25	:	270	:	program
-26	:	271	:	function
-27	:	272	:	stmt
-28	:	273	:	expr
-29	:	274	:	stmt_list
+14	:	256	:	VARIABLE
+15	:	257	:	INTEGER
+16	:	258	:	WHILE
+17	:	259	:	IF
+18	:	260	:	PRINT
+19	:	262	:	ELSE
+20	:	263	:	GE
+21	:	264	:	LE
+22	:	265	:	EQ
+23	:	266	:	NE
+24	:	268	:	@start
+25	:	269	:	program
+26	:	270	:	function
+27	:	271	:	stmt
+28	:	272	:	expr
+29	:	273	:	stmt_list
 
 ----------- statistics ----------
-max terminal = 268
+max terminal = 267
 non terminal count = 6
 terminal count = 30
 used terminal count = 24

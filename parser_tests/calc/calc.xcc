@@ -28,6 +28,38 @@
 			<action>return getText ().charAt (0);</action>
 		</rule>
 		<rule>
+			<pattern>">="</pattern>
+			<action>return GE;</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA["<="]]></pattern>
+			<action>return LE;</action>
+		</rule>
+		<rule>
+			<pattern>"=="</pattern>
+			<action>return EQ;</action>
+		</rule>
+		<rule>
+			<pattern>"!="</pattern>
+			<action>return NE;</action>
+		</rule>
+		<rule>
+			<pattern>"while"</pattern>
+			<action>return WHILE;</action>
+		</rule>
+		<rule>
+			<pattern>"if"</pattern>
+			<action>return IF;</action>
+		</rule>
+		<rule>
+			<pattern>"else"</pattern>
+			<action>return ELSE;</action>
+		</rule>
+		<rule>
+			<pattern>"print"</pattern>
+			<action>return PRINT;</action>
+		</rule>
+		<rule>
 			<pattern>[ \t\n]+</pattern>
 			<action>/* ignore white space */</action>
 		</rule>

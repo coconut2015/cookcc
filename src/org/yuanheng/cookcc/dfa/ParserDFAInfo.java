@@ -27,6 +27,7 @@
 package org.yuanheng.cookcc.dfa;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Vector;
 
 import org.yuanheng.cookcc.doc.Document;
@@ -34,6 +35,7 @@ import org.yuanheng.cookcc.doc.GrammarDoc;
 import org.yuanheng.cookcc.doc.ParserDoc;
 import org.yuanheng.cookcc.parser.Parser;
 import org.yuanheng.cookcc.parser.Production;
+import org.yuanheng.cookcc.parser.Token;
 
 /**
  * @author Heng Yuan
@@ -140,5 +142,10 @@ public class ParserDFAInfo
 			return m_symbols;
 		m_symbols = m_parser.getSymbols ();
 		return m_symbols;
+	}
+
+	public LinkedList<Token> getTokens ()
+	{
+		return m_parser.getTokens ();
 	}
 }

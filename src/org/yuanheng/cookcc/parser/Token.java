@@ -30,7 +30,7 @@ package org.yuanheng.cookcc.parser;
  * @author Heng Yuan
  * @version $Id$
  */
-class Token
+public class Token
 {
 	public final static int LEFT = 1;
 	public final static int RIGHT = 2;
@@ -62,5 +62,15 @@ class Token
 			this.type = LEFT;
 		else
 			this.type = RIGHT;
+	}
+
+	public String getName ()
+	{
+		return name;
+	}
+
+	public int getValue ()
+	{
+		return value;
 	}
 }

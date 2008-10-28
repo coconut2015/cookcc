@@ -2,7 +2,9 @@
 
 = XML Format =
 
-CookCC contains can generator both lexers and parsers.  The input XML ([http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd DTD]) reflects thus contains a [LexerXML lexer] section and a [ParserXML parser] section.  The file extension is {{{*.xcc}}}.
+CookCC contains can generator both lexers and parsers.  The input XML ([http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd DTD]) thus contains a [LexerXML lexer] section and a [ParserXML parser] section.  Only one of the two section is required.  The file extension is {{{*.xcc}}}.
+
+There are plenty of examples shown in the [http://code.google.com/p/cookcc/source/browse/trunk/tests/ test cases].
 
 = Overview =
 

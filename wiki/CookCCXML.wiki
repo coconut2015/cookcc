@@ -30,9 +30,9 @@ A sample XML looks like:
 		<!-- parser section -->
 	</parser>
 
-	<code name="default">
-		<!-- code section, can appear any where directly under the <cookcc> tag. -->
-	</code>
+	<code name="default"><![CDATA[
+		/* code section, can appear any where directly under the <cookcc> tag. */
+	]]></code>
 </cookcc>
 }}}
 

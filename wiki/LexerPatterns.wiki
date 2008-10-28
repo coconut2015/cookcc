@@ -48,7 +48,7 @@ Escape Characters:
 || *{{{\u002a}}}* || the unicode character with hexadecimal value 2a (exactly 4 digits) ||
 Escape sequences with {{{\}}} proceeds any character would treat treat that character as the literal character, rather than special characters.
 
-Additionally, there are predefined POSIX character classes (ASCII only):
+== POSIX Character Classes ==
 || *Class* || *Equivalent* ||
 || {{{[:alnum:]}}} || {{{[a-zA-Z0-9]}}} ||
 || {{{[:alpha:]}}} || {{{[a-zA-Z]}}} ||

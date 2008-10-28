@@ -18,10 +18,10 @@ Some examples can be found in test cases for [http://code.google.com/p/cookcc/so
 || *{{{r?}}}* || zero or one r's (that is, "an optional r") ||
 || *{{{r{2,5} }}}* || anywhere from two to five r's ||
 || *{{{r{2,} }}}* || two or more r's ||
-|| *{{{r{4} }}}* || exactly 4 r's ||
-|| *{{{ {name} }}}* || the expansion of the "shortcut" definition ||
+|| *{{{r{4} }}}* || exactly 4 {{{r}}}'s ||
+|| *{{{ {name} }}}* || Replace with the {{{<shortcut>}}} pattern of the same name. ||
 || *{{{"[xyz]\"foo"}}}* || the literal string: *{{{[xyz]"foo}}}* ||
-|| *{{{\x}}}* || if x is an `a', `b', `f', `n', `r', `t', or `v', then the ANSI-C interpretation of \x. Otherwise, a literal `x' (used to escape operators such as *{{{*}}}*) ||
+|| *{{{\x}}}* || Escape character, see the section below. ||
 || *{{{\0}}}* || the character with 0 (ASCII code 0) ||
 || *{{{(r)}}}* || match an r ||
 || *{{{rs}}}* || the concatenation of the regular expression *r* followed by the regular expression *s* ||

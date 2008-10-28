@@ -230,6 +230,7 @@ ${code.classheader}
 		_yyBaseState = baseState;
 	}
 
+	<#if debug>
 	protected boolean debugLexer (int matchedState, int accept)
 	{
 		System.err.println ("lexer: " + _yyBaseState + ", " + matchedState + ", " + accept + ", " + getText ());
@@ -241,6 +242,7 @@ ${code.classheader}
 		System.err.println ("lexer backup: " + _yyBaseState + ", " + backupState + ", " + backupString);
 		return true;
 	}
+	</#if>
 
 	// read more data from the input
 	protected boolean yyRefreshBuffer () throws IOException
@@ -573,6 +575,7 @@ ${code.classheader}
 </#if>
 
 <#if parser?has_content>
+	<#if debug>
 	protected boolean debugParser (int fromState, int toState, int ecsToken)
 	{
 		if (toState == 0)
@@ -583,6 +586,7 @@ ${code.classheader}
 			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", shift");
 		return true;
 	}
+	</#if>
 
 	/**
 	 * Call this function to start parsing.

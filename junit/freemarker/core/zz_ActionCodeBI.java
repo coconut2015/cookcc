@@ -38,6 +38,6 @@ public class zz_ActionCodeBI
 	@Test
 	public void testActionParser () throws Exception
 	{
-		Assert.assertArrayEquals (new String[]{"abc", "$$", "def", "$1", "hij" }, ActionCodeBI.parseActionCode ("abc$$def$1hij"));
+		Assert.assertArrayEquals (new String[]{"abc", "$", "def", "1", "hij" }, ActionCodeBI.parseActionCode ("abc$$def$1hij"));
 	}
 }

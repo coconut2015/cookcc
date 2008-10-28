@@ -52,9 +52,9 @@ public class ParserDFAInfo
 
 	private int[] m_rules;
 
-	private short[] m_defaultReduce;
 	private int[] m_lhs;
 	private int[] m_ecs;
+	private String[] m_symbols;
 
 	private ParserDFAInfo (ParserDoc parserDoc, Parser Parser)
 	{
@@ -134,10 +134,11 @@ public class ParserDFAInfo
 		return m_dfa;
 	}
 
-	public short[] getDefaultReduce ()
+	public String[] getSymbols ()
 	{
-		if (m_defaultReduce == null)
-			m_defaultReduce = m_parser.getDefaultReduces ();
-		return m_defaultReduce;
+		if (m_symbols != null)
+			return m_symbols;
+		m_symbols = m_parser.getSymbols ();
+		return m_symbols;
 	}
 }

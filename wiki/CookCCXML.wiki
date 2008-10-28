@@ -43,7 +43,7 @@ Some XML editors such as the one in [http://www.jetbrains.com/idea/ IntelliJ IDE
 This is the document root of the XML file.  It only a single attribute to indicate where or not the lexer parses unicode.  By default, {{{unicode}}} is false.
 
 == {{{<code>}}} ==
-The {{{<code>}}} tag can specify any pieces of code.  There can be multiple of such tags and it can locate any where directly under {{{<cookcc>}}} tag.  The name of the code needs to be unique.  If the name is not specified, it is assumed to be {{{"default"}}}.  The exact usage of that code depends on the template being used.  For Java output, you can take a look at the [http://code.google.com/p/cookcc/source/browse/trunk/src/resources/templates/java/class.txt Java output template] to get a rough idea.
+The {{{<code>}}} tag can specify any pieces of code.  There can be multiple of such tags and it can locate any where directly under {{{<cookcc>}}} tag.  The name of the code needs to be unique.  If the name is not specified, it is assumed to be {{{"default"}}}.  The exact usage of that code depends on the template being used.  For Java output, you can take a look at the [http://code.google.com/p/cookcc/source/browse/trunk/src/resources/templates/java/class.ftl Java output template] to get a rough idea.
 
 One of the traditional limitations of lex/yacc is that they only have rather limited places to insert codes.  But for many object-oriented languages, there are file header section, class header section, instance / class / local variables etc.  There are simply not enough room with the bare {{{%%}}}.  Using {{{<code>}}} simplifies the problem.
 

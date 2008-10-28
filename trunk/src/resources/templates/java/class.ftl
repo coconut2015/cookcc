@@ -1,6 +1,7 @@
 <#setting number_format=0>
 <#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
 <#macro intarray a>${a?javastring()}</#macro>
+<#macro type a b c d>${a?type(b,c,d)}</#macro>
 <#if code.fileheader?has_content>
 ${code.fileheader}
 </#if>
@@ -695,7 +696,7 @@ ${code.classheader}
 <#list i.rhs as p>
 				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
 				{
-					${p.action}
+					<#list p.action?actioncode() as a><#if a_index % 2 == 0>${a}<#else><#if a == "$">_yyValue<#else><@type p a parser.formats "yyGetValue (" + a + ")"/></#if></#if></#list>
 				}
 				case ${p.caseValue + parser.caseCount}: break;
 </#list>

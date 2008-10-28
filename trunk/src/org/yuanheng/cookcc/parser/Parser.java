@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -47,6 +48,7 @@ import org.yuanheng.cookcc.lexer.CCL;
 public class Parser
 {
 	private final static String PROP_PARSER = "Parser";
+	private final static String PROP_PRODUCTION = "Production";
 
 	private static Pattern s_tokenNamePattern = Pattern.compile ("[a-zA-Z_][a-zA-Z_0-9]*");
 
@@ -107,6 +109,8 @@ public class Parser
 	private final Vector<short[]> m_goto = new Vector<short[]> ();
 
 	private final LinkedList<Token> m_tokens = new LinkedList<Token> ();
+
+	private final HashMap<Integer, MessageFormat> m_formats = new HashMap<Integer, MessageFormat> ();
 
 	final Vector<ItemSet> _DFAStates = new Vector<ItemSet> ();
 	final Map<ItemSet, Short> _DFASet = new TreeMap<ItemSet, Short> ();
@@ -285,6 +289,7 @@ public class Parser
 
 				prods.add (production);
 				rhs.setCaseValue (production.getId ());
+				rhs.setProperty (PROP_PRODUCTION, production);
 				m_productions.add (production);
 			}
 			m_productionMap.put (lhs, prods.toArray (new Production[prods.size ()]));
@@ -1087,5 +1092,36 @@ public class Parser
 		for (int i = 0; i < symbols.length; ++i)
 			symbols[i] = m_symbolMap.get (m_usedSymbols[i]);
 		return symbols;
+	}
+
+	public Map<Integer, MessageFormat> getFormats ()
+	{
+		if (m_formats.size () > 0)
+			return m_formats;
+
+		int[] value = new int[1];
+		for (TypeDoc typeDoc : m_doc.getParser ().getTypes ())
+		{
+			MessageFormat format = typeDoc.getFormat ();
+			for (String name : typeDoc.getSymbols ())
+			{
+				checkTerminalName (0, name, value);
+				if (value[0] > 0)
+					m_formats.put (value[0], format);
+				else
+				{
+					Token token = m_terminals.get (name);
+					if (token != null)
+						m_formats.put (token.value, format);
+					else
+					{
+						Integer sym = m_nonTerminals.get (name);
+						if (sym != null)
+							m_formats.put (sym, format);
+					}
+				}
+			}
+		}
+		return m_formats;
 	}
 }

@@ -42,6 +42,8 @@ public class ParserDoc extends TreeDoc
 	private final LinkedList<GrammarDoc> m_grammarList = new LinkedList<GrammarDoc> ();
 	private final HashMap<String, GrammarDoc> m_grammarMap = new HashMap<String, GrammarDoc> ();
 
+	private final LinkedList<TypeDoc> m_types = new LinkedList<TypeDoc> ();
+
 	private String m_start;
 	private boolean m_defaultReduce;
 
@@ -84,6 +86,11 @@ public class ParserDoc extends TreeDoc
 		return grammarDoc;
 	}
 
+	public void addType (TypeDoc type)
+	{
+		m_types.add (type);
+	}
+
 	public void setTable (String type)
 	{
 		setProperty (PROP_TABLE_TYPE, type);
@@ -100,5 +107,10 @@ public class ParserDoc extends TreeDoc
 	public GrammarDoc[] getGrammars ()
 	{
 		return m_grammarList.toArray (new GrammarDoc[m_grammarList.size ()]);
+	}
+
+	public TypeDoc[] getTypes ()
+	{
+		return m_types.toArray (new TypeDoc[m_types.size ()]);
 	}
 }

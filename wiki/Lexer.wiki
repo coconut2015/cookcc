@@ -14,7 +14,7 @@ CookCC supports both 8-bit and 16-bit DFA tables.  16-bit DFA tables are intende
 
 == Pattern Warnings ==
 
-CookCC generates warnings on patterns that cause [http://code.google.com/p/cookcc/source/browse/trunk/tests/backup backup], patterns that were never reached, or states that have [http://code.google.com/p/cookcc/source/browse/trunk/tests/incomplete incomplete pattnerns].
+CookCC generates warnings on patterns that cause [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/lexer/backup backup], patterns that were [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/lexer/backup never reached], or states that have [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/lexer/incomplete incomplete pattnerns].
 
 
 == Trail Context ==

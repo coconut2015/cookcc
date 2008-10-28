@@ -31,6 +31,7 @@ import java.io.PrintWriter;
 import org.yuanheng.cookcc.doc.GrammarDoc;
 import org.yuanheng.cookcc.doc.ParserDoc;
 import org.yuanheng.cookcc.doc.RhsDoc;
+import org.yuanheng.cookcc.doc.TypeDoc;
 
 /**
  * @author Heng Yuan
@@ -54,11 +55,22 @@ class XmlParserOutput
 		p.println ("\t\t</grammar>");
 	}
 
+	private void printType (TypeDoc type, PrintWriter p)
+	{
+		p.print ("\t\t<type format=\"" + type.getFormat ().toPattern () + "\"><![CDATA[");
+		for (String t : type.getSymbols ())
+			p.print (" " + t);
+		p.println (" ]]></type>");
+	}
+
 	public void printParserDoc (ParserDoc doc, PrintWriter p)
 	{
 		if (doc == null)
 			return;
 		p.println ("\t<parser" + (doc.getStart () == null ? "" : ( " start=\"" + doc.getStart () + "\")")) + ">");
+
+		for (TypeDoc type : doc.getTypes ())
+			printType (type, p);
 
 		for (GrammarDoc grammar : doc.getGrammars ())
 			printGrammar (grammar, p);

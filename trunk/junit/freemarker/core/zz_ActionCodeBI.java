@@ -24,7 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen;
+package freemarker.core;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,11 +33,11 @@ import org.junit.Test;
  * @author Heng Yuan
  * @version $Id$
  */
-public class zz_ActionParser
+public class zz_ActionCodeBI
 {
 	@Test
 	public void testActionParser () throws Exception
 	{
-		Assert.assertArrayEquals (new String[]{"abc", "$$", "def", "$1", "hij" }, ActionParser.parseAction ("abc$$def$1hij"));
+		Assert.assertArrayEquals (new String[]{"abc", "$$", "def", "$1", "hij" }, ActionCodeBI.parseActionCode ("abc$$def$1hij"));
 	}
 }

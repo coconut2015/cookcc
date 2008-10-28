@@ -38,6 +38,7 @@ import org.yuanheng.cookcc.dfa.ParserDFAInfo;
 import org.yuanheng.cookcc.doc.Document;
 
 import freemarker.cache.TemplateLoader;
+import freemarker.core.ActionCodeBI;
 import freemarker.core.HexBI;
 import freemarker.core.JavaStringBI;
 import freemarker.template.Configuration;
@@ -58,6 +59,7 @@ public abstract class TemplatedCodeGen
 	{
 		HexBI.init ();
 		JavaStringBI.init ();
+		ActionCodeBI.init ();
 
 		Configuration cfg = new Configuration ();
 		cfg.setTemplateLoader (new TemplateLoader()

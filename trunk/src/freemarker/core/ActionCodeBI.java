@@ -83,7 +83,7 @@ public class ActionCodeBI extends BuiltIn
 	 * <p/>
 	 * parseAction ("abc$$def$1hij")
 	 * <p/>
-	 * would return {"abc", "$$", "def", "$1", "hij"}.
+	 * would return {"abc", "$", "def", "1", "hij"}.
 	 * <p/>
 	 * This piece code was written by gloomyturkey on mitbbs.
 	 *
@@ -106,7 +106,7 @@ public class ActionCodeBI extends BuiltIn
 			{
 				content.add (input.substring (index, start));
 			}
-			spliter.add (input.substring (start, end));
+			spliter.add (input.substring (start + 1, end));
 			index = end;
 		}
 		if (index < input.length ())

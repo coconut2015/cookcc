@@ -73,4 +73,9 @@ A character class can be manipulated in several ways:
 || *Operation* || *Description* || *Example* ||
 || {{{ {+} }}} || Merging two character classes. || {{{[A-Z]{+}[a-z]}}} is the same as {{{[A-Za-z]}}} ||
 || {{{ {-} }}} || Remove all characters in the second character class from the first character class || {{{[A-Za-z]{-}[a-z]}}} is the same as {{{[A-Z}}} ||
-|| {{{ ^ }}} || Not operation || {{{[[:^alpha:]]}}} is the same as {{{[\0-\xff]{-}[a-zA-Z]}}} ||
+|| {{{ ^ }}} || Not operation || {{{[[:^alpha:]]}}} is the same as {{{[\0-\xff]{-}[a-zA-Z]}}}.  {{{[^ \t\r\n]}}} is the same as all non-space characters. ||
+
+== Tips ==
+ * Unless one is generating a full DFA table, it is usually a good idea not to generate new character classes.  For example, {{{(a|b)}}} can be better written as {{{[ab]}}} which would reduce the DFA table size for {{{ecs}}} and {{{compressed}}} format quite a bit.  This approach is particularly necessary when there are lots of DFA states.
+ * Long strings of keyword matches such as {{{"while"}}}, {{{"continue"}}} can increase the DFA table size slightly.  Consider using hash tables or [http://en.wikipedia.org/wiki/Perfect_hash_function perfect hash] instead if the tools are available in the target language.
+ * On the other hand, specifying long patterns without causing backups can increase the lexer performances at the expense of more DFA states.

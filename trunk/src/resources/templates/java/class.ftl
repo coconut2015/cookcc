@@ -79,25 +79,25 @@ ${code.classheader}
 		private static char[] lhs = <@intarray parser.lhs/>;
 	}
 
-	private final static class ParserState	// internal tracking tool
+	private final static class YYParserState	// internal tracking tool
 	{
 		int token;			// the current token type
 		Object value;		// the current value associated with token
 		short state;		// the current scan state
 
-		ParserState ()	// EOF token construction
+		YYParserState ()	// EOF token construction
 		{
 			this (0, null, (short)0);
 		}
-		ParserState (int token)
+		YYParserState (int token)
 		{
 			this (token, null, (short)0);
 		}
-		ParserState (int token, Object value)
+		YYParserState (int token, Object value)
 		{
 			this (token, value, (short)0);
 		}
-		ParserState (int token, Object value, short state)
+		YYParserState (int token, Object value, short state)
 		{
 			this.token = token;
 			this.value = value;
@@ -596,13 +596,13 @@ ${code.classheader}
 		Vector cc_stateStack = _yyStateStack;
 
 		if (cc_stateStack.size () == 0)
-			cc_stateStack.add (new ParserState ());
+			cc_stateStack.add (new YYParserState ());
 
 		short cc_toState = 0;
 
 		for (;;)
 		{
-			ParserState cc_lookahead;
+			YYParserState cc_lookahead;
 
 			short cc_fromState;
 			char cc_ch;
@@ -615,14 +615,14 @@ ${code.classheader}
 			{
 				_yyValue = null;
 				int val = yyLex ();
-				cc_lookahead = new ParserState (val, _yyValue);
+				cc_lookahead = new YYParserState (val, _yyValue);
 				cc_lookaheadStack.add (cc_lookahead);
 			}
 			else
-				cc_lookahead = (ParserState)cc_lookaheadStack.getLast ();
+				cc_lookahead = (YYParserState)cc_lookaheadStack.getLast ();
 
 			cc_ch = cc_ecs[cc_lookahead.token];
-			cc_fromState = ((ParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state;
+			cc_fromState = ((YYParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state;
 <#if parser.table == "ecs">
 			cc_toState = (short)cc_next[cc_fromState][cc_ch];
 <#else>
@@ -633,7 +633,7 @@ ${code.classheader}
 			// first check if can reduce in case of error
 			//
 			if (_yyInError && cc_lookahead.token != 1)
-				cc_toState = (short)cc_reduce[((ParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state];
+				cc_toState = (short)cc_reduce[((YYParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state];
 </#if>
 
 			//
@@ -668,7 +668,7 @@ ${code.classheader}
 			//
 			// find the state that said need this non-terminal
 			//
-			cc_fromState = ((ParserState)cc_stateStack.get (_yyArgStart)).state;
+			cc_fromState = ((YYParserState)cc_stateStack.get (_yyArgStart)).state;
 
 			//
 			// find the state to goto after shifting the non-terminal
@@ -702,7 +702,7 @@ ${code.classheader}
 			}
 
 			//
-			ParserState cc_reduced = new ParserState (-cc_ruleState, _yyValue, cc_toState);
+			YYParserState cc_reduced = new YYParserState (-cc_ruleState, _yyValue, cc_toState);
 			cc_stateStack.setSize (_yyArgStart + 1);
 			cc_stateStack.add (cc_reduced);
 		}
@@ -728,7 +728,7 @@ ${code.classheader}
 
 	private Object yyGetValue (int arg)
 	{
-		return ((ParserState)_yyStateStack.get (_yyArgStart + arg)).value;
+		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).value;
 	}
 
 </#if>

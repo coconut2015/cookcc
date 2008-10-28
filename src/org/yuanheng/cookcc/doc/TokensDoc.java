@@ -26,8 +26,9 @@
  */
 package org.yuanheng.cookcc.doc;
 
-import java.util.LinkedList;
-import java.util.StringTokenizer;
+import java.io.IOException;
+
+import org.yuanheng.cookcc.util.TokenParser;
 
 /**
  * @author Heng Yuan
@@ -58,19 +59,9 @@ public class TokensDoc extends TreeDoc
 		return m_tokens;
 	}
 
-	public void setTokens (String tokens)
+	public void setTokens (String tokens) throws IOException
 	{
-		StringTokenizer tokenizer = new StringTokenizer (tokens, ", \r\n");
-		LinkedList<String> list = new LinkedList<String> ();
-		while (tokenizer.hasMoreTokens ())
-		{
-			String tok = tokenizer.nextToken ().trim ();
-			if (tok.length () == 0)
-				continue;
-			if (!list.contains (tok))
-				list.add (tok);
-		}
-		m_tokens = list.toArray (new String[list.size ()]);
+		m_tokens = TokenParser.parseString (tokens);
 	}
 
 	public int getLineNumber ()

@@ -41,6 +41,7 @@ import freemarker.cache.TemplateLoader;
 import freemarker.core.ActionCodeBI;
 import freemarker.core.HexBI;
 import freemarker.core.JavaStringBI;
+import freemarker.core.TypeBI;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
@@ -60,6 +61,7 @@ public abstract class TemplatedCodeGen
 		HexBI.init ();
 		JavaStringBI.init ();
 		ActionCodeBI.init ();
+		TypeBI.init ();
 
 		Configuration cfg = new Configuration ();
 		cfg.setTemplateLoader (new TemplateLoader()

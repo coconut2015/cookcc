@@ -27,7 +27,9 @@
 package org.yuanheng.cookcc.dfa;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Vector;
 
 import org.yuanheng.cookcc.doc.Document;
@@ -147,5 +149,10 @@ public class ParserDFAInfo
 	public LinkedList<Token> getTokens ()
 	{
 		return m_parser.getTokens ();
+	}
+
+	public Map<Integer, MessageFormat> getFormats ()
+	{
+		return m_parser.getFormats ();
 	}
 }

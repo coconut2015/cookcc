@@ -73,98 +73,101 @@
 		</rule>
 	</lexer>
 	<parser start="program">
+		<type format="((Node){0})">stmt expr stmt_list</type>
+		<type format="((String){0})">VARIABLE</type>
+		<type format="((Integer){0})">INTEGER</type>
 		<grammar rule="program">
 			<rhs>function</rhs>
 			<action>return 0;</action>
 		</grammar>
 		<grammar rule="function">
 			<rhs>function stmt</rhs>
-			<action>interpret ((Node)yyGetValue (2));</action>
+			<action>interpret ($2);</action>
 			<rhs></rhs>
 		</grammar>
 		<grammar rule="stmt">
 			<rhs>';'</rhs>
-			<action>_yyValue = new SemiColonNode (); /* just to prevent null pointers */</action>
+			<action>$$ = new SemiColonNode ();</action>
 
 			<rhs>expr ';'</rhs>
-			<action>_yyValue = yyGetValue (1);</action>
+			<action>$$ = $1;</action>
 
 			<rhs>PRINT expr ';'</rhs>
-			<action>_yyValue = new PrintNode ((Node)yyGetValue (2));</action>
+			<action>$$ = new PrintNode ($2);</action>
 
 			<rhs>VARIABLE '=' expr ';'</rhs>
-			<action>_yyValue = new AssignNode ((String)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new AssignNode ((String)$1, $3);</action>
 
 			<rhs>WHILE '(' expr ')' stmt</rhs>
-			<action>_yyValue = new WhileNode ((Node)yyGetValue (3), (Node)yyGetValue (5));</action>
+			<action>$$ = new WhileNode ($3, $5);</action>
 
 			<rhs precedence="IFX">IF '(' expr ')' stmt</rhs>
-			<action>_yyValue = new IfNode ((Node)yyGetValue (3), (Node)yyGetValue (5), null);</action>
+			<action>$$ = new IfNode ($3, $5, null);</action>
 
 			<rhs>IF '(' expr ')' stmt ELSE stmt</rhs>
-			<action>_yyValue = new IfNode ((Node)yyGetValue (3), (Node)yyGetValue (5), (Node)yyGetValue (7));</action>
+			<action>$$ = new IfNode ($3, $5, $7);</action>
 
 			<rhs>'{' stmt_list '}'</rhs>
-			<action>_yyValue = yyGetValue (2);</action>
+			<action>$$ = $2;</action>
 		</grammar>
 		<grammar rule="stmt_list">
 			<rhs>stmt</rhs>
-			<action>_yyValue = yyGetValue (1);</action>
+			<action>$$ = $1;</action>
 
 			<rhs>stmt_list stmt</rhs>
-			<action>_yyValue = new SemiColonNode ((Node)yyGetValue (1), (Node)yyGetValue (2));</action>
+			<action>$$ = new SemiColonNode ($1, $2);</action>
 		</grammar>
 		<grammar rule="expr">
 			<rhs>INTEGER</rhs>
-			<action>_yyValue = new ConstantNode ((Integer)yyGetValue (1));</action>
+			<action>$$ = new ConstantNode ((Integer)$1);</action>
 
 			<rhs>VARIABLE</rhs>
 			<action>
-				String var = (String)yyGetValue (1);
+				String var = (String)$1;
 				IdNode idNode = (IdNode)m_varMap.get (var);
 				if (idNode == null)
 				{
 					idNode = new IdNode (var);
 					m_varMap.put (var, idNode);
 				}
-				_yyValue = idNode;
+				$$ = idNode;
 			</action>
 
 			<rhs precedence="UMINUS">'-' expr</rhs>
-			<action>_yyValue = new ExprNode (UMINUS, (Node)yyGetValue (1), null);</action>
+			<action>$$ = new ExprNode (UMINUS, $2, null);</action>
 
 			<rhs>expr '+' expr</rhs>
-			<action>_yyValue = new ExprNode ('+', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode ('+', $1, $3);</action>
 
 			<rhs>expr '-' expr</rhs>
-			<action>_yyValue = new ExprNode ('-', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode ('-', $1, $3);</action>
 
 			<rhs>expr '*' expr</rhs>
-			<action>_yyValue = new ExprNode ('*', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode ('*', $1, $3);</action>
 
 			<rhs>expr '/' expr</rhs>
-			<action>_yyValue = new ExprNode ('/', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode ('/', $1, $3);</action>
 
 			<rhs><![CDATA[expr '<' expr]]></rhs>
-			<action><![CDATA[_yyValue = new ExprNode ('<', (Node)yyGetValue (1), (Node)yyGetValue (3));]]></action>
+			<action><![CDATA[$$ = new ExprNode ('<', $1, $3);]]></action>
 
 			<rhs>expr '>' expr</rhs>
-			<action>_yyValue = new ExprNode ('>', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode ('>', $1, $3);</action>
 
 			<rhs>expr GE expr</rhs>
-			<action>_yyValue = new ExprNode (GE, (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode (GE, $1, $3);</action>
 
 			<rhs>expr LE expr</rhs>
-			<action>_yyValue = new ExprNode (LE, (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode (LE, $1, $3);</action>
 
 			<rhs>expr NE expr</rhs>
-			<action>_yyValue = new ExprNode (NE, (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode (NE, $1, $3);</action>
 
 			<rhs>expr EQ expr</rhs>
-			<action>_yyValue = new ExprNode (EQ, (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+			<action>$$ = new ExprNode (EQ, $1, $3);</action>
 
 			<rhs>'(' expr ')'</rhs>
-			<action>_yyValue = yyGetValue (2);</action>
+			<action>$$ = $2;</action>
 		</grammar>
 	</parser>
 	<code name="classheader">

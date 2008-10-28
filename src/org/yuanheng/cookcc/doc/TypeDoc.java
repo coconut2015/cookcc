@@ -26,93 +26,41 @@
  */
 package org.yuanheng.cookcc.doc;
 
+import java.io.IOException;
+import java.text.MessageFormat;
+
+import org.yuanheng.cookcc.util.TokenParser;
+
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class RhsDoc extends TreeDoc
+public class TypeDoc extends TreeDoc
 {
-	private String m_terms = "";
-	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
-	private int m_lineNumber;
-	private int m_actionLineNumber;
-	private String m_action = "";
-	private String m_precedence;
+	private MessageFormat m_format;
+	private String[] m_symbols;
 
-	public RhsDoc ()
+	public TypeDoc ()
 	{
 	}
 
-	public void setTerms (String terms)
+	public void setFormat (String format)
 	{
-		if (terms == null)
-			terms = "";
-		m_terms = terms;
+		m_format = new MessageFormat (format);
 	}
 
-	public String getTerms ()
+	public MessageFormat getFormat ()
 	{
-		return m_terms;
+		return m_format;
 	}
 
-	/**
-	 * Obtain the case value in the lexer.
-	 */
-	public int getCaseValue ()
+	public void setSymbols (String symbols) throws IOException
 	{
-		return m_caseValue;
+		m_symbols = TokenParser.parseString (symbols);
 	}
 
-	/**
-	 * Set the case value in the parser.  This function is for internal use.
-	 *
-	 * @param	caseValue
-	 * 			Computed caes value in DFA.
-	 */
-	public void setCaseValue (int caseValue)
+	public String[] getSymbols ()
 	{
-		m_caseValue = caseValue;
-	}
-
-	public int getLineNumber ()
-	{
-		return m_lineNumber;
-	}
-
-	public void setLineNumber (int lineNumber)
-	{
-		m_lineNumber = lineNumber;
-	}
-
-	public int getActionLineNumber ()
-	{
-		return m_actionLineNumber;
-	}
-
-	public void setActionLineNumber (int actionLineNumber)
-	{
-		m_actionLineNumber = actionLineNumber;
-	}
-
-	public String getAction ()
-	{
-		return m_action;
-	}
-
-	public void setAction (String action)
-	{
-		if (action == null)
-			action = "";
-		m_action = action;
-	}
-
-	public String getPrecedence ()
-	{
-		return m_precedence;
-	}
-
-	public void setPrecedence (String precedence)
-	{
-		m_precedence = precedence;
+		return m_symbols;
 	}
 }

@@ -26,50 +26,66 @@
  */
 package freemarker.core;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import freemarker.ext.beans.StringModel;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
+import org.yuanheng.cookcc.doc.RhsDoc;
+import org.yuanheng.cookcc.parser.Production;
+
+import freemarker.ext.beans.BeanModel;
+import freemarker.ext.beans.MapModel;
+import freemarker.template.*;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class ActionCodeBI extends BuiltIn
+public class TypeBI extends BuiltIn
 {
 	public static void init ()
 	{
-		BuiltIn.builtins.put ("actioncode", new ActionCodeBI ());
+		BuiltIn.builtins.put ("type", new TypeBI ());
 	}
 
 	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
 	{
 		TemplateModel model = target.getAsTemplateModel (env);
-		if (!(model instanceof StringModel))
-			throw invalidTypeException (model, target, env, "string");
-		StringModel seq = (StringModel)model;
-		return new ActionCodeBuilder (seq);
+		if (!(model instanceof BeanModel))
+			throw invalidTypeException (model, target, env, "bean");
+		BeanModel seq = (BeanModel)model;
+		return new TypeBuilder (seq);
 	}
 
-	private class ActionCodeBuilder implements TemplateMethodModelEx
+	private class TypeBuilder implements TemplateMethodModelEx
 	{
-		private final StringModel m_str;
+		private final Production m_production;
 
-		private ActionCodeBuilder (StringModel str)
+		private TypeBuilder (BeanModel str)
 		{
 			super ();
-			m_str = str;
+			m_production = (Production)((RhsDoc)str.getWrappedObject ()).getProperty ("Production");
 		}
 
 		public TemplateModel exec (List args) throws TemplateModelException
 		{
-			return new StringArraySequence (parseActionCode (m_str.getAsString ()));
+			String t = ((SimpleScalar)args.get (0)).getAsString ();
+			int sym;
+			if ("$".equals (t))
+				sym = m_production.getSymbol ();
+			else
+				sym = m_production.getProduction ()[Integer.parseInt (t) - 1];
+
+			MessageFormat format = ((Map<Integer, MessageFormat>)((MapModel)args.get (1)).getWrappedObject ()).get (sym);
+
+			if (format == null)
+				return (SimpleScalar)args.get (2);
+
+			String text = ((SimpleScalar)args.get (2)).getAsString ();
+			return new SimpleScalar (format.format (new Object[]{ text }));
 		}
 	}
 

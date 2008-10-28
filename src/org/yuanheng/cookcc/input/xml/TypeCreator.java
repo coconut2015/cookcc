@@ -24,95 +24,33 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.doc;
+package org.yuanheng.cookcc.input.xml;
+
+import org.w3c.dom.Element;
+import org.yuanheng.cookcc.doc.ParserDoc;
+import org.yuanheng.cookcc.doc.TypeDoc;
+
+import cookxml.core.DecodeEngine;
+import cookxml.core.interfaces.Creator;
+import cookxml.core.util.TextUtils;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class RhsDoc extends TreeDoc
+public class TypeCreator implements Creator
 {
-	private String m_terms = "";
-	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
-	private int m_lineNumber;
-	private int m_actionLineNumber;
-	private String m_action = "";
-	private String m_precedence;
-
-	public RhsDoc ()
+	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
 	{
+		decodeEngine.setDoAdd (false);
+		TypeDoc type = new TypeDoc ();
+		type.setSymbols (TextUtils.getText (elm));
+		return type;
 	}
 
-	public void setTerms (String terms)
+	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
 	{
-		if (terms == null)
-			terms = "";
-		m_terms = terms;
-	}
-
-	public String getTerms ()
-	{
-		return m_terms;
-	}
-
-	/**
-	 * Obtain the case value in the lexer.
-	 */
-	public int getCaseValue ()
-	{
-		return m_caseValue;
-	}
-
-	/**
-	 * Set the case value in the parser.  This function is for internal use.
-	 *
-	 * @param	caseValue
-	 * 			Computed caes value in DFA.
-	 */
-	public void setCaseValue (int caseValue)
-	{
-		m_caseValue = caseValue;
-	}
-
-	public int getLineNumber ()
-	{
-		return m_lineNumber;
-	}
-
-	public void setLineNumber (int lineNumber)
-	{
-		m_lineNumber = lineNumber;
-	}
-
-	public int getActionLineNumber ()
-	{
-		return m_actionLineNumber;
-	}
-
-	public void setActionLineNumber (int actionLineNumber)
-	{
-		m_actionLineNumber = actionLineNumber;
-	}
-
-	public String getAction ()
-	{
-		return m_action;
-	}
-
-	public void setAction (String action)
-	{
-		if (action == null)
-			action = "";
-		m_action = action;
-	}
-
-	public String getPrecedence ()
-	{
-		return m_precedence;
-	}
-
-	public void setPrecedence (String precedence)
-	{
-		m_precedence = precedence;
+		((ParserDoc)parentObj).addType ((TypeDoc)obj);
+		return obj;
 	}
 }

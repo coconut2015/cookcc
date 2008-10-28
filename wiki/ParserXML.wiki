@@ -1,0 +1,78 @@
+#summary Describes the Parser XML format
+
+= XML Format =
+
+Currently, CookCC Parser only accepts XML ([http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd DTD] input files.  The default extension is {{{*.xcc}}} .
+
+= Example =
+A sample XML looks like:
+
+{{{
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc unicode="false">
+	<code name="fileheader">
+/*
+ * Copyright 2008 by ...
+ *
+ */	</code>
+	<code name="classheader">
+import java.util.*;
+
+/**
+ * Class header.
+ *
+ * @version $Id$
+ */	</code>
+	<code name="lexerprolog">
+	// local variables within yyLex () function
+	int wordCount = 0;
+	</code>
+	<tokens type="nonassoc">IFX</tokens>
+	<tokens type="nonassoc">ELSE</tokens>
+	<tokens type="left"><![CDATA[GE LE EQ NE '>' '<']]></tokens>
+	<tokens type="left">'+' '-'</tokens>
+	<tokens type="left">'*' '/'</tokens>
+	<tokens type="nonassoc">UMINUS</tokens>
+	<parser start="program">
+		<grammar rule="program">
+			<rhs>function</rhs>
+			<action>return 0;</action>
+		</grammar>
+		<grammar rule="function">
+			<rhs>function stmt</rhs>
+			<rhs></rhs>
+		</grammar>
+		<grammar rule="expr">
+			<rhs>INTEGER</rhs>
+			<rhs>VARIABLE</rhs>
+			<rhs precedence="UMINUS">'-' expr</rhs>
+			<rhs>expr '+' expr</rhs>
+			<rhs>expr '-' expr</rhs>
+			<rhs>expr '*' expr</rhs>
+			<rhs>expr '/' expr</rhs>
+			<rhs><![CDATA[expr '<' expr]]></rhs>
+			<rhs>expr '>' expr</rhs>
+			<rhs>expr GE expr</rhs>
+			<rhs>expr LE expr</rhs>
+			<rhs>expr NE expr</rhs>
+			<rhs>expr EQ expr</rhs>
+			<rhs>'(' expr ')'</rhs>
+	</parser>
+	<code>
+	// some other pieces of code appended at the end of the class.
+	public void doNothing ()
+	{
+	}
+	</code>
+</cookcc>
+}}}
+
+= XML Tag Explanations =
+== {{{<cookcc>}}} ==
+This is the document root of the XML file.  It only a single attribute to indicate where or not the lexer parses unicode.  By default, unicode is false.
+
+== {{{<tokens>}}} ==
+Simply a list of string names.  They can be separated by spaces, tabs or new lines.
+
+== {{{<parser>}}} ==

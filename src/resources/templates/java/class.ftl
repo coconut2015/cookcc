@@ -242,17 +242,6 @@ ${code.classheader}
 		return true;
 	}
 
-	protected boolean debugParser (int fromState, int toState, int ecsToken)
-	{
-		if (toState == 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", error");
-		else if (toState < 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", reduce");
-		else
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", shift");
-		return true;
-	}
-
 	// read more data from the input
 	protected boolean yyRefreshBuffer () throws IOException
 	{
@@ -584,6 +573,17 @@ ${code.classheader}
 </#if>
 
 <#if parser?has_content>
+	protected boolean debugParser (int fromState, int toState, int ecsToken)
+	{
+		if (toState == 0)
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", error");
+		else if (toState < 0)
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", reduce");
+		else
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", shift");
+		return true;
+	}
+
 	/**
 	 * Call this function to start parsing.
 	 *

@@ -24,39 +24,74 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen;
+package freemarker.core;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import freemarker.template.*;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class ActionParser
+public class ActionCodeBI extends BuiltIn
 {
+	private final static int MAX_ARRAY_LEN = 32768;
+
+	public static void init ()
+	{
+		BuiltIn.builtins.put ("actioncode", new ActionCodeBI ());
+	}
+
+	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
+	{
+		TemplateModel model = target.getAsTemplateModel (env);
+		if (!(model instanceof SimpleScalar))
+			throw invalidTypeException (model, target, env, "string");
+		SimpleScalar seq = (SimpleScalar)model;
+		return new JavaStringBuilder (seq);
+	}
+
+	private class JavaStringBuilder implements TemplateMethodModelEx
+	{
+		private final SimpleScalar m_str;
+
+		private JavaStringBuilder (SimpleScalar str)
+		{
+			super ();
+			m_str = str;
+		}
+
+		public TemplateModel exec (List args) throws TemplateModelException
+		{
+			return new StringArraySequence (parseActionCode (m_str.getAsString ()));
+		}
+	}
+
 	/**
 	 * A very simple utility function that splits user action code based on
 	 * $$ and $[0-9]+ deliminators.  This is useful for substitution purposes
 	 * in the generated code.
-	 * <p>
+	 * <p/>
 	 * The reason why the parser didn't do this step automatically is to allow
 	 * customizable deliminator patterns.
-	 * <p>
+	 * <p/>
 	 * An example:
-	 * <p>
+	 * <p/>
 	 * parseAction ("abc$$def$1hij")
-	 * <p>
+	 * <p/>
 	 * would return {"abc", "$$", "def", "$1", "hij"}.
-	 * <p>
+	 * <p/>
 	 * This piece code was written by gloomyturkey on mitbbs.
 	 *
 	 * @param	input
 	 * 			the user action code.
 	 * @return	the splitted strings
 	 */
-	public static String[] parseAction (String input)
+	public static String[] parseActionCode (String input)
 	{
 		ArrayList<String> spliter = new ArrayList<String> ();
 		ArrayList<String> content = new ArrayList<String> ();

@@ -30,6 +30,7 @@ import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
 import org.yuanheng.cookcc.codegen.options.LexerTableOption;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;

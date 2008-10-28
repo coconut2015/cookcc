@@ -10,13 +10,6 @@
 	<tokens type="nonassoc">UMINUS</tokens>
 	<lexer>
 		<rule>
-			<pattern>[a-z]+</pattern>
-			<action>
-				_yyValue = getText ();
-				return VARIABLE;
-			</action>
-		</rule>
-		<rule>
 			<pattern>[0-9]+</pattern>
 			<action>
 				_yyValue = new Integer (Integer.parseInt (getText ()));
@@ -60,7 +53,14 @@
 			<action>return PRINT;</action>
 		</rule>
 		<rule>
-			<pattern>[ \t\n]+</pattern>
+			<pattern>[a-z]+</pattern>
+			<action>
+				_yyValue = getText ();
+				return VARIABLE;
+			</action>
+		</rule>
+		<rule>
+			<pattern>[ \t\r\n]+</pattern>
 			<action>/* ignore white space */</action>
 		</rule>
 		<rule>
@@ -75,40 +75,233 @@
 	<parser start="program">
 		<grammar rule="program">
 			<rhs>function</rhs>
+			<action>return 0;</action>
 		</grammar>
 		<grammar rule="function">
 			<rhs>function stmt</rhs>
+			<action>interpret ((Node)yyGetValue (2));</action>
 			<rhs></rhs>
 		</grammar>
 		<grammar rule="stmt">
 			<rhs>';'</rhs>
+			<action>_yyValue = new SemiColonNode (); /* just to prevent null pointers */</action>
+
 			<rhs>expr ';'</rhs>
+			<action>_yyValue = yyGetValue (1);</action>
+
 			<rhs>PRINT expr ';'</rhs>
+			<action>_yyValue = new PrintNode ((Node)yyGetValue (2));</action>
+
 			<rhs>VARIABLE '=' expr ';'</rhs>
+			<action>_yyValue = new AssignNode ((String)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>WHILE '(' expr ')' stmt</rhs>
-			<rhs>IF '(' expr ')' stmt</rhs>
+			<action>_yyValue = new WhileNode ((Node)yyGetValue (3), (Node)yyGetValue (5));</action>
+
+			<rhs precedence="IFX">IF '(' expr ')' stmt</rhs>
+			<action>_yyValue = new IfNode ((Node)yyGetValue (3), (Node)yyGetValue (5), null);</action>
+
 			<rhs>IF '(' expr ')' stmt ELSE stmt</rhs>
+			<action>_yyValue = new IfNode ((Node)yyGetValue (3), (Node)yyGetValue (5), (Node)yyGetValue (7));</action>
+
 			<rhs>'{' stmt_list '}'</rhs>
+			<action>_yyValue = yyGetValue (2);</action>
 		</grammar>
 		<grammar rule="stmt_list">
 			<rhs>stmt</rhs>
+			<action>_yyValue = yyGetValue (1);</action>
+
 			<rhs>stmt_list stmt</rhs>
+			<action>_yyValue = new SemiColonNode ((Node)yyGetValue (1), (Node)yyGetValue (2));</action>
 		</grammar>
 		<grammar rule="expr">
 			<rhs>INTEGER</rhs>
+			<action>_yyValue = new ConstantNode ((Integer)yyGetValue (1));</action>
+
 			<rhs>VARIABLE</rhs>
+			<action>
+				String var = (String)yyGetValue (1);
+				IdNode idNode = (IdNode)m_varMap.get (var);
+				if (idNode == null)
+				{
+					idNode = new IdNode (var);
+					m_varMap.put (var, idNode);
+				}
+				_yyValue = idNode;
+			</action>
+
 			<rhs precedence="UMINUS">'-' expr</rhs>
+			<action>_yyValue = new ExprNode (UMINUS, (Node)yyGetValue (1), null);</action>
+
 			<rhs>expr '+' expr</rhs>
+			<action>_yyValue = new ExprNode ('+', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>expr '-' expr</rhs>
+			<action>_yyValue = new ExprNode ('-', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>expr '*' expr</rhs>
+			<action>_yyValue = new ExprNode ('*', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>expr '/' expr</rhs>
+			<action>_yyValue = new ExprNode ('/', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs><![CDATA[expr '<' expr]]></rhs>
+			<action><![CDATA[_yyValue = new ExprNode ('<', (Node)yyGetValue (1), (Node)yyGetValue (3));]]></action>
+
 			<rhs>expr '>' expr</rhs>
+			<action>_yyValue = new ExprNode ('>', (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>expr GE expr</rhs>
+			<action>_yyValue = new ExprNode (GE, (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>expr LE expr</rhs>
+			<action>_yyValue = new ExprNode (LE, (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>expr NE expr</rhs>
+			<action>_yyValue = new ExprNode (NE, (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>expr EQ expr</rhs>
+			<action>_yyValue = new ExprNode (EQ, (Node)yyGetValue (1), (Node)yyGetValue (3));</action>
+
 			<rhs>'(' expr ')'</rhs>
+			<action>_yyValue = yyGetValue (2);</action>
 		</grammar>
 	</parser>
+	<code name="classheader">
+		import java.util.HashMap;
+	</code>
+	<code><![CDATA[
+		private final HashMap m_varMap = new HashMap ();
+
+		private static class Node
+		{
+		}
+
+		private static class IdNode extends Node
+		{
+			String name;
+			int value;
+			public IdNode (String name) { this.name = name; }
+		}
+
+		private static class ConstantNode extends Node
+		{
+			int value;
+			public ConstantNode (Integer value) { this.value = value.intValue (); }
+		}
+
+		private static class OpNode extends Node
+		{
+			final int type;
+			public OpNode (int type) { this.type = type; }
+		}
+
+		private static class SemiColonNode extends OpNode
+		{
+			Node stmt1;
+			Node stmt2;
+			public SemiColonNode () { super (';'); }
+			public SemiColonNode (Node stmt1, Node stmt2) { super (';'); this.stmt1 = stmt1; this.stmt2 = stmt2; }
+		}
+
+		private static class PrintNode extends OpNode
+		{
+			Node expr;
+			public PrintNode (Node expr) { super (PRINT); this.expr = expr; }
+		}
+
+		private static class AssignNode extends OpNode
+		{
+			String var;
+			Node expr;
+			public AssignNode (String var, Node expr) { super ('='); this.var = var; this.expr = expr; }
+		}
+
+		private static class WhileNode extends OpNode
+		{
+			Node expr;
+			Node stmt;
+			public WhileNode (Node expr, Node stmt) { super (WHILE); this.expr = expr; this.stmt = stmt; }
+		}
+
+		private static class IfNode extends OpNode
+		{
+			Node expr;
+			Node stmt1;
+			Node stmt2;
+			public IfNode (Node expr, Node stmt1, Node stmt2) { super (IF); this.expr = expr; this.stmt1 = stmt1; this.stmt2 = stmt2;}
+		}
+
+		private static class ExprNode extends OpNode
+		{
+			Node expr1;
+			Node expr2;
+			public ExprNode (int type, Node expr1, Node expr2) { super (type); this.expr1 = expr1; this.expr2 = expr2; }
+		}
+
+		int interpret (Node p)
+		{
+			if (p == null)
+				return 0;
+			if (p instanceof ConstantNode)
+				return ((ConstantNode)p).value;
+			if (p instanceof IdNode)
+				return ((IdNode)p).value;
+			// should be all OpNodes from this point on
+
+			switch (((OpNode)p).type)
+			{
+				case WHILE:
+					while (interpret (((WhileNode)p).expr) > 0)
+						interpret (((WhileNode)p).stmt);
+					return 0;
+				case IF:
+					if (interpret (((IfNode)p).expr) > 0)
+						interpret (((IfNode)p).stmt1);
+					else
+						interpret (((IfNode)p).stmt2);
+					return 0;
+				case PRINT:
+					System.out.println (interpret (((PrintNode)p).expr));
+					return 0;
+				case ';':
+					interpret (((SemiColonNode)p).stmt1);
+					return interpret (((SemiColonNode)p).stmt2);
+				case '=':
+				{
+					String var = ((AssignNode)p).var;
+					IdNode idNode = (IdNode)m_varMap.get (var);
+					if (idNode == null)
+					{
+						idNode = new IdNode (var);
+						m_varMap.put (var, idNode);
+					}
+					return idNode.value = interpret (((AssignNode)p).expr);
+				}
+				case UMINUS:
+					return -interpret (((ExprNode)p).expr1);
+				case '+':
+					return interpret (((ExprNode)p).expr1) + interpret (((ExprNode)p).expr2);
+				case '-':
+					return interpret (((ExprNode)p).expr1) - interpret (((ExprNode)p).expr2);
+				case '*':
+					return interpret (((ExprNode)p).expr1) * interpret (((ExprNode)p).expr2);
+				case '/':
+					return interpret (((ExprNode)p).expr1) / interpret (((ExprNode)p).expr2);
+				case '<':
+					return interpret (((ExprNode)p).expr1) < interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case '>':
+					return interpret (((ExprNode)p).expr1) > interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case GE:
+					return interpret (((ExprNode)p).expr1) >= interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case LE:
+					return interpret (((ExprNode)p).expr1) <= interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case NE:
+					return interpret (((ExprNode)p).expr1) != interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case EQ:
+					return interpret (((ExprNode)p).expr1) == interpret (((ExprNode)p).expr2) ? 1 : 0;
+			}
+			return 0;
+		}
+	]]></code>
 </cookcc>

@@ -44,7 +44,7 @@ class XmlLexerOutput
 	private void printRule (RuleDoc rule, PrintWriter p)
 	{
 		if (rule.getLineNumber () > 0)
-			p.println ("\t\t\t<rule line=\"" + rule.getLineNumber () + "\">");
+			p.println ("\t\t\t<rule>");
 		else
 			p.println ("\t\t\t<rule>");
 		for (PatternDoc pattern : rule.getPatterns ())

@@ -38,7 +38,7 @@ A sample XML for the {{{<lexer>}}} section looks like:
 == {{{<lexer>}}} ==
 Options for the lexer are specified as attributes of the {{{<lexer>}}} tag.
 || *Attribute* || *Description* ||
-|| *{{{table}}}* || The DFA table format.  Can be one of {{{"ecs"}}}, {{{"full"}}}, {{{"compressed"}}} options.  ||
+|| *{{{table}}}* || The DFA table format.  Can be one of {{{"ecs"}}}, {{{"full"}}}, {{{"compressed"}}} options.  Command line options can override the choice here.  ||
 || *{{{bol}}}* || Instruct the lexer to keep track of the BOL (beginning of line) information even when there are no patterns use that information. ||
 
 == {{{<shortcut>}}} ==

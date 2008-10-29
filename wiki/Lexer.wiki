@@ -6,7 +6,7 @@ CookCC Lexer has the following features.
 
 == Lexer Table Format ==
 
-CookCC supports both 8-bit and 16-bit DFA tables.  16-bit DFA tables are intended for unicode support.  Currently, the following table formats are supported.
+CookCC supports DFA tables for 8-bit and 16-bit characters.  16-bit character tables are intended for unicode support.  Currently, the following table formats are supported.
 
 || {{{full}}} || A full table.  Very memory intensive. ||
 || {{{ecs}}} || A much smaller table using equivalent classes. ||

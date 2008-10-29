@@ -114,8 +114,6 @@ ${code.classheader}
 	// flag that indicates error
 	private boolean _yyInError;
 </#if>
-	// flag that tells the parser to redo the parsing (i.e. do not reduce the current state)
-	private boolean _yyReduce;
 	// internal track of the argument start
 	private int _yyArgStart;
 	// for passing value from lexer to parser
@@ -709,7 +707,6 @@ ${code.classheader}
 </#if>
 
 			_yyValue = null;
-			_yyReduce = true;
 
 			switch (cc_ruleState)
 			{
@@ -728,13 +725,10 @@ ${code.classheader}
 					throw new IOException ("Internal error in ${ccclass} parser.");
 			}
 
-			if (_yyReduce == true)		// check if the user specifically instructed us not to reduce (for error recovery).
-			{
-				YYParserState cc_reduced = new YYParserState (-cc_ruleState, _yyValue, cc_toState);
-				_yyValue = null;
-				cc_stateStack.setSize (_yyArgStart + 1);
-				cc_stateStack.add (cc_reduced);
-			}
+			YYParserState cc_reduced = new YYParserState (-cc_ruleState, _yyValue, cc_toState);
+			_yyValue = null;
+			cc_stateStack.setSize (_yyArgStart + 1);
+			cc_stateStack.add (cc_reduced);
 		}
 	}
 
@@ -786,15 +780,6 @@ ${code.classheader}
 	protected void yyPopStateStack ()
 	{
 		_yyStateStack.setSize (_yyStateStack.size () - 1);
-	}
-
-	/**
-	 * Instruct the parser not to perform the reduce action.  This function is
-	 * mainly used to deal with error recovery.
-	 */
-	protected void yyUnReduce ()
-	{
-		_yyReduce = false;
 	}
 
 	/**

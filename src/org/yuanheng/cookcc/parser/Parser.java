@@ -224,7 +224,7 @@ public class Parser
 					throw new ParserException (tokensDoc.getLineNumber (), "Duplicate token " + name + " specified.");
 
 				checkValue[0] = 0;
-				name = checkTerminalName (tokensDoc.getLineNumber (), name, checkValue);
+				name = checkTerminalName (tokensDoc.getLineNumber (), name, checkValue, true);
 				int v = checkValue[0];
 				if (v == 0)
 					v = ++maxTerminalValue;
@@ -331,6 +331,11 @@ public class Parser
 
 	private String checkTerminalName (int lineNumber, String name, int[] value)
 	{
+		return checkTerminalName (lineNumber, name, value, false);
+	}
+
+	private String checkTerminalName (int lineNumber, String name, int[] value, boolean noInternal)
+	{
 		try
 		{
 			if (name.startsWith ("'"))
@@ -350,7 +355,7 @@ public class Parser
 			}
 			else if (s_tokenNamePattern.matcher (name).matches ())
 			{
-				if ("error".equals (name))
+				if (noInternal && "error".equals (name))
 					throw new ParserException (0, "error token is built-in");
 				return name;
 			}

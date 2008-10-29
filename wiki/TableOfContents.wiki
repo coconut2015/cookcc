@@ -8,6 +8,7 @@
    * [LexerPatterns Patterns]
    * [LexerWarnings Compiler Warnings]
  * [Parser]
+   * [ParserErrorRecovery Error Recovery]
  * Target Languages
    * [TargetLanguageJava Java]
    * [TargetLanguagePlain Plain]

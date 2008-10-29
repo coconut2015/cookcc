@@ -11,6 +11,7 @@
 <!ELEMENT action	(#PCDATA)>
 
 <!ATTLIST cookcc	unicode (true|false) #IMPLIED>
+<!ATTLIST cookcc	main (true|false) #IMPLIED>
 
 <!ATTLIST code		name CDATA #IMPLIED>
 

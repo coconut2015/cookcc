@@ -16,4 +16,4 @@ It is important for the grammar that contains {{{error}}} token to perform one o
  * Artificially inject a token using by calling {{{yyPushLookahead}}} function to deal with a missing token (such as {{{';'}}} or {{{')'}}}).
  * Pop the lookahead (such as an extra {{{')'}}}) that originally caused the error.
  * return from the parser.
-Failure to do so could result in an endless loop.
+Failure to do so could result in an endless loop.  In case of successful error recovery, it is also necessary to clear the {{{_yyInError}}} flag.

@@ -316,7 +316,7 @@ ${code.classheader}
 	 * @throws	IOException
 	 *			in case of I/O error.
 	 */
-	public ${yytype} yyLex () throws IOException
+	<#if parser?has_content>protected<#else>public</#if> ${yytype} yyLex () throws IOException
 	{
 <#if code.lexerprolog?has_content>
 	${code.lexerprolog}

@@ -66,6 +66,11 @@ public class ParserDFAInfo
 		m_parser = Parser;
 	}
 
+	public boolean getRecovery ()
+	{
+		return m_parserDoc.getRecovery ();
+	}
+
 	public String getTable ()
 	{
 		return m_parserDoc.getTable ();

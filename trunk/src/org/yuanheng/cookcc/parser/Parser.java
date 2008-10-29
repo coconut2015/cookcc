@@ -161,6 +161,14 @@ public class Parser
 
 		parseProductions ();
 
+		// make sure all the non-terminals have its production
+		for (int i = 0; i < m_nonTerminalCount; ++i)
+		{
+			if (m_productionMap.get (i + m_maxTerminal + 1) == null)
+				throw new ParserException (0, "Missing production for non-terminal " + m_symbolMap.get (i + m_maxTerminal + 1));
+		}
+
+
 		ParserDoc parserDoc = m_doc.getParser ();
 		Integer startNonTerminal = parserDoc.getStart () == null ? m_productions.get (0).getSymbol () : m_nonTerminals.get (parserDoc.getStart ());
 		if (startNonTerminal == null)

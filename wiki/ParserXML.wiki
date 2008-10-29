@@ -1,78 +1,53 @@
 #summary Describes the Parser XML format
 
-= XML Format =
-
-Currently, CookCC Parser only accepts XML ([http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd DTD] input files.  The default extension is {{{*.xcc}}} .
+= {{{<parser>}}} Description =
 
 = Example =
-A sample XML looks like:
+A sample XML for {{{<parser>}}} section looks like:
 
 {{{
-<?xml version = "1.0" encoding="UTF-8"?>
-<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
-<cookcc unicode="false">
-	<code name="fileheader">
-/*
- * Copyright 2008 by ...
- *
- */	</code>
-	<code name="classheader">
-import java.util.*;
-
-/**
- * Class header.
- *
- * @version $Id$
- */	</code>
-	<code name="lexerprolog">
-	// local variables within yyLex () function
-	int wordCount = 0;
-	</code>
-	<tokens type="nonassoc">IFX</tokens>
-	<tokens type="nonassoc">ELSE</tokens>
-	<tokens type="left"><![CDATA[GE LE EQ NE '>' '<']]></tokens>
-	<tokens type="left">'+' '-'</tokens>
-	<tokens type="left">'*' '/'</tokens>
-	<tokens type="nonassoc">UMINUS</tokens>
 	<parser start="program">
+		<type format="((Node){0})">stmt expr stmt_list</type>
+		<type format="((String){0})">VARIABLE</type>
+		<type format="((Integer){0})">INTEGER</type>
 		<grammar rule="program">
 			<rhs>function</rhs>
 			<action>return 0;</action>
 		</grammar>
 		<grammar rule="function">
 			<rhs>function stmt</rhs>
+			<action>interpret ($2);</action>
 			<rhs></rhs>
 		</grammar>
-		<grammar rule="expr">
-			<rhs>INTEGER</rhs>
-			<rhs>VARIABLE</rhs>
-			<rhs precedence="UMINUS">'-' expr</rhs>
-			<rhs>expr '+' expr</rhs>
-			<rhs>expr '-' expr</rhs>
-			<rhs>expr '*' expr</rhs>
-			<rhs>expr '/' expr</rhs>
-			<rhs><![CDATA[expr '<' expr]]></rhs>
-			<rhs>expr '>' expr</rhs>
-			<rhs>expr GE expr</rhs>
-			<rhs>expr LE expr</rhs>
-			<rhs>expr NE expr</rhs>
-			<rhs>expr EQ expr</rhs>
-			<rhs>'(' expr ')'</rhs>
+		<grammar rule="stmt">
+			<rhs>';'</rhs>
+			<action>$$ = new SemiColonNode ();</action>
+
+			<rhs>expr ';'</rhs>
+			<action>$$ = $1;</action>
+
+			<rhs>PRINT expr ';'</rhs>
+			<action>$$ = new PrintNode ($2);</action>
+
+			<rhs>VARIABLE '=' expr ';'</rhs>
+			<action>$$ = new AssignNode ($1, $3);</action>
+
+			<rhs>WHILE '(' expr ')' stmt</rhs>
+			<action>$$ = new WhileNode ($3, $5);</action>
+
+			<rhs precedence="IFX">IF '(' expr ')' stmt</rhs>
+			<action>$$ = new IfNode ($3, $5, null);</action>
+
+			<rhs>IF '(' expr ')' stmt ELSE stmt</rhs>
+			<action>$$ = new IfNode ($3, $5, $7);</action>
+
+			<rhs>'{' stmt_list '}'</rhs>
+			<action>$$ = $2;</action>
+		</grammar>
 	</parser>
-	<code>
-	// some other pieces of code appended at the end of the class.
-	public void doNothing ()
-	{
-	}
-	</code>
-</cookcc>
 }}}
 
 = XML Tag Explanations =
-== {{{<cookcc>}}} ==
-This is the document root of the XML file.  It only a single attribute to indicate where or not the lexer parses unicode.  By default, unicode is false.
 
-== {{{<tokens>}}} ==
-Simply a list of string names.  They can be separated by spaces, tabs or new lines.
 
 == {{{<parser>}}} ==

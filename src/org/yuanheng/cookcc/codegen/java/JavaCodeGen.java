@@ -126,6 +126,10 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		for (Object key : Resources.defaults.keySet ())
 			map.put (key.toString (), Resources.defaults.getProperty (key.toString ()));
 
+		// check if user specifically set the main function flag
+		if (doc.getMain () != null)
+			map.put ("main", doc.getMain ());
+
 		String cl = m_classOption.getClassOption ();
 
 		if (cl != null && cl.length () > 0)

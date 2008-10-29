@@ -41,11 +41,27 @@ import java.util.Map;
  */
 public class Document extends TreeDoc
 {
+	private Boolean m_main;
 	private boolean m_unicode;
 	private final Map<String,String> m_code = new HashMap<String,String> ();
 	private final Collection<TokensDoc> m_tokens = new LinkedList<TokensDoc> ();
 	private LexerDoc m_lexer;
 	private ParserDoc m_parser;
+
+	/**
+	 * Check if the user specifically asked for main function.
+	 *
+	 * @return	if user wants to have a main function or not.  null indicates flag not set.
+	 */
+	public Boolean getMain ()
+	{
+		return m_main;
+	}
+
+	public void setMain (boolean main)
+	{
+		m_main = Boolean.valueOf (main);
+	}
 
 	public boolean isUnicode ()
 	{

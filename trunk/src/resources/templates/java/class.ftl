@@ -110,8 +110,10 @@ ${code.classheader}
 	private final LinkedList _yyLookaheadStack = new LinkedList ();
 	// state stack for the parser
 	private final Vector _yyStateStack = new Vector (512, 512);
+<#if parser.recovery>
 	// flag that indicates error
 	private boolean _yyInError;
+</#if>
 	// flag that tells the parser to redo the parsing (i.e. do not reduce the current state)
 	private boolean _yyReduce;
 	// internal track of the argument start
@@ -661,6 +663,7 @@ ${code.classheader}
 			}
 			else if (cc_toState == 0)
 			{
+<#if parser.recovery>
 				// error
 				if (!_yyInError)
 				{
@@ -677,9 +680,13 @@ ${code.classheader}
 				else
 					_yyInError = false;
 				continue;
+<#else>
+				return 1;
+</#if>
 			}
+<#if parser.recovery>
 			_yyInError = false;
-
+</#if>
 			// now the reduce action
 			int cc_ruleState = -cc_toState;
 
@@ -731,6 +738,7 @@ ${code.classheader}
 		}
 	}
 
+<#if parser.recovery>
 	/**
 	 * This function is used by the error handling grammars to check the immediate
 	 * lookahead token on the stack.
@@ -820,6 +828,7 @@ ${code.classheader}
 </#if>
 		return true;
 	}
+</#if>
 
 	private Object yyGetValue (int arg)
 	{

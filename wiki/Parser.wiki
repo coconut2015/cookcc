@@ -17,4 +17,4 @@ When this option is turned on, DFA states that contain a reduce state would conv
 
 == Analysis Output ==
 
-When the command line option {{{-analysis}}} is specified.  A file named [http://code.google.com/p/cookcc/source/browse/trunk/parser_tests/calc/cookcc_parser_analysis.txt cookcc_parser_analysis.txt] is generated in the current directory that contains the detail of the parser.  It can be useful in analyzing the grammar.
+When the command line option {{{-analysis}}} is specified.  A file named [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/parser/calc/cookcc_parser_analysis.txt cookcc_parser_analysis.txt] is generated in the current directory that contains the detail of the parser.  It can be useful in analyzing the grammar.

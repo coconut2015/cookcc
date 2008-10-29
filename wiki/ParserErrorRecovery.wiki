@@ -14,7 +14,7 @@ When the {{{recovery}}} option is set to {{{false}}}, the parser simply returns 
 
 Otherwise, the behavior of the parser is the following.
 
-When a token not belongs to one of the lookahead (i.e. cannot either reduce or shift), an error token is pushed onto the lookahead stack and an internal error flag {{{_yyInError}}} is set, and parsing is resumed.
+When a token not belonging to one of the lookahead (i.e. cannot either reduce or shift) is encountered, an error token is pushed onto the lookahead stack and an internal error flag {{{_yyInError}}} is set, and parsing is resumed.
 
 If the error token can be shifted, then a grammar dealing with error recovery is found.  Otherwise, the parser would start discarding tokens on the stack until a grammar that can handle the "error" token is reached.
 

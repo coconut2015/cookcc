@@ -31,7 +31,6 @@ A sample XML looks like:
 			</rule>
 		</state>
 	</lexer>
-</cookcc>
 }}}
 
 = XML Tag Explanations =

@@ -98,4 +98,12 @@ public class Production implements Comparable<Production>
 			return 0;
 		return m_id - o.m_id;
 	}
+
+	public boolean isErrorCorrecting ()
+	{
+		for (int i = 0; i < m_production.length; ++i)
+			if (m_production[i] == 1)
+				return true;
+		return false;
+	}
 }

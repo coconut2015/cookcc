@@ -771,17 +771,34 @@ ${code.classheader}
 	}
 
 	/**
-	 * This function is used by the error handling grammars to pop an unwantted
-	 * token from the lookahead stack.
-	 *
-	 * @param	token
-	 *			the token
-	 * @param	value
-	 *			the value associated with the token
+	 * This function is used by the error handling grammars to pop an unwanted
+	 * token from the state stack.  Usually it is used to pop the error token
+	 * so that the parsing can resume.
 	 */
 	protected void yyPopStateStack ()
 	{
 		_yyStateStack.setSize (_yyStateStack.size () - 1);
+	}
+
+	/**
+	 * Instruct the parser not to perform the reduce action.  This function is
+	 * mainly used to deal with error recovery.
+	 */
+	protected void yyUnReduce ()
+	{
+		_yyReduce = false;
+	}
+
+	/**
+	 * Clear the error flag.  If this flag is present and the parser again sees
+	 * another error transition, it would immediately calls yyParseError, which
+	 * would by default exit the parser.
+	 * <p>
+	 * This function is used in error recovery.
+	 */
+	protected void yyClearError ()
+	{
+		_yyInError = false;
 	}
 
 	/**
@@ -838,7 +855,10 @@ ${code.classheader}
 	</#if>
 
 		if (tmpParser.yyParse () > 0)
+		{
+			System.err.println ("parser: fatal error!");
 			System.exit (1);
+		}
 <#else>
 		${ccclass} tmpLexer = new ${ccclass} ();
 	<#if unicode>

@@ -51,3 +51,25 @@ A sample XML for {{{<parser>}}} section looks like:
 
 
 == {{{<parser>}}} ==
+
+{{{<parser>}}} has a single attribute {{{start}}} which can be used to specify the start non-terminal.  If this attribute is not specified, the LHS of the first grammar is used.
+
+== {{{<type>}}} ==
+
+This tag is used to specify the necessary code that should be used to cast / retrieve members of arguments {{{ {0} }}}.  In the example above, {{{$1}}} was automatically converted to ((Node)$1) if {{{$1}}} is a {{{stmt}}}, {{{expr}}}, or {{{stmt_list}}}.  {{{$1}}} itself is internally translated to the appropriate variable/function call.
+
+(Note in the Java code generator, the format does not apply to {{{$$}}}).
+
+== {{{<grammar>}}} ==
+
+The attribute value of {{{rule}}} is a non-terminal.  All the productions in {{{<rhs>}}} are for this particular terminal.
+
+== {{{<rhs>}}} ==
+
+This tag represents the production for the non-terminal of the parent {{{grammar}}} tag.  Its action code should be immediately followed.  If not, there are no actions performed for this particular production.
+
+== {{{<action>}}} ==
+
+This tag is used to specify the code that should be called for the production in the immediately before {{{<rhs>}}}.
+
+{{{$$}}} represents the value for the LHS non-terminal.  {{{$1}}}, {{{$2}}} etc represent the object values of the symbols at the position for productions specified in the {{{<lhs>}}} tag, starting from 1.

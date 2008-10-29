@@ -58,8 +58,8 @@
 					yyPushLookahead (';', null);
 					System.out.println ("adding missing ';'");
 				}
+				System.out.println ("making " + $1);
 				yyPopStateStack ();		// remove error token
-				_yyReduce = false;
 				_yyInError = false;
 			</action>
 

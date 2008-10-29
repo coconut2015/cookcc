@@ -832,15 +832,14 @@ public class Parser
 
 			short[] column = m_dfa.getRow (i).getStates ();
 
-			if (defaultReduce)
+			// force default reduce on any productions with error tokens
+			Production defaultReduceState = hasDefaultReduce (_DFAStates.get (i));
+			if (defaultReduceState != null && (defaultReduce || defaultReduceState.isErrorCorrecting ()))
 			{
-				Production reduceState = hasDefaultReduce (_DFAStates.get (i));
-				if (reduceState != null)
-				{
-					for (int j = 0; j < column.length; ++j)
-						if (column[j] == 0)
-							column[j] = (short)-reduceState.getId ();
-				}
+				short id = (short)-defaultReduceState.getId ();
+				for (int j = 0; j < column.length; ++j)
+					if (column[j] == 0)
+						column[j] = id;
 			}
 
 			for (int j = 0; j < m_usedTerminalCount; ++j)

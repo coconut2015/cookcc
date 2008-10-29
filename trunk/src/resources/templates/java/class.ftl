@@ -112,6 +112,8 @@ ${code.classheader}
 	private final Vector _yyStateStack = new Vector (512, 512);
 	// flag that indicates error
 	private boolean _yyInError;
+	// flag that tells the parser to redo the parsing (i.e. do not reduce the current state)
+	private boolean _yyReduce;
 	// internal track of the argument start
 	private int _yyArgStart;
 	// for passing value from lexer to parser
@@ -660,10 +662,23 @@ ${code.classheader}
 			else if (cc_toState == 0)
 			{
 				// error
+				if (!_yyInError)
+				{
+	<#if debug>
+					System.err.println ("parser: inject error token as lookahead");
+	</#if>
+					_yyLookaheadStack.add (new YYParserState (1, _yyValue));
+					_yyInError = true;
+					continue;
+				}
+
 				if (yyParseError (cc_ch))
 					return 1;
+				else
+					_yyInError = false;
 				continue;
 			}
+			_yyInError = false;
 
 			// now the reduce action
 			int cc_ruleState = -cc_toState;
@@ -687,6 +702,7 @@ ${code.classheader}
 </#if>
 
 			_yyValue = null;
+			_yyReduce = true;
 
 			switch (cc_ruleState)
 			{
@@ -705,12 +721,67 @@ ${code.classheader}
 					throw new IOException ("Internal error in ${ccclass} parser.");
 			}
 
-			YYParserState cc_reduced = new YYParserState (-cc_ruleState, _yyValue, cc_toState);
-			_yyValue = null;
-			cc_stateStack.setSize (_yyArgStart + 1);
-			cc_stateStack.add (cc_reduced);
+			if (_yyReduce == true)		// check if the user specifically instructed us not to reduce (for error recovery).
+			{
+				YYParserState cc_reduced = new YYParserState (-cc_ruleState, _yyValue, cc_toState);
+				_yyValue = null;
+				cc_stateStack.setSize (_yyArgStart + 1);
+				cc_stateStack.add (cc_reduced);
+			}
 		}
+	}
 
+	/**
+	 * This function is used by the error handling grammars to check the immediate
+	 * lookahead token on the stack.
+	 *
+	 * @return	the top of lookahead stack.
+	 */
+	protected YYParserState yyPeekLookahead ()
+	{
+		return (YYParserState)_yyLookaheadStack.getLast ();
+	}
+
+	/**
+	 * This function is used by the error handling grammars to artificially inject a
+	 * token on to the lookahead stack to allow the parsing to proceed.
+	 *
+	 * @param	token
+	 *			the token
+	 * @param	value
+	 *			the value associated with the token
+	 */
+	protected void yyPushLookahead (int token, Object value)
+	{
+		_yyLookaheadStack.add (new YYParserState (token, value));
+	}
+
+	/**
+	 * This function is used by the error handling grammars to pop an unwantted
+	 * token from the lookahead stack.
+	 *
+	 * @param	token
+	 *			the token
+	 * @param	value
+	 *			the value associated with the token
+	 */
+	protected void yyPopLookahead ()
+	{
+		_yyLookaheadStack.removeLast ();
+	}
+
+	/**
+	 * This function is used by the error handling grammars to pop an unwantted
+	 * token from the lookahead stack.
+	 *
+	 * @param	token
+	 *			the token
+	 * @param	value
+	 *			the value associated with the token
+	 */
+	protected void yyPopStateStack ()
+	{
+		_yyStateStack.setSize (_yyStateStack.size () - 1);
 	}
 
 	/**
@@ -727,6 +798,9 @@ ${code.classheader}
 	 */
 	protected boolean yyParseError (char ecsToken) throws IOException
 	{
+<#if debug>
+		System.err.println ("parser: fatal error");
+</#if>
 		return true;
 	}
 
@@ -763,7 +837,8 @@ ${code.classheader}
 		</#if>
 	</#if>
 
-		tmpParser.yyParse ();
+		if (tmpParser.yyParse () > 0)
+			System.exit (1);
 <#else>
 		${ccclass} tmpLexer = new ${ccclass} ();
 	<#if unicode>

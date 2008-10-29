@@ -8,7 +8,6 @@
    * [LexerPatterns Patterns]
    * [LexerWarnings Compiler Warnings]
  * [Parser]
-   * Only an empty stub
  * Target Languages
    * [TargetLanguageJava Java]
    * [TargetLanguagePlain Plain]

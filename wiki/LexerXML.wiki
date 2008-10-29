@@ -1,9 +1,9 @@
 #summary Describes the Lexer XML format
 
-= {{{<lexer>}}} XML =
+= {{{<lexer>}}} Description =
 
 = Example =
-A sample XML looks like:
+A sample XML for the {{{<lexer>}}} section looks like:
 
 {{{
 	<lexer table="ecs">

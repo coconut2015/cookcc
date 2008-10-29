@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding="UTF-8"?>
 <!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
 <cookcc>
-	<!-- This example shows popping an extra token from the lookahead stack.  -->
+	<!-- This example shows popping an extra token and inserting a missing token.  -->
 	<tokens>IDENTIFIER</tokens>
 	<lexer>
 		<rule>
@@ -64,12 +64,6 @@
 			</action>
 
 			<rhs>';'</rhs>
-			<rhs>error</rhs>
-			<action>
-				yyPushLookahead (';', null);
-				_yyInError = false;
-				System.out.println ("adding missing ';'");
-			</action>
 		</grammar>
 		<grammar rule="function">
 			<rhs>IDENTIFIER '(' ')'</rhs>

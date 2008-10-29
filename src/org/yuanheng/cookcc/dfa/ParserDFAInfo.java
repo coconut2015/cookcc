@@ -88,7 +88,7 @@ public class ParserDFAInfo
 		int maxTerminal = m_parser.getMaxTerminal ();
 		m_ecs = new int[maxTerminal + 1];
 		int[] symbols = m_parser.getSymbolGroups ();
-		System.arraycopy (symbols, 0, m_ecs, 0, maxTerminal);
+		System.arraycopy (symbols, 0, m_ecs, 0, maxTerminal + 1);
 		return m_ecs;
 	}
 

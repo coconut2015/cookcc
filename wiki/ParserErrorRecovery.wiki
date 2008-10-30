@@ -12,6 +12,8 @@ The exact behavior of error recovery depends on the specific implementation of o
 
 When the {{{recovery}}} option is set to {{{false}}}, the parser simply returns with a value of {{{1}}} to indicate that an error has occurred.
 
+The option {{{parseerror}}} controls whether or not the code generator should generatet he {{{yyParseError}}} function.  Set this option to {{{false}}} if you want to the parser to use your own function.
+
 Otherwise, the behavior of the parser is the following.
 
 When a token not belonging to one of the lookahead (i.e. cannot either reduce or shift) is encountered.  {{{yyParseError}}} function is called.  If this function returns {{{true}}}, the parser stops and returns a value {{{1}}}.  If the function returns {{{false}}} (by default), an error token is pushed onto the lookahead stack and an internal error flag {{{_yyInError}}} is set.  Then the parsing is resumed.

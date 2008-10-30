@@ -63,7 +63,7 @@ See the [ParserErrorRecovery parser recovery page] for more information on error
 
 == {{{<type>}}} ==
 
-This tag is used to specify the necessary code that should be used to cast / retrieve members of arguments {{{ {0} }}}.  In the example above, {{{$1}}} was automatically converted to ((Node)$1) if {{{$1}}} is a {{{stmt}}}, {{{expr}}}, or {{{stmt_list}}}.  {{{$1}}} itself is internally translated to the appropriate variable/function call.
+This tag is used to specify the necessary code that should be used to cast / retrieve members of arguments {{{ {0} }}}.  In the example above, {{{$1}}} was automatically converted to {{{((Node)$1)}}} if {{{$1}}} is a {{{stmt}}}, {{{expr}}}, or {{{stmt_list}}}.  {{{$1}}} itself is internally translated to the appropriate variable/function call.
 
 (Note in the Java code generator, the format does not apply to {{{$$}}}).
 

@@ -20,4 +20,6 @@ If the error token can be shifted, then a grammar dealing with error recovery is
 
 With the error token shifted on to the stack.  The state should be immediately reduceable if the grammar does not require any tokens after the error token.  Otherwise, it means the grammar is looking for a specific terminal.  Then the input is continuously consumed until the desired token is found, or the end of file is reached.
 
+Additionally, yyPeekLookahead () is provided to check the cause of the error (only accurate if the user didn't specify any terminals after {{{error}}} in the grammar).  yyPopLookahead () is provided to remove the possible offending token.  However, this function can should be called only once.
+
 Here are some [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/parser/error/ test cases] that demonstrate these behaviors.

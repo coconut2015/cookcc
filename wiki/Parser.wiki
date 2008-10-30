@@ -1,6 +1,9 @@
 #summary CookCC Parser Documentation
 
 = Parser =
+<wiki:toc/>
+
+== Introduction
 
 Currently, the parser generator is in the process of implementation.  The generated parser is [http://en.wikipedia.org/wiki/LALR_parser LALR(1)].
 
@@ -13,8 +16,8 @@ Currently, the following table formats are supported.
 
 == Default Reduce ==
 
-When this option is turned on, DFA states that contain a reduce state would convert all 0 entries to the reduce state.  This approach can make the compressed table more compact, at the expense of more difficult error recovery.
+the command line option {{{-defaultreduce}}} is specified, DFA states that contain a reduceable item would convert all 0 (i.e. error) entries to reduce.  This approach can make the compressed table more compact, at the expense of slightly more difficult error recovery.
 
 == Analysis Output ==
 
-When the command line option {{{-analysis}}} is specified.  A file named [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/parser/calc/cookcc_parser_analysis.txt cookcc_parser_analysis.txt] is generated in the current directory that contains the detail of the parser.  It can be useful in analyzing the grammar.
+When the command line option {{{-analysis}}} is specified, a file named [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/parser/calc/cookcc_parser_analysis.txt cookcc_parser_analysis.txt] is generated in the current directory that contains the detail of the parser.  It can be useful in analyzing the grammar.

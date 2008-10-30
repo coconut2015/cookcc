@@ -1,11 +1,13 @@
 #summary Notes on Java Output
-
 = Target Language : Java =
+<wiki:toc/>
+
+== Introduction ==
 
 Java is the default output language of CookCC.  It can also be selected using the
 {{{-lang java}}}  command line option.
 
-Currently, only the lexer component has been finished.
+Currently, v0.1 only contains the lexer component.
 
 == Command Line Options ==
 

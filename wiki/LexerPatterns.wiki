@@ -32,7 +32,7 @@ Some examples can be found in test cases for [http://code.google.com/p/cookcc/so
 || *{{{r$}}}* || an *r* at the end of the line (\n), but not including the \n character.  Note that this pattern does not work well on files in dos format because it does not consider {{{\r}}} character. ||
 || *{{{<<EOF>>}}}* || an end of file character.  This character is artificial. ||
 
-Escape Characters:
+== Escape Characters ==
 || *Code* || *Description* ||
 || *{{{\b}}}* || backspace ||
 || *{{{\e}}} || escape {{{\033}}} ||

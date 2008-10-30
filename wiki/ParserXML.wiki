@@ -75,6 +75,9 @@ The attribute value of {{{rule}}} is a non-terminal.  All the productions in {{{
 
 This tag represents the production for the non-terminal of the parent {{{grammar}}} tag.  Its action code should be immediately followed.  If not, there are no actions performed for this particular production.
 
+|| *Attribute* || *Description* ||
+|| *{{{precedence}}}* || Specify the precedence for the production to the precedence of a particular terminal. ||
+
 == {{{<action>}}} ==
 
 This tag is used to specify the code that should be called for the production in the immediately before {{{<rhs>}}}.

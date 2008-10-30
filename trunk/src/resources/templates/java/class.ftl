@@ -787,6 +787,7 @@ ${code.classheader}
 		_yyInError = false;
 	}
 
+<#if parser.parseError>
 	/**
 	 * This function reports error and return true if critical error occurred, or
 	 * false if the error has been successfully recovered.  IOException is an optional
@@ -807,6 +808,7 @@ ${code.classheader}
 </#if>
 		return false;
 	}
+</#if>
 </#if>
 
 	private Object yyGetValue (int arg)

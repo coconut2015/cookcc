@@ -47,6 +47,7 @@ public class ParserDoc extends TreeDoc
 	private String m_start;
 	private boolean m_defaultReduce;
 	private boolean m_recovery = true;
+	private boolean m_parseerror = true;
 
 	public ParserDoc ()
 	{
@@ -80,6 +81,16 @@ public class ParserDoc extends TreeDoc
 	public void setRecovery (boolean recovery)
 	{
 		m_recovery = recovery;
+	}
+
+	public boolean getParseError ()
+	{
+		return m_parseerror;
+	}
+
+	public void setParseError (boolean parseerror)
+	{
+		m_parseerror = parseerror;
 	}
 
 	public GrammarDoc getGrammar (String term)

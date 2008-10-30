@@ -2,6 +2,7 @@
 <!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
 <cookcc>
 	<!-- This example shows error reducable state finding and ';' finding. -->
+	<!-- Also tests custom parse error function. -->
 	<tokens>IDENTIFIER</tokens>
 	<lexer>
 		<rule>
@@ -33,7 +34,7 @@
 			<action>return 0; /* 0 is the EOF token */</action>
 		</rule>
 	</lexer>
-	<parser start="program">
+	<parser start="program" parseerror="false">
 		<grammar rule="program">
 			<rhs>stmt_list</rhs>
 		</grammar>
@@ -72,5 +73,11 @@
 	</parser>
 	<code>
 		private int m_lineNum = 1;
+
+		private boolean yyParseError (int terminal)
+		{
+			System.out.println ("Custom error function");
+			return false;
+		}
 	</code>
 </cookcc>

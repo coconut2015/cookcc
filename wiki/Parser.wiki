@@ -3,7 +3,7 @@
 = Parser =
 <wiki:toc/>
 
-== Introduction
+== Introduction ==
 
 Currently, the parser generator is in the process of implementation.  The generated parser is [http://en.wikipedia.org/wiki/LALR_parser LALR(1)].
 

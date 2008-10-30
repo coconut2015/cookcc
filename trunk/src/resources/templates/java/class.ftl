@@ -663,8 +663,31 @@ ${code.classheader}
 			{
 <#if parser.recovery>
 				// error
-				if (!_yyInError)
+				if (_yyInError)
 				{
+					// first check if the error is at the lookahead
+					if (cc_ch == 1)
+					{
+						// so we need to reduce the stack until a state with reduceable
+						// action is found
+						if (_yyStateStack.size () > 1)
+							_yyStateStack.setSize (_yyStateStack.size () - 1);
+						else
+							return 1;	// can't do much we exit the parser
+					}
+					else
+					{
+						// this means that we need to dump the lookahead.
+						if (cc_ch == 0)		// can't do much with EOF;
+							return 1;
+						cc_lookaheadStack.removeLast ();
+					}
+					continue;
+				}
+				else
+				{
+					if (yyParseError (cc_lookahead.token))
+						return 1;
 	<#if debug>
 					System.err.println ("parser: inject error token as lookahead");
 	</#if>
@@ -672,12 +695,6 @@ ${code.classheader}
 					_yyInError = true;
 					continue;
 				}
-
-				if (yyParseError (cc_ch))
-					return 1;
-				else
-					_yyInError = false;
-				continue;
 <#else>
 				return 1;
 </#if>
@@ -745,20 +762,6 @@ ${code.classheader}
 	}
 
 	/**
-	 * This function is used by the error handling grammars to artificially inject a
-	 * token on to the lookahead stack to allow the parsing to proceed.
-	 *
-	 * @param	token
-	 *			the token
-	 * @param	value
-	 *			the value associated with the token
-	 */
-	protected void yyPushLookahead (int token, Object value)
-	{
-		_yyLookaheadStack.add (new YYParserState (token, value));
-	}
-
-	/**
 	 * This function is used by the error handling grammars to pop an unwantted
 	 * token from the lookahead stack.
 	 *
@@ -770,16 +773,6 @@ ${code.classheader}
 	protected void yyPopLookahead ()
 	{
 		_yyLookaheadStack.removeLast ();
-	}
-
-	/**
-	 * This function is used by the error handling grammars to pop an unwanted
-	 * token from the state stack.  Usually it is used to pop the error token
-	 * so that the parsing can resume.
-	 */
-	protected void yyPopStateStack ()
-	{
-		_yyStateStack.setSize (_yyStateStack.size () - 1);
 	}
 
 	/**
@@ -799,19 +792,20 @@ ${code.classheader}
 	 * false if the error has been successfully recovered.  IOException is an optional
 	 * choice of reporting error.
 	 *
-	 * @param	ecsToken
-	 *			this token is the ecs group id of the input token.
+	 * @param	terminal
+	 *			the terminal that caused the error.
 	 * @return	true if irrecoverable error occurred.  Or simply throw an IOException.
-	 *			false if the parsing can be continued.
+	 *			false if the parsing can be continued to check for specific
+	 *			error tokens.
 	 * @throws	IOException
 	 *			in case of error.
 	 */
-	protected boolean yyParseError (char ecsToken) throws IOException
+	protected boolean yyParseError (int terminal) throws IOException
 	{
 <#if debug>
 		System.err.println ("parser: fatal error");
 </#if>
-		return true;
+		return false;
 	}
 </#if>
 

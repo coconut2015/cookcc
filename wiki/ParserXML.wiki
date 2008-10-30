@@ -1,6 +1,6 @@
 #summary Describes the Parser XML format
 
-= <parser> Tag Description =
+= {{{<parser>}}} Tag Description =
 <wiki:toc/>
 
 == Example ==

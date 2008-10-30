@@ -52,7 +52,14 @@ A sample XML for {{{<parser>}}} section looks like:
 
 == {{{<parser>}}} ==
 
-{{{<parser>}}} has a single attribute {{{start}}} which can be used to specify the start non-terminal.  If this attribute is not specified, the LHS of the first grammar is used.
+Options for the parser are specified as attributes of the {{{<parser>}}} tag.
+
+|| *Attribute* || *Description* ||
+|| *{{{start}}}* || Specify the start non-terminal.  If this attribute is not specified, the LHS of the first grammar is used. ||
+|| *{{{recovery}}}* || Should the parser try to generate error recovery routines.  This attribute is default {{{true}}}.  Set this attribute to {{{false}}} for speedy exit from the parser in case of error. ||
+|| *{{{parseerror}}}* || Should the parser generate the error function since the user is going to supply one.  This attribute is default {{{true}}}. ||
+
+See the [ParserErrorRecovery parser recovery page] for more information on error recovery.
 
 == {{{<type>}}} ==
 

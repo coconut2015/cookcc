@@ -80,6 +80,6 @@ This tag represents the production for the non-terminal of the parent {{{grammar
 
 == {{{<action>}}} ==
 
-This tag is used to specify the code that should be called for the production in the immediately before {{{<rhs>}}}.
+This tag is used to specify the code that should be called for the production in the immediate {{{<rhs>}}} above.
 
 {{{$$}}} represents the value for the LHS non-terminal.  {{{$1}}}, {{{$2}}} etc represent the object values of the symbols at the position for productions specified in the {{{<lhs>}}} tag, starting from 1.

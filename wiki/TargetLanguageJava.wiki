@@ -22,7 +22,7 @@ Currently, v0.1 only contains the lexer component.
 
 === Unicode Support ===
 
-CookCC can generate 16-bit tables.  However, due to the size of of the equivalent class table, Sun's Java compilers cannot handle it.  A work around is to use [http://www.eclipse.org/jdt/core/index.php ECJ (Eclipse Core Java compiler)] to compile the generated code.
+CookCC can generate tables for 16-bit characters.  However, due to the size of of the equivalent class table, Sun's Java compilers cannot handle it.  A work around is to use [http://www.eclipse.org/jdt/core/index.php ECJ (Eclipse Core Java compiler)] to compile the generated code.
 
 === Performance ===
 

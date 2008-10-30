@@ -33,7 +33,7 @@ A sample XML for the {{{<lexer>}}} section looks like:
 	</lexer>
 }}}
 
-== XML Tag Explanations ==
+== Tag Explanations ==
 
 === {{{<lexer>}}} ===
 Options for the lexer are specified as attributes of the {{{<lexer>}}} tag.

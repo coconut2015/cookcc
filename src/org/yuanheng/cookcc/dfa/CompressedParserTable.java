@@ -48,6 +48,9 @@ public class CompressedParserTable
 	private short[] m_default;
 	private boolean m_error;
 	private short[] m_meta;
+	private short[] m_gotoDefault;
+
+	private int m_baseAdd;
 
 	public CompressedParserTable (Parser lexer)
 	{
@@ -70,6 +73,14 @@ public class CompressedParserTable
 		m_default = compressor.getDefault ();
 		m_error = compressor.getError ();
 		m_meta = compressor.getMeta ();
+
+		GotoTableCompressor gotoCompressor = new GotoTableCompressor (m_parser.getGoto ());
+		gotoCompressor.compute (m_base, m_next, m_check);
+		m_base = gotoCompressor.getBase ();
+		m_next = gotoCompressor.getNext ();
+		m_check = gotoCompressor.getCheck ();
+		m_gotoDefault = gotoCompressor.getDefault ();
+		m_baseAdd = gotoCompressor.getBaseAdd ();
 	}
 
 	public int getSize ()
@@ -77,30 +88,9 @@ public class CompressedParserTable
 		return m_parser.getDFA ().size ();
 	}
 
-	public int[] getEcs ()
-	{
-		return m_parser.getSymbolGroups ();
-	}
-
 	public Vector<short[]> getGoto ()
 	{
 		return m_parser.getGoto ();
-	}
-
-	public int[][] getTable ()
-	{
-		DFATable dfa = m_parser.getDFA ();
-		int rows = dfa.size ();
-		int cols = getEcs ().length;
-		int[][] table = new int[rows][cols];
-		for (int i = 0; i < rows; ++i)
-		{
-			short[] states = dfa.getRow (i).getStates ();
-			int[] array = table[i];
-			for (int j = 0; j < cols; ++j)
-				array[j] = states[j];
-		}
-		return table;
 	}
 
 	public short[] getBase ()
@@ -139,6 +129,18 @@ public class CompressedParserTable
 		return m_meta;
 	}
 
+	public int getBaseAdd ()
+	{
+		compute ();
+		return m_baseAdd;
+	}
+
+	public short[] getGotoDefault ()
+	{
+		compute ();
+		return m_gotoDefault;
+	}
+
 
 	public boolean getCorrect ()
 	{
@@ -149,15 +151,20 @@ public class CompressedParserTable
 		short[] defaults = getDefault ();
 		short[] meta = getMeta ();
 		boolean error = getError ();
+		short[] gotoDefault = getGotoDefault ();
 
 		DFATable dfa = m_parser.getDFA ();
+		Vector<short[]> gotoTable = m_parser.getGoto ();
 		int numStates = dfa.size ();
-		int numGroups = getEcs ().length;
+		int usedTerminalCount = m_parser.getUsedTerminalCount ();
+		int nonTerminalCount = m_parser.getNonTerminalCount ();
+		int baseAdd = getBaseAdd ();
 
 		for (int state = 0; state < numStates; ++state)
 		{
 			short[] row = dfa.getRow (state).getStates ();
-			for (int symbol = 0; symbol < numGroups; ++symbol)
+			short[] gotoRow = gotoTable.get (state);
+			for (int symbol = 0; symbol < usedTerminalCount; ++symbol)
 			{
 //				System.out.println ("state: " + state + ", sym: " + symbol);
 				int currentState;
@@ -202,6 +209,29 @@ public class CompressedParserTable
 				if (row[symbol] != currentState)
 //					throw new RuntimeException ("Compressed table and ecs table do not match");
 					return false;
+			}
+			for (int symbol = 0; symbol < nonTerminalCount; ++symbol)
+			{
+				int currentState;
+				currentState = state;
+				int e = symbol;
+				if (gotoDefault == null)
+				{
+					if (check[symbol + base[state + baseAdd]] == (state + baseAdd))
+						currentState = next[symbol + base[state]];
+					else
+						currentState = 0;
+				}
+				else
+				{
+					while (check[e + base[currentState + baseAdd]] != (currentState + baseAdd))
+					{
+						currentState = gotoDefault[currentState];
+						if (currentState == 0)
+							break;
+					}
+				}
+				currentState = next[e + base[currentState]];
 			}
 		}
 		return true;

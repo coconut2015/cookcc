@@ -93,10 +93,28 @@
 # table
 <@intarray3d parser.dfa.table/>
 <#else>
+# compressed correctly = ${parser.dfa.correct?string}
+# base add
+${parser.dfa.baseAdd}
+# base
+<@intarray parser.dfa.base/>
+# next
+<@intarray parser.dfa.next/>
+# check
+<@intarray parser.dfa.check/>
+<#if parser.dfa.default?has_content>
+# default
+<@intarray parser.dfa.default/>
 </#if>
-<#if parser.defaultReduce?has_content>
-# default reduce
-<@intarray parser.defaultReduce/>
+<#if parser.dfa.error>
+: error = ${parser.dfa.error?string}
+</#if>
+<#if parser.dfa.meta?has_content>
+# meta
+<@intarray parser.dfa.meta/>
+</#if>
+# goto default
+<@intarray parser.dfa.gotoDefault/>
 </#if>
 # rules
 <@intarray parser.rules/>

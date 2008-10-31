@@ -88,7 +88,7 @@
 <#if parser?has_content>
 # parser
 # ecs
-<@intarray parser.dfa.ecs/>
+<@intarray parser.ecs/>
 <#if parser.table == "ecs">
 # table
 <@intarray3d parser.dfa.table/>

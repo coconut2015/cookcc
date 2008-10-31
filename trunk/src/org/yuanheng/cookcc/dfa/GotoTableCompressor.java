@@ -42,6 +42,7 @@ class GotoTableCompressor
 	private final Vector<short[]> m_dfaCopy;
 
 	int m_baseAdd;
+	private boolean m_useStateDiff;
 
 	private short[] m_default;
 
@@ -94,6 +95,7 @@ class GotoTableCompressor
 		else
 		{
 			short[] column2 = m_dfa.get (cmpState);
+			m_useStateDiff = true;
 
 			for (int i = 0; i < column1.length; ++i)
 				if (column1[i] == 0 || column1[i] == column2[i])
@@ -345,8 +347,15 @@ class GotoTableCompressor
 		return m_base;
 	}
 
+	int getBaseAdd ()
+	{
+		return m_baseAdd;
+	}
+
 	short[] getDefault ()
 	{
-		return m_default;
+		if (m_useStateDiff)
+			return m_default;
+		return null;
 	}
 }

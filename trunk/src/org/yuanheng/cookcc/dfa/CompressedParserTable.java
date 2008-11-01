@@ -213,25 +213,23 @@ public class CompressedParserTable
 			for (int symbol = 0; symbol < nonTerminalCount; ++symbol)
 			{
 				int currentState;
-				currentState = state;
-				int e = symbol;
 				if (gotoDefault == null)
 				{
-					if (check[symbol + base[state + baseAdd]] == (state + baseAdd))
-						currentState = next[symbol + base[state]];
+					currentState = state + baseAdd;
+					if (check[symbol + base[currentState]] == (currentState))
+						currentState = next[symbol + base[currentState]];
 					else
 						currentState = 0;
 				}
 				else
 				{
-					while (check[e + base[currentState + baseAdd]] != (currentState + baseAdd))
-					{
-						currentState = gotoDefault[currentState];
-						if (currentState == 0)
-							break;
-					}
+					currentState = state + baseAdd;
+					while (check[symbol + base[currentState]] != currentState)
+						currentState = gotoDefault[currentState - baseAdd];
+					currentState = next[symbol + base[currentState]];
 				}
-				currentState = next[e + base[currentState]];
+				if (gotoRow[symbol] != currentState)
+					return false;
 			}
 		}
 		return true;

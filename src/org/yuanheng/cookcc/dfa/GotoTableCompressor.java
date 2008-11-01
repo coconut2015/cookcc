@@ -202,7 +202,10 @@ class GotoTableCompressor
 
 	void doInsertState (short state, short cmpState)
 	{
-		m_default[state] = cmpState;
+		if (cmpState >= 0)
+			m_default[state] = (short)(cmpState + m_baseAdd);
+		else
+			m_default[state] = cmpState;
 		cleanState (state, cmpState);
 
 		int[] minMax = new int[2];
@@ -259,8 +262,8 @@ class GotoTableCompressor
 
 		m_baseAdd = m_base.length;
 
-		m_base = TableCompressor.resize (m_base, m_base.length + m_dfaCopy.size (), SHORT_MIN);
-		m_default = TableCompressor.resize (m_default, m_dfaCopy.size (), SHORT_MIN);
+		m_base = TableCompressor.resize (m_base, m_base.length + m_dfaCopy.size () + 1, SHORT_MIN);
+		m_default = TableCompressor.resize (m_default, m_dfaCopy.size () + 1, SHORT_MIN);
 
 		for (short i = 0; i < m_dfaCopy.size (); ++i)
 		{
@@ -293,16 +296,25 @@ class GotoTableCompressor
 
 		doFillStates ();
 
-		// shrink base and default array to save some space
-//		for (int i = m_base.length - 1; i > 0; --i)
-//		{
-//			if (m_base[i] != SHORT_MIN)
-//			{
-//				_baseArray.resize (i + 1);
-//				_defaultArray.resize (i + 1 - _baseAdd);
-//				break;
-//			}
-//		}
+		// Add an empty state at the end to prevent index out of bound etc
+		// and deal with states with all 0's
+		short defaultState = (short)(m_baseAdd + m_dfa.size ());
+		int end;
+		for (end = m_next.length - 1; end > 0; --end)
+		{
+			if (m_check[end] != SHORT_MIN)
+				break;
+		}
+		++end;
+		m_next = TableCompressor.resize (m_next, end + m_dfa.get (0).length, (short)0);
+		m_check = TableCompressor.resize (m_check, end + m_dfa.get (0).length, defaultState);
+		for (int i = end; i < m_check.length; ++i)
+		{
+			m_check[i] = defaultState;
+			m_next[i] = (short)0;
+		}
+		m_base[m_base.length - 1] = (short)end;
+
 
 		//
 		// process all SHORT_MIN in _checkArray and _nextArray to
@@ -311,7 +323,7 @@ class GotoTableCompressor
 		for (int i = 0; i < m_check.length; ++i)
 		{
 			if (m_check[i] == SHORT_MIN)
-				m_check[i] = -1;
+				m_check[i] = defaultState;
 			if (m_next[i] == SHORT_MIN)
 				m_next[i] = 0;
 		}
@@ -323,12 +335,12 @@ class GotoTableCompressor
 		for (int i = m_baseAdd; i < m_base.length; ++i)
 		{
 			if (m_base[i] == SHORT_MIN)
-				m_base[i] = 0;
+				m_base[i] = (short)end;
 		}
 		for (int i = 0; i < m_default.length; ++i)
 		{
 			if (m_default[i] == SHORT_MIN)
-				m_default[i] = 0;
+				m_default[i] = defaultState;
 		}
 	}
 

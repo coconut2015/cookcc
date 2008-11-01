@@ -67,7 +67,11 @@ class XmlParserOutput
 	{
 		if (doc == null)
 			return;
-		p.println ("\t<parser" + (doc.getStart () == null ? "" : ( " start=\"" + doc.getStart () + "\")")) + ">");
+		p.println ("\t<parser" +
+				   (doc.getStart () == null ? "" : (" start=\"" + doc.getStart () + "\"")) +
+				   (doc.getParseError ()  == true ? "" : " parseerror=\"false\"") +
+				   (doc.getRecovery ()  == true ? "" : " recovery=\"false\"") +
+				   ">");
 
 		for (TypeDoc type : doc.getTypes ())
 			printType (type, p);

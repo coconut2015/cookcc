@@ -1136,4 +1136,14 @@ public class Parser
 		}
 		return m_formats;
 	}
+
+	public int getShiftConflict ()
+	{
+		return m_shiftConflict;
+	}
+
+	public int getReduceConflict ()
+	{
+		return m_reduceConflict;
+	}
 }

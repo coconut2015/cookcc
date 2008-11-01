@@ -107,6 +107,16 @@ public class ParserDFAInfo
 		return m_parser.getMaxTerminal ();
 	}
 
+	public int getUsedTerminalCount ()
+	{
+		return m_parser.getUsedTerminalCount ();
+	}
+
+	public int getNonTerminalCount ()
+	{
+		return m_parser.getNonTerminalCount ();
+	}
+
 	public int[] getRules ()
 	{
 		if (m_rules != null)
@@ -164,5 +174,15 @@ public class ParserDFAInfo
 	public Map<Integer, MessageFormat> getFormats ()
 	{
 		return m_parser.getFormats ();
+	}
+
+	public int getShiftConflict ()
+	{
+		return m_parser.getShiftConflict ();
+	}
+
+	public int getReduceConflict ()
+	{
+		return m_parser.getReduceConflict ();
 	}
 }

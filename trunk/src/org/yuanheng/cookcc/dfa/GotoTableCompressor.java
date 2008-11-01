@@ -60,13 +60,15 @@ class GotoTableCompressor
 			m_dfaCopy.add (column.clone ());
 	}
 
-	private boolean isEmpty (int state)
+	// find out the # of zeros (i.e. errors) in the state
+	private int getErrorCount (int state)
 	{
+		int count = 0;
 		short[] column = m_dfa.get (state);
 		for (short c : column)
-			if (c != 0)
-				return false;
-		return true;
+			if (c == 0)
+				++count;
+		return count;
 	}
 
 	private int getStateDiff (int thisState, int cmpState)
@@ -268,7 +270,9 @@ class GotoTableCompressor
 		for (short i = 0; i < m_dfaCopy.size (); ++i)
 		{
 			// ignore those empty ones
-			if (isEmpty (i))
+			int errorCount = getErrorCount (i);
+			int rowLength = m_dfa.get (i).length;
+			if (errorCount == rowLength)		// ok, this state is full of 0's
 				continue;
 
 			// search the DFA for a nearest state
@@ -288,7 +292,7 @@ class GotoTableCompressor
 			}
 
 			// if found a state like that
-			if (minState < i)
+			if (minState < i && minDiff < (rowLength - errorCount))
 				doInsertState (i, minState);
 			else
 				doInsertState (i, SHORT_MIN);

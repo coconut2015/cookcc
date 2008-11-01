@@ -939,7 +939,7 @@ ${code.default}
 </#if>
 
 /*
- * properties and statistics:
+ * lexer properties:
  * unicode = ${unicode?string}
 <#if lexer?has_content>
  * bol = ${lexer.bol?string}
@@ -976,6 +976,20 @@ ${code.default}
 </#if>
  *
 <#if parser?has_content>
+ * parser properties:
+ * symbols = ${parser.symbols?size}
+ * max terminal = ${parser.maxTerminal}
+ * used terminals = ${parser.usedTerminalCount}
+ * non-terminals = ${parser.nonTerminalCount}
+ * rules = ${parser.rules?size - 1}
+ * shift/reduce conflicts = ${parser.shiftConflict}
+ * reduct/reduce conflicts = ${parser.reduceConflict}
+ *
+ * memory usage:
+ * ecs table = ${(parser.ecs?size + (parser.usedTerminalCount + parser.nonTerminalCount) * parser.dfa.size)}
+<#if parser.table == "compressed">
+ * compressed table = ${parser.ecs?size + parser.dfa.totalSize}
+</#if>
 </#if>
  */
 }

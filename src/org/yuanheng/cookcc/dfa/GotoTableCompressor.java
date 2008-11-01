@@ -77,7 +77,7 @@ class GotoTableCompressor
 		int diff = 0;
 
 		for (int i = 0; i < column1.length; ++i)
-			if (column1[i] != 0 && column1[i] != column2[i])
+			if (column1[i] != column2[i])
 				++diff;
 		return diff;
 	}
@@ -98,7 +98,7 @@ class GotoTableCompressor
 			m_useStateDiff = true;
 
 			for (int i = 0; i < column1.length; ++i)
-				if (column1[i] == 0 || column1[i] == column2[i])
+				if (column1[i] == column2[i])
 					column1[i] = SHORT_MIN;
 		}
 	}

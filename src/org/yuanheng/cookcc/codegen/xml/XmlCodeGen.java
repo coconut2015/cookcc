@@ -66,7 +66,7 @@ public class XmlCodeGen implements CodeGen
 	{
 		p.println ("<?xml version = \"1.0\" encoding=\"UTF-8\"?>");
 		p.println ("<!DOCTYPE cookcc PUBLIC \"-//CookCC//1.0\" \"http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd\">");
-		p.println ("<codecc>");
+		p.println ("<cookcc>");
 
 		Map<String,String> codeMap = doc.getCode ();
 
@@ -74,13 +74,13 @@ public class XmlCodeGen implements CodeGen
 		{
 			String code = codeMap.get (key);
 			if (code != null && code.length () > 0)
-				p.println ("\t<code name=\"" + key + "\">" + code + "</code>");
+				p.println ("\t<code name=\"" + key + "\">" + Utils.translate (code) + "</code>");
 		}
 
 		printTokens (doc, p);
 		new XmlLexerOutput ().printLexer (doc.getLexer (), p);
 		new XmlParserOutput ().printParserDoc (doc.getParser (), p);
-		p.println ("</codecc>");
+		p.println ("</cookcc>");
 	}
 
 	public void generateOutput (Document doc)

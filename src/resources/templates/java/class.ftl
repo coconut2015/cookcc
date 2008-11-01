@@ -73,6 +73,18 @@ ${code.classheader}
 	<#if parser.table == "ecs">
 		private static char[][] next = {<#list parser.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
 	<#else>
+		private static char[] base = <@intarray parser.dfa.base/>;
+		private static char[] next = <@intarray parser.dfa.next/>;
+		private static char[] check = <@intarray parser.dfa.check/>;
+		<#if parser.dfa.default?has_content>
+		private static char[] defaults = <@intarray parser.dfa.default/>;
+		</#if>
+		<#if parser.dfa.meta?has_content>
+		private static char[] meta = <@intarray parser.dfa.meta/>;
+		</#if>
+		<#if parser.dfa.gotoDefault?has_content>
+		private static char[] gotoDefault = <@intarray parser.dfa.gotoDefault/>;
+		</#if>
 	</#if>
 		private static char[] lhs = <@intarray parser.lhs/>;
 	<#if debug>
@@ -84,7 +96,7 @@ ${code.classheader}
 	{
 		int token;			// the current token type
 		Object value;		// the current value associated with token
-		short state;		// the current scan state
+		int state;			// the current scan state
 
 		YYParserState ()	// EOF token construction
 		{
@@ -98,7 +110,7 @@ ${code.classheader}
 		{
 			this (token, value, (short)0);
 		}
-		YYParserState (int token, Object value, short state)
+		YYParserState (int token, Object value, int state)
 		{
 			this.token = token;
 			this.value = value;
@@ -355,12 +367,12 @@ ${code.classheader}
 			_yyBOL = _yyIsNextBOL;
 			_yyIsNextBOL = false;
 	<#if lexer.bolStates>
-			int matchedState = _yyBaseState + (_yyBOL ? 1 : 0);
+			int cc_matchedState = _yyBaseState + (_yyBOL ? 1 : 0);
 	<#else>
-			int matchedState = _yyBaseState;
+			int cc_matchedState = _yyBaseState;
 	</#if>
 <#else>
-			int matchedState = _yyBaseState;
+			int cc_matchedState = _yyBaseState;
 </#if>
 
 			int matchedLength = 0;
@@ -369,7 +381,7 @@ ${code.classheader}
 			int lookahead = _yyMatchStart;
 
 <#if lexer.backup>
-			int cc_backupMatchedState = matchedState;
+			int cc_backupMatchedState = cc_matchedState;
 			int cc_backupMatchedLength = 0;
 </#if>
 
@@ -380,66 +392,66 @@ ${code.classheader}
 				if (lookahead < internalBufferEnd)
 				{
 					// now okay to process the character
-					int currentState;
+					int cc_toState;
 <#if lexer.table == "full">
-					currentState = cc_next[matchedState][buffer[lookahead]<#if !unicode> & 0xff</#if>];
+					cc_toState = cc_next[cc_matchedState][buffer[lookahead]<#if !unicode> & 0xff</#if>];
 <#elseif lexer.table == "ecs">
-					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead]<#if !unicode> & 0xff</#if>]];
+					cc_toState = cc_next[cc_matchedState][cc_ecs[buffer[lookahead]<#if !unicode> & 0xff</#if>]];
 <#else>
 					int symbol = cc_ecs[buffer[lookahead]<#if !unicode> & 0xff</#if>];
-					currentState = matchedState;
+					cc_toState = cc_matchedState;
 	<#if !lexer.dfa.default?has_content>
-					if (cc_check[symbol + cc_base[matchedState]] == matchedState)
-						currentState = cc_next[symbol + cc_base[matchedState]];
+					if (cc_check[symbol + cc_base[cc_matchedState]] == cc_matchedState)
+						cc_toState = cc_next[symbol + cc_base[cc_matchedState]];
 					else
-						currentState = 0;
+						cc_toState = 0;
 	<#elseif !lexer.dfa.error?has_content>
-					if (cc_check[symbol + cc_base[matchedState]] == matchedState)
-						currentState = cc_next[symbol + cc_base[matchedState]];
+					if (cc_check[symbol + cc_base[cc_matchedState]] == cc_matchedState)
+						cc_toState = cc_next[symbol + cc_base[cc_matchedState]];
 					else
-						currentState = cc_default[matchedState];
+						cc_toState = cc_default[cc_matchedState];
 	<#elseif !lexer.dfa.meta?has_content>
-					while (cc_check[symbol + cc_base[currentState]] != currentState)
+					while (cc_check[symbol + cc_base[cc_toState]] != cc_toState)
 					{
-						currentState = cc_default[currentState];
-						if (currentState >= ${lexer.dfa.size})
+						cc_toState = cc_default[cc_toState];
+						if (cc_toState >= ${lexer.dfa.size})
 							symbol = 0;
 					}
-					currentState = cc_next[symbol + cc_base[currentState]];
+					cc_toState = cc_next[symbol + cc_base[cc_toState]];
 	<#else>
-					while (cc_check[symbol + cc_base[currentState]] != currentState)
+					while (cc_check[symbol + cc_base[cc_toState]] != cc_toState)
 					{
-						currentState = cc_default[currentState];
-						if (currentState >= ${lexer.dfa.size})
+						cc_toState = cc_default[cc_toState];
+						if (cc_toState >= ${lexer.dfa.size})
 							symbol = cc_meta[symbol];
 					}
-					currentState = cc_next[symbol + cc_base[currentState]];
+					cc_toState = cc_next[symbol + cc_base[cc_toState]];
 	</#if>
 </#if>
 
 <#if lexer.backup>
-					if (currentState == 0)
+					if (cc_toState == 0)
 					{
 	<#if debug>
-						debugLexerBackup (matchedState, new String (_yyBuffer, _yyMatchStart, matchedLength));
+						debugLexerBackup (cc_matchedState, new String (_yyBuffer, _yyMatchStart, matchedLength));
 	</#if>
-						matchedState = cc_backupMatchedState;
+						cc_matchedState = cc_backupMatchedState;
 						matchedLength = cc_backupMatchedLength;
 						break;
 					}
 <#else>
-					if (currentState == 0)
+					if (cc_toState == 0)
 						break;
 </#if>
 
-					matchedState = currentState;
+					cc_matchedState = cc_toState;
 					++lookahead;
 					++matchedLength;
 
 <#if lexer.backup>
-					if (cc_accept[matchedState] > 0)
+					if (cc_accept[cc_matchedState] > 0)
 					{
-						cc_backupMatchedState = currentState;
+						cc_backupMatchedState = cc_toState;
 						cc_backupMatchedLength = matchedLength;
 					}
 </#if>
@@ -454,50 +466,50 @@ ${code.classheader}
 					if (! refresh)
 					{
 						// <<EOF>>
-						int currentState;
+						int cc_toState;
 <#if lexer.table == "full">
-						currentState = cc_next[matchedState][${lexer.eof}];
+						cc_toState = cc_next[cc_matchedState][${lexer.eof}];
 <#elseif lexer.table == "ecs">
-						currentState = cc_next[matchedState][cc_ecs[${lexer.eof}]];
+						cc_toState = cc_next[cc_matchedState][cc_ecs[${lexer.eof}]];
 <#elseif lexer.table == "compressed">
 						int symbol = cc_ecs[${lexer.eof}];
 	<#if !lexer.dfa.default?has_content>
-						if (cc_check[symbol + cc_base[matchedState]] == matchedState)
-							currentState = cc_next[symbol + cc_base[matchedState]];
+						if (cc_check[symbol + cc_base[cc_matchedState]] == cc_matchedState)
+							cc_toState = cc_next[symbol + cc_base[cc_matchedState]];
 						else
-							currentState = 0;
+							cc_toState = 0;
 	<#elseif !lexer.dfa.error>
-						if (cc_check[symbol + cc_base[matchedState]] == matchedState)
-							currentState = cc_next[symbol + cc_base[matchedState]];
+						if (cc_check[symbol + cc_base[cc_matchedState]] == cc_matchedState)
+							cc_toState = cc_next[symbol + cc_base[cc_matchedState]];
 						else
-							currentState = cc_default[matchedState];
+							cc_toState = cc_default[cc_matchedState];
 	<#elseif !lexer.dfa.meta?has_content>
-						currentState = matchedState;
-						while (cc_check[symbol + cc_base[currentState]] != currentState)
+						cc_toState = cc_matchedState;
+						while (cc_check[symbol + cc_base[cc_toState]] != cc_toState)
 						{
-							currentState = cc_default[currentState];
-							if (currentState >= ${lexer.dfa.size})
+							cc_toState = cc_default[cc_toState];
+							if (cc_toState >= ${lexer.dfa.size})
 								symbol = 0;
 						}
-						currentState = cc_next[symbol + cc_base[currentState]];
+						cc_toState = cc_next[symbol + cc_base[cc_toState]];
 	<#else>
-						currentState = matchedState;
-						while (cc_check[symbol + cc_base[currentState]] != currentState)
+						cc_toState = cc_matchedState;
+						while (cc_check[symbol + cc_base[cc_toState]] != cc_toState)
 						{
-							currentState = cc_default[currentState];
-							if (currentState >= ${lexer.dfa.size})
+							cc_toState = cc_default[cc_toState];
+							if (cc_toState >= ${lexer.dfa.size})
 								symbol = cc_meta[symbol];
 						}
-						currentState = cc_next[symbol + cc_base[currentState]];
+						cc_toState = cc_next[symbol + cc_base[cc_toState]];
 	</#if>
 
 </#if>
-						if (currentState != 0)
-							matchedState = currentState;
+						if (cc_toState != 0)
+							cc_matchedState = cc_toState;
 <#if lexer.backup>
 						else
 						{
-							matchedState = cc_backupMatchedState;
+							cc_matchedState = cc_backupMatchedState;
 							matchedLength = cc_backupMatchedLength;
 						}
 </#if>
@@ -511,10 +523,10 @@ ${code.classheader}
 			_yyLength = matchedLength;
 
 <#if debug>
-			debugLexer (matchedState, cc_accept[matchedState]);
+			debugLexer (cc_matchedState, cc_accept[cc_matchedState]);
 </#if>
 
-			switch (cc_accept[matchedState])
+			switch (cc_accept[cc_matchedState])
 			{
 <#list lexer.cases as i>
 	<#if !i.internal>
@@ -603,6 +615,19 @@ ${code.classheader}
 		char[] cc_ecs = cc_parser.ecs;
 <#if parser.table == "ecs">
 		char[][] cc_next = cc_parser.next;
+<#else>
+		char[] cc_next = cc_parser.next;
+		char[] cc_check = cc_parser.check;
+		char[] cc_base = cc_parser.base;
+	<#if parser.dfa.default?has_content>
+		char[] cc_default = cc_parser.defaults;
+	</#if>
+	<#if parser.dfa.meta?has_content>
+		char[] cc_meta = cc_parser.meta;
+	</#if>
+	<#if parser.dfa.gotoDefault?has_content>
+		char[] cc_gotoDefault = cc_parser.gotoDefault;
+	</#if>
 </#if>
 		char[] cc_rule = cc_parser.rule;
 		char[] cc_lhs = cc_parser.lhs;
@@ -613,13 +638,13 @@ ${code.classheader}
 		if (cc_stateStack.size () == 0)
 			cc_stateStack.add (new YYParserState ());
 
-		short cc_toState = 0;
+		int cc_toState = 0;
 
 		for (;;)
 		{
 			YYParserState cc_lookahead;
 
-			short cc_fromState;
+			int cc_fromState;
 			char cc_ch;
 
 			//
@@ -641,6 +666,37 @@ ${code.classheader}
 <#if parser.table == "ecs">
 			cc_toState = (short)cc_next[cc_fromState][cc_ch];
 <#else>
+	<#if !parser.dfa.default?has_content>
+			if (cc_check[cc_ch + cc_base[cc_fromState]] == cc_fromState)
+				cc_toState = (short)cc_next[cc_ch + cc_base[cc_fromState]];
+			else
+				cc_toState = 0;
+	<#elseif !parser.dfa.error?has_content>
+			if (cc_check[cc_ch + cc_base[cc_fromState]] == cc_fromState)
+				cc_toState = (short)cc_next[cc_ch + cc_base[cc_fromState]];
+			else
+				cc_toState = (short)cc_default[cc_fromState];
+	<#elseif !parser.dfa.meta?has_content>
+			int cc_symbol = cc_ch;
+			cc_toState = cc_fromState;
+			while (cc_check[cc_symbol + cc_base[cc_toState]] != cc_toState)
+			{
+				cc_toState = cc_default[cc_toState];
+				if (cc_toState >= ${parser.dfa.size})
+					cc_symbol = 0;
+			}
+			cc_toState = (short)cc_next[cc_symbol + cc_base[cc_toState]];
+	<#else>
+			int cc_symbol = cc_ch;
+			cc_toState = cc_fromState;
+			while (cc_check[cc_symbol + cc_base[cc_toState]] != cc_toState)
+			{
+				cc_toState = cc_default[cc_toState];
+				if (cc_toState >= ${parser.dfa.size})
+					cc_symbol = cc_meta[cc_symbol];
+			}
+			cc_toState = (short)cc_next[cc_symbol + cc_base[cc_toState]];
+	</#if>
 </#if>
 
 <#if debug>
@@ -718,10 +774,24 @@ ${code.classheader}
 			if (cc_ruleState == 1)
 				cc_toState = 0;			// reset the parser
 			else
+			{
 <#if parser.table == "ecs">
-				cc_toState = (short)cc_next[cc_fromState][cc_lhs[cc_ruleState]];
+				cc_toState = cc_next[cc_fromState][cc_lhs[cc_ruleState]];
 <#else>
+				cc_toState = cc_fromState + ${parser.dfa.baseAdd};
+				int cc_tmpCh = cc_lhs[cc_ruleState] - ${parser.dfa.usedTerminalCount};
+	<#if !parser.dfa.gotoDefault?has_content>
+				if (cc_check[cc_tmpCh + cc_base[cc_toState]] == cc_toState)
+					cc_toState = cc_next[cc_tmpCh + cc_base[cc_toState]];
+				else
+					cc_toState = 0;
+	<#else>
+				while (cc_check[cc_tmpCh + cc_base[cc_toState]] != cc_toState)
+					cc_toState = cc_gotoDefault[cc_toState - ${parser.dfa.baseAdd}];
+				cc_toState = cc_next[cc_tmpCh + cc_base[cc_toState]];
+	</#if>
 </#if>
+			}
 
 			_yyValue = null;
 

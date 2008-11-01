@@ -141,6 +141,11 @@ public class CompressedParserTable
 		return m_gotoDefault;
 	}
 
+	public int getUsedTerminalCount ()
+	{
+		compute ();
+		return m_parser.getUsedTerminalCount ();
+	}
 
 	public boolean getCorrect ()
 	{

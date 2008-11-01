@@ -87,6 +87,19 @@
 </#if>
 <#if parser?has_content>
 # parser
+# properties
+: symbols = ${parser.symbols?size}
+: max terminal = ${parser.maxTerminal}
+: used terminals = ${parser.usedTerminalCount}
+: non-terminals = ${parser.nonTerminalCount}
+: rules = ${parser.rules?size - 1}
+: shift/reduce conflicts = ${parser.shiftConflict}
+: reduct/reduce conflicts = ${parser.reduceConflict}
+# memory usage
+: ecs table = ${(parser.ecs?size + (parser.usedTerminalCount + parser.nonTerminalCount) * parser.dfa.size)}
+<#if parser.table == "compressed">
+: compressed table = ${parser.ecs?size + parser.dfa.totalSize}
+</#if>
 # ecs
 <@intarray parser.ecs/>
 <#if parser.table == "ecs">

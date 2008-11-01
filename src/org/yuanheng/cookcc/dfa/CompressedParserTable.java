@@ -88,6 +88,19 @@ public class CompressedParserTable
 		return m_parser.getDFA ().size ();
 	}
 
+	public int getTotalSize ()
+	{
+		compute ();
+		int totalSize = 0;
+		totalSize += m_base.length;
+		totalSize += m_next.length;
+		totalSize += m_check.length;
+		totalSize += m_default == null ? 0 : m_default.length;
+		totalSize += m_meta == null ? 0 : m_meta.length;
+		totalSize += m_gotoDefault == null ? 0 : m_gotoDefault.length;
+		return totalSize;
+	}
+
 	public Vector<short[]> getGoto ()
 	{
 		return m_parser.getGoto ();

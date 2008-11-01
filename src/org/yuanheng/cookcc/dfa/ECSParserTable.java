@@ -50,6 +50,12 @@ public class ECSParserTable
 		return m_parser.getDFA ().size ();
 	}
 
+	public int getTotalSize ()
+	{
+		int rows = m_parser.getDFA ().size ();
+		return rows * (m_parser.getUsedTerminalCount () + m_parser.getNonTerminalCount ());
+	}
+
 	public int[][] getTable ()
 	{
 		DFATable dfa = m_parser.getDFA ();

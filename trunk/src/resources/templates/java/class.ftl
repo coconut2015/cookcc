@@ -100,15 +100,15 @@ ${code.classheader}
 
 		YYParserState ()	// EOF token construction
 		{
-			this (0, null, (short)0);
+			this (0, null, 0);
 		}
 		YYParserState (int token)
 		{
-			this (token, null, (short)0);
+			this (token, null, 0);
 		}
 		YYParserState (int token, Object value)
 		{
-			this (token, value, (short)0);
+			this (token, value, 0);
 		}
 		YYParserState (int token, Object value, int state)
 		{

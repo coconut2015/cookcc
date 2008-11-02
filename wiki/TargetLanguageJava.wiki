@@ -7,8 +7,6 @@
 Java is the default output language of CookCC.  It can also be selected using the
 {{{-lang java}}}  command line option.
 
-Currently, v0.1 only contains the lexer component.
-
 == Command Line Options ==
 
 || {{{-d <directory>}}} || Select the output directory.  By default, it is the current directory. ||

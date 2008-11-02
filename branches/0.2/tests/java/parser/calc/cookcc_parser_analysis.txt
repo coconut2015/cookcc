@@ -1,0 +1,1454 @@
+
+----------- used symbols ----------
+0	:	0	:	$
+1	:	1	:	error
+2	:	40	:	'('
+3	:	41	:	')'
+4	:	42	:	'*'
+5	:	43	:	'+'
+6	:	45	:	'-'
+7	:	47	:	'/'
+8	:	59	:	';'
+9	:	60	:	'<'
+10	:	61	:	'='
+11	:	62	:	'>'
+12	:	123	:	'{'
+13	:	125	:	'}'
+14	:	256	:	VARIABLE
+15	:	257	:	INTEGER
+16	:	258	:	WHILE
+17	:	259	:	IF
+18	:	260	:	PRINT
+19	:	262	:	ELSE
+20	:	263	:	GE
+21	:	264	:	LE
+22	:	265	:	EQ
+23	:	266	:	NE
+24	:	268	:	@start
+25	:	269	:	program
+26	:	270	:	function
+27	:	271	:	stmt
+28	:	272	:	expr
+29	:	273	:	stmt_list
+
+----------- statistics ----------
+max terminal = 267
+non terminal count = 6
+terminal count = 30
+used terminal count = 24
+used symbol count = 30
+
+----------- productions ----------
+1	@start	:	 program
+2	program	:	 function
+3	function	:	 function stmt
+4	function	:	
+5	stmt	:	 ';'
+6	stmt	:	 expr ';'
+7	stmt	:	 PRINT expr ';'
+8	stmt	:	 VARIABLE '=' expr ';'
+9	stmt	:	 WHILE '(' expr ')' stmt
+10	stmt	:	 IF '(' expr ')' stmt
+11	stmt	:	 IF '(' expr ')' stmt ELSE stmt
+12	stmt	:	 '{' stmt_list '}'
+13	stmt_list	:	 stmt
+14	stmt_list	:	 stmt_list stmt
+15	expr	:	 INTEGER
+16	expr	:	 VARIABLE
+17	expr	:	 '-' expr
+18	expr	:	 expr '+' expr
+19	expr	:	 expr '-' expr
+20	expr	:	 expr '*' expr
+21	expr	:	 expr '/' expr
+22	expr	:	 expr '<' expr
+23	expr	:	 expr '>' expr
+24	expr	:	 expr GE expr
+25	expr	:	 expr LE expr
+26	expr	:	 expr NE expr
+27	expr	:	 expr EQ expr
+28	expr	:	 '(' expr ')'
+
+----------- First Sets ----------
+FIRST(@start) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+FIRST(program) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+FIRST(function) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT], epsilon
+FIRST(stmt) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+FIRST(expr) = ['(' '-' VARIABLE INTEGER]
+FIRST(stmt_list) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+
+----------- DFA states: 58 ----------
+default reduce = false
+
+State 0:
+ *	@start	: . program , [$]
+ -	program	: . function , [$]
+ -	function	: . function stmt , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	function	: . , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+
+	$	reduce to rule 4
+	'('	reduce to rule 4
+	'-'	reduce to rule 4
+	';'	reduce to rule 4
+	'{'	reduce to rule 4
+	VARIABLE	reduce to rule 4
+	INTEGER	reduce to rule 4
+	WHILE	reduce to rule 4
+	IF	reduce to rule 4
+	PRINT	reduce to rule 4
+	program	shift, goto to state 1
+	function	shift, goto to state 2
+
+
+State 1:
+ *	@start	: program . , [$]
+
+	$	Accept
+
+
+State 2:
+ *	program	: function . , [$]
+ *	function	: function . stmt , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . ';' , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . expr ';' , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . PRINT expr ';' , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . VARIABLE '=' expr ';' , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . WHILE '(' expr ')' stmt , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . IF '(' expr ')' stmt , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . IF '(' expr ')' stmt ELSE stmt , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . '{' stmt_list '}' , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	$	reduce to rule 2
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	';'	shift, goto to state 5
+	'{'	shift, goto to state 6
+	VARIABLE	shift, goto to state 7
+	INTEGER	shift, goto to state 8
+	WHILE	shift, goto to state 9
+	IF	shift, goto to state 10
+	PRINT	shift, goto to state 11
+	stmt	shift, goto to state 12
+	expr	shift, goto to state 13
+
+
+State 3:
+ *	expr	: '(' . expr ')' , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 15
+
+
+State 4:
+ *	expr	: '-' . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 16
+
+
+State 5:
+ *	stmt	: ';' . , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	$	reduce to rule 5
+	'('	reduce to rule 5
+	')'	reduce to rule 5
+	'-'	reduce to rule 5
+	';'	reduce to rule 5
+	'{'	reduce to rule 5
+	'}'	reduce to rule 5
+	VARIABLE	reduce to rule 5
+	INTEGER	reduce to rule 5
+	WHILE	reduce to rule 5
+	IF	reduce to rule 5
+	PRINT	reduce to rule 5
+	ELSE	reduce to rule 5
+
+
+State 6:
+ *	stmt	: '{' . stmt_list '}' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt_list	: . stmt , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt_list	: . stmt_list stmt , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . ';' , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . expr ';' , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . PRINT expr ';' , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . VARIABLE '=' expr ';' , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . WHILE '(' expr ')' stmt , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . IF '(' expr ')' stmt , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . IF '(' expr ')' stmt ELSE stmt , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . '{' stmt_list '}' , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	';'	shift, goto to state 5
+	'{'	shift, goto to state 6
+	VARIABLE	shift, goto to state 7
+	INTEGER	shift, goto to state 8
+	WHILE	shift, goto to state 9
+	IF	shift, goto to state 10
+	PRINT	shift, goto to state 11
+	stmt	shift, goto to state 17
+	expr	shift, goto to state 13
+	stmt_list	shift, goto to state 18
+
+
+State 7:
+ *	stmt	: VARIABLE . '=' expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	expr	: VARIABLE . , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'*'	reduce to rule 16
+	'+'	reduce to rule 16
+	'-'	reduce to rule 16
+	'/'	reduce to rule 16
+	';'	reduce to rule 16
+	'<'	reduce to rule 16
+	'='	shift, goto to state 19
+	'>'	reduce to rule 16
+	GE	reduce to rule 16
+	LE	reduce to rule 16
+	EQ	reduce to rule 16
+	NE	reduce to rule 16
+
+
+State 8:
+ *	expr	: INTEGER . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 15
+	'*'	reduce to rule 15
+	'+'	reduce to rule 15
+	'-'	reduce to rule 15
+	'/'	reduce to rule 15
+	';'	reduce to rule 15
+	'<'	reduce to rule 15
+	'>'	reduce to rule 15
+	GE	reduce to rule 15
+	LE	reduce to rule 15
+	EQ	reduce to rule 15
+	NE	reduce to rule 15
+
+
+State 9:
+ *	stmt	: WHILE . '(' expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	'('	shift, goto to state 20
+
+
+State 10:
+ *	stmt	: IF . '(' expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	stmt	: IF . '(' expr ')' stmt ELSE stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	'('	shift, goto to state 21
+
+
+State 11:
+ *	stmt	: PRINT . expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 22
+
+
+State 12:
+ *	function	: function stmt . , [$ '(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+
+	$	reduce to rule 3
+	'('	reduce to rule 3
+	'-'	reduce to rule 3
+	';'	reduce to rule 3
+	'{'	reduce to rule 3
+	VARIABLE	reduce to rule 3
+	INTEGER	reduce to rule 3
+	WHILE	reduce to rule 3
+	IF	reduce to rule 3
+	PRINT	reduce to rule 3
+
+
+State 13:
+ *	stmt	: expr . ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'*'	shift, goto to state 23
+	'+'	shift, goto to state 24
+	'-'	shift, goto to state 25
+	'/'	shift, goto to state 26
+	';'	shift, goto to state 27
+	'<'	shift, goto to state 28
+	'>'	shift, goto to state 29
+	GE	shift, goto to state 30
+	LE	shift, goto to state 31
+	EQ	shift, goto to state 32
+	NE	shift, goto to state 33
+
+
+State 14:
+ *	expr	: VARIABLE . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 16
+	'*'	reduce to rule 16
+	'+'	reduce to rule 16
+	'-'	reduce to rule 16
+	'/'	reduce to rule 16
+	';'	reduce to rule 16
+	'<'	reduce to rule 16
+	'>'	reduce to rule 16
+	GE	reduce to rule 16
+	LE	reduce to rule 16
+	EQ	reduce to rule 16
+	NE	reduce to rule 16
+
+
+State 15:
+ *	expr	: '(' expr . ')' , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	shift, goto to state 34
+	'*'	shift, goto to state 23
+	'+'	shift, goto to state 24
+	'-'	shift, goto to state 25
+	'/'	shift, goto to state 26
+	'<'	shift, goto to state 28
+	'>'	shift, goto to state 29
+	GE	shift, goto to state 30
+	LE	shift, goto to state 31
+	EQ	shift, goto to state 32
+	NE	shift, goto to state 33
+
+
+State 16:
+ *	expr	: '-' expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 17
+	'*'	reduce to rule 17, due to precedence
+	'+'	reduce to rule 17, due to precedence
+	'-'	reduce to rule 17, due to precedence
+	'/'	reduce to rule 17, due to precedence
+	';'	reduce to rule 17
+	'<'	reduce to rule 17, due to precedence
+	'>'	reduce to rule 17, due to precedence
+	GE	reduce to rule 17, due to precedence
+	LE	reduce to rule 17, due to precedence
+	EQ	reduce to rule 17, due to precedence
+	NE	reduce to rule 17, due to precedence
+
+
+State 17:
+ *	stmt_list	: stmt . , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+
+	'('	reduce to rule 13
+	'-'	reduce to rule 13
+	';'	reduce to rule 13
+	'{'	reduce to rule 13
+	'}'	reduce to rule 13
+	VARIABLE	reduce to rule 13
+	INTEGER	reduce to rule 13
+	WHILE	reduce to rule 13
+	IF	reduce to rule 13
+	PRINT	reduce to rule 13
+
+
+State 18:
+ *	stmt	: '{' stmt_list . '}' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	stmt_list	: stmt_list . stmt , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . ';' , ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . expr ';' , ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . PRINT expr ';' , ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . VARIABLE '=' expr ';' , ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . WHILE '(' expr ')' stmt , ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . IF '(' expr ')' stmt , ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . IF '(' expr ')' stmt ELSE stmt , ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	stmt	: . '{' stmt_list '}' , ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	';'	shift, goto to state 5
+	'{'	shift, goto to state 6
+	'}'	shift, goto to state 35
+	VARIABLE	shift, goto to state 7
+	INTEGER	shift, goto to state 8
+	WHILE	shift, goto to state 9
+	IF	shift, goto to state 10
+	PRINT	shift, goto to state 11
+	stmt	shift, goto to state 36
+	expr	shift, goto to state 13
+
+
+State 19:
+ *	stmt	: VARIABLE '=' . expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 37
+
+
+State 20:
+ *	stmt	: WHILE '(' . expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	expr	: . INTEGER , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 38
+
+
+State 21:
+ *	stmt	: IF '(' . expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	stmt	: IF '(' . expr ')' stmt ELSE stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	expr	: . INTEGER , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 39
+
+
+State 22:
+ *	stmt	: PRINT expr . ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'*'	shift, goto to state 23
+	'+'	shift, goto to state 24
+	'-'	shift, goto to state 25
+	'/'	shift, goto to state 26
+	';'	shift, goto to state 40
+	'<'	shift, goto to state 28
+	'>'	shift, goto to state 29
+	GE	shift, goto to state 30
+	LE	shift, goto to state 31
+	EQ	shift, goto to state 32
+	NE	shift, goto to state 33
+
+
+State 23:
+ *	expr	: expr '*' . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 41
+
+
+State 24:
+ *	expr	: expr '+' . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 42
+
+
+State 25:
+ *	expr	: expr '-' . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 43
+
+
+State 26:
+ *	expr	: expr '/' . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 44
+
+
+State 27:
+ *	stmt	: expr ';' . , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	$	reduce to rule 6
+	'('	reduce to rule 6
+	')'	reduce to rule 6
+	'-'	reduce to rule 6
+	';'	reduce to rule 6
+	'{'	reduce to rule 6
+	'}'	reduce to rule 6
+	VARIABLE	reduce to rule 6
+	INTEGER	reduce to rule 6
+	WHILE	reduce to rule 6
+	IF	reduce to rule 6
+	PRINT	reduce to rule 6
+	ELSE	reduce to rule 6
+
+
+State 28:
+ *	expr	: expr '<' . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 45
+
+
+State 29:
+ *	expr	: expr '>' . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 46
+
+
+State 30:
+ *	expr	: expr GE . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 47
+
+
+State 31:
+ *	expr	: expr LE . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 48
+
+
+State 32:
+ *	expr	: expr EQ . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 49
+
+
+State 33:
+ *	expr	: expr NE . expr , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	VARIABLE	shift, goto to state 14
+	INTEGER	shift, goto to state 8
+	expr	shift, goto to state 50
+
+
+State 34:
+ *	expr	: '(' expr ')' . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 28
+	'*'	reduce to rule 28
+	'+'	reduce to rule 28
+	'-'	reduce to rule 28
+	'/'	reduce to rule 28
+	';'	reduce to rule 28
+	'<'	reduce to rule 28
+	'>'	reduce to rule 28
+	GE	reduce to rule 28
+	LE	reduce to rule 28
+	EQ	reduce to rule 28
+	NE	reduce to rule 28
+
+
+State 35:
+ *	stmt	: '{' stmt_list '}' . , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	$	reduce to rule 12
+	'('	reduce to rule 12
+	')'	reduce to rule 12
+	'-'	reduce to rule 12
+	';'	reduce to rule 12
+	'{'	reduce to rule 12
+	'}'	reduce to rule 12
+	VARIABLE	reduce to rule 12
+	INTEGER	reduce to rule 12
+	WHILE	reduce to rule 12
+	IF	reduce to rule 12
+	PRINT	reduce to rule 12
+	ELSE	reduce to rule 12
+
+
+State 36:
+ *	stmt_list	: stmt_list stmt . , ['(' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT]
+
+	'('	reduce to rule 14
+	'-'	reduce to rule 14
+	';'	reduce to rule 14
+	'{'	reduce to rule 14
+	'}'	reduce to rule 14
+	VARIABLE	reduce to rule 14
+	INTEGER	reduce to rule 14
+	WHILE	reduce to rule 14
+	IF	reduce to rule 14
+	PRINT	reduce to rule 14
+
+
+State 37:
+ *	stmt	: VARIABLE '=' expr . ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'*'	shift, goto to state 23
+	'+'	shift, goto to state 24
+	'-'	shift, goto to state 25
+	'/'	shift, goto to state 26
+	';'	shift, goto to state 51
+	'<'	shift, goto to state 28
+	'>'	shift, goto to state 29
+	GE	shift, goto to state 30
+	LE	shift, goto to state 31
+	EQ	shift, goto to state 32
+	NE	shift, goto to state 33
+
+
+State 38:
+ *	stmt	: WHILE '(' expr . ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	expr	: expr . '+' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	shift, goto to state 52
+	'*'	shift, goto to state 23
+	'+'	shift, goto to state 24
+	'-'	shift, goto to state 25
+	'/'	shift, goto to state 26
+	'<'	shift, goto to state 28
+	'>'	shift, goto to state 29
+	GE	shift, goto to state 30
+	LE	shift, goto to state 31
+	EQ	shift, goto to state 32
+	NE	shift, goto to state 33
+
+
+State 39:
+ *	stmt	: IF '(' expr . ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	stmt	: IF '(' expr . ')' stmt ELSE stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	expr	: expr . '+' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , [')' '*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	shift, goto to state 53
+	'*'	shift, goto to state 23
+	'+'	shift, goto to state 24
+	'-'	shift, goto to state 25
+	'/'	shift, goto to state 26
+	'<'	shift, goto to state 28
+	'>'	shift, goto to state 29
+	GE	shift, goto to state 30
+	LE	shift, goto to state 31
+	EQ	shift, goto to state 32
+	NE	shift, goto to state 33
+
+
+State 40:
+ *	stmt	: PRINT expr ';' . , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	$	reduce to rule 7
+	'('	reduce to rule 7
+	')'	reduce to rule 7
+	'-'	reduce to rule 7
+	';'	reduce to rule 7
+	'{'	reduce to rule 7
+	'}'	reduce to rule 7
+	VARIABLE	reduce to rule 7
+	INTEGER	reduce to rule 7
+	WHILE	reduce to rule 7
+	IF	reduce to rule 7
+	PRINT	reduce to rule 7
+	ELSE	reduce to rule 7
+
+
+State 41:
+ *	expr	: expr '*' expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 20
+	'*'	reduce to rule 20, due to left associativity
+	'+'	reduce to rule 20, due to precedence
+	'-'	reduce to rule 20, due to precedence
+	'/'	reduce to rule 20, due to left associativity
+	';'	reduce to rule 20
+	'<'	reduce to rule 20, due to precedence
+	'>'	reduce to rule 20, due to precedence
+	GE	reduce to rule 20, due to precedence
+	LE	reduce to rule 20, due to precedence
+	EQ	reduce to rule 20, due to precedence
+	NE	reduce to rule 20, due to precedence
+
+
+State 42:
+ *	expr	: expr '+' expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 18
+	'*'	shift, goto to state 23, due to precedence
+	'+'	reduce to rule 18, due to left associativity
+	'-'	reduce to rule 18, due to left associativity
+	'/'	shift, goto to state 26, due to precedence
+	';'	reduce to rule 18
+	'<'	reduce to rule 18, due to precedence
+	'>'	reduce to rule 18, due to precedence
+	GE	reduce to rule 18, due to precedence
+	LE	reduce to rule 18, due to precedence
+	EQ	reduce to rule 18, due to precedence
+	NE	reduce to rule 18, due to precedence
+
+
+State 43:
+ *	expr	: expr '-' expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 19
+	'*'	shift, goto to state 23, due to precedence
+	'+'	reduce to rule 19, due to left associativity
+	'-'	reduce to rule 19, due to left associativity
+	'/'	shift, goto to state 26, due to precedence
+	';'	reduce to rule 19
+	'<'	reduce to rule 19, due to precedence
+	'>'	reduce to rule 19, due to precedence
+	GE	reduce to rule 19, due to precedence
+	LE	reduce to rule 19, due to precedence
+	EQ	reduce to rule 19, due to precedence
+	NE	reduce to rule 19, due to precedence
+
+
+State 44:
+ *	expr	: expr '/' expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 21
+	'*'	reduce to rule 21, due to left associativity
+	'+'	reduce to rule 21, due to precedence
+	'-'	reduce to rule 21, due to precedence
+	'/'	reduce to rule 21, due to left associativity
+	';'	reduce to rule 21
+	'<'	reduce to rule 21, due to precedence
+	'>'	reduce to rule 21, due to precedence
+	GE	reduce to rule 21, due to precedence
+	LE	reduce to rule 21, due to precedence
+	EQ	reduce to rule 21, due to precedence
+	NE	reduce to rule 21, due to precedence
+
+
+State 45:
+ *	expr	: expr '<' expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 22
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
+	';'	reduce to rule 22
+	'<'	reduce to rule 22, due to left associativity
+	'>'	reduce to rule 22, due to left associativity
+	GE	reduce to rule 22, due to left associativity
+	LE	reduce to rule 22, due to left associativity
+	EQ	reduce to rule 22, due to left associativity
+	NE	reduce to rule 22, due to left associativity
+
+
+State 46:
+ *	expr	: expr '>' expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 23
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
+	';'	reduce to rule 23
+	'<'	reduce to rule 23, due to left associativity
+	'>'	reduce to rule 23, due to left associativity
+	GE	reduce to rule 23, due to left associativity
+	LE	reduce to rule 23, due to left associativity
+	EQ	reduce to rule 23, due to left associativity
+	NE	reduce to rule 23, due to left associativity
+
+
+State 47:
+ *	expr	: expr GE expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 24
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
+	';'	reduce to rule 24
+	'<'	reduce to rule 24, due to left associativity
+	'>'	reduce to rule 24, due to left associativity
+	GE	reduce to rule 24, due to left associativity
+	LE	reduce to rule 24, due to left associativity
+	EQ	reduce to rule 24, due to left associativity
+	NE	reduce to rule 24, due to left associativity
+
+
+State 48:
+ *	expr	: expr LE expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 25
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
+	';'	reduce to rule 25
+	'<'	reduce to rule 25, due to left associativity
+	'>'	reduce to rule 25, due to left associativity
+	GE	reduce to rule 25, due to left associativity
+	LE	reduce to rule 25, due to left associativity
+	EQ	reduce to rule 25, due to left associativity
+	NE	reduce to rule 25, due to left associativity
+
+
+State 49:
+ *	expr	: expr EQ expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 27
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
+	';'	reduce to rule 27
+	'<'	reduce to rule 27, due to left associativity
+	'>'	reduce to rule 27, due to left associativity
+	GE	reduce to rule 27, due to left associativity
+	LE	reduce to rule 27, due to left associativity
+	EQ	reduce to rule 27, due to left associativity
+	NE	reduce to rule 27, due to left associativity
+
+
+State 50:
+ *	expr	: expr NE expr . , [')' '*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '+' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '-' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '*' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '/' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '<' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . '>' expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . GE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . LE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . NE expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+ *	expr	: expr . EQ expr , ['*' '+' '-' '/' '<' '>' GE LE EQ NE]
+
+	')'	reduce to rule 26
+	'*'	shift, goto to state 23, due to precedence
+	'+'	shift, goto to state 24, due to precedence
+	'-'	shift, goto to state 25, due to precedence
+	'/'	shift, goto to state 26, due to precedence
+	';'	reduce to rule 26
+	'<'	reduce to rule 26, due to left associativity
+	'>'	reduce to rule 26, due to left associativity
+	GE	reduce to rule 26, due to left associativity
+	LE	reduce to rule 26, due to left associativity
+	EQ	reduce to rule 26, due to left associativity
+	NE	reduce to rule 26, due to left associativity
+
+
+State 51:
+ *	stmt	: VARIABLE '=' expr ';' . , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	$	reduce to rule 8
+	'('	reduce to rule 8
+	')'	reduce to rule 8
+	'-'	reduce to rule 8
+	';'	reduce to rule 8
+	'{'	reduce to rule 8
+	'}'	reduce to rule 8
+	VARIABLE	reduce to rule 8
+	INTEGER	reduce to rule 8
+	WHILE	reduce to rule 8
+	IF	reduce to rule 8
+	PRINT	reduce to rule 8
+	ELSE	reduce to rule 8
+
+
+State 52:
+ *	stmt	: WHILE '(' expr ')' . stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . PRINT expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . VARIABLE '=' expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . WHILE '(' expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . IF '(' expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . IF '(' expr ')' stmt ELSE stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . '{' stmt_list '}' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	';'	shift, goto to state 5
+	'{'	shift, goto to state 6
+	VARIABLE	shift, goto to state 7
+	INTEGER	shift, goto to state 8
+	WHILE	shift, goto to state 9
+	IF	shift, goto to state 10
+	PRINT	shift, goto to state 11
+	stmt	shift, goto to state 54
+	expr	shift, goto to state 13
+
+
+State 53:
+ *	stmt	: IF '(' expr ')' . stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	stmt	: IF '(' expr ')' . stmt ELSE stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . PRINT expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . VARIABLE '=' expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . WHILE '(' expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . IF '(' expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . IF '(' expr ')' stmt ELSE stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . '{' stmt_list '}' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	';'	shift, goto to state 5
+	'{'	shift, goto to state 6
+	VARIABLE	shift, goto to state 7
+	INTEGER	shift, goto to state 8
+	WHILE	shift, goto to state 9
+	IF	shift, goto to state 10
+	PRINT	shift, goto to state 11
+	stmt	shift, goto to state 55
+	expr	shift, goto to state 13
+
+
+State 54:
+ *	stmt	: WHILE '(' expr ')' stmt . , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	$	reduce to rule 9
+	'('	reduce to rule 9
+	')'	reduce to rule 9
+	'-'	reduce to rule 9
+	';'	reduce to rule 9
+	'{'	reduce to rule 9
+	'}'	reduce to rule 9
+	VARIABLE	reduce to rule 9
+	INTEGER	reduce to rule 9
+	WHILE	reduce to rule 9
+	IF	reduce to rule 9
+	PRINT	reduce to rule 9
+	ELSE	reduce to rule 9
+
+
+State 55:
+ *	stmt	: IF '(' expr ')' stmt . , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ *	stmt	: IF '(' expr ')' stmt . ELSE stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	$	reduce to rule 10
+	'('	reduce to rule 10
+	')'	reduce to rule 10
+	'-'	reduce to rule 10
+	';'	reduce to rule 10
+	'{'	reduce to rule 10
+	'}'	reduce to rule 10
+	VARIABLE	reduce to rule 10
+	INTEGER	reduce to rule 10
+	WHILE	reduce to rule 10
+	IF	reduce to rule 10
+	PRINT	reduce to rule 10
+	ELSE	shift, goto to state 56, due to precedence
+
+
+State 56:
+ *	stmt	: IF '(' expr ')' stmt ELSE . stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . PRINT expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . VARIABLE '=' expr ';' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . WHILE '(' expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . IF '(' expr ')' stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . IF '(' expr ')' stmt ELSE stmt , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	stmt	: . '{' stmt_list '}' , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+ -	expr	: . INTEGER , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . VARIABLE , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '+' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '-' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '*' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '/' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '<' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr '>' expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr GE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr LE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr NE expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . expr EQ expr , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+ -	expr	: . '(' expr ')' , ['*' '+' '-' '/' ';' '<' '>' GE LE EQ NE]
+
+	'('	shift, goto to state 3
+	'-'	shift, goto to state 4
+	';'	shift, goto to state 5
+	'{'	shift, goto to state 6
+	VARIABLE	shift, goto to state 7
+	INTEGER	shift, goto to state 8
+	WHILE	shift, goto to state 9
+	IF	shift, goto to state 10
+	PRINT	shift, goto to state 11
+	stmt	shift, goto to state 57
+	expr	shift, goto to state 13
+
+
+State 57:
+ *	stmt	: IF '(' expr ')' stmt ELSE stmt . , [$ '(' ')' '-' ';' '{' '}' VARIABLE INTEGER WHILE IF PRINT ELSE]
+
+	$	reduce to rule 11
+	'('	reduce to rule 11
+	')'	reduce to rule 11
+	'-'	reduce to rule 11
+	';'	reduce to rule 11
+	'{'	reduce to rule 11
+	'}'	reduce to rule 11
+	VARIABLE	reduce to rule 11
+	INTEGER	reduce to rule 11
+	WHILE	reduce to rule 11
+	IF	reduce to rule 11
+	PRINT	reduce to rule 11
+	ELSE	reduce to rule 11
+
+shift/reduce conflicts: 0, reduce/reduce conflicts: 0

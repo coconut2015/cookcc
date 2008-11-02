@@ -126,8 +126,10 @@ ${parser.dfa.baseAdd}
 # meta
 <@intarray parser.dfa.meta/>
 </#if>
+<#if parser.dfa.gotoDefault?has_content>
 # goto default
 <@intarray parser.dfa.gotoDefault/>
+</#if>
 </#if>
 # rules
 <@intarray parser.rules/>

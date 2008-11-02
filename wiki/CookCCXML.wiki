@@ -40,7 +40,7 @@ Some XML editors such as the one in [http://www.jetbrains.com/idea/ IntelliJ IDE
 
 = XML Tag Explanations =
 == {{{<cookcc>}}} ==
-This is the document root of the XML file.  It only a single attribute to indicate where or not the lexer parses unicode.  By default, {{{unicode}}} is false.
+This is the document root of the XML file.  It has a single attribute to indicate where or not the lexer parses unicode.  By default, {{{unicode}}} is false.
 
 == {{{<code>}}} ==
 The {{{<code>}}} tag can specify any pieces of code.  There can be multiple of such tags and it can locate any where directly under {{{<cookcc>}}} tag.  The name of the code needs to be unique.  If the name is not specified, it is assumed to be {{{"default"}}}.  The exact usage of that code depends on the template being used.  For Java output, you can take a look at the [http://code.google.com/p/cookcc/source/browse/trunk/src/resources/templates/java/class.ftl Java output template] to get a rough idea.

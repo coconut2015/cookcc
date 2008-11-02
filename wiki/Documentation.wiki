@@ -18,6 +18,7 @@ The current release is 0.2.  It contains both the lexer and parser (LALR (1)) ge
 || {{{-quiet}}} || Suppress console messages. ||
 || {{{-debug}}} || Generate debugging code.  The effect depends on the target language code generator. ||
 || {{{-analysis}}} || Generate an [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/parser/calc/cookcc_parser_analysis.txt analysis file] for the parser grammar.  The file name is fixed to {{{cookcc_parser_analysis.txt}}}. ||
+|| {{{-defaultreduce}}} || Generate a compact parser table by assuming that entries would be reduced by default, even in cases of unwanted look ahead.  Only java code generator currently checks this option. ||
 
 Language specific options can be found by specifying the language along with {{{-help}}}.  For example:
 

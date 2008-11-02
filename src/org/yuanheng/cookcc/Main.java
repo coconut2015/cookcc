@@ -32,6 +32,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.doc.LexerDoc;
+import org.yuanheng.cookcc.doc.ParserDoc;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
 
@@ -47,6 +49,9 @@ public class Main
 	public static String OPTION_DEBUG = "-debug";
 	public static String OPTION_ANALYSIS = "-analysis";
 	public static String OPTION_DEFAULTREDUCE = "-defaultreduce";
+
+	public static String OPTION_LEXERTABLE = "-lexertable";
+	public static String OPTION_PARSERTABLE = "-parsertable";
 
 	public static String ANALYSIS_FILE = "cookcc_parser_analysis.txt";
 
@@ -73,6 +78,8 @@ public class Main
 	private static boolean s_debug;
 	private static boolean s_analysis;
 	private static boolean s_defaultReduce;
+	private static String s_parserTable;
+	private static String s_lexerTable;
 
 
 	private static OptionParser s_helpOptioni = new OptionParser ()
@@ -144,6 +151,59 @@ public class Main
 		}
 	};
 
+	private static OptionParser s_lexerTableOption = new OptionParser ()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_LEXERTABLE.equals (args[index]))
+				return 0;
+			String table = args[index + 1].toLowerCase ();
+			if (!"ecs".equals (table) &&
+				!"full".equals (table) &&
+				!"compressed".equals (table))
+				throw new IllegalArgumentException ("Invalid table choice: " + table);
+			s_lexerTable = table;
+			return 2;
+		}
+
+		public String toString ()
+		{
+			return OPTION_LEXERTABLE + "\t\t\tSelect lexer DFA table format.\n" +
+				   "\tAvailable formats:\t\t[ecs, full, compressed]";
+		}
+
+		public String getLexerTable ()
+		{
+			return s_lexerTable;
+		}
+	};
+
+	private static OptionParser s_parserTableOption = new OptionParser ()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_PARSERTABLE.equals (args[index]))
+				return 0;
+			String table = args[index + 1].toLowerCase ();
+			if (!"ecs".equals (table) &&
+				!"compressed".equals (table))
+				throw new IllegalArgumentException ("Invalid table choice: " + table);
+			s_parserTable = table;
+			return 2;
+		}
+
+		public String toString ()
+		{
+			return OPTION_PARSERTABLE + "\t\t\tSelect parser DFA table format.\n" +
+				   "\tAvailable formats:\t\t[ecs, compressed]";
+		}
+
+		public String getParserTable ()
+		{
+			return s_parserTable;
+		}
+	};
+
 	private static OptionParser s_langOption = new OptionParser()
 	{
 		public int handleOption (String[] args, int index) throws Exception
@@ -159,7 +219,7 @@ public class Main
 			StringBuffer buffer = new StringBuffer ();
 			buffer.append (OPTION_LANG + "\t\t\t\tSelect output language.  Default is ");
 			buffer.append (s_codeGenDrivers.getProperty ("default"));
-			buffer.append ("\t\tAvailable languages:\t");
+			buffer.append ("\t\tAvailable languages:\t\t");
 			Set<Object> keys = s_codeGenDrivers.keySet ();
 			keys.remove ("default");
 			buffer.append (keys);
@@ -190,6 +250,8 @@ public class Main
 		s_quietOption,
 		s_analysisOption,
 		s_defaultReduceOption,
+		s_lexerTableOption,
+		s_parserTableOption,
 		s_debugOption
 	};
 
@@ -294,6 +356,21 @@ public class Main
 			if (parserClass == null)
 				error ("Unknown file type: " + args[fileIndex]);
 			Document doc = (Document)parserClass.getMethod ("parse", File.class).invoke (null, file);
+
+			LexerDoc lexer = doc.getLexer ();
+			ParserDoc parser = doc.getParser ();
+			if (lexer != null)
+			{
+				if (s_lexerTable != null)
+					doc.getLexer ().setTable (s_lexerTable);
+			}
+			if (parser != null)
+			{
+				if (s_defaultReduce)
+					parser.setDefaultReduce (true);
+				if (s_parserTable != null)
+					parser.setTable (s_parserTable);
+			}
 
 			s_codeGen.generateOutput (doc);
 		}

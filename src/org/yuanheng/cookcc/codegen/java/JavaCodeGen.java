@@ -32,12 +32,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
 import org.yuanheng.cookcc.codegen.options.ClassOption;
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
 import org.yuanheng.cookcc.codegen.options.OutputDirectoryOption;
-import org.yuanheng.cookcc.codegen.options.ParserTableOption;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
@@ -80,9 +77,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 	private OutputDirectoryOption m_outputDirectoryOption = new OutputDirectoryOption ();
 
-	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
-	private ParserTableOption m_parserTableOption = new ParserTableOption ();
-
 	private ClassOption m_classOption = new ClassOption ();
 
 	private OptionParser m_publicOption = new OptionParser()
@@ -104,20 +98,12 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	private OptionParser[] m_options = new OptionParser[]
 	{
 			m_outputDirectoryOption,
-			m_lexerTableOption,
-			m_parserTableOption,
 			m_classOption,
 			m_publicOption
 	};
 
 	private void generateTemplateOutput (Document doc, File file) throws Exception
 	{
-		if (doc.getParser () != null)
-		{
-			if (Main.getDefaultReduce ())
-				doc.getParser ().setDefaultReduce (true);
-		}
-
 		Lexer lexer = Lexer.getLexer (doc);
 		Parser parser = Parser.getParser (doc);
 		if (lexer == null && parser == null)
@@ -144,16 +130,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 		if (m_public)
 			map.put ("public", Boolean.TRUE);
-		if (lexer != null)
-		{
-			if (m_lexerTableOption.getLexerTable () != null)
-				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
-		}
-		if (parser != null)
-		{
-			if (m_parserTableOption.getParserTable () != null)
-				doc.getParser ().setTable (m_parserTableOption.getParserTable ());
-		}
 		setup (map, doc);
 		Resources.template.process (map, fw);
 		fw.close ();

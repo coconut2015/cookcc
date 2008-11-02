@@ -1,0 +1,33 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<lexer>
+		<rule>
+			<pattern>"("</pattern>
+			<pattern>")"</pattern>
+			<action>return getText ().charAt (0);</action>
+		</rule>
+		<rule>
+			<pattern>.|\n</pattern>
+			<action>/* do nothing */</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+	</lexer>
+	<parser start="S">
+		<grammar rule="S">
+			<rhs>'(' S ')' S</rhs>
+			<action>
+				_yyValue = "(" + yyGetValue (2) + ")" + yyGetValue (4);
+				System.out.println (_yyValue);
+			</action>
+			<rhs></rhs>
+			<action>
+				_yyValue = "e";
+				System.out.println ('e');
+			</action>
+		</grammar>
+	</parser>
+</cookcc>

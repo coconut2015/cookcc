@@ -31,8 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
-import org.yuanheng.cookcc.codegen.options.LexerTableOption;
-import org.yuanheng.cookcc.codegen.options.ParserTableOption;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
@@ -59,32 +57,12 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
-	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
-	private ParserTableOption m_parserTableOption = new ParserTableOption ();
-
-	private OptionParser[] m_options = new OptionParser[]
-	{
-		m_lexerTableOption,
-		m_parserTableOption
-	};
-
 	public void generateOutput (Document doc) throws Exception
 	{
 		Lexer lexer = Lexer.getLexer (doc);
 		Parser parser = Parser.getParser (doc);
 		if (lexer == null && parser == null)
 			return;
-
-		if (lexer != null)
-		{
-			if (m_lexerTableOption.getLexerTable () != null)
-				doc.getLexer ().setTable (m_lexerTableOption.getLexerTable ());
-		}
-		if (parser != null)
-		{
-			if (m_parserTableOption.getParserTable () != null)
-				doc.getParser ().setTable (m_parserTableOption.getParserTable ());
-		}
 
 		Map<String, Object> map = new HashMap<String, Object> ();
 		OutputStreamWriter sw = new OutputStreamWriter (System.out);
@@ -95,6 +73,6 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 
 	public OptionParser[] getOptions ()
 	{
-		return m_options;
+		return new OptionParser[0];
 	}
 }

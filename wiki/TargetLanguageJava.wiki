@@ -15,6 +15,7 @@ Currently, v0.1 only contains the lexer component.
 || {{{-lexertable <format>}}} || Select lexer DFA table format.  Available choices are {{{ecs}}}, {{{full}}}, and {{{compressed}}}.  This option will override the table choice specified in the input file. ||
 || {{{-class <className>}}} || Set the class name.  By default, the class name is {{{Lexer}}}.  The output Java file would be generated under the appropriate package subdirectories of the output directory.  The subdirectories would be created if they do not exist.  ||
 || {{{-public}}} || set class scope to {{{public}}}.  By default, the class generated is in the package scope. ||
+|| {{{-defaultreduce}}} || Generate a compact parser table by assuming that entries would be reduced by default, even in cases of unwanted look ahead. ||
 
 == Lexer ==
 

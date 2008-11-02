@@ -9,9 +9,7 @@ The input to CookCC is currently limited to an XML ([http://code.google.com/p/co
 
 CookCC requires JRE 1.5+ to run, although the generated Java code can be compiled by earlier versions of JDK.
 
-Currently, the v0.1 release contains only the [Lexer lexer] generator.
-
-The [Parser parser] generator is being worked on.  The main work left is the Java code generator.
+The current release is 0.2.  It contains both the lexer and parser (LALR (1)) generator.
 
 == Command Line Options ==
 

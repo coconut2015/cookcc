@@ -9,3 +9,4 @@ Plain text output can be selected using the {{{-lang plain}}}  command line opti
 == Command Line Options ==
 
 || {{{-lexertable <format>}}} || Select lexer DFA table format.  Available choices are {{{ecs}}}, {{{full}}}, and {{{compressed}}}. ||
+|| {{{-parsertable <format>}}} || Select parser DFA table format.  Available choices are {{{ecs}}}, and {{{compressed}}}. ||

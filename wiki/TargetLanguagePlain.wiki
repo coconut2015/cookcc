@@ -5,8 +5,3 @@
 This output is both for debugging and other tools that wish to extract DFA tables.  It dumps the output to the console.
 
 Plain text output can be selected using the {{{-lang plain}}}  command line option.
-
-== Command Line Options ==
-
-|| {{{-lexertable <format>}}} || Select lexer DFA table format.  Available choices are {{{ecs}}}, {{{full}}}, and {{{compressed}}}. ||
-|| {{{-parsertable <format>}}} || Select parser DFA table format.  Available choices are {{{ecs}}}, and {{{compressed}}}. ||

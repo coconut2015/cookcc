@@ -46,6 +46,7 @@ public class Main
 	public static String OPTION_LANG = "-lang";
 	public static String OPTION_DEBUG = "-debug";
 	public static String OPTION_ANALYSIS = "-analysis";
+	public static String OPTION_DEFAULTREDUCE = "-defaultreduce";
 
 	public static String ANALYSIS_FILE = "cookcc_parser_analysis.txt";
 
@@ -71,6 +72,8 @@ public class Main
 	private static boolean s_quiet;
 	private static boolean s_debug;
 	private static boolean s_analysis;
+	private static boolean s_defaultReduce;
+
 
 	private static OptionParser s_helpOptioni = new OptionParser ()
 	{
@@ -120,6 +123,27 @@ public class Main
 		}
 	};
 
+	private static OptionParser s_defaultReduceOption = new OptionParser ()
+	{
+		public int handleOption (String[] args, int index) throws Exception
+		{
+			if (!OPTION_DEFAULTREDUCE.equals (args[index]))
+				return 0;
+			s_defaultReduce = true;
+			return 1;
+		}
+
+		public String toString ()
+		{
+			return OPTION_DEFAULTREDUCE + "\t\t\tUse default reduce states for the parser.";
+		}
+
+		public boolean getDefaultReduce ()
+		{
+			return s_defaultReduce;
+		}
+	};
+
 	private static OptionParser s_langOption = new OptionParser()
 	{
 		public int handleOption (String[] args, int index) throws Exception
@@ -165,6 +189,7 @@ public class Main
 		s_langOption,
 		s_quietOption,
 		s_analysisOption,
+		s_defaultReduceOption,
 		s_debugOption
 	};
 
@@ -334,5 +359,10 @@ public class Main
 		if (s_analysis)
 			return new File (ANALYSIS_FILE);
 		return null;
+	}
+
+	public static boolean getDefaultReduce ()
+	{
+		return s_defaultReduce;
 	}
 }

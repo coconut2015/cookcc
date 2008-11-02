@@ -32,8 +32,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
-import org.yuanheng.cookcc.codegen.options.*;
+import org.yuanheng.cookcc.codegen.options.ClassOption;
+import org.yuanheng.cookcc.codegen.options.LexerTableOption;
+import org.yuanheng.cookcc.codegen.options.OutputDirectoryOption;
+import org.yuanheng.cookcc.codegen.options.ParserTableOption;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionParser;
@@ -78,7 +82,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 	private LexerTableOption m_lexerTableOption = new LexerTableOption ();
 	private ParserTableOption m_parserTableOption = new ParserTableOption ();
-	private ParserDefaultReduceOption m_parserDefaultReduceOption = new ParserDefaultReduceOption ();
 
 	private ClassOption m_classOption = new ClassOption ();
 
@@ -103,7 +106,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 			m_outputDirectoryOption,
 			m_lexerTableOption,
 			m_parserTableOption,
-			m_parserDefaultReduceOption,
 			m_classOption,
 			m_publicOption
 	};
@@ -112,7 +114,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	{
 		if (doc.getParser () != null)
 		{
-			if (m_parserDefaultReduceOption.getDefaultReduce ())
+			if (Main.getDefaultReduce ())
 				doc.getParser ().setDefaultReduce (true);
 		}
 

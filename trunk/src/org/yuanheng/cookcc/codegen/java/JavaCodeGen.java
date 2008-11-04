@@ -118,7 +118,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		if (doc.getMain () != null)
 			map.put ("main", doc.getMain ());
 
-		String cl = m_classOption.getClassOption ();
+		String cl = m_classOption.getClassName ();
 
 		if (cl != null && cl.length () > 0)
 		{
@@ -137,7 +137,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 	public void generateOutput (Document doc) throws Exception
 	{
-		String cl = m_classOption.getClassOption ();
+		String cl = m_classOption.getClassName ();
 		String className = cl == null ? Resources.defaults.getProperty ("ccclass") : cl;
 		String packageName = getPackageName (className);
 		className = getClassName (className);
@@ -167,6 +167,16 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	public OptionParser[] getOptions ()
 	{
 		return m_options;
+	}
+
+	public void setOutputDirectory (File dir)
+	{
+		m_outputDirectoryOption.setOutputDirectory (dir);
+	}
+
+	public void setClassName (String className)
+	{
+		m_classOption.setClassName (className);
 	}
 
 	private static String getClassName (String className)

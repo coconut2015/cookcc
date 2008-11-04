@@ -60,4 +60,9 @@ public class OutputDirectoryOption implements OptionParser
 	{
 		return m_outputDir;
 	}
+
+	public void setOutputDirectory (File dir)
+	{
+		m_outputDir = dir;
+	}
 }

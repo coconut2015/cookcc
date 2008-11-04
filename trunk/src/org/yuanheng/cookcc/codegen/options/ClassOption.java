@@ -51,8 +51,13 @@ public class ClassOption implements OptionParser
 		return OPTION_CLASS + "\t\t\t\tSet class name.";
 	}
 
-	public String getClassOption ()
+	public String getClassName ()
 	{
 		return m_class;
+	}
+
+	public void setClassName (String className)
+	{
+		m_class = className;
 	}
 }

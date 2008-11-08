@@ -393,6 +393,11 @@ public class Main
 		return s_debug;
 	}
 
+	public static void setDebug (boolean debug)
+	{
+		s_debug = debug;
+	}
+
 	private static Class getParser (String extension)
 	{
 		String className = s_inputParsers.getProperty (extension);

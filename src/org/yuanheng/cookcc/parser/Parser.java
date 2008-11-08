@@ -170,7 +170,7 @@ public class Parser
 
 
 		ParserDoc parserDoc = m_doc.getParser ();
-		Integer startNonTerminal = parserDoc.getStart () == null ? m_productions.get (0).getSymbol () : m_nonTerminals.get (parserDoc.getStart ());
+		Integer startNonTerminal = parserDoc.getStart () == null ? (m_productions.size () > 1 ? m_productions.get (1).getSymbol () : null) : m_nonTerminals.get (parserDoc.getStart ());
 		if (startNonTerminal == null)
 			throw new ParserException (0, "Unable to find the start symbol for the parser.");
 		startProduction.setProduction (new int[]{ startNonTerminal });

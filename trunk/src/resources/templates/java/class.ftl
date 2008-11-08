@@ -116,7 +116,7 @@ ${code.classheader}
 			this.value = value;
 			this.state = state;
 		}
-	};
+	}
 
 	// lookahead stack for the parser
 	private final LinkedList _yyLookaheadStack = new LinkedList ();
@@ -224,6 +224,9 @@ ${code.classheader}
 	 * Put all but n characters back to the input stream.  Be aware that calling
 	 * yyLess (0) is allowed, but be sure to change the state some how to avoid
 	 * an endless loop.
+	 *
+	 * @param	n
+	 * 			The number characters.
 	 */
 	protected void yyLess (int n)
 	{

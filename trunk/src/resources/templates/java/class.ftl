@@ -881,7 +881,7 @@ ${code.classheader}
 </#if>
 </#if>
 
-	private Object yyGetValue (int arg)
+	protected Object yyGetValue (int arg)
 	{
 		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).value;
 	}

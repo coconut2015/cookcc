@@ -26,75 +26,34 @@
  */
 package org.yuanheng.cookcc.doc;
 
-import java.io.IOException;
-
-import org.yuanheng.cookcc.util.TokenParser;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class TokensDoc extends TreeDoc
+public class zz_TokensDoc
 {
-	private String m_type;
-	private String[] m_tokens;
-	private int m_lineNumber;
-
-	public TokensDoc ()
+	@Test
+	public void testSetTokens () throws Exception
 	{
+		TokensDoc tokensDoc = new TokensDoc ();
+		tokensDoc.setTokens ("abc def '<' '>' 123 ");
+		Assert.assertArrayEquals (new String[]{ "abc", "def", "'<'", "'>'", "123" }, tokensDoc.getTokens ());
+		tokensDoc.setTokens ("abc \\x12 \\123 ");
+		Assert.assertArrayEquals (new String[]{ "abc", "\\x12", "\\123" }, tokensDoc.getTokens ());
 	}
 
-	public void setType (String type)
+	@Test
+	public void testAddTokens ()
 	{
-		m_type = type;
-	}
-
-	public String getType ()
-	{
-		return m_type;
-	}
-
-	public String[] getTokens ()
-	{
-		return m_tokens;
-	}
-
-	public void setTokens (String tokens) throws IOException
-	{
-		m_tokens = TokenParser.parseString (tokens);
-	}
-
-	public void addTokens (String token)
-	{
-		if (token == null || (token = token.trim ()).length () == 0)
-			return;
-		try
-		{
-			String[] tokensA = TokenParser.parseString (token);
-			if (tokensA == null || tokensA.length == 0)
-				return;
-			if (m_tokens == null)
-			{
-				m_tokens = tokensA;
-				return;
-			}
-			String[] newA = new String[m_tokens.length + tokensA.length];
-			System.arraycopy (m_tokens, 0, newA, 0, m_tokens.length);
-			System.arraycopy (tokensA, 0, newA, m_tokens.length, tokensA.length);
-			m_tokens = newA;
-		}
-		catch (IOException ex)
-		{
-		}
-	}
-
-	public int getLineNumber ()
-	{
-		return m_lineNumber;
-	}
-
-	public void setLineNumber (int lineNumber)
-	{
-		m_lineNumber = lineNumber;
+		TokensDoc tokensDoc = new TokensDoc ();
+		tokensDoc.addTokens ("abc");
+		Assert.assertArrayEquals (new String[]{ "abc" }, tokensDoc.getTokens ());
+		tokensDoc.addTokens ("abc def '<' '>' 123 ");
+		Assert.assertArrayEquals (new String[]{ "abc", "abc", "def", "'<'", "'>'", "123" }, tokensDoc.getTokens ());
+		tokensDoc.addTokens ("abc \\x12 \\123 ");
+		Assert.assertArrayEquals (new String[]{ "abc", "abc", "def", "'<'", "'>'", "123", "abc", "\\x12", "\\123" }, tokensDoc.getTokens ());
 	}
 }

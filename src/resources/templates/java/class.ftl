@@ -834,11 +834,6 @@ ${code.classheader}
 	/**
 	 * This function is used by the error handling grammars to pop an unwantted
 	 * token from the lookahead stack.
-	 *
-	 * @param	token
-	 *			the token
-	 * @param	value
-	 *			the value associated with the token
 	 */
 	protected void yyPopLookahead ()
 	{
@@ -884,6 +879,11 @@ ${code.classheader}
 	protected Object yyGetValue (int arg)
 	{
 		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).value;
+	}
+
+	protected void yySetValue (Object value)
+	{
+		_yyValue = value;
 	}
 
 </#if>

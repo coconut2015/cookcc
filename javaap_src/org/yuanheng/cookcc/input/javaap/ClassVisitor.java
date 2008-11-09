@@ -26,6 +26,7 @@
  */
 package org.yuanheng.cookcc.input.javaap;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.yuanheng.cookcc.*;
@@ -90,9 +91,18 @@ class ClassVisitor implements DeclarationVisitor
 			return "";
 		String[] lines = docComment.split ("\n");
 		StringBuffer buffer = new StringBuffer ();
-		buffer.append ("/*\n");
+		boolean firstLine = true;
 		for (String line : lines)
-			buffer.append (" *").append (line).append ("\n");
+		{
+			if (firstLine)
+			{
+				buffer.append ("/*");
+				firstLine = false;
+			}
+			else
+				buffer.append (" *");
+			buffer.append (line).append ("\n");
+		}
 		buffer.append (" */");
 		return buffer.toString ();
 	}
@@ -324,8 +334,15 @@ class ClassVisitor implements DeclarationVisitor
 		if (tokenClass != null && (tokenClass = tokenClass.trim ()).length () != 0)
 			m_doc.setProperty (PROP_TOKEN, tokenClass);
 
-//		m_doc.addCode ("fileheader", generateFileHeader (superClass.getPackage ().getDocComment ()));
-		// try to get the file header and class header
+		// try to get the file header
+		try
+		{
+			m_doc.addCode ("fileheader", generateFileHeader (FileHeaderScanner.getFileHeader (superClass.getPosition ().file ())));
+		}
+		catch (IOException e)
+		{
+		}
+		// try to get the class header
 		m_doc.addCode ("classheader", generateClassHeader (superClass.getDocComment ()));
 
 		m_parent.addDocument (classDeclaration.getQualifiedName (), m_doc);

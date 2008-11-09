@@ -30,6 +30,10 @@
 				<patternset>
 					<include name="src/**/**.*"/>
 					<include name="lib/**/**.jar"/>
+					<include name="javaap_src/**/**.*"/>
+					<include name="junit/**/**.*"/>
+					<include name="tests/**/**.*"/>
+					<include name="tool/**/**.*"/>
 				</patternset>
 			</fileset>
 			<fileset dir="${basedir}">

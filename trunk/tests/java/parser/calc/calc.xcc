@@ -12,13 +12,13 @@
 		<rule>
 			<pattern>[0-9]+</pattern>
 			<action>
-				_yyValue = new Integer (Integer.parseInt (getText ()));
+				_yyValue = new Integer (Integer.parseInt (yyText ()));
 				return INTEGER;
 			</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[[\-()<>=+*/;{}.]]]></pattern>
-			<action>return getText ().charAt (0);</action>
+			<action>return yyText ().charAt (0);</action>
 		</rule>
 		<rule>
 			<pattern>">="</pattern>
@@ -55,7 +55,7 @@
 		<rule>
 			<pattern>[a-z]+</pattern>
 			<action>
-				_yyValue = getText ();
+				_yyValue = yyText ();
 				return VARIABLE;
 			</action>
 		</rule>
@@ -65,7 +65,7 @@
 		</rule>
 		<rule>
 			<pattern>.</pattern>
-			<action>throw new IOException ("Illegal character: " + getText ());</action>
+			<action>throw new IOException ("Illegal character: " + yyText ());</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>

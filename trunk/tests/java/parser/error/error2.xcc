@@ -10,7 +10,7 @@
 		</rule>
 		<rule>
 			<pattern>[a-zA-Z_][a-zA-Z_0-9]*</pattern>
-			<action>_yyValue = getText (); return IDENTIFIER;</action>
+			<action>_yyValue = yyText (); return IDENTIFIER;</action>
 		</rule>
 		<rule>
 			<pattern>[ \t\r]</pattern>
@@ -18,7 +18,7 @@
 		</rule>
 		<rule>
 			<pattern>[();]</pattern>
-			<action>return getText ().charAt (0);</action>
+			<action>return yyText ().charAt (0);</action>
 		</rule>
 		<rule>
 			<pattern>\n</pattern>

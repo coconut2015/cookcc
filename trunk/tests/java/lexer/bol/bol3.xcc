@@ -5,7 +5,7 @@
 		<rule>
 			<pattern>abc</pattern>
 			<pattern>.|\n</pattern>
-			<action>System.out.println ("*" + getText () + " " + isBOL () + "*");</action>
+			<action>System.out.println ("*" + yyText () + " " + isBOL () + "*");</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>

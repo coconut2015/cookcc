@@ -149,7 +149,7 @@
 		</rule>
 		<rule>
 			<pattern>.</pattern>
-			<action>throw new IOException ("Invalid character: " + getText ());</action>
+			<action>throw new IOException ("Invalid character: " + yyText ());</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>
@@ -518,7 +518,7 @@
 
 		void count()
 		{
-			String text = getText ();
+			String text = yyText ();
 
 			for (int i = 0; i < text.length (); ++i)
 			{

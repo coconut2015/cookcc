@@ -5,7 +5,7 @@
 		<rule>
 			<pattern>"("</pattern>
 			<pattern>")"</pattern>
-			<action>return getText ().charAt (0);</action>
+			<action>return yyText ().charAt (0);</action>
 		</rule>
 		<rule>
 			<pattern>.|\n</pattern>

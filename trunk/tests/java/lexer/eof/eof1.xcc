@@ -4,7 +4,7 @@
 	<lexer table="ecs">
 		<rule>
 			<pattern><![CDATA[f/<<EOF>>]]></pattern>
-			<action>System.out.print ("*" + getText () + "*");</action>
+			<action>System.out.print ("*" + yyText () + "*");</action>
 		</rule>
 		<rule>
 			<pattern>.|\n</pattern>

@@ -33,9 +33,13 @@ import java.net.URL;
 import java.util.Map;
 
 import org.yuanheng.cookcc.Main;
+import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.dfa.LexerDFAInfo;
 import org.yuanheng.cookcc.dfa.ParserDFAInfo;
 import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.doc.LexerDoc;
+import org.yuanheng.cookcc.doc.ParserDoc;
+import org.yuanheng.cookcc.interfaces.CodeGen;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.core.ActionCodeBI;
@@ -52,7 +56,7 @@ import freemarker.template.Template;
  * @author Heng Yuan
  * @version $Id$
  */
-public abstract class TemplatedCodeGen
+public abstract class TemplatedCodeGen implements CodeGen
 {
 	private static Configuration s_configuration;
 
@@ -104,14 +108,34 @@ public abstract class TemplatedCodeGen
 
 	public void setup (Map<String, Object> map, Document doc) throws IOException
 	{
-		map.put ("debug", Main.isDebug ());
+		OptionMap options = getOptions ();
+
+		LexerDoc lexer = doc.getLexer ();
+		ParserDoc parser = doc.getParser ();
+
+		if (lexer != null)
+		{
+			String table = Main.getLexerTable (options);
+			if (table != null)
+				lexer.setTable (table);
+		}
+		if (parser != null)
+		{
+			String table = Main.getParserTable (options);
+			if (table != null)
+				parser.setTable (table);
+			if (Main.getDefaultReduce (options))
+				parser.setDefaultReduce (true);
+		}
+
+		map.put ("debug", Main.isDebug (options));
 		map.put ("tokens", doc.getTokens ());
 		map.put ("code", doc.getCode ());
 		map.put ("unicode", Boolean.valueOf (doc.isUnicode ()));
 
-		if (doc.getLexer () != null)
+		if (lexer != null)
 			map.put ("lexer", LexerDFAInfo.getLexerDFAInfo (doc));
-		if (doc.getParser () != null)
-			map.put ("parser", ParserDFAInfo.getParserDFAInfo (doc));
+		if (parser != null)
+			map.put ("parser", ParserDFAInfo.getParserDFAInfo (doc, options));
 	}
 }

@@ -29,10 +29,10 @@ package org.yuanheng.cookcc.codegen.xml;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.doc.TokensDoc;
 import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
 
 /**
  * @author Heng Yuan
@@ -40,6 +40,8 @@ import org.yuanheng.cookcc.interfaces.OptionParser;
  */
 public class XmlCodeGen implements CodeGen
 {
+	private final OptionMap m_options = new OptionMap ();
+
 	private void printTokens (Document doc, PrintWriter p)
 	{
 		for (TokensDoc tokens : doc.getTokens ())
@@ -90,8 +92,8 @@ public class XmlCodeGen implements CodeGen
 		p.flush ();
 	}
 
-	public OptionParser[] getOptions ()
+	public OptionMap getOptions ()
 	{
-		return new OptionParser[0];
+		return m_options;
 	}
 }

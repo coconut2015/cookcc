@@ -24,47 +24,40 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.options;
-
-import org.yuanheng.cookcc.interfaces.OptionHandler;
+package org.yuanheng.cookcc.interfaces;
 
 /**
+ * OptionParser is used in parsing user command line arguments.
+ * It's toString () function is used to print usage.
+ *
  * @author Heng Yuan
  * @version $Id$
  */
-public class ClassOption implements OptionHandler
+public interface OptionHandler
 {
-	public static String OPTION_CLASS = "-class";
+	/**
+	 * Indicates the option string
+	 * @return	the option string
+	 */
+	public String getOption ();
 
-	private String m_class;
+	/**
+	 * Indicates whether or not this option requires an argument.
+	 *
+	 * @return whether or not this option requires an argument.
+	 */
+	public boolean requireArguments ();
 
-	public String getOption ()
-	{
-		return OPTION_CLASS;
-	}
-
-	public boolean requireArguments ()
-	{
-		return true;
-	}
-
-	public void handleOption (String className) throws Exception
-	{
-		m_class = className;
-	}
-
-	public String toString ()
-	{
-		return OPTION_CLASS + "\t\t\t\tSet class name.";
-	}
-
-	public String getClassName ()
-	{
-		return m_class;
-	}
-
-	public void setClassName (String className)
-	{
-		m_class = className;
-	}
+	/**
+	 * This function parses the argument at the current index.
+	 * If this function recognizes the argument, it would return
+	 * the number of arguments being read.  Otherwise, just return
+	 * 0 to indicate that it was not handled.
+	 *
+	 * @param	value
+	 *			the argument for the option
+	 * @throws	Exception
+	 *			in case of error.
+	 */
+	public void handleOption (String value) throws Exception;
 }

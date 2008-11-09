@@ -35,6 +35,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 import org.yuanheng.cookcc.Main;
+import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.dfa.DFARow;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.*;
@@ -61,7 +62,7 @@ public class Parser
 	private static Token s_finish = new Token ("$", 0, FINISH, Token.NONASSOC);
 	private static Token s_error = new Token ("error", 0, ERROR, Token.NONASSOC);
 
-	public static Parser getParser (Document doc) throws IOException
+	public static Parser getParser (Document doc, OptionMap options) throws IOException
 	{
 		if (doc == null)
 			return null;
@@ -72,7 +73,7 @@ public class Parser
 		Parser parser;
 		if (obj == null | !(obj instanceof Parser))
 		{
-			parser = new Parser (doc);
+			parser = new Parser (doc, options);
 			parser.parse ();
 			parserDoc.setProperty (PROP_PARSER, parser);
 		}
@@ -86,6 +87,7 @@ public class Parser
 
 	private short m_productionIdCounter = 1;
 	private final Document m_doc;
+	private final OptionMap m_options;
 	private int m_terminalCount;
 	private int m_nonTerminalCount;
 	private int m_usedTerminalCount;
@@ -120,9 +122,10 @@ public class Parser
 
 	private PrintStream m_out;
 
-	private Parser (Document doc)
+	private Parser (Document doc, OptionMap options)
 	{
 		m_doc = doc;
+		m_options = options;
 	}
 
 	private void verbose (String msg)
@@ -142,7 +145,7 @@ public class Parser
 
 	public void parse () throws IOException
 	{
-		File analysisFile = Main.getAnalysisFile ();
+		File analysisFile = Main.getAnalysisFile (m_options);
 		if (analysisFile != null)
 			m_out = new PrintStream (new FileOutputStream (analysisFile));
 

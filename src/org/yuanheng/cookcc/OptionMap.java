@@ -24,7 +24,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.options;
+package org.yuanheng.cookcc;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 import org.yuanheng.cookcc.interfaces.OptionHandler;
 
@@ -32,39 +36,65 @@ import org.yuanheng.cookcc.interfaces.OptionHandler;
  * @author Heng Yuan
  * @version $Id$
  */
-public class ClassOption implements OptionHandler
+public class OptionMap
 {
-	public static String OPTION_CLASS = "-class";
+	private final Map<String, OptionHandler> m_handlerMap = new HashMap<String, OptionHandler> ();
+	private final LinkedList<OptionHandler> m_handlerList = new LinkedList<OptionHandler> ();
 
-	private String m_class;
+	private final Map<String, String> m_options = new HashMap<String, String> ();
 
-	public String getOption ()
+	public void registerOptionHandler (OptionHandler handler)
 	{
-		return OPTION_CLASS;
+		m_handlerMap.put (handler.getOption (), handler);
+		m_handlerList.add (handler);
 	}
 
-	public boolean requireArguments ()
+	public void addOption (String option) throws Exception
 	{
-		return true;
+		addOption (option, null);
 	}
 
-	public void handleOption (String className) throws Exception
+	public void addOption (String option, String value) throws Exception
 	{
-		m_class = className;
+		m_options.put (option, value);
+
+		OptionHandler handler = m_handlerMap.get (option);
+		if (handler == null)
+			return;
+		handler.handleOption (value);
+	}
+
+	public int handleOption (String[] args, int index) throws Exception
+	{
+		OptionHandler handler = m_handlerMap.get (args[index]);
+		if (handler == null)
+			return 0;
+		if (!handler.requireArguments ())
+		{
+			addOption (args[index]);
+			return 1;
+		}
+		if ((index + 1) >= args.length)
+			throw new IllegalArgumentException ("Missing argument for option " + args[index]);
+		addOption (args[index], args[index + 1]);
+		return 2;
 	}
 
 	public String toString ()
 	{
-		return OPTION_CLASS + "\t\t\t\tSet class name.";
+		StringBuffer buffer = new StringBuffer ();
+		for (OptionHandler handler : m_handlerList)
+			buffer.append (handler.toString ()).append ('\n');
+		return buffer.toString ();
 	}
 
-	public String getClassName ()
+	public boolean hasOption (String option)
 	{
-		return m_class;
+		return m_options.containsKey (option);
 	}
 
-	public void setClassName (String className)
+	public String getArgument (String option)
 	{
-		m_class = className;
+		return m_options.get (option);
 	}
 }

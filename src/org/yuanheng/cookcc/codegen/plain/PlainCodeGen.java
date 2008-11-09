@@ -30,12 +30,10 @@ import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.Lexer;
-import org.yuanheng.cookcc.parser.Parser;
 
 import freemarker.template.Template;
 
@@ -57,11 +55,11 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
+	private final OptionMap m_options = new OptionMap ();
+
 	public void generateOutput (Document doc) throws Exception
 	{
-		Lexer lexer = Lexer.getLexer (doc);
-		Parser parser = Parser.getParser (doc);
-		if (lexer == null && parser == null)
+		if (doc.getLexer () == null && doc.getParser () == null)
 			return;
 
 		Map<String, Object> map = new HashMap<String, Object> ();
@@ -71,8 +69,8 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 		sw.flush ();
 	}
 
-	public OptionParser[] getOptions ()
+	public OptionMap getOptions ()
 	{
-		return new OptionParser[0];
+		return m_options;
 	}
 }

@@ -52,6 +52,8 @@ public class OutputDirectoryOption implements OptionHandler
 
 	public void handleOption (String value) throws Exception
 	{
+		if (value == null)
+			throw new IllegalArgumentException ("Output directory was not specified.");
 		File file = new File (value);
 		if (!file.isDirectory ())
 			throw new IllegalArgumentException (value + " does not exist.");

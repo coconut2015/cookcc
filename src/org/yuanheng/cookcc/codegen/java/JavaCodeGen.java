@@ -175,16 +175,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		return m_options;
 	}
 
-	public void setOutputDirectory (File dir)
-	{
-		m_outputDirectoryOption.setOutputDirectory (dir);
-	}
-
-	public void setClassName (String className)
-	{
-		m_classOption.setClassName (className);
-	}
-
 	private static String getClassName (String className)
 	{
 		int index = className.lastIndexOf ('.');

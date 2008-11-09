@@ -28,6 +28,7 @@ package org.yuanheng.cookcc;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -299,7 +300,6 @@ public class Main
 		}
 
 		CodeGen codeGen = getCodeGen ();
-		s_codeGen = codeGen;
 		optionParsers = codeGen.getOptions ();
 		for (; i < args.length;)
 		{
@@ -333,11 +333,32 @@ public class Main
 		return i;
 	}
 
-	private static CodeGen getCodeGen () throws Exception
+	public static void parseOptions (Map<String, String> options) throws Exception
 	{
-		if (s_lang == null)
-			throw new IllegalArgumentException ("output language not specified.");
-		String codeGen = (String)s_codeGenDrivers.get (s_lang);
+		String lang = options.get (OPTION_LANG);
+		if (lang != null)
+		{
+			if (s_lang == null || !s_lang.equals (lang))
+			{
+				s_lang = lang;
+				s_codeGen = null;
+			}
+		}
+
+		CodeGen codeGen = getCodeGen ();
+		Set<String> keySet = options.keySet ();
+		keySet.remove (OPTION_LANG);
+		OptionMap optionMap = codeGen.getOptions ();
+		for (String option : keySet)
+		{
+			String value = options.get (option);
+			optionMap.addOption (option, value);
+		}
+	}
+
+	public static CodeGen getCodeGen (String lang) throws Exception
+	{
+		String codeGen = (String)s_codeGenDrivers.get (lang);
 		if (codeGen == null)
 			throw new IllegalArgumentException ("unknown output language: " + s_lang);
 		Class codeGenClass = Class.forName (codeGen);
@@ -345,6 +366,16 @@ public class Main
 		if (ctor == null)
 			throw new IllegalArgumentException ("default constructor not found in the doclet class.");
 		return (CodeGen)ctor.newInstance (new Object[0]);
+	}
+
+	public static CodeGen getCodeGen () throws Exception
+	{
+		if (s_codeGen != null)
+			return s_codeGen;
+		if (s_lang == null)
+			throw new IllegalArgumentException ("output language not specified.");
+		s_codeGen = getCodeGen (s_lang);
+		return s_codeGen;
 	}
 
 	public static void main (String[] args) throws Exception
@@ -450,5 +481,17 @@ public class Main
 		if (table != null)
 			return table;
 		return s_options.getArgument (OPTION_PARSERTABLE);
+	}
+
+	public static OptionMap getOptions ()
+	{
+		return s_options;
+	}
+
+	public static String[] getLanguages ()
+	{
+		Set<Object> keys = s_codeGenDrivers.keySet ();
+		keys.remove ("default");
+		return keys.toArray (new String[keys.size ()]);
 	}
 }

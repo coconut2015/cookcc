@@ -44,7 +44,10 @@ class FileHeaderScanner extends FileHeaderLexer
 	@Shortcuts (shortcuts = {
 		@Shortcut (name = "ws", pattern = "[ \\t]")
 	})
-	@Lex (pattern = "{ws}+")
+	@Lexs (patterns = {
+		@Lex (pattern = "{ws}+"),
+		@Lex (pattern = "\\n+")
+	})
 	protected void ignoreWhiteSpace ()
 	{
 	}
@@ -84,7 +87,7 @@ class FileHeaderScanner extends FileHeaderLexer
 
 	@Lexs (patterns = {
 		@Lex (pattern = "^{ws}*[^ \\t]"),
-		@Lex (pattern = ".|\\n"),
+		@Lex (pattern = "."),
 		@Lex (pattern = "<<EOF>>"),
 		@Lex(pattern = "<<EOF>>", state = "BLOCKCOMMENT")
 	})

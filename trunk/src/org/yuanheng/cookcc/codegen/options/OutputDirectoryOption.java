@@ -28,27 +28,34 @@ package org.yuanheng.cookcc.codegen.options;
 
 import java.io.File;
 
-import org.yuanheng.cookcc.interfaces.OptionParser;
+import org.yuanheng.cookcc.interfaces.OptionHandler;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class OutputDirectoryOption implements OptionParser
+public class OutputDirectoryOption implements OptionHandler
 {
 	public static String OPTION_OUTPUT_DIR = "-d";
 
 	private static File m_outputDir = new File (".");
 
-	public int handleOption (String[] args, int index) throws Exception
+	public String getOption ()
 	{
-		if (!OPTION_OUTPUT_DIR.equals (args[index]))
-			return 0;
-		File file = new File (args[index + 1]);
+		return OPTION_OUTPUT_DIR;
+	}
+
+	public boolean requireArguments ()
+	{
+		return true;
+	}
+
+	public void handleOption (String value) throws Exception
+	{
+		File file = new File (value);
 		if (!file.isDirectory ())
-			throw new IllegalArgumentException (args[index + 1] + " does not exist.");
+			throw new IllegalArgumentException (value + " does not exist.");
 		m_outputDir = file;
-		return 2;
 	}
 
 	public String toString ()

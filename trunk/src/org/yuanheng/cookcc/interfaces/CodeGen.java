@@ -26,6 +26,7 @@
  */
 package org.yuanheng.cookcc.interfaces;
 
+import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.doc.Document;
 
 /**
@@ -36,5 +37,5 @@ public interface CodeGen
 {
 	public void generateOutput (Document doc) throws Exception;
 
-	public OptionParser[] getOptions ();
+	public OptionMap getOptions ();
 }

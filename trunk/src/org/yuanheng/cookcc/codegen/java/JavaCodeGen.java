@@ -32,14 +32,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
+import org.yuanheng.cookcc.codegen.options.AbstractOption;
 import org.yuanheng.cookcc.codegen.options.ClassOption;
 import org.yuanheng.cookcc.codegen.options.OutputDirectoryOption;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
-import org.yuanheng.cookcc.lexer.Lexer;
-import org.yuanheng.cookcc.parser.Parser;
+import org.yuanheng.cookcc.interfaces.OptionHandler;
 
 import freemarker.template.Template;
 
@@ -79,14 +79,21 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 	private ClassOption m_classOption = new ClassOption ();
 
-	private OptionParser m_publicOption = new OptionParser()
+	private OptionHandler m_publicOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_PUBLIC.equals (args[index]))
-				return 0;
+			return OPTION_PUBLIC;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
 			m_public = true;
-			return 1;
 		}
 
 		public String toString ()
@@ -95,18 +102,20 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	};
 
-	private OptionParser[] m_options = new OptionParser[]
+	private OptionHandler m_abstractOption = new AbstractOption ();
+
+	private OptionMap m_options = new OptionMap ();
+
 	{
-			m_outputDirectoryOption,
-			m_classOption,
-			m_publicOption
-	};
+		m_options.registerOptionHandler (m_outputDirectoryOption);
+		m_options.registerOptionHandler (m_classOption);
+		m_options.registerOptionHandler (m_publicOption);
+		m_options.registerOptionHandler (m_abstractOption);
+	}
 
 	private void generateTemplateOutput (Document doc, File file) throws Exception
 	{
-		Lexer lexer = Lexer.getLexer (doc);
-		Parser parser = Parser.getParser (doc);
-		if (lexer == null && parser == null)
+		if (doc.getLexer () == null && doc.getParser () == null)
 			return;
 
 		Map<String, Object> map = new HashMap<String, Object> ();
@@ -164,7 +173,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		generateTemplateOutput (doc, new File (dir, className + ".java"));
 	}
 
-	public OptionParser[] getOptions ()
+	public OptionMap getOptions ()
 	{
 		return m_options;
 	}

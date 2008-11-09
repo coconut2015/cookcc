@@ -24,30 +24,47 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.interfaces;
+package org.yuanheng.cookcc.codegen.options;
+
+import org.yuanheng.cookcc.interfaces.OptionHandler;
 
 /**
- * OptionParser is used in parsing user command line arguments.
- * It's toString () function is used to print usage.
- *
  * @author Heng Yuan
  * @version $Id$
  */
-public interface OptionParser
+public class AbstractOption implements OptionHandler
 {
-	/**
-	 * This function parses the argument at the current index.
-	 * If this function recognizes the argument, it would return
-	 * the number of arguments being read.  Otherwise, just return
-	 * 0 to indicate that it was not handled.
-	 *
-	 * @param	args
-	 *			the command line arguments.
-	 * @param	index
-	 *			the current index of the argument being handled at.
-	 * @return	the number of arguments being processed.
-	 * @throws	Exception
-	 *			in case of error.
-	 */
-	public int handleOption (String[] args, int index) throws Exception;
+	public static String OPTION_ABSTRACT = "-abstract";
+
+	private boolean m_abstract;
+
+	public String getOption ()
+	{
+		return OPTION_ABSTRACT;
+	}
+
+	public boolean requireArguments ()
+	{
+		return false;
+	}
+
+	public void handleOption (String value) throws Exception
+	{
+		m_abstract = true;
+	}
+
+	public String toString ()
+	{
+		return OPTION_ABSTRACT + "\t\t\tMake the output class abstract.";
+	}
+
+	public boolean isAbstract ()
+	{
+		return m_abstract;
+	}
+
+	public void setAbstract (boolean abstractClass)
+	{
+		m_abstract = abstractClass;
+	}
 }

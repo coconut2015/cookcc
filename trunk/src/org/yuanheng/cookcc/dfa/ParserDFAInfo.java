@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Vector;
 
+import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.doc.GrammarDoc;
 import org.yuanheng.cookcc.doc.ParserDoc;
@@ -45,9 +46,9 @@ import org.yuanheng.cookcc.parser.Token;
  */
 public class ParserDFAInfo
 {
-	public static ParserDFAInfo getParserDFAInfo (Document doc) throws IOException
+	public static ParserDFAInfo getParserDFAInfo (Document doc, OptionMap options) throws IOException
 	{
-		return new ParserDFAInfo (doc.getParser (), Parser.getParser (doc));
+		return new ParserDFAInfo (doc.getParser (), Parser.getParser (doc, options));
 	}
 
 	private final ParserDoc m_parserDoc;

@@ -32,10 +32,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.LexerDoc;
-import org.yuanheng.cookcc.doc.ParserDoc;
 import org.yuanheng.cookcc.interfaces.CodeGen;
-import org.yuanheng.cookcc.interfaces.OptionParser;
+import org.yuanheng.cookcc.interfaces.OptionHandler;
 
 /**
  * @author Heng Yuan
@@ -71,41 +69,48 @@ public class Main
 		}
 	}
 
-	private static boolean s_printUsage;
 	private static String s_lang = s_codeGenDrivers.getProperty ("default");
 	private static CodeGen s_codeGen;
 	private static boolean s_quiet;
-	private static boolean s_debug;
-	private static boolean s_analysis;
-	private static boolean s_defaultReduce;
-	private static String s_parserTable;
-	private static String s_lexerTable;
 
-
-	private static OptionParser s_helpOptioni = new OptionParser ()
+	private static OptionHandler s_helpOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_HELP.equals (args[index]))
-				return 0;
-			s_printUsage = true;
-			return 1;
+			return OPTION_HELP;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
 		}
 
 		public String toString ()
 		{
 			return OPTION_HELP + "\t\t\t\tPrint this help message.";
 		}
+
 	};
 
-	private static OptionParser s_quietOption = new OptionParser ()
+	private static OptionHandler s_quietOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_QUIET.equals (args[index]))
-				return 0;
+			return OPTION_QUIET;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
 			s_quiet = true;
-			return 1;
 		}
 
 		public String toString ()
@@ -114,14 +119,20 @@ public class Main
 		}
 	};
 
-	private static OptionParser s_analysisOption = new OptionParser()
+	private static OptionHandler s_analysisOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_ANALYSIS.equals (args[index]))
-				return 0;
-			s_analysis = true;
-			return 1;
+			return OPTION_ANALYSIS;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
 		}
 
 		public String toString ()
@@ -130,40 +141,47 @@ public class Main
 		}
 	};
 
-	private static OptionParser s_defaultReduceOption = new OptionParser ()
+	private static OptionHandler s_defaultReduceOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_DEFAULTREDUCE.equals (args[index]))
-				return 0;
-			s_defaultReduce = true;
-			return 1;
+			return OPTION_DEFAULTREDUCE;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
 		}
 
 		public String toString ()
 		{
 			return OPTION_DEFAULTREDUCE + "\t\t\tUse default reduce states for the parser.";
 		}
-
-		public boolean getDefaultReduce ()
-		{
-			return s_defaultReduce;
-		}
 	};
 
-	private static OptionParser s_lexerTableOption = new OptionParser ()
+	private static OptionHandler s_lexerTableOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_LEXERTABLE.equals (args[index]))
-				return 0;
-			String table = args[index + 1].toLowerCase ();
+			return OPTION_LEXERTABLE;
+		}
+
+		public boolean requireArguments ()
+		{
+			return true;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
+			String table = value.toLowerCase ();
 			if (!"ecs".equals (table) &&
 				!"full".equals (table) &&
 				!"compressed".equals (table))
 				throw new IllegalArgumentException ("Invalid table choice: " + table);
-			s_lexerTable = table;
-			return 2;
 		}
 
 		public String toString ()
@@ -171,25 +189,26 @@ public class Main
 			return OPTION_LEXERTABLE + "\t\t\tSelect lexer DFA table format.\n" +
 				   "\tAvailable formats:\t\t[ecs, full, compressed]";
 		}
-
-		public String getLexerTable ()
-		{
-			return s_lexerTable;
-		}
 	};
 
-	private static OptionParser s_parserTableOption = new OptionParser ()
+	private static OptionHandler s_parserTableOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_PARSERTABLE.equals (args[index]))
-				return 0;
-			String table = args[index + 1].toLowerCase ();
+			return OPTION_PARSERTABLE;
+		}
+
+		public boolean requireArguments ()
+		{
+			return true;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
+			String table = value.toLowerCase ();
 			if (!"ecs".equals (table) &&
 				!"compressed".equals (table))
 				throw new IllegalArgumentException ("Invalid table choice: " + table);
-			s_parserTable = table;
-			return 2;
 		}
 
 		public String toString ()
@@ -197,21 +216,23 @@ public class Main
 			return OPTION_PARSERTABLE + "\t\t\tSelect parser DFA table format.\n" +
 				   "\tAvailable formats:\t\t[ecs, compressed]";
 		}
-
-		public String getParserTable ()
-		{
-			return s_parserTable;
-		}
 	};
 
-	private static OptionParser s_langOption = new OptionParser()
+	private static OptionHandler s_langOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_LANG.equals (args[index]))
-				return 0;
-			s_lang = args[index + 1];
-			return 2;
+			return OPTION_LANG;
+		}
+
+		public boolean requireArguments ()
+		{
+			return true;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
+			s_lang = value;
 		}
 
 		public String toString ()
@@ -227,14 +248,20 @@ public class Main
 		}
 	};
 
-	private static OptionParser s_debugOption = new OptionParser()
+	private static OptionHandler s_debugOption = new OptionHandler()
 	{
-		public int handleOption (String[] args, int index) throws Exception
+		public String getOption ()
 		{
-			if (!OPTION_DEBUG.equals (args[index]))
-				return 0;
-			s_debug = true;
-			return 1;
+			return OPTION_DEBUG;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
 		}
 
 		public String toString ()
@@ -243,35 +270,31 @@ public class Main
 		}
 	};
 
-	private static OptionParser[] s_options = new OptionParser[]
+	private static OptionMap s_options = new OptionMap ();
+
+	static
 	{
-		s_helpOptioni,
-		s_langOption,
-		s_quietOption,
-		s_analysisOption,
-		s_defaultReduceOption,
-		s_lexerTableOption,
-		s_parserTableOption,
-		s_debugOption
-	};
+		s_options.registerOptionHandler (s_helpOption);
+		s_options.registerOptionHandler (s_langOption);
+		s_options.registerOptionHandler (s_quietOption);
+		s_options.registerOptionHandler (s_analysisOption);
+		s_options.registerOptionHandler (s_defaultReduceOption);
+		s_options.registerOptionHandler (s_lexerTableOption);
+		s_options.registerOptionHandler (s_parserTableOption);
+		s_options.registerOptionHandler (s_debugOption);
+	}
 
 	private static int parseOptions (String[] args) throws Exception
 	{
-		OptionParser[] optionParsers = s_options;
+		OptionMap optionParsers = s_options;
 		int i;
 		for (i = 0; i < args.length;)
 		{
-			int j;
-			for (j = 0; j < optionParsers.length; ++j)
-			{
-				int count = optionParsers[j].handleOption (args, i);
-				if (count > 0)
-				{
-					i += count;
-					break;
-				}
-			}
-			if (j == optionParsers.length)
+			int count = optionParsers.handleOption (args, i);
+
+			if (count > 0)
+				i += count;
+			else
 				break;
 		}
 
@@ -280,45 +303,30 @@ public class Main
 		optionParsers = codeGen.getOptions ();
 		for (; i < args.length;)
 		{
-			int j;
-			for (j = 0; j < optionParsers.length; ++j)
+			int count = optionParsers.handleOption (args, i);
+			if (count > 0)
 			{
-				int count = optionParsers[j].handleOption (args, i);
-				if (count > 0)
-				{
-					i += count;
-					break;
-				}
-			}
-			if (j < optionParsers.length)
+				i += count;
 				continue;
-			for (j = 0; j < s_options.length; ++j)
-			{
-				int count = s_options[j].handleOption (args, i);
-				if (count > 0)
-				{
-					i += count;
-					break;
-				}
 			}
-			if (j == s_options.length)
+
+			count = s_options.handleOption (args, i);
+			if (count > 0)
+				i += count;
+			else
 				break;
 		}
 
-		if (s_printUsage || args.length == 0)
+		if (s_options.hasOption (OPTION_HELP) || args.length == 0)
 		{
-			s_printUsage = false;
-
 			Package p = Package.getPackage ("org.yuanheng.cookcc");
 
 			System.out.println ("CookCC version " + p.getImplementationVersion ());
 			System.out.println ("Usage: cookcc [cookcc options] [language options] file");
-			for (int j = 0; j < s_options.length; ++j)
-				System.out.println (s_options[j]);
+			System.out.println (s_options);
 			System.out.println ();
 			System.out.println (s_lang + " options:");
-			for (int j = 0; j < optionParsers.length; ++j)
-				System.out.println (optionParsers[j]);
+			System.out.println (optionParsers);
 			return -1;
 		}
 
@@ -357,21 +365,6 @@ public class Main
 				error ("Unknown file type: " + args[fileIndex]);
 			Document doc = (Document)parserClass.getMethod ("parse", File.class).invoke (null, file);
 
-			LexerDoc lexer = doc.getLexer ();
-			ParserDoc parser = doc.getParser ();
-			if (lexer != null)
-			{
-				if (s_lexerTable != null)
-					doc.getLexer ().setTable (s_lexerTable);
-			}
-			if (parser != null)
-			{
-				if (s_defaultReduce)
-					parser.setDefaultReduce (true);
-				if (s_parserTable != null)
-					parser.setTable (s_parserTable);
-			}
-
 			s_codeGen.generateOutput (doc);
 		}
 		catch (Exception ex)
@@ -386,16 +379,6 @@ public class Main
 		if (index < 0)
 			return "";
 		return fileName.substring (index);
-	}
-
-	public static boolean isDebug ()
-	{
-		return s_debug;
-	}
-
-	public static void setDebug (boolean debug)
-	{
-		s_debug = debug;
 	}
 
 	private static Class getParser (String extension)
@@ -436,15 +419,36 @@ public class Main
 		System.err.println (msg);
 	}
 
-	public static File getAnalysisFile ()
+	public static boolean isDebug (OptionMap options)
 	{
-		if (s_analysis)
+		return s_options.hasOption (OPTION_DEBUG) || options.hasOption (OPTION_DEBUG);
+	}
+
+	public static File getAnalysisFile (OptionMap options)
+	{
+		if (s_options.hasOption (OPTION_ANALYSIS) || options.hasOption (OPTION_ANALYSIS))
 			return new File (ANALYSIS_FILE);
 		return null;
 	}
 
-	public static boolean getDefaultReduce ()
+	public static boolean getDefaultReduce (OptionMap options)
 	{
-		return s_defaultReduce;
+		return s_options.hasOption (OPTION_DEFAULTREDUCE) || options.hasOption (OPTION_DEFAULTREDUCE);
+	}
+
+	public static String getLexerTable (OptionMap options)
+	{
+		String table = options.getArgument (OPTION_LEXERTABLE);
+		if (table != null)
+			return table;
+		return s_options.getArgument (OPTION_LEXERTABLE);
+	}
+
+	public static String getParserTable (OptionMap options)
+	{
+		String table = options.getArgument (OPTION_PARSERTABLE);
+		if (table != null)
+			return table;
+		return s_options.getArgument (OPTION_PARSERTABLE);
 	}
 }

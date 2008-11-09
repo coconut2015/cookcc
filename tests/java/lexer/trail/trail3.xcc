@@ -4,12 +4,12 @@
 	<lexer>
 		<rule>
 			<pattern>a.*c/d</pattern>
-			<action>System.out.println ("-" + getText () + "-");</action>
+			<action>System.out.println ("-" + yyText () + "-");</action>
 		</rule>
 		<rule>
 			<pattern>abc</pattern>
 			<pattern>.|\n</pattern>
-			<action>System.out.println ("*" + getText () + "*");</action>
+			<action>System.out.println ("*" + yyText () + "*");</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>

@@ -195,7 +195,7 @@ ${code.classheader}
 	 *
 	 * @return	the current text token.
 	 */
-	public String getText ()
+	public String yyText ()
 	{
 		if (_yyMatchStart == _yyTextStart)		// this is the case when we have EOF
 			return null;
@@ -207,7 +207,7 @@ ${code.classheader}
 	 * can directly access the variable
 	 * @return	the string token length
 	 */
-	public int getLength ()
+	public int yyLength ()
 	{
 		return _yyLength;
 	}
@@ -217,7 +217,7 @@ ${code.classheader}
 	 */
 	public void echo ()
 	{
-		System.out.print (getText ());
+		System.out.print (yyText ());
 	}
 
 	/**
@@ -251,7 +251,7 @@ ${code.classheader}
 	<#if debug>
 	protected boolean debugLexer (int matchedState, int accept)
 	{
-		System.err.println ("lexer: " + _yyBaseState + ", " + matchedState + ", " + accept + ", " + getText ());
+		System.err.println ("lexer: " + _yyBaseState + ", " + matchedState + ", " + accept + ", " + yyText ());
 		return true;
 	}
 

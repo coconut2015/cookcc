@@ -29,11 +29,11 @@
 			<pattern>^"a+d:"([[:alpha:]]{+}[[:digit:]])+"@a+d@"\n</pattern>
 			<pattern>^"a-u+Q:"([[:alpha:]]{-}[[:upper:]]{+}[Q])+"@a-u+Q@"\n</pattern>
 
-			<action>ok (getText ());</action>
+			<action>ok (yyText ());</action>
 		</rule>
 		<rule>
 			<pattern>.|\n</pattern>
-			<action>error (getText ());</action>
+			<action>error (yyText ());</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>

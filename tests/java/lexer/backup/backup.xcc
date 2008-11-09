@@ -4,11 +4,11 @@
 	<lexer table="ecs">
 		<rule>
 			<pattern>abc</pattern>
-			<action>System.out.print ("*" + getText () + "*");</action>
+			<action>System.out.print ("*" + yyText () + "*");</action>
 		</rule>
 		<rule>
 			<pattern>abcde</pattern>
-			<action>System.out.print ("*" + getText () + "*");</action>
+			<action>System.out.print ("*" + yyText () + "*");</action>
 		</rule>
 		<rule>
 			<pattern>.|\n</pattern>

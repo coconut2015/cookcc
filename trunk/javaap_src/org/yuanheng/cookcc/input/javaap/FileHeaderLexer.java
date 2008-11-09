@@ -38,14 +38,14 @@ abstract class FileHeaderLexer
 {
 
 	protected final static int INITIAL = 0;
-	protected final static int BLOCKCOMMENT = 15;
+	protected final static int BLOCKCOMMENT = 17;
 
 	// an internal class for lazy initiation
 	private final static class cc_lexer
 	{
-		private static char[] accept = ("\000\000\005\001\005\006\004\001\004\001\003\000\004\001\002\000\000\014\013\014\015\015\016\013\011\013\000\012\013\011").toCharArray ();
+		private static char[] accept = ("\000\000\006\001\002\006\007\005\001\002\005\001\004\000\005\001\003\000\000\015\014\015\016\016\017\014\012\014\000\013\014\012").toCharArray ();
 		private static char[] ecs = ("\000\000\000\000\000\000\000\000\000\001\002\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\000\000\000\003\000\000\000\000\004\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\005").toCharArray ();
-		private static char[][] next = {("\002\003\002\002\004\005").toCharArray (),("\006\007\006\006\010\005").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\011\000\000\000\000").toCharArray (),("\000\000\000\012\013\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\014\015\014\014\014\000").toCharArray (),("\000\000\000\012\013\000").toCharArray (),("\000\011\000\000\000\000").toCharArray (),("\000\000\000\012\000\000").toCharArray (),("\013\013\016\013\013\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\014\015\014\014\014\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\021\022\023\024\025\026").toCharArray (),("\021\027\023\030\025\026").toCharArray (),("\023\000\023\000\000\000").toCharArray (),("\000\031\000\032\000\000").toCharArray (),("\023\000\023\000\000\000").toCharArray (),("\000\000\000\032\033\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\034\000\035\000\000").toCharArray (),("\000\000\000\032\033\000").toCharArray (),("\000\031\000\032\000\000").toCharArray (),("\000\000\000\032\033\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\034\000\035\000\000").toCharArray (),("\000\000\000\032\033\000").toCharArray ()};
+		private static char[][] next = {("\002\003\004\002\005\006").toCharArray (),("\007\010\011\007\012\006").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\013\000\000\000\000").toCharArray (),("\000\000\004\000\000\000").toCharArray (),("\000\000\000\014\015\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\016\017\016\016\016\000").toCharArray (),("\000\000\004\000\000\000").toCharArray (),("\000\000\000\014\015\000").toCharArray (),("\000\013\000\000\000\000").toCharArray (),("\000\000\000\014\000\000").toCharArray (),("\015\015\020\015\015\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\016\017\016\016\016\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\023\024\025\026\027\030").toCharArray (),("\023\031\025\032\027\030").toCharArray (),("\025\000\025\000\000\000").toCharArray (),("\000\033\000\034\000\000").toCharArray (),("\025\000\025\000\000\000").toCharArray (),("\000\000\000\034\035\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\036\000\037\000\000").toCharArray (),("\000\000\000\034\035\000").toCharArray (),("\000\033\000\034\000\000").toCharArray (),("\000\000\000\034\035\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\036\000\037\000\000").toCharArray (),("\000\000\000\034\035\000").toCharArray ()};
 	}
 
 
@@ -74,6 +74,13 @@ abstract class FileHeaderLexer
 		return _yyIs;
 	}
 
+	/**
+	 * Check whether or not the current token at the beginning of the line.  This
+	 * function is not accurate if the user does multi-line pattern matching or
+	 * have trail contexts at the end of the line.
+	 *
+	 * @return	whether or not the current token is at the beginning of the line.
+	 */
 	public boolean isBOL ()
 	{
 		return _yyBOL;
@@ -97,7 +104,8 @@ abstract class FileHeaderLexer
 
 	/**
 	 * Get the current text token's length.  Actions specified in the CookCC file
-	 * can directly access the variable
+	 * can directly access the variable _yyLength.
+	 *
 	 * @return	the string token length
 	 */
 	public int yyLength ()
@@ -119,7 +127,7 @@ abstract class FileHeaderLexer
 	 * an endless loop.
 	 *
 	 * @param	n
-	 * 			The number characters.
+	 * 			The number of characters.
 	 */
 	protected void yyLess (int n)
 	{
@@ -170,7 +178,7 @@ abstract class FileHeaderLexer
 	/**
 	 * Reset the internal buffer.
 	 */
-	public void resetBuffer ()
+	public void yyResetBuffer ()
 	{
 		_yyMatchStart = 0;
 		_yyBufferEnd = 0;
@@ -288,72 +296,77 @@ abstract class FileHeaderLexer
 				{
 					m_this.ignoreWhiteSpace ();
 				}
-				case 16: break;
-				case 2:	// [/][/].*\n
+				case 17: break;
+				case 2:	// \n+
+				{
+					m_this.ignoreWhiteSpace ();
+				}
+				case 18: break;
+				case 3:	// [/][/].*\n
 				{
 					m_this.scanLineComment ();
 				}
-				case 17: break;
-				case 3:	// [/][*]+
+				case 19: break;
+				case 4:	// [/][*]+
 				{
 					m_this.startBlockComment ();
 				}
-				case 18: break;
-				case 9:	// ^{ws}*[*]
+				case 20: break;
+				case 10:	// ^{ws}*[*]
 				{
 					m_this.ignoreLeadingStar ();
 				}
-				case 24: break;
-				case 10:	// {ws}*[*]+[/]
+				case 26: break;
+				case 11:	// {ws}*[*]+[/]
 				{
 					m_this.endBlockComment ();
 				}
-				case 25: break;
-				case 11:	// {ws}+
-				{
-					m_this.scanBlockComment ();
-				}
-				case 26: break;
-				case 12:	// [^ \t*/]+
-				{
-					m_this.scanBlockComment ();
-				}
 				case 27: break;
-				case 13:	// .
+				case 12:	// {ws}+
 				{
 					m_this.scanBlockComment ();
 				}
 				case 28: break;
-				case 4:	// ^{ws}*[^ \t]
+				case 13:	// [^ \t*/]+
 				{
-					return m_this.doneScanning ();
+					m_this.scanBlockComment ();
 				}
-				case 19: break;
-				case 5:	// .|\n
+				case 29: break;
+				case 14:	// .
 				{
-					return m_this.doneScanning ();
+					m_this.scanBlockComment ();
 				}
-				case 20: break;
-				case 6:	// <<EOF>>
+				case 30: break;
+				case 5:	// ^{ws}*[^ \t]
 				{
 					return m_this.doneScanning ();
 				}
 				case 21: break;
-				case 14:	// <<EOF>>
+				case 6:	// .
 				{
 					return m_this.doneScanning ();
 				}
-				case 29: break;
-				case 7:	// .|\n
+				case 22: break;
+				case 7:	// <<EOF>>
+				{
+					return m_this.doneScanning ();
+				}
+				case 23: break;
+				case 15:	// <<EOF>>
+				{
+					return m_this.doneScanning ();
+				}
+				case 31: break;
+				case 8:	// .|\n
 				{
 					echo ();			// default character action
 				}
-				case 22: break;
-				case 8:	// <<EOF>>
+				case 24: break;
+				case 9:	// <<EOF>>
 				{
 					return 0;			// default EOF action
 				}
-				case 23: break;
+				case 25: break;
 				default:
 					throw new IOException ("Internal error in FileHeaderLexer lexer.");
 			}
@@ -398,15 +411,15 @@ abstract class FileHeaderLexer
  * unicode = false
  * bol = true
  * backup = true
- * cases = 14
+ * cases = 15
  * table = ecs
  * ecs = 6
- * states = 30
+ * states = 32
  * max symbol value = 256
  *
  * memory usage:
- * full table = 7710
- * ecs table = 437
+ * full table = 8224
+ * ecs table = 449
  *
  */
 }

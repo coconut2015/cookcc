@@ -136,6 +136,11 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 		if (m_options.hasOption (OPTION_PUBLIC))
 			map.put ("public", Boolean.TRUE);
+		if (m_options.hasOption (AbstractOption.OPTION_ABSTRACT))
+		{
+			map.put ("abstract", Boolean.TRUE);
+			map.put ("main", Boolean.FALSE);		// force disable output main since we can't instantiate the class
+		}
 		setup (map, doc);
 		Resources.template.process (map, fw);
 		fw.close ();

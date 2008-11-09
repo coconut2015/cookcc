@@ -227,14 +227,20 @@ public class Lexer
 			{
 				for (PatternDoc pattern : rule.getPatterns ())
 				{
-					RuleParser parser = new RuleParser (this, m_nfaFactory, pattern.isNocase ());
-					NFA nfa = parser.parse (pattern.getLineNumber (), pattern.getPattern ());
-					pattern.setCaseValue (nfa.last ().caseValue);
-					if (parser.isBOL ())
-						pattern.setBOL (true);
-					if (nfa.anchor != 0)
-						pattern.setTrailContext (nfa.anchor);
-					pattern.setProperty (PROP_NFA, nfa);
+					NFA nfa;
+					if (pattern.getCaseValue () < 0)
+					{
+						RuleParser parser = new RuleParser (this, m_nfaFactory, pattern.isNocase ());
+						nfa = parser.parse (pattern.getLineNumber (), pattern.getPattern ());
+						pattern.setCaseValue (nfa.last ().caseValue);
+						if (parser.isBOL ())
+							pattern.setBOL (true);
+						if (nfa.anchor != 0)
+							pattern.setTrailContext (nfa.anchor);
+						pattern.setProperty (PROP_NFA, nfa);
+					}
+					else
+						nfa = (NFA)pattern.getProperty (PROP_NFA);
 					if (pattern.isBOL ())
 					{
 						m_bolStates = true;

@@ -73,8 +73,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	}
 
-	private static boolean m_public;
-
 	private OutputDirectoryOption m_outputDirectoryOption = new OutputDirectoryOption ();
 
 	private ClassOption m_classOption = new ClassOption ();
@@ -93,7 +91,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 		public void handleOption (String value) throws Exception
 		{
-			m_public = true;
 		}
 
 		public String toString ()
@@ -137,7 +134,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 			if (packageName.length () > 0)
 				map.put ("package", packageName);
 		}
-		if (m_public)
+		if (m_options.hasOption (OPTION_PUBLIC))
 			map.put ("public", Boolean.TRUE);
 		setup (map, doc);
 		Resources.template.process (map, fw);

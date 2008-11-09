@@ -27,7 +27,7 @@ import java.util.Vector;
 <#if code.classheader?has_content>
 ${code.classheader}
 </#if>
-<#if public?has_content && public?string == "true">public </#if>class ${ccclass}
+<#if public?has_content && public?string == "true">public </#if><#if abstract?has_content && abstract?string == "true">abstract </#if>class ${ccclass}
 {
 <#if parser?has_content && parser.tokens?has_content>
 <#list parser.tokens as i>

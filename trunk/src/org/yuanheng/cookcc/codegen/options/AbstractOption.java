@@ -36,8 +36,6 @@ public class AbstractOption implements OptionHandler
 {
 	public static String OPTION_ABSTRACT = "-abstract";
 
-	private boolean m_abstract;
-
 	public String getOption ()
 	{
 		return OPTION_ABSTRACT;
@@ -50,21 +48,10 @@ public class AbstractOption implements OptionHandler
 
 	public void handleOption (String value) throws Exception
 	{
-		m_abstract = true;
 	}
 
 	public String toString ()
 	{
 		return OPTION_ABSTRACT + "\t\t\tMake the output class abstract.";
-	}
-
-	public boolean isAbstract ()
-	{
-		return m_abstract;
-	}
-
-	public void setAbstract (boolean abstractClass)
-	{
-		m_abstract = abstractClass;
 	}
 }

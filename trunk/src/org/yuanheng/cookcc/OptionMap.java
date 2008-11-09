@@ -64,6 +64,19 @@ public class OptionMap
 		handler.handleOption (value);
 	}
 
+	/**
+	 * Remove an option.  Depending on how option parser is implemented, it may not
+	 * actually change the state of the option.  The CodeGen that handles the options
+	 * should try to consult the OptionMap as much as possible.
+	 *
+	 * @param	option
+	 * 			the option to be removed.
+	 */
+	public void removeOption (String option)
+	{
+		m_options.remove (option);
+	}
+
 	public int handleOption (String[] args, int index) throws Exception
 	{
 		OptionHandler handler = m_handlerMap.get (args[index]);

@@ -116,7 +116,6 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 			return;
 
 		Map<String, Object> map = new HashMap<String, Object> ();
-		FileWriter fw = new FileWriter (file);
 		for (Object key : Resources.defaults.keySet ())
 			map.put (key.toString (), Resources.defaults.getProperty (key.toString ()));
 
@@ -142,6 +141,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 			map.put ("main", Boolean.FALSE);		// force disable output main since we can't instantiate the class
 		}
 		setup (map, doc);
+		FileWriter fw = new FileWriter (file);
 		Resources.template.process (map, fw);
 		fw.close ();
 	}

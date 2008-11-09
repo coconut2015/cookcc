@@ -97,4 +97,9 @@ public class OptionMap
 	{
 		return m_options.get (option);
 	}
+
+	public String[] getAvailableOptions ()
+	{
+		return m_handlerMap.keySet ().toArray (new String[m_handlerMap.size ()]);
+	}
 }

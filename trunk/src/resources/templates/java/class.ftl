@@ -178,6 +178,13 @@ ${code.classheader}
 </#if>
 
 <#if lexer.bol>
+	/**
+	 * Check whether or not the current token at the beginning of the line.  This
+	 * function is not accurate if the user does multi-line pattern matching or
+	 * have trail contexts at the end of the line.
+	 *
+	 * @return	whether or not the current token is at the beginning of the line.
+	 */
 	public boolean isBOL ()
 	{
 		return _yyBOL;
@@ -202,7 +209,8 @@ ${code.classheader}
 
 	/**
 	 * Get the current text token's length.  Actions specified in the CookCC file
-	 * can directly access the variable
+	 * can directly access the variable _yyLength.
+	 *
 	 * @return	the string token length
 	 */
 	public int yyLength ()
@@ -224,7 +232,7 @@ ${code.classheader}
 	 * an endless loop.
 	 *
 	 * @param	n
-	 * 			The number characters.
+	 * 			The number of characters.
 	 */
 	protected void yyLess (int n)
 	{
@@ -293,7 +301,7 @@ ${code.classheader}
 	/**
 	 * Reset the internal buffer.
 	 */
-	public void resetBuffer ()
+	public void yyResetBuffer ()
 	{
 		_yyMatchStart = 0;
 		_yyBufferEnd = 0;
@@ -877,11 +885,24 @@ ${code.classheader}
 </#if>
 </#if>
 
+	/**
+	 * Gets the object value associated with the symbol at the argument's position.
+	 *
+	 * @param	arg
+	 *			the symbol position starting from 1.
+	 * @return	the object value associated with symbol.
+	 */
 	protected Object yyGetValue (int arg)
 	{
 		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).value;
 	}
 
+	/**
+	 * Set the object value for the current non-terminal being reduced.
+	 *
+	 * @param	value
+	 * 			the object value for the current non-terminal.
+	 */
 	protected void yySetValue (Object value)
 	{
 		_yyValue = value;

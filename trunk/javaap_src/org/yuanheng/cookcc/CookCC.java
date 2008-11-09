@@ -26,6 +26,8 @@
  */
 package org.yuanheng.cookcc;
 
+import java.io.IOException;
+
 /**
  * This class is merely a place holder for functions that would be generated.  It does
  * not contain any actual source code, other than the JavaDoc.
@@ -35,13 +37,16 @@ package org.yuanheng.cookcc;
  */
 public abstract class CookCC
 {
+	/**
+	 * Check whether or not the current token at the beginning of the line.  This
+	 * function is not accurate if the user does multi-line pattern matching or
+	 * have trail contexts at the end of the line.
+	 *
+	 * @return	whether or not the current token is at the beginning of the line.
+	 */
 	protected boolean isBOL ()
 	{
 		return false;
-	}
-
-	public void setBOL (boolean bol)
-	{
 	}
 
 	/**
@@ -53,29 +58,61 @@ public abstract class CookCC
 
 	public boolean debugLexer (int matchedState, int accept)
 	{
-		System.err.println ("lexer: " + matchedState + ", " + accept + ", " + yyText ());
 		return true;
 	}
 
 	public boolean debugLexerBackup (int backupState, String backupString)
 	{
-		System.err.println ("lexer backup: " + backupState + ", " + backupString);
 		return true;
 	}
 
+	protected boolean debugParser (int fromState, int toState, int ecsToken)
+	{
+		return true;
+	}
+
+	/**
+	 * Get the current token text.
+	 * <p>
+	 * Avoid calling this function unless it is absolutely necessary since it creates
+	 * a copy of the token string.  The string length can be found by reading _yyLength
+	 * or calling yyLength () function.
+	 *
+	 * @return	the current text token.
+	 */
 	public String yyText ()
 	{
 		return null;
 	}
 
+	/**
+	 * Get the current text token's length.  Actions specified in the CookCC file
+	 * can directly access the variable _yyLength.
+	 *
+	 * @return	the string token length
+	 */
+	public int yyLength ()
+	{
+		return 0;
+	}
+
+	/**
+	 * Call this function to start the scanning of the input.
+	 *
+	 * @return	a token or status value.
+	 * @throws	IOException
+	 *			in case of I/O error.
+	 */
 	public int yyLex ()
 	{
 		return 0;
 	}
 
-	public int yyLength ()
+	/**
+	 * Reset the internal buffer.
+	 */
+	public void yyResetBuffer ()
 	{
-		return 0;
 	}
 
 	/**
@@ -88,12 +125,79 @@ public abstract class CookCC
 	}
 
 	/**
+	 * Put all but n characters back to the input stream.  Be aware that calling
+	 * yyLess (0) is allowed, but be sure to change the state some how to avoid
+	 * an endless loop.
+	 *
+	 * @param	n
+	 * 			The number of characters.
+	 */
+	protected void yyLess (int n)
+	{
+	}
+
+	/**
 	 * This function is used to change the initial state for the lexer.
 	 *
 	 * @param	state
 	 *			the name of the state
 	 */
 	public void begin (String state)
+	{
+	}
+
+	/**
+	 * Call this function to start parsing.
+	 *
+	 * @return 0 if everything is okay, or 1 if an error occurred.
+	 * @throws IOException in case of error
+	 */
+	public int yyParse () throws IOException
+	{
+		return 0;
+	}
+
+	protected void yyClearError ()
+	{
+	}
+
+	/**
+	 * This function reports error and return true if critical error occurred, or
+	 * false if the error has been successfully recovered.  IOException is an optional
+	 * choice of reporting error.
+	 *
+	 * @param	terminal
+	 *			the terminal that caused the error.
+	 * @return	true if irrecoverable error occurred.  Or simply throw an IOException.
+	 *			false if the parsing can be continued to check for specific
+	 *			error tokens.
+	 * @throws	IOException
+	 *			in case of error.
+	 */
+	protected boolean yyParseError (int terminal) throws IOException
+	{
+		return false;
+	}
+
+	/**
+	 * Gets the object value associated with the symbol at the argument's position.
+	 *
+	 * @param	arg
+	 *			the symbol position starting from 1.
+	 * @return	the object value associated with symbol.
+	 */
+	protected Object yyGetValue (int arg)
+	{
+		return null;
+	}
+
+	/**
+	 * Set the object value for the current non-terminal being reduced.
+	 *
+	 * @param	value
+	 * 			the object value for the current non-terminal.
+	 */
+	protected void yySetValue (Object value)
 	{
 	}
 }

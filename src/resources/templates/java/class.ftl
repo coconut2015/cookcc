@@ -10,11 +10,9 @@ package ${package};
 </#if>
 
 <#if unicode>
-import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 <#else>
-import java.io.FileInputStream;
 import java.io.InputStream;
 </#if>
 import java.io.IOException;
@@ -910,10 +908,10 @@ ${code.classheader}
 	<#if lexer?has_content>
 		<#if unicode>
 		if (args.length > 0)
-			tmpParser.setInput (new InputStreamReader (new FileInputStream (args[0])));
+			tmpParser.setInput (new InputStreamReader (new java.io.FileInputStream (args[0])));
 		<#else>
 		if (args.length > 0)
-			tmpParser.setInput (new FileInputStream (args[0]));
+			tmpParser.setInput (new java.io.FileInputStream (args[0]));
 		</#if>
 	</#if>
 
@@ -926,10 +924,10 @@ ${code.classheader}
 		${ccclass} tmpLexer = new ${ccclass} ();
 	<#if unicode>
 		if (args.length > 0)
-			tmpLexer.setInput (new InputStreamReader (new FileInputStream (args[0])));
+			tmpLexer.setInput (new InputStreamReader (new java.io.FileInputStream (args[0])));
 	<#else>
 		if (args.length > 0)
-			tmpLexer.setInput (new FileInputStream (args[0]));
+			tmpLexer.setInput (new java.io.FileInputStream (args[0]));
 	</#if>
 
 		tmpLexer.yyLex ();

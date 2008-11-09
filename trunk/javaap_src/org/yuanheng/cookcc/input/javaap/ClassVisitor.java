@@ -33,6 +33,8 @@ import org.yuanheng.cookcc.*;
 import org.yuanheng.cookcc.doc.*;
 
 import com.sun.mirror.declaration.*;
+import com.sun.mirror.type.ClassType;
+import com.sun.mirror.type.DeclaredType;
 import com.sun.mirror.util.DeclarationVisitor;
 import com.sun.mirror.util.SourcePosition;
 
@@ -118,6 +120,14 @@ class ClassVisitor implements DeclarationVisitor
 			buffer.append (" *").append (line).append ("\n");
 		buffer.append (" */");
 		return buffer.toString ();
+	}
+
+	private static String computeOutputClass (ClassType classType)
+	{
+		DeclaredType containingType = classType.getContainingType ();
+		if (containingType == null)
+			return classType.getDeclaration ().getQualifiedName ();
+		throw new IllegalArgumentException ("The generated class cannot be a nested class.");
 	}
 
 	/** the current document being worked on */
@@ -322,8 +332,9 @@ class ClassVisitor implements DeclarationVisitor
 		m_doc.setMain (false);
 		String inputClass = classDeclaration.getQualifiedName ();
 		m_doc.setProperty (PROP_INPUT, inputClass);
-		ClassDeclaration superClass = classDeclaration.getSuperclass ().getDeclaration ();
-		m_doc.setProperty (PROP_OUTPUT, superClass.getQualifiedName ());
+		ClassType superClassType = classDeclaration.getSuperclass ();
+		ClassDeclaration superClass = superClassType.getDeclaration ();
+		m_doc.setProperty (PROP_OUTPUT, computeOutputClass (superClassType));
 
 		if (superClass.getModifiers ().contains (Modifier.PUBLIC))
 			m_doc.setProperty (PROP_PUBLIC, Boolean.TRUE);

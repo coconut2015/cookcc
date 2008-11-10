@@ -133,6 +133,7 @@ class ClassVisitor implements DeclarationVisitor
 	/** the current document being worked on */
 	private final Document m_doc = new Document ();
 	private final CookCCVisitor m_parent;
+	private CookCCOption m_option;
 
 	ClassVisitor (CookCCVisitor parent)
 	{
@@ -145,6 +146,7 @@ class ClassVisitor implements DeclarationVisitor
 		if (lexer == null)
 		{
 			lexer = new LexerDoc ();
+			lexer.setTable (m_option.lexerTable ());
 			m_doc.setLexer (lexer);
 		}
 		return lexer;
@@ -156,6 +158,7 @@ class ClassVisitor implements DeclarationVisitor
 		if (parser == null)
 		{
 			parser = new ParserDoc ();
+			parser.setTable (m_option.parserTable ());
 			m_doc.setParser (parser);
 		}
 		return parser;
@@ -328,6 +331,7 @@ class ClassVisitor implements DeclarationVisitor
 		CookCCOption option = classDeclaration.getAnnotation (CookCCOption.class);
 		if (option == null)
 			return;
+		m_option = option;
 
 		m_doc.setMain (false);
 		String inputClass = classDeclaration.getQualifiedName ();

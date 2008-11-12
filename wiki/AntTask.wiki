@@ -27,6 +27,17 @@ For input files such as {{{*.xcc}}}, the typical setup is.
 	</target>
 }}}
 
+The attributes of {{{<cookcc>}}} are the following:
+|| Attribute || Description ||
+|| src || a list of input files separated by space.  However, usually it is a good idea to have only a single file per task. ||
+|| lang || Same as {{{-lang}}} command line option.  Select the output language.  The default is {{{java}}} ||
+|| analysis || Same as {{{-analysis}}} command line option. ||
+|| lexertable || Same as {{{-lexertable}}} command line option. ||
+|| parsertable || Same as {{{-parsertable}}} command line option. ||
+|| defaultreduce || Same as {{{-defaultreduce}}} command line option. ||
+
+Additional language specific options can be specified using the nested {{{<option>}}} tag.
+
 == Annotation Processing Tool ==
 
 To run CookCC with the Annotation Processing Tool (APT), the typical setup is
@@ -35,3 +46,9 @@ To run CookCC with the Annotation Processing Tool (APT), the typical setup is
 		<cookcc srcdir="${basedir}/javaap_src" src="org/yuanheng/cookcc/input/javaap/FileHeaderScanner.java"/>
 	</target>
 }}}
+
+== Nested Option Tag ==
+{{{<option>}}} is used to specify additional language specific command line options.  It has two attributes.
+
+|| *name* || the option name, such as {{{-class}}}, {{{-d}}} etc ||
+|| *value* || the option value.  It is optional. ||

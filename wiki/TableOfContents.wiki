@@ -1,7 +1,7 @@
 #summary Table Of Contents
 ===== [Documentation] =====
  * [Input]
-   * [CookCCXML XML input]
+   * [XMLInput XML input]
      * [LexerXML Lexer section]
      * [ParserXML Parser section]
  * [Lexer]

@@ -24,65 +24,54 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.codegen.plain;
+package org.yuanheng.cookcc.codegen.options;
 
-import java.io.FileWriter;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
-import org.yuanheng.cookcc.OptionMap;
-import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
-import org.yuanheng.cookcc.codegen.options.OutputOption;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.interfaces.CodeGen;
-
-import freemarker.template.Template;
+import org.yuanheng.cookcc.interfaces.OptionHandler;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
+public class OutputOption implements OptionHandler
 {
-	public final static String TEMPLATE_URI = "resources/templates/plain/plain.ftl";
+	public static String OPTION_OUTPUT = "-o";
 
-	private static class Resources
+	private static File m_output;
+
+	public String getOption ()
 	{
-		private static Template template;
-
-		static
-		{
-			template = getTemplate (TEMPLATE_URI);
-		}
+		return OPTION_OUTPUT;
 	}
 
-	private final OutputOption m_outputOption = new OutputOption ();
-
-	private final OptionMap m_options = new OptionMap ();
+	public boolean requireArguments ()
 	{
-		m_options.registerOptionHandler (m_outputOption);
+		return true;
 	}
 
-	public void generateOutput (Document doc) throws Exception
+	public void handleOption (String value) throws Exception
 	{
-		if (doc.getLexer () == null && doc.getParser () == null)
-			return;
-
-		Map<String, Object> map = new HashMap<String, Object> ();
-		Writer writer;
-		if (m_outputOption.getOutput () == null)
-			writer = new OutputStreamWriter (System.out);
-		else
-			writer = new FileWriter (m_outputOption.getOutput ());
-		setup (map, doc);
-		Resources.template.process (map, writer);
-		writer.close ();
+		if (value == null)
+			throw new IllegalArgumentException ("Output file was not specified.");
+		File file = new File (value);
+		if (file.exists () && file.isDirectory ())
+			throw new IllegalArgumentException (value + " is a directory.");
+		m_output = file;
 	}
 
-	public OptionMap getOptions ()
+	public String toString ()
 	{
-		return m_options;
+		return OPTION_OUTPUT + "\t\t\t\tSelect output file.";
+	}
+
+	public File getOutput ()
+	{
+		return m_output;
+	}
+
+	public void setOutput (File output)
+	{
+		m_output = output;
 	}
 }

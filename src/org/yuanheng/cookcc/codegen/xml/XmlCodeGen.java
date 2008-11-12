@@ -26,10 +26,12 @@
  */
 package org.yuanheng.cookcc.codegen.xml;
 
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Map;
 
 import org.yuanheng.cookcc.OptionMap;
+import org.yuanheng.cookcc.codegen.options.OutputOption;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.doc.TokensDoc;
 import org.yuanheng.cookcc.interfaces.CodeGen;
@@ -40,7 +42,13 @@ import org.yuanheng.cookcc.interfaces.CodeGen;
  */
 public class XmlCodeGen implements CodeGen
 {
+	private final OutputOption m_outputOption = new OutputOption ();
+
 	private final OptionMap m_options = new OptionMap ();
+
+	{
+		m_options.registerOptionHandler (m_outputOption);
+	}
 
 	private void printTokens (Document doc, PrintWriter p)
 	{
@@ -85,11 +93,16 @@ public class XmlCodeGen implements CodeGen
 		p.println ("</cookcc>");
 	}
 
-	public void generateOutput (Document doc)
+	public void generateOutput (Document doc) throws Exception
 	{
-		PrintWriter p = new PrintWriter (System.out);
+		PrintWriter p;
+		if (m_outputOption.getOutput () == null)
+			p = new PrintWriter (System.out);
+		else
+			p = new PrintWriter (new FileWriter (m_outputOption.getOutput ()));
 		printDocument (doc, p);
 		p.flush ();
+		p.close ();
 	}
 
 	public OptionMap getOptions ()

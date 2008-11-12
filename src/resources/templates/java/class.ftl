@@ -9,13 +9,13 @@ ${code.fileheader}
 package ${package};
 </#if>
 
+import java.io.IOException;
 <#if unicode>
 import java.io.InputStreamReader;
 import java.io.Reader;
 <#else>
 import java.io.InputStream;
 </#if>
-import java.io.IOException;
 
 <#if parser?has_content>
 import java.util.LinkedList;

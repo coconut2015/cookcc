@@ -11,6 +11,9 @@
 	<target name="init">
 		<mkdir dir="${dist}"/>
 	</target>
+	<target name="initcookcc">
+		<taskdef name="cookcc" classname="org.yuanheng.cookcc.ant.Task" classpath="${basedir}/tool/cookcc-0.3.jar"/>
+	</target>
 
 	<target name="compile" depends="init">
 		<delete dir="{build}"/>
@@ -18,6 +21,7 @@
 		<javac debug="true" deprecation="true" destdir="${build}" optimize="true" includes="**/**.java" source="1.5" target="1.5">
 			<src path="${src}"/>
 			<src path="${basedir}/javaap_src"/>
+			<src path="${basedir}/anttask_src"/>
 			<classpath>
 				<fileset dir="${lib}" includes="*.jar"/>
 			</classpath>
@@ -79,4 +83,17 @@
 	</target>
 
 	<target name="all" depends="cookcc_jar,cookcc_source_zip"/>
+
+	<!-- lexer/parser generated from CookCC -->
+
+	<target name="FileHeaderLexer.java" depends="initcookcc">
+		<cookcc srcdir="${basedir}/javaap_src" src="org/yuanheng/cookcc/input/javaap/FileHeaderScanner.java"/>
+	</target>
+	<target name="TokenParser.java" depends="initcookcc">
+		<cookcc src="${basedir}/src/org/yuanheng/cookcc/util/TokenParser.xcc">
+			<option name="-class" value="org.yuanheng.cookcc.util.TokenParser"/>
+			<option name="-d" value="${basedir}/src"/>
+		</cookcc>
+	</target>
+
 </project>

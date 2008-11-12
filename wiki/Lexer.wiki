@@ -1,6 +1,7 @@
 #summary Documentation for the CookCC Lexer
+<wiki:toc/>
 
-= Features =
+= Lexer =
 
 CookCC Lexer has the following features.
 

@@ -1,7 +1,7 @@
 #summary CookCC Parser Documentation
+<wiki:toc/>
 
 = Parser =
-<wiki:toc/>
 
 == Introduction ==
 

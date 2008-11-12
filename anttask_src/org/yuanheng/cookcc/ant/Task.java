@@ -175,13 +175,6 @@ public class Task extends org.apache.tools.ant.Task
 			cmd.createArgument ().setValue ("-lang");
 			cmd.createArgument ().setValue (m_lang);
 		}
-		if (m_lang == null || "java".equals (m_lang))
-		{
-			if (m_destDir == null)
-				m_destDir = m_srcDir;
-			cmd.createArgument ().setValue ("-d");
-			cmd.createArgument ().setValue (m_destDir.getPath ());
-		}
 		for (Option option : m_options)
 		{
 			if (option.m_name == null || option.m_name.length () == 0)
@@ -235,9 +228,14 @@ public class Task extends org.apache.tools.ant.Task
 			cmd.createArgument ().setValue ("-Alexertable=" + m_lexerTable);
 		if (m_parserTable != null)
 			cmd.createArgument ().setValue ("-Aparsertable=" + m_parserTable);
-		if (m_destDir == null)
-			m_destDir = m_srcDir;
-		cmd.createArgument ().setValue ("-Ad=" + m_destDir.getPath ());
+		if (m_lang != null)
+			cmd.createArgument ().setValue ("-Alang=" + m_lang);
+		if (m_lang == null || "java".equals (m_lang))
+		{
+			if (m_destDir == null)
+				m_destDir = m_srcDir;
+			cmd.createArgument ().setValue ("-Ad=" + m_destDir.getPath ());
+		}
 		for (Option option : m_options)
 		{
 			if (option.m_name == null || option.m_name.length () == 0)

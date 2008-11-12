@@ -8,4 +8,5 @@ Plain text output can be selected using the {{{-lang plain}}} command line optio
 
 == Command Line Options ==
 
-|| {{{-o <file>}}} || Specify the complete path for the output file.  If this option is not specified, the default output is the console. ||
+|| *Option* || *Version* || *Description* ||
+|| {{{-o <file>}}} || 0.3+ || Specify the complete path for the output file.  If this option is not specified, the default output is the console. ||

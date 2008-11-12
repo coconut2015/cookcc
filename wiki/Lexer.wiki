@@ -20,7 +20,7 @@ CookCC generates warnings on patterns that cause [http://code.google.com/p/cookc
 
 == Trail Context ==
 
-CookCC at present only handles either fixed head (e.g., abc/xyz or abc/x*z) or tail trail contexts (e.g., a.*b/xyz).
+CookCC at present only handles either fixed head (e.g., abc/xyz or abc/x*z) or tail (e.g., a.*b/xyz) trail contexts.
 
 == TODO List ==
 

@@ -3,6 +3,7 @@
 	<property name="src" location="${basedir}/src"/>
 	<property name="lib" location="${basedir}/lib"/>
 	<property name="dist" value="${basedir}/dist"/>
+	<property name="tool" value="${basedir}/tool"/>
 	<property name="build" value="${basedir}/cookcc_classes"/>
 
 	<property name="license" value="LICENSE_cookcc.txt"/>
@@ -12,7 +13,7 @@
 		<mkdir dir="${dist}"/>
 	</target>
 	<target name="initcookcc">
-		<taskdef name="cookcc" classname="org.yuanheng.cookcc.ant.Task" classpath="${basedir}/tool/cookcc-0.3.jar"/>
+		<taskdef name="cookcc" classname="org.yuanheng.cookcc.ant.Task" classpath="${tool}/cookcc-0.3.jar"/>
 	</target>
 
 	<target name="compile" depends="init">
@@ -35,19 +36,16 @@
 					<include name="src/**/**.*"/>
 					<include name="lib/**/**.jar"/>
 					<include name="javaap_src/**/**.*"/>
+					<include name="anttask_src/**/**.*"/>
 					<include name="junit/**/**.*"/>
 					<include name="tests/**/**.*"/>
 					<include name="tool/**/**.*"/>
-				</patternset>
-			</fileset>
-			<fileset dir="${basedir}">
-				<patternset>
 					<include name="${license}"/>
 				</patternset>
 			</fileset>
 		</zip>
 	</target>
-	<target name="cookcc_jar" depends="init,compile">
+	<target name="cookcc_jar" depends="init,compile" description="Build CookCC binary">
 		<tstamp>
 			<format property="today" pattern="yyyy-MM-dd" locale="en"/>
 		</tstamp>
@@ -80,6 +78,7 @@
 				<include name="resources/**/**"/>
 			</fileset>
 		</jar>
+		<copy file="${dist}/cookcc-${version}.jar" tofile="${tool}/cookcc-${version}.jar"/>
 	</target>
 
 	<target name="all" depends="cookcc_jar,cookcc_source_zip"/>

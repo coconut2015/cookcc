@@ -22,7 +22,7 @@ CookCC generates warnings on patterns that cause [http://code.google.com/p/cookc
 
 CookCC at present only handles either fixed head (e.g., abc/xyz or abc/x*z) or tail trail contexts (e.g., a.*b/xyz).
 
-= TODO List =
+== TODO List ==
 
 The following features are yet to be implemented:
 || yyMore || Make the current string available for the next time. ||

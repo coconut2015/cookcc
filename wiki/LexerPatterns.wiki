@@ -1,7 +1,7 @@
 #summary Description of patterns recognized by the CookCC lexer.
+<wiki:toc/>
 
 = Patterns =
-<wiki:toc/>
 
 CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.html Flex patterns], so this page is mostly a copy/paste of the referenced article.
 

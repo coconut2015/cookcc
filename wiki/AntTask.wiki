@@ -52,7 +52,7 @@ To run CookCC with the Annotation Processing Tool (APT), the typical setup is
 || *Attribute* || *Description* ||
 || *srcdir* || the source directory.  It is *required*. ||
 || *destdir* || the output directory.  If not specified, it would be the same as {{{srcdir}}}. ||
-|| *src* || a list of java input file separated by space.  Note that the path is relative to the directory specified by {{{srcdir}}} attribute. ||
+|| *src* || a list of java files separated by space.  Note that the path is relative to the directory specified by {{{srcdir}}} attribute. ||
 || *lang* || Same as {{{-lang}}} command line option.  Select the output language.  The default is {{{java}}} ||
 || *analysis* || Same as {{{-analysis}}} command line option. ||
 || *lexertable* || Same as {{{-lexertable}}} command line option. ||

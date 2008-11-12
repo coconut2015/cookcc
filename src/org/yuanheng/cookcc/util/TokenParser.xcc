@@ -37,7 +37,7 @@
 			<pattern>'[^\\']'</pattern>
 			<pattern>\\[0-9]{1,3}</pattern>
 			<pattern>\\x[[:xdigit:]]{1,2}</pattern>
-			<action>m_tokenList.add (getText ());</action>
+			<action>m_tokenList.add (yyText ());</action>
 		</rule>
 		<rule>
 			<pattern>[, \r\t\n]+</pattern>
@@ -45,7 +45,7 @@
 		</rule>
 		<rule>
 			<pattern>.</pattern>
-			<action>throw new IOException ("Invalid character: " + getText ());</action>
+			<action>throw new IOException ("Invalid character: " + yyText ());</action>
 		</rule>
 		<rule>
 			<pattern><![CDATA[<<EOF>>]]></pattern>
@@ -60,8 +60,10 @@ import java.util.LinkedList;
  * This class is used to parse tokens inside &lt;tokens> tag or similar tags that
  * list a series of symbols.  Things get complicated with single quoted characters
  * and such.
- */
-]]></code>
+ *
+ * @author Heng Yuan
+ * @version $Id$
+ */]]></code>
 	<code><![CDATA[
 		private final LinkedList<String> m_tokenList = new LinkedList<String> ();
 

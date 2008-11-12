@@ -36,7 +36,7 @@ import org.yuanheng.cookcc.*;
  * @author Heng Yuan
  * @version $Id$
  */
-@CookCCOption
+@CookCCOption (lexerTable = "ecs")
 class FileHeaderScanner extends FileHeaderLexer
 {
 	private StringBuffer m_buffer = new StringBuffer ();

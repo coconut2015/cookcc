@@ -1,0 +1,14 @@
+#summary Describes Java input.
+<wiki:toc/>
+
+= Java Input =
+
+One of the innovations of CookCC is being able to directly specify the lexer/parser right in the Java code, without going into an obscure / proprietary input file.  This feature greatly simplifies the task of writing lexer/parser.
+
+This capability can be extended to other languages, such as Python or C#.
+
+== The Old Way of Writing Lexer/Parser ==
+
+Traditionally, one would have to write lexer/parser in {{{*.l}}} or {{{*.y}}} input files.  These input file formats are not trivial.  Additionally, they are not quite suitable for certain languages that are fairly strict on indentation (Python namely) or not so keenly wit h "{" and "}" codes.
+
+XML input only solves part of the problem that being able to accept action codes for all languages, but there are more disadvantages of using proprietary file formats.

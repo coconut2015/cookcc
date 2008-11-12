@@ -1,0 +1,35 @@
+#summary Describes how to generate files using Ant
+
+= CookCC Ant Task =
+
+== Initiate CookCC Ant Task ==
+
+To use CookCC Ant Task, first add the following line (and modify the class path) to your {{{build.xml}}} so that Ant recognizes {{{<cookcc>}}}.
+
+{{{
+	<target name="initcookcc">
+		<taskdef name="cookcc" classname="org.yuanheng.cookcc.ant.Task" classpath="${basedir}/tool/cookcc-0.3.jar"/>
+	</target>
+}}}
+
+== Generic CookCC Input ==
+
+For input files such as {{{*.xcc}}}, the typical setup is.
+
+{{{
+	<target name="TokenParser.java" depends="initcookcc">
+		<cookcc src="${basedir}/src/org/yuanheng/cookcc/util/TokenParser.xcc">
+			<option name="-class" value="org.yuanheng.cookcc.util.TokenParser"/>
+			<option name="-d" value="${basedir}/src"/>
+		</cookcc>
+	</target>
+}}}
+
+== Annotation Processing Tool ==
+
+To run CookCC with the Annotation Processing Tool (APT), the typical set is
+{{{
+	<target name="FileHeaderLexer.java" depends="initcookcc">
+		<cookcc srcdir="${basedir}/javaap_src" src="org/yuanheng/cookcc/input/javaap/FileHeaderScanner.java"/>
+	</target>
+}}}

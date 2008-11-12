@@ -1,6 +1,7 @@
 #summary Notes on Java Output
-= Target Language : Java =
 <wiki:toc/>
+
+= Target Language : Java =
 
 == Introduction ==
 

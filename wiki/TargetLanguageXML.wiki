@@ -1,5 +1,10 @@
 #summary Notes on XML Output
+<wiki:toc/>
 
 = Target Language : XML =
 
 The output from this language is simply an XML input ({{{*.xcc}}} format) for CookCC.  This output is both serving as a debugging function and a conversion tool when other input formats to CookCC is available.
+
+== Command Line Option ==
+
+|| {{{-o <file>}}} || Specify the complete path for the output file.  If this option is not specified, the default output is the console. ||

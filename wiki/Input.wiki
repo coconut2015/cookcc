@@ -2,6 +2,6 @@
 
 = CookCC Input Files =
 
-Currently, only [CookCCXML XML] input files are accepted.
+Currently, only [XMLInput XML] input files are accepted.
 
 Input files must have the exact file extensions since CookCC internally uses file extension to find the correct input filter.

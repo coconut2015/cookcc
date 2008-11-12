@@ -27,7 +27,6 @@
 package org.yuanheng.cookcc.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
@@ -36,9 +35,11 @@ import java.util.LinkedList;
  * This class is used to parse tokens inside &lt;tokens> tag or similar tags that
  * list a series of symbols.  Things get complicated with single quoted characters
  * and such.
+ *
+ * @author Heng Yuan
+ * @version $Id$
  */
-
-public class TokenParser
+class TokenParser
 {
 
 	protected final static int INITIAL = 0;
@@ -84,7 +85,7 @@ public class TokenParser
 	 *
 	 * @return	the current text token.
 	 */
-	public String getText ()
+	public String yyText ()
 	{
 		if (_yyMatchStart == _yyTextStart)		// this is the case when we have EOF
 			return null;
@@ -93,10 +94,11 @@ public class TokenParser
 
 	/**
 	 * Get the current text token's length.  Actions specified in the CookCC file
-	 * can directly access the variable
+	 * can directly access the variable _yyLength.
+	 *
 	 * @return	the string token length
 	 */
-	public int getLength ()
+	public int yyLength ()
 	{
 		return _yyLength;
 	}
@@ -106,13 +108,16 @@ public class TokenParser
 	 */
 	public void echo ()
 	{
-		System.out.print (getText ());
+		System.out.print (yyText ());
 	}
 
 	/**
 	 * Put all but n characters back to the input stream.  Be aware that calling
 	 * yyLess (0) is allowed, but be sure to change the state some how to avoid
 	 * an endless loop.
+	 *
+	 * @param	n
+	 * 			The number of characters.
 	 */
 	protected void yyLess (int n)
 	{
@@ -163,7 +168,7 @@ public class TokenParser
 	/**
 	 * Reset the internal buffer.
 	 */
-	public void resetBuffer ()
+	public void yyResetBuffer ()
 	{
 		_yyMatchStart = 0;
 		_yyBufferEnd = 0;
@@ -207,14 +212,14 @@ public class TokenParser
 		while (true)
 		{
 			// initiate variables necessary for lookup
-			int matchedState = _yyBaseState;
+			int cc_matchedState = _yyBaseState;
 
 			int matchedLength = 0;
 
 			int internalBufferEnd = _yyBufferEnd;
 			int lookahead = _yyMatchStart;
 
-			int cc_backupMatchedState = matchedState;
+			int cc_backupMatchedState = cc_matchedState;
 			int cc_backupMatchedLength = 0;
 
 			// the DFA lookup
@@ -224,23 +229,23 @@ public class TokenParser
 				if (lookahead < internalBufferEnd)
 				{
 					// now okay to process the character
-					int currentState;
-					currentState = cc_next[matchedState][cc_ecs[buffer[lookahead] & 0xff]];
+					int cc_toState;
+					cc_toState = cc_next[cc_matchedState][cc_ecs[buffer[lookahead] & 0xff]];
 
-					if (currentState == 0)
+					if (cc_toState == 0)
 					{
-						matchedState = cc_backupMatchedState;
+						cc_matchedState = cc_backupMatchedState;
 						matchedLength = cc_backupMatchedLength;
 						break;
 					}
 
-					matchedState = currentState;
+					cc_matchedState = cc_toState;
 					++lookahead;
 					++matchedLength;
 
-					if (cc_accept[matchedState] > 0)
+					if (cc_accept[cc_matchedState] > 0)
 					{
-						cc_backupMatchedState = currentState;
+						cc_backupMatchedState = cc_toState;
 						cc_backupMatchedLength = matchedLength;
 					}
 				}
@@ -254,13 +259,13 @@ public class TokenParser
 					if (! refresh)
 					{
 						// <<EOF>>
-						int currentState;
-						currentState = cc_next[matchedState][cc_ecs[256]];
-						if (currentState != 0)
-							matchedState = currentState;
+						int cc_toState;
+						cc_toState = cc_next[cc_matchedState][cc_ecs[256]];
+						if (cc_toState != 0)
+							cc_matchedState = cc_toState;
 						else
 						{
-							matchedState = cc_backupMatchedState;
+							cc_matchedState = cc_backupMatchedState;
 							matchedLength = cc_backupMatchedLength;
 						}
 						break;
@@ -273,31 +278,31 @@ public class TokenParser
 			_yyLength = matchedLength;
 
 
-			switch (cc_accept[matchedState])
+			switch (cc_accept[cc_matchedState])
 			{
 				case 1:	// [a-zA-Z_][a-zA-Z_0-9]*
 				{
-					m_tokenList.add (getText ());
+					m_tokenList.add (yyText ());
 				}
 				case 12: break;
 				case 2:	// [0-9]+
 				{
-					m_tokenList.add (getText ());
+					m_tokenList.add (yyText ());
 				}
 				case 13: break;
 				case 3:	// '[^\\']'
 				{
-					m_tokenList.add (getText ());
+					m_tokenList.add (yyText ());
 				}
 				case 14: break;
 				case 4:	// \\[0-9]{1,3}
 				{
-					m_tokenList.add (getText ());
+					m_tokenList.add (yyText ());
 				}
 				case 15: break;
 				case 5:	// \\x[[:xdigit:]]{1,2}
 				{
-					m_tokenList.add (getText ());
+					m_tokenList.add (yyText ());
 				}
 				case 16: break;
 				case 6:	// [, \r\t\n]+
@@ -307,7 +312,7 @@ public class TokenParser
 				case 17: break;
 				case 7:	// .
 				{
-					throw new IOException ("Invalid character: " + getText ());
+					throw new IOException ("Invalid character: " + yyText ());
 				}
 				case 18: break;
 				case 8:	// <<EOF>>
@@ -348,7 +353,7 @@ public class TokenParser
 	{
 		TokenParser tmpLexer = new TokenParser ();
 		if (args.length > 0)
-			tmpLexer.setInput (new FileInputStream (args[0]));
+			tmpLexer.setInput (new java.io.FileInputStream (args[0]));
 
 		tmpLexer.yyLex ();
 	}
@@ -370,7 +375,7 @@ public class TokenParser
 	
 
 /*
- * properties and statistics:
+ * lexer properties:
  * unicode = false
  * bol = false
  * backup = true

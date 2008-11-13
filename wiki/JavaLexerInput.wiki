@@ -26,7 +26,7 @@ There are three types functions that can be marked with these two annotations.  
 
 None of the functions can be {{{private}}}, since they are called from the generated class.  They can be {{{protected}}}, {{{public}}} or in the package scope (if the generated class is in the same package as this class).
 
-=== Case 1: Function is void ===
+=== Case 1: Function returns void ===
 
 This is the most simple case.  The lexer would call this function and then move on to matching the next potential pattern.  For example:
 

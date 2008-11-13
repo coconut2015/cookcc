@@ -54,7 +54,7 @@ Within {{{Calculator}}} class, you can specify the token Enum class.  It is not 
 
 Use {{{@CookCCToken}}} to mark a Enum declaration.  All the names defined here are all treated as terminals by CookCC.
 
-To specify the precedence and the type, use mark a token with {{{@TokenGroup}}} and set its type to LEFT, RIGHT or NONASSOC.  If the type is not specified, it is assumed to be NONASSOC.  All unmarked tokens would inherit the precedence and type of the previous token.
+To specify the precedence and the type, mark a token with {{{@TokenGroup}}} and set its type to LEFT, RIGHT or NONASSOC.  If the type is not specified, it is assumed to be NONASSOC.  All unmarked tokens would inherit the precedence and type of the previous token.
 
 You can use [http://java.sun.com/j2se/1.5.0/docs/guide/language/static-import.html static import] to avoid typing {{{TokenType.LEFT}}} and only need to type {{{LEFT}}}.  I dislike static import, and I copy/paste code anyways.  So it doesn't really matter.
 

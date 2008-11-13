@@ -3,7 +3,7 @@
 
 = Patterns =
 
-CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.html Flex patterns], so this page is mostly a copy/paste of the referenced article.
+CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.html Flex patterns], so this page is contains a number of text copied/pasted from the referenced article.  There are some minor differences though since CookCC allows both double quoted strings as well as single quoted strings (since version 0.3.1).
 
 Some examples can be found in test cases for [http://code.google.com/p/cookcc/source/browse/trunk/tests/nfa/ NFA] and [http://code.google.com/p/cookcc/source/browse/trunk/tests/ccl/ CCL].
 
@@ -21,7 +21,8 @@ Some examples can be found in test cases for [http://code.google.com/p/cookcc/so
 || *{{{r{2,} }}}* || two or more r's ||
 || *{{{r{4} }}}* || exactly 4 {{{r}}}'s ||
 || *{{{ {name} }}}* || Replace with the {{{<shortcut>}}} pattern of the same name. ||
-|| *{{{"[xyz]\"foo"}}}* || the literal string: *{{{[xyz]"foo}}}* ||
+|| *{{{"[xyz]"}}}* || the literal string: {{{[xyz]}}} ||
+|| *{{{'[xyz]'}}}* || the literal string: {{{[xyz]}}}, since version 0.3.1. ||
 || *{{{\x}}}* || Escape character, see the section below. ||
 || *{{{\0}}}* || the character with 0 (ASCII code 0) ||
 || *{{{(r)}}}* || match an r ||

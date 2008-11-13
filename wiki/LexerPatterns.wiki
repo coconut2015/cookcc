@@ -8,9 +8,9 @@ CookCC follows closely to the [http://dinosaur.compilertools.net/flex/flex_7.htm
 Some examples can be found in test cases for [http://code.google.com/p/cookcc/source/browse/trunk/tests/nfa/ NFA] and [http://code.google.com/p/cookcc/source/browse/trunk/tests/ccl/ CCL].
 
 || *Format* || *Description* ||
-|| *{{{x}}}* || matches the character *x* ||
+|| *{{{x}}}* || matches the character *{{{x}}}* ||
 || *{{{.}}}* || matches anything except \n character ||
-|| *{{{[xyz]}}}* || a character class which includes *x*, *y*, and *z* ||
+|| *{{{[xyz]}}}* || a character class which includes *{{{x}}}*, *{{{y}}}*, and *{{{z}}}* ||
 || *{{{[abj-oZ]}}}* || a "character class" with a range in it; matches an `a', a `b', any letter from `j' through `o', or a `Z' ||
 || *{{{[^A-Z]}}}* || a "negated character class", i.e., any character but those in the class. In this case, any character EXCEPT an uppercase letter. ||
 || *{{{[^A-Z\n]}}}* || any character EXCEPT an uppercase letter or a newline ||

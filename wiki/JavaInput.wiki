@@ -32,6 +32,7 @@ XML input only solves part of the problem that being able to accept action codes
 
  * Advantages
    * Write code as normal and take the full advantage of the modern IDEs.
+   * No longer have to deal with $$, $1 etc.
    * Coherent code without fragmentation
    * Comments can be easily extracted using generic documentation tools.
    * Most languages have documentation tools that can be utilized to deal with annotations.

@@ -24,7 +24,7 @@
 
 There are three types functions that can be marked with these two annotations.  They each has different meanings.
 
-None of the functions can be private, since they are called from the generated class.  They can be protected or package scope (if the generated class is in the same package as this class).
+None of the functions can be {{{private}}}, since they are called from the generated class.  They can be {{{protected}}}, {{{public}}} or in the package scope (if the generated class is in the same package as this class).
 
 === Case 1: Function is void ===
 
@@ -37,6 +37,8 @@ This is the most simple case.  The lexer would call this function and then move 
 	}
 }}}
 
+Note that it is necessary to use double backslashes here for escape sequences because Java itself also interpret escape sequences.  This is perhaps one of the main drawback using Java annotation to specify the lexer.  Fortunately usually the lexer is fairly easy to get it working correctly.
+
 === Case 2: Function returns a non-int value ===
 
 In this case, {{{@Lex}}} needs to contain the terminal token that would be returned.  The return value from the function is going to be the value associated with this terminal.
@@ -48,6 +50,17 @@ We have to specify the terminal in String due to the technical limitation.
 	protected Integer parseInt ()
 	{
 		return Integer.parseInt (yyText ());
+	}
+
+	@Lexs (patterns = {
+		@Lex (pattern = "while", token = "WHILE"),
+		@Lex (pattern = "if", token = "IF"),
+		@Lex (pattern = "else", token = "ELSE"),
+		@Lex (pattern = "print", token = "PRINT")
+	})
+	protected Object parseKeyword ()
+	{
+		return null;
 	}
 }}}
 

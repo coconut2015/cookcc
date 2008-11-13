@@ -1,0 +1,33 @@
+#summary Overview of the Java annotation input
+<wiki:toc/>
+
+= Overview =
+
+{{{@CookCCOption}}} is used to mark a class that uses the generated lexer/parser.  In this case, we mark the {{{Calculator}}} class.
+
+{{{
+import org.yuanheng.cookcc.*;
+
+@CookCCOption (lexerTable = "compressed", parserTable = "compressed")
+public class Calculator extends Parser
+{
+
+}
+}}}
+
+The generated class is actually the parent class of {{{Calculator}}}, in this case, {{{Parser}}} class.  Since we haven't really generated this class yet, so what we needed to do to work on the {{{Calculator}}} class without the error in editor (assuming that you are using a decent Java IDE such as Eclipse or IntelliJ IDEA) is to create an empty {{{Parser.java}}} with the following code.
+
+{{{
+/* Copyright (c) 2008 by Heng Yuan */
+import org.yuanheng.cookcc.CookCCByte;
+
+/**
+ * @author Heng Yuan
+ * @version $Id$
+ */
+public class Parser extends CookCCByte
+{
+}
+}}}
+
+Notice that we have the file header (copyright notice) and the class header.  CookCC Java input will keep these in the generated class.

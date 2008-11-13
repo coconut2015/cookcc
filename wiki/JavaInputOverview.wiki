@@ -5,6 +5,8 @@
 
 CookCC 0.3 and later include a capability of input lexer/parser information directly using Java annotation.  It will require [http://java.sun.com/j2se/1.5.0/docs/guide/apt/GettingStarted.html Java APT] to launch CookCC jar.  An [AntTask Ant task] has been provided to simplify the task.
 
+The following example is a simple calculator script interpreter adapted from [http://epaperpress.com/lexandyacc/ A Compact Guide to Lex & Yacc].
+
 == Setup ==
 
 First, add CookCC jar file to your project path.  This jar file is only required for building the parser, and setting up the ant task.  It is not required at runtime.

@@ -44,4 +44,4 @@ Notice that we have the file header (copyright notice) and the class header.  Co
 
 {{{CookCCByte}}} is class is nothing more than a class that contains all the possible generated functions (not all of them will be available depending on the options and the patterns/rules), so that code in {{{Calculator}}} can use them in advance.  Since we are not dealing with Unicode, so we extend {{{CookCCByte}}} class.  For lexers that deal with Unicode, extend {{{CookCCChar}}} class.
 
-Note that all the CookCC annotations and CookCCByte are merely required for compile time, they are not required for runtime.
+Note that all the CookCC annotations and {{{CookCCByte}}} are merely required for compile time, they are not required for runtime.  The generated class no longer extends {{{CookCCByte}}}.

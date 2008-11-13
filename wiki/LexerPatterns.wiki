@@ -31,7 +31,7 @@ Some examples can be found in test cases for [http://code.google.com/p/cookcc/so
 || *{{{r/s}}}* || *r* followed by *s*, but only obtains the *r* part.  At present, CookCC can only handle cases where either {{{r}}} or {{{s}}} is fixed in length. ||
 || *{{{^r}}}* || an *r* at beginning of line, or the start of scan.  It will increase the DFA size slightly and slightly decrease the lexer performance. || 
 || *{{{r$}}}* || an *r* at the end of the line (\n), but not including the \n character.  Note that this pattern does not work well on files in dos format because it does not consider {{{\r}}} character. ||
-|| *{{{<<EOF>>}}}* || an end of file character.  This character is artificial. ||
+|| *{{{<<EOF>>}}}* || an end of file character.  This character is artificial and will not be actually seen in the input.  If this character is the entire pattern, return value from yyText () is null. ||
 
 == Escape Characters ==
 || *Code* || *Description* ||

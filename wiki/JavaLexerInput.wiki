@@ -76,6 +76,8 @@ In this case, the lexer would return the value.  For example:
 	}
 }}}
 
+Be extra careful if the return value is used as terminals in the parser.  Values not in the valid used terminals can result in the early termination of the parser.
+
 Note that when {{{<<EOF>>}}} is encountered, it is necessary to return a value or the lexer would get into an infinite loop.  There are a number of ways of doing so:
 
 {{{

@@ -78,6 +78,10 @@ A character class can be manipulated in several ways:
 || {{{ {-} }}} || Remove all characters in the second character class from the first character class || {{{[A-Za-z]{-}[a-z]}}} is the same as {{{[A-Z]}}}.  {{{[a-z]{-}[aeiou]}}} represents all lower case consonant letters.  ||
 || {{{ ^ }}} || Not operation || {{{[[:^alpha:]]}}} is the same as {{{[^[:alpha:]]}}} and {{{[\0-\xff]{-}[a-zA-Z]}}}.  {{{[^ \t\r\n]}}} represents all non-space characters. ||
 
+== Useful Links ==
+
+ * [http://www.manpagez.com/man/7/ascii/ ASCII map]
+
 == Tips ==
  * Unless one is generating a full DFA table, it is usually a good idea not to generate new character classes.  For example, {{{(a|b)}}} can be better written as {{{[ab]}}} which would reduce the DFA table size for {{{ecs}}} and {{{compressed}}} format quite a bit.  This approach is particularly necessary when there are lots of DFA states.
  * Long strings of keyword matches such as {{{"while"}}}, {{{"continue"}}} can increase the DFA table size quite a bit.  Consider using hash tables or [http://en.wikipedia.org/wiki/Perfect_hash_function perfect hash] instead if the tools are available in the target language.

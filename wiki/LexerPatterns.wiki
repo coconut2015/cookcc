@@ -48,7 +48,8 @@ Some examples can be found in test cases for [http://code.google.com/p/cookcc/so
 || *{{{\123}}}* || the character with octal value 123 (maximum 3 digits) ||
 || *{{{\x2a}}}* || the character with hexadecimal value 2a (maximum 2 digits) ||
 || *{{{\u002a}}}* || the unicode character with hexadecimal value 2a (exactly 4 digits) ||
-Escape sequences with {{{\}}} proceeds any character would treat treat that character as the literal character, rather than special characters.
+
+Escape sequences with {{{\}}} proceeding any character that is not listed above would treat treat that character as the literal character, rather than special characters.
 
 == POSIX Character Classes ==
 || *Class* || *Equivalent* ||

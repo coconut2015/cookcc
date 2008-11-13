@@ -11,6 +11,8 @@
      * [JavaInputCommandLine Command line execution]
  * [Lexer]
    * [LexerPatterns Patterns]
+     * [http://www.manpagez.com/man/7/ascii/ ASCII map]
+     * [http://www.unicodemap.org/ Unicode map]
    * [LexerWarnings Compiler Warnings]
  * [Parser]
    * [ParserErrorRecovery Error Recovery]

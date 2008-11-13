@@ -8,6 +8,7 @@
      * [JavaInputOverview Overview]
      * [JavaLexerInput Lexer section]
      * [JavaParserInput Parser section]
+     * [JavaInputCommandLine Command line execution]
  * [Lexer]
    * [LexerPatterns Patterns]
    * [LexerWarnings Compiler Warnings]

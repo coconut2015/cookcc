@@ -44,6 +44,8 @@ Although it is possible to use [http://java.sun.com/j2se/javadoc/ JavaDoc] docle
 
 Please goto [JavaInputOverview overview] section to start.
 
+There are a number of examples in [http://code.google.com/p/cookcc/source/browse/trunk/tests/javaap test cases].
+
 == Related Work ==
 
 Aycock, J. "Compiling Little Languages in Python", Proceedings of the Seventh International Python Conference, p100, 1998.

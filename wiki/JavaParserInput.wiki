@@ -32,6 +32,8 @@ In this case, the value associated with the non-terminal of the LHS is null.
 
 Note the {{{args}}} contains the indexes of values that would to be passed to the function.  The indexing value starts from 1 for the production on the RHS.
 
+As you can see, one does not have to mess with {{{$$}}}, {{{$1}}} etc, and does not have to deal with type information specified elsewhere.  This approach is much more intuitive.
+
 === Case 3: Function returns an Object ===
 
 In this case, the return value is automatically associated with the non-terminal on the LHS.

@@ -48,9 +48,9 @@ Note that all the CookCC annotations and {{{CookCCByte}}} are merely required fo
 
 == Second Step: Mark a Toke Enum ==
 
-If you are only going to use a lexer, you can skip this section.
+If you are only going to use a [JavaLexerInput lexer], you can skip this section.
 
-Within {{{Calculator}}} class, you can specify the token Enum class.  It is not required to have this Enum as a nested class of {{{Calculator}}} since {{{@CookCCOption}}} can be used to specify the Enum class defined elsewhere.  However, I personally find that having such nested declaration makes it more visual.
+Within {{{Calculator}}} class, you can specify the token [http://java.sun.com/j2se/1.5.0/docs/guide/language/enums.html Enum] class.  It is not required to have this Enum as a nested class of {{{Calculator}}} since {{{@CookCCOption}}} can be used to specify the Enum class defined elsewhere.  However, I personally find that having such nested declaration makes it more visual.
 
 Use {{{@CookCCToken}}} to mark a Enum declaration.  All the names defined here are all treated as terminals by CookCC.
 

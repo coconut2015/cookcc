@@ -54,6 +54,7 @@ public class RuleParser
 	private boolean[] m_singletonCharSet;
 	private boolean[] m_cclCharSet;
 	private boolean[] m_quoteCharSet;
+	private boolean[] m_singleQuoteCharSet;
 
 	private RuleLexer m_lex;
 	private int m_lineNumber;
@@ -180,6 +181,7 @@ public class RuleParser
 		m_singletonCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[$/|*+?.(){}]]"));
 		m_cclCharSet = CCL.subtract (m_ccl.ANY.clone (), m_ccl.parseCCL ("[-\\]\\n]"));
 		m_quoteCharSet = m_ccl.parseCCL ("[^\"\\n]");
+		m_singleQuoteCharSet = m_ccl.parseCCL ("[^'\\n]");
 	}
 
 	public boolean isBOL ()
@@ -296,10 +298,17 @@ public class RuleParser
 				}
 				else if (m_lex.ifMatch ('"'))
 				{
-					head = parseString ();
+					head = parseString (m_quoteCharSet);
 					if (head == null)
 						throw new InvalidRegExException (m_lineNumber, m_lex.getInput ());
 					m_lex.match ('"');
+				}
+				else if (m_lex.ifMatch ('\''))
+				{
+					head = parseString (m_singleQuoteCharSet);
+					if (head == null)
+						throw new InvalidRegExException (m_lineNumber, m_lex.getInput ());
+					m_lex.match ('\'');
 				}
 				else if (m_lex.ifMatch ('('))
 				{
@@ -402,11 +411,11 @@ public class RuleParser
 		return new Integer (number);
 	}
 
-	private NFA parseString ()
+	private NFA parseString (boolean[] charSet)
 	{
 		NFA head = null;
 		Character ch;
-		while ((ch = parseChar (m_quoteCharSet)) != null)
+		while ((ch = parseChar (charSet)) != null)
 		{
 			++m_ruleLen;
 			NFA tail;

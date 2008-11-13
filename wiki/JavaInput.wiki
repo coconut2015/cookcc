@@ -3,7 +3,7 @@
 
 = Java Input =
 
-One of the innovations of CookCC is being able to directly specify the lexer/parser right in the Java code, without going into an obscure / proprietary input file.  This feature greatly simplifies the task of writing lexer/parser.
+One of the cool feature of CookCC is being able to directly specify the lexer/parser right in the Java code, without going into an obscure / proprietary input file.  This feature greatly simplifies the task of writing lexer/parser.
 
 This capability can be extended to other languages, such as Python or C#.
 
@@ -43,3 +43,7 @@ XML input only solves part of the problem that being able to accept action codes
 Although it is possible to use JavaDoc doclet to extract annotations, the annotation capabilities of Java 1.5 is simply a lot easier to use and deal with.  For this reason, I settled to use Java 1.5.  This however, does not mean the code generated has to be run under JVM 1.5+.  One can always target the output class files for earlier version of JVM.
 
 Please goto [JavaInputOverview overview] section to start.
+
+== Related Work ==
+
+Aycock, J. "Compiling Little Languages in Python", Proceedings of the Seventh International Python Conference, p100, 1998.

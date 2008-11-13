@@ -79,3 +79,7 @@ You can use [http://java.sun.com/j2se/1.5.0/docs/guide/language/static-import.ht
 		UMINUS
 	}
 }}}
+
+One of the unfortunate drawback of using Enum token is that it is necessary to give a name to terminals such as {{{'='}}} {{{'<'}}}, etc.  On the other hand, it is good to have them defined since it is easier to use them in abstract syntax trees (ASTs).
+
+(Currently, CookCC does not have a tree generator yet.  Hopefully it can be added in the near future.)

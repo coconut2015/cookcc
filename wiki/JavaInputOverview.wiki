@@ -21,7 +21,7 @@ import org.yuanheng.cookcc.*;
 @CookCCOption (lexerTable = "compressed", parserTable = "compressed")
 public class Calculator extends Parser
 {
-
+	// code
 }
 }}}
 
@@ -45,3 +45,37 @@ Notice that we have the file header (copyright notice) and the class header.  Co
 {{{CookCCByte}}} is class is nothing more than a class that contains all the possible generated functions (not all of them will be available depending on the options and the patterns/rules), so that code in {{{Calculator}}} can use them in advance.  Since we are not dealing with Unicode, so we extend {{{CookCCByte}}} class.  For lexers that deal with Unicode, extend {{{CookCCChar}}} class.
 
 Note that all the CookCC annotations and {{{CookCCByte}}} are merely required for compile time, they are not required for runtime.  The generated class no longer extends {{{CookCCByte}}}.
+
+== Second Step: Mark a Toke Enum ==
+
+If you are only going to use a lexer, you can skip this section.
+
+With in {{{Calculator}}} class, you can specify the token Enum class.  It is not required to have this Enum as a nested class of {{{Calculator}}} since {{{@CookCCOption}}} can be used to specify the Enum class defined elsewhere.  However, I personally find that having such nested declaration makes it more visual.
+
+Use {{{@CookCCToken}}} to mark a Enum declaration.  All the names defined here are all treated as terminals by CookCC.
+
+To specify the precedence and the type, use mark a token with {{{@TokenGroup}}} and set its type to LEFT, RIGHT or NONASSOC.  If the type is not specified, it is assumed to be NONASSOC.
+
+You can use [http://java.sun.com/j2se/1.5.0/docs/guide/language/static-import.html static import] to avoid typing {{{TokenType.LEFT}}} and only need to type {{{LEFT}}}.  I dislike static import, and I copy/paste code anyways.  So it doesn't really matter.
+
+{{{
+	@CookCCToken
+	static enum Token
+	{
+		@TokenGroup
+		VARIABLE, INTEGER, WHILE, IF, PRINT, ASSIGN, SEMICOLON,
+		@TokenGroup
+		IFX,
+		@TokenGroup
+		ELSE,
+
+		@TokenGroup (type = TokenType.LEFT)
+		GE, LE, EQ, NE, LT, GT,
+		@TokenGroup (type = TokenType.LEFT)
+		ADD, SUB,
+		@TokenGroup (type = TokenType.LEFT)
+		MUL, DIV,
+		@TokenGroup (type = TokenType.LEFT)
+		UMINUS
+	}
+}}}

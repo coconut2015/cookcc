@@ -11,7 +11,7 @@ The following example is a simple [http://code.google.com/p/cookcc/source/browse
 
 First, add CookCC jar file to your project path.  This jar file is only required for building the parser, and setting up the ant task.  It is not required at runtime.
 
-== First Step: Annotatte a Class ==
+== First Step: Annotate a Class ==
 
 {{{@CookCCOption}}} is used to mark a class that uses the generated lexer/parser.  In the following example, we mark the {{{Calculator}}} class.
 

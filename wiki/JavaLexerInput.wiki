@@ -1,0 +1,85 @@
+#summary Specifies how to define lexer using Java annotation
+<wiki:toc/>
+
+== Specifying Shortcuts ==
+
+{{{@Shortcut}}} is used to specify a single frequently used pattern can be re-used in actual lexical patterns.  Multiple {{{@Shortcut}}} can be defined using {{{@Shortcuts}}} annotation.  Just specify it on any functions.  The order of shortcut is not important and it is possible to contain references to other shortcuts.  Just be careful not to create cyclic references.
+
+{{{
+	@Shortcuts ( shortcuts = {
+		@Shortcut (name="nonws", pattern="[^ \\t\\n]"),
+		@Shortcut (name="ws", pattern="[ \\t]")
+	})
+	@Lex (pattern="{nonws}+", state="INITIAL")
+	void matchWord ()
+	{
+		m_cc += yyLength ();
+		++m_wc;
+	}
+}}}
+
+== Specifying Lexical Patterns ==
+
+{{{@Lex}}} is use to specify a single lexical pattern.  {{{@Lexs}}} is used to specify multiple lexical patterns that share a common action.
+
+There are three types functions that can be marked with these two annotations.  They each has different meanings.
+
+None of the functions can be private, since they are called from the generated class.  They can be protected or package scope (if the generated class is in the same package as this class).
+
+=== Case 1: Function is void ===
+
+This is the most simple case.  The lexer would call this function and then move on to matching the next potential pattern.  For example:
+
+{{{
+	@Lex (pattern = "[ \\t\\r\\n]+")
+	protected void ignoreWhiteSpace ()
+	{
+	}
+}}}
+
+=== Case 2: Function returns a non-int value ===
+
+In this case, {{{@Lex}}} needs to contain the terminal token that would be returned.  The return value from the function is going to be the value associated with this terminal.
+
+We have to specify the terminal in String due to the technical limitation.
+
+{{{
+	@Lex (pattern="[0-9]+", token="INTEGER") 
+	protected Integer parseInt ()
+	{
+		return Integer.parseInt (yyText ());
+	}
+}}}
+
+=== Case 3: Function returns an int value ==
+
+In this case, the lexer would return the value.  For example:
+
+{{{
+	@Lex (pattern="[(){}.]")
+	protected int parseSymbol ()
+	{
+		return yyText ().charAt (0);
+	}
+}}}
+
+Note that when {{{<<EOF>>}}} is encountered, it is necessary to return a value or the lexer would get into an infinite loop.  There are a number of ways of doing so:
+
+{{{
+	@Lex (pattern = "<<EOF>>", token = "$")
+	protected void parseEOF ()
+	{
+	}
+}}}
+
+Or you can simply do
+
+{{{
+	@Lex (pattern = "<<EOF>>")
+	protected int parseEOF ()
+	{
+		return 0;
+	}
+}}}
+
+This is because {{{$}}} terminal corresponds to 0.

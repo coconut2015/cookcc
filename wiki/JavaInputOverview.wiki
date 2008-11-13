@@ -3,7 +3,15 @@
 
 = Overview =
 
-{{{@CookCCOption}}} is used to mark a class that uses the generated lexer/parser.  In this case, we mark the {{{Calculator}}} class.
+CookCC 0.3 and later include a capability of input lexer/parser information directly using Java annotation.  It will require [http://java.sun.com/j2se/1.5.0/docs/guide/apt/GettingStarted.html Java APT] to launch CookCC jar.  An [AntTask Ant task] has been provided to simplify the task.
+
+== Setup ==
+
+First, add CookCC jar file to your project path.  This jar file is only required for building the parser, and setting up the ant task.  It is not required at runtime.
+
+== First Step: Mark a Class That is going to use Lexer/Parser ==
+
+{{{@CookCCOption}}} is used to mark a class that uses the generated lexer/parser.  In the following example, we mark the {{{Calculator}}} class.
 
 {{{
 import org.yuanheng.cookcc.*;
@@ -15,7 +23,7 @@ public class Calculator extends Parser
 }
 }}}
 
-The generated class is actually the parent class of {{{Calculator}}}, in this case, {{{Parser}}} class.  Since we haven't really generated this class yet, so what we needed to do to work on the {{{Calculator}}} class without the error in editor (assuming that you are using a decent Java IDE such as Eclipse or IntelliJ IDEA) is to create an empty {{{Parser.java}}} with the following code.
+The generated class is actually the parent class of {{{Calculator}}}, in this case, {{{Parser}}} class.  Since we haven't really generated this class yet, so what we needed to do to work on the {{{Calculator}}} class without the error in editor (assuming that you are using a decent Java IDE such as Eclipse or IntelliJ IDEA) is to create an empty {{{Parser.java}}} like the following code.
 
 {{{
 /* Copyright (c) 2008 by Heng Yuan */
@@ -30,4 +38,8 @@ public class Parser extends CookCCByte
 }
 }}}
 
-Notice that we have the file header (copyright notice) and the class header.  CookCC Java input will keep these in the generated class.
+Notice that we have the file header (copyright notice) and the class header.  CookCC Java input will keep these in the generated class.  It also keep the scope of the class, {{{public}}} in this case.
+
+{{{CookCCByte}}} is class is nothing more than a class that contains all the possible generated functions (not all of them will be available depending on the options and the patterns/rules), so that code in {{{Calculator}}} can use them in advance.  Since we are not dealing with Unicode, so we extend {{{CookCCByte}}} class.  For lexers that deal with Unicode, extend {{{CookCCChar}}} class.
+
+Note that all the CookCC annotations and CookCCByte are merely required for compile time, they are not required for runtime.

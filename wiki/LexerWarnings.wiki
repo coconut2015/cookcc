@@ -17,7 +17,7 @@ This situation happens when patterns concerning part of the character sets have 
 
 One way to avoid such warning is by adding a pattern {{{.|\n}}} as the last pattern for the state.  This is in fact the way internally CookCC does.  However, it then runs into the potential problem of having patterns that can never be matched.
 
-CookCC also requires user to specify {{{<<EOF>>}}} conditions for all states, just in case of an unexpected end of file.
+CookCC also requires user to specify {{{<<EOF>>}}} conditions for all states, just in case of an unexpected end of file.  If not specified, the default action is to exit from lexer with a value of 0.
 
 Here are some [http://code.google.com/p/cookcc/source/browse/trunk/?#trunk/tests/incomplete examples] that cause such a problem.
 

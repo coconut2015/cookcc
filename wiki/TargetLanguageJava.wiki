@@ -16,6 +16,23 @@ Java is the default output language of CookCC.  It can also be selected using th
 || {{{-public}}} || 0.1+ || set class scope to {{{public}}}.  By default, the class generated is in the package scope. ||
 || {{{-abstract}}} || 0.3+ || set the generated class to be abstract.  It also disables the generation of {{{main}}} function. ||
 
+== Code Locations ==
+For codes in {{{<code>}}} tags.
+
+{{{
+/* code name = "fileheader" /*
+package foo;
+
+/**
+ * code name = "classheader"
+ */
+public class
+{
+   ... // generated code
+   // code name = "default"
+}
+}}}
+
 == Lexer ==
 
 [http://code.google.com/p/cookcc/source/browse/trunk/tests/#tests/fastwc Word count tests] on large files (5 MB - 22 MB) have shown that {{{ecs}}} table has about the same performance as the {{{full}}} table for Java.

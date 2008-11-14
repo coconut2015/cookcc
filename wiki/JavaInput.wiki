@@ -50,4 +50,4 @@ There are a number of examples in [http://code.google.com/p/cookcc/source/browse
 
 == Related Work ==
 
-* [http://pages.cpsc.ucalgary.ca/~aycock/spark/ SPARK] which is for Python uses doc string to specify the lexer/parser components.  Aycock, J. "Compiling Little Languages in Python", Proceedings of the Seventh International Python Conference, p100, 1998.
+ * [http://pages.cpsc.ucalgary.ca/~aycock/spark/ SPARK] which is for Python uses doc string to specify the lexer/parser components.  Aycock, J. "Compiling Little Languages in Python", Proceedings of the Seventh International Python Conference, p100, 1998.

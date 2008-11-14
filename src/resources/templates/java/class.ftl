@@ -621,6 +621,10 @@ ${code.classheader}
 	 */
 	public int yyParse () throws IOException
 	{
+ <#if code.parserprolog?has_content>
+		${code.parserprolog}
+
+ </#if>
 		char[] cc_ecs = cc_parser.ecs;
 <#if parser.table == "ecs">
 		char[][] cc_next = cc_parser.next;

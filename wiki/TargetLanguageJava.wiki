@@ -17,19 +17,26 @@ Java is the default output language of CookCC.  It can also be selected using th
 || {{{-abstract}}} || 0.3+ || set the generated class to be abstract.  It also disables the generation of {{{main}}} function. ||
 
 == Code Locations ==
-For codes in {{{<code>}}} tags.
+For codes in {{{<code name="name"></code>}}}, their locations in the generated file can be seen in the following example.  If the name is not given, the name is assumed to be "default".
 
 {{{
-/* code name = "fileheader" /*
+/* code name = "fileheader" */
 package foo;
 
 /**
  * code name = "classheader"
  */
-public class
+public class Bar
 {
-   ... // generated code
-   // code name = "default"
+	public int yyLex ()
+	{
+		// code name = "lexerprolog"
+
+		// case switch codes
+	}
+
+
+	// code name = "default"
 }
 }}}
 

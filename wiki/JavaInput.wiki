@@ -14,11 +14,12 @@ Traditionally, one would have to write lexer/parser in {{{*.l}}} or {{{*.y}}} in
  * Difficult to write
    * Proprietary file format
      * The parsing of lex/yaccfiles are non-trivial and not easily portable for different languages
-   * Lagging support in terms of modern IDE features.
+   * Lagging support in terms of modern IDE features such as
      * Syntax highlighting
      * Context sensitive help
      * Instant error check, including semantic check as well as variable/function call checks.
      * Variable / function usage highlight and analysis.
+     * Automatic code/template insertions that reduce typing.
      * Many many more.
    * Fragmented code
  * Difficult to maintain

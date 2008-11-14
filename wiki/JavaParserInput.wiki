@@ -7,7 +7,7 @@
 
 There are also three cases of functions marked using {{{@Rule}}}
 
-=== Case 1: Function that returns int ===
+=== Case 1: Function returns an int ===
 
 This function is used by the grammar start non-terminal to signal the exit of the parser with the particular value.  It can be used by error processing functions as well.
 
@@ -19,7 +19,7 @@ This function is used by the grammar start non-terminal to signal the exit of th
 	}
 }}}
 
-=== Case 2: Function is void ===
+=== Case 2: Function returns void ===
 
 In this case, the value associated with the non-terminal of the LHS is null.
 

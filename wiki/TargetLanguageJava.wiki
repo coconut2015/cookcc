@@ -35,6 +35,10 @@ public class Bar
 		// case switch codes
 	}
 
+	public int yyParse ()
+	{
+		// case switch codes
+	}
 
 	// code name = "default"
 }

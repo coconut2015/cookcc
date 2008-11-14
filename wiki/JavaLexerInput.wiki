@@ -37,7 +37,7 @@ This is the most simple case.  The lexer would call this function and then move 
 	}
 }}}
 
-Note that it is necessary to use double backslashes here for escape sequences because Java itself also interpret escape sequences.  This is perhaps one of the main drawback using Java annotation to specify the lexer.  Fortunately usually the lexer is fairly easy to get it working correctly.
+Note that it is necessary to use double backslashes here for escape sequences because Java itself also interpret escape sequences.  This is perhaps one of the main drawback using Java annotation to specify the lexer.  Fortunately usually the lexer is fairly easy to get it working correctly.  IntelliJ IDEA also has a nice feature which pasting code with escape sequence such as {{{[ \t\r\n]+}}} inside a pair of double quotes would automatically adds the extra backslashes.
 
 === Case 2: Function returns a non-int value ===
 

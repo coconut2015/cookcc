@@ -16,7 +16,7 @@ It is necessary to add CookCC jar file to the class path since it contains CookC
 
 Multiple Java files can be specified.  CookCC annotation processor can deal with multiple input files at a time.
 
-To specify CookCC specific options, it requires an approach that serves not to confuse the APT processor.
+To specify CookCC specific options, it requires an approach that serves not to confuse the APT, which has its own set of options.
 
 Examples of specifying CookCC options using APT:
 

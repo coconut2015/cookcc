@@ -5,7 +5,7 @@
 
 One of the cool feature of CookCC is being able to directly specify the lexer/parser right in the Java code, without going into an obscure / proprietary input file.  This feature greatly simplifies the task of writing lexer/parser.
 
-This capability can be extended to other languages, such as Python or C#.
+This capability can be extended to other languages, such as Python or C#, even C / C++.
 
 == The Old Way of Writing Lexer/Parser ==
 

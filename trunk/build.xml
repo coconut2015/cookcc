@@ -13,7 +13,7 @@
 		<mkdir dir="${dist}"/>
 	</target>
 	<target name="initcookcc">
-		<taskdef name="cookcc" classname="org.yuanheng.cookcc.ant.Task" classpath="${tool}/cookcc-0.3.jar"/>
+		<taskdef name="cookcc" classname="org.yuanheng.cookcc.ant.Task" classpath="${tool}/cookcc-latest.jar"/>
 	</target>
 
 	<target name="compile" depends="init">
@@ -92,6 +92,7 @@
 		<cookcc src="${basedir}/src/org/yuanheng/cookcc/util/TokenParser.xcc">
 			<option name="-class" value="org.yuanheng.cookcc.util.TokenParser"/>
 			<option name="-d" value="${basedir}/src"/>
+			<option name="-public"/>
 		</cookcc>
 	</target>
 

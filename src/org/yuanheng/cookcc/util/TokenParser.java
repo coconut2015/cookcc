@@ -39,7 +39,7 @@ import java.util.LinkedList;
  * @author Heng Yuan
  * @version $Id$
  */
-class TokenParser
+public class TokenParser
 {
 
 	protected final static int INITIAL = 0;
@@ -290,7 +290,7 @@ class TokenParser
 					m_tokenList.add (yyText ());
 				}
 				case 13: break;
-				case 3:	// '[^\\']'
+				case 3:	// \'[^\\']\'
 				{
 					m_tokenList.add (yyText ());
 				}

@@ -218,6 +218,8 @@ public class Task extends org.apache.tools.ant.Task
 		cmd.createArgument ().setValue ("-s");
 		cmd.createArgument ().setValue (m_srcDir.getPath ());
 
+		cmd.createArgument ().setValue ("-nocompile");
+
 		if (m_analysis)
 			cmd.createArgument ().setValue ("-Aanalysis");
 		if (m_debug)

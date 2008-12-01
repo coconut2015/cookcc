@@ -18,4 +18,23 @@
 	</#list>
 		throw new IllegalArgumentException ("Unknown lexer state: " + state);
 	}
+
+	/**
+	 * Push the current state onto lexer state onto stack and
+	 * begin the new state specified by the user.
+	 *
+	 * @param	state
+	 *			the new state.
+	 */
+	protected void yyPushLexerState (String state)
+	{
+	<#list states as i>
+		if ("${i.name}".equals (state))
+		{
+			yyPushLexerState (${i.name});
+			return;
+		}
+	</#list>
+		throw new IllegalArgumentException ("Unknown lexer state: " + state);
+	}
 </#if>

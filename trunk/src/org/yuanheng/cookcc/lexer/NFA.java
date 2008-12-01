@@ -284,7 +284,7 @@ class NFA
 		else if (thisChar == ISCCL)
 		{
 			if (cclStr.length () <= 3)
-				buffer.append (cclStr);
+				buffer.append (cclStr + "    ".substring (cclStr.length ()));
 			else
 				buffer.append ("CCL ");
 		}

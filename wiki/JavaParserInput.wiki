@@ -31,10 +31,6 @@ In this case, the value associated with the non-terminal of the LHS is null.
 	}
 }}}
 
-Note the {{{args}}} contains the indexes of values that would to be passed to the function.  The indexing value starts from 1 for the production on the RHS.
-
-As you can see, one does not have to mess with {{{$$}}}, {{{$1}}} etc, and does not have to deal with type information specified elsewhere.  This approach is much more intuitive.
-
 === Case 3: Function returns an Object ===
 
 In this case, the return value is automatically associated with the non-terminal on the LHS.
@@ -46,3 +42,31 @@ In this case, the return value is automatically associated with the non-terminal
 		return new SemiColonNode ();
 	}
 }}}
+
+=== Passing Arguments ===
+
+{{{args}}} of the {{{@Rule}}} annotation is a list of indexes (separated by comma or space) of the symbols which the method expects as arguments.  The indexing value starts from 1 for the production on the RHS.
+
+For example:
+
+{{{
+	@Rule (lhs = "stmt", rhs = "VARIABLE ASSIGN expr SEMICOLON", args = "1 3")
+	protected Node parseAssign (String var, Node expr)
+	{
+		return new AssignNode (var, expr);
+	}
+}}}
+
+This will assign the value of symbol {{{VARIABLE}}} to the method parameter {{{String var}}} and the value of symbol {{{expr}}} to the method parameter {{{Node expr}}}.
+
+Note that the indexes need not be in any specific order. This would be equivalent (indexes and method parameters swapped):
+
+{{{
+	@Rule (lhs = "stmt", rhs = "VARIABLE ASSIGN expr SEMICOLON", args = "3 1")
+	protected Node parseAssign (Node expr, String var)
+	{
+		return new AssignNode (var, expr);
+	}
+}}}
+
+As you can see, one does not have to mess with {{{$$}}}, {{{$1}}} etc, and does not have to deal with type information specified elsewhere.  This approach is much more intuitive.

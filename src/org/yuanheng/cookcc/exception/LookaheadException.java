@@ -36,7 +36,7 @@ import org.yuanheng.cookcc.lexer.CCL;
  */
 public class LookaheadException extends ParserException
 {
-	public static MessageFormat ERROR_MSG = new MessageFormat ("expected token {0}, but found {1}");
+	public static MessageFormat ERROR_MSG = new MessageFormat ("expected token {0}, but found {1} for input {2}");
 
 	private final int m_expected;
 	private final CCL m_ccl;
@@ -45,7 +45,7 @@ public class LookaheadException extends ParserException
 
 	public LookaheadException (int lineNumber, CCL ccl, boolean[] charSet, String input, int pos)
 	{
-		super (lineNumber, ERROR_MSG.format (new Object[]{ ccl.toString (charSet), pos >= input.length () ? "<<EOF>>" : "" + input.charAt (pos)}));
+		super (lineNumber, ERROR_MSG.format (new Object[]{ ccl.toString (charSet), pos >= input.length () ? "<<EOF>>" : "" + input.charAt (pos), input }));
 		m_expected = -1;
 		m_ccl = ccl;
 		m_charSet = charSet;
@@ -54,7 +54,7 @@ public class LookaheadException extends ParserException
 
 	public LookaheadException (int lineNumber, CCL ccl, int expected, String input, int pos)
 	{
-		super (lineNumber, ERROR_MSG.format (new Object[]{ expected < 0 ? "<<EOF>>" : (ccl.PRINT[expected] ? "'" + (char)expected + "'" : new Integer (expected)), pos >= input.length () ? "<<EOF>>" : "" + input.charAt (pos)}));
+		super (lineNumber, ERROR_MSG.format (new Object[]{ expected < 0 ? "<<EOF>>" : (ccl.PRINT[expected] ? "'" + (char)expected + "'" : new Integer (expected)), pos >= input.length () ? "<<EOF>>" : "" + input.charAt (pos), input }));
 		m_expected = expected;
 		m_ccl = ccl;
 		m_charSet = null;

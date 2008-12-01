@@ -34,10 +34,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.LexerDoc;
-import org.yuanheng.cookcc.doc.ParserDoc;
-import org.yuanheng.cookcc.doc.ShortcutDoc;
+import org.yuanheng.cookcc.doc.*;
 
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import com.sun.org.apache.xerces.internal.xni.*;
@@ -47,6 +44,7 @@ import cookxml.core.adder.CallFunctionAdder;
 import cookxml.core.adder.DefaultAdder;
 import cookxml.core.converter.BooleanConverter;
 import cookxml.core.creator.DefaultCreator;
+import cookxml.core.setter.CallFunctionSetter;
 import cookxml.core.setter.DefaultSetter;
 import cookxml.core.taglibrary.InheritableTagLibrary;
 
@@ -86,6 +84,7 @@ public class XmlParser
 		tagLibrary.setCreator ("shortcut", new ShortcutCreator ());
 		tagLibrary.setCreator ("state", new LexerStateCreator ());
 		tagLibrary.setCreator ("rule", new RuleCreator ());
+		tagLibrary.setSetter ("rule", "state", new CallFunctionSetter ("addStates", RuleDoc.class, String.class));
 		tagLibrary.setCreator ("pattern", new PatternCreator ());
 		tagLibrary.setCreator ("action", new ActionCreator ());
 

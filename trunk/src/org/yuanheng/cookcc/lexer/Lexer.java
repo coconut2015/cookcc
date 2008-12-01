@@ -112,8 +112,7 @@ public class Lexer
 	private boolean[] m_backupCases;
 
 	private final DFATable m_dfa = new DFATable ();
-	private Vector<ESet> _Dstates = new Vector<ESet> ();
-	private TreeMap<ESet, Integer> _DstatesSet = new TreeMap<ESet, Integer> ();
+	private Vector<ESet> m_dfaStates = new Vector<ESet> ();
 	private LexerStateDoc[] m_lexerStates;
 	private int[] m_beginLocations;
 
@@ -286,7 +285,7 @@ public class Lexer
 			ESet startSet = (ESet)lexerState.getProperty (PROP_START_SET);
 			ESet bolSet = (ESet)lexerState.getProperty (PROP_BOL_SET);
 
-			m_beginLocations[i] = _Dstates.size ();
+			m_beginLocations[i] = m_dfaStates.size ();
 
 			buildDFA (startSet, bolSet);
 
@@ -473,6 +472,8 @@ public class Lexer
 	{
 		int j, a;
 
+		TreeMap<ESet, Integer> statesSet = new TreeMap<ESet, Integer> ();
+
 		ECS ecs = getECS ();
 		int groupCount = ecs.getGroupCount ();
 		int[] lookup = ecs.getLookup ();
@@ -483,23 +484,23 @@ public class Lexer
 		ESet s1 = eClosure (bolSet);
 
 		int dfaBase = m_dfa.size ();
-		int esetBase = _Dstates.size ();
+		int esetBase = m_dfaStates.size ();
 
 		// initially, e_closure (s0) is the only state in _Dstates and it is unmarked
-		_Dstates.add (s0);
-		_DstatesSet.put (s0, new Integer (_Dstates.size () - 1));
+		m_dfaStates.add (s0);
+		statesSet.put (s0, new Integer (m_dfaStates.size () - 1));
 
 		if (m_bolStates)
 		{
-			_Dstates.add (s1);
-			_DstatesSet.put (s1, new Integer (_Dstates.size () - 1));
+			m_dfaStates.add (s1);
+			statesSet.put (s1, new Integer (m_dfaStates.size () - 1));
 		}
 
 		// while there is an unmarked state T in _Dstates
-		for (Mark = esetBase; Mark < _Dstates.size (); Mark++)
+		for (Mark = esetBase; Mark < m_dfaStates.size (); Mark++)
 		{
 			// mark T;
-			ESet T = _Dstates.get (Mark);
+			ESet T = m_dfaStates.get (Mark);
 
 			NFA n = T.isAccept ();
 
@@ -549,12 +550,12 @@ public class Lexer
 				// if U is not in _Dstates
 				// add U as an unmarked state to _Dstates
 				int toState;
-				Integer value = _DstatesSet.get (U);
+				Integer value = statesSet.get (U);
 				if (value == null)
 				{
-					_Dstates.add (U);
-					_DstatesSet.put (U, new Integer (_Dstates.size () - 1));
-					toState = _Dstates.size () - 1;
+					m_dfaStates.add (U);
+					statesSet.put (U, new Integer (m_dfaStates.size () - 1));
+					toState = m_dfaStates.size () - 1;
 					U.setStateId (toState);
 				}
 				else

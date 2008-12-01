@@ -28,6 +28,8 @@ package org.yuanheng.cookcc.input.javaap;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 import org.yuanheng.cookcc.*;
 import org.yuanheng.cookcc.doc.*;
@@ -122,6 +124,49 @@ class ClassVisitor implements DeclarationVisitor
 		return buffer.toString ();
 	}
 
+	static int getAnnotationLineNumber (MethodDeclaration method, String className)
+	{
+		for (AnnotationMirror mirror : method.getAnnotationMirrors ())
+		{
+			if (!className.equals (mirror.getAnnotationType ().getDeclaration ().getQualifiedName ()))
+				continue;
+			SourcePosition pos = mirror.getPosition ();
+			return pos == null ? 0 : pos.line ();
+		}
+		return 0;
+	}
+
+	static int[] getAnnotationArrayLineNumbers (MethodDeclaration method, String className, String attr)
+	{
+		for (AnnotationMirror mirror : method.getAnnotationMirrors ())
+		{
+			if (!className.equals (mirror.getAnnotationType ().getDeclaration ().getQualifiedName ()))
+				continue;
+			Map<AnnotationTypeElementDeclaration, AnnotationValue> map = mirror.getElementValues ();
+			for (AnnotationTypeElementDeclaration key : map.keySet ())
+			{
+				if (!attr.equals (key.getSimpleName ()))
+					continue;
+				Collection c = (Collection)map.get (key).getValue ();
+				if (c == null)
+					return null;
+				int[] returnVal = new int[c.size ()];
+				int i = 0;
+				for (Object o : c)
+				{
+					AnnotationValue v = (AnnotationValue)o;
+					SourcePosition pos = v.getPosition ();
+					if (pos == null)
+						returnVal[i++] = 0;
+					else
+						returnVal[i++] = pos.line ();
+				}
+				return returnVal;
+			}
+		}
+		return null;
+	}
+
 	private static String computeOutputClass (ClassType classType)
 	{
 		DeclaredType containingType = classType.getContainingType ();
@@ -189,11 +234,13 @@ class ClassVisitor implements DeclarationVisitor
 		if (lexs == null)
 			return;
 
+		int[] pos = getAnnotationArrayLineNumbers (method, Lexs.class.getName (), "patterns");
+		int i = 0;
 		for (Lex lex : lexs.patterns ())
-			parseLex (lex, method);
+			parseLex (lex, method, pos == null ? 0 : pos[i++]);
 	}
 
-	private void parseLex (Lex lex, MethodDeclaration method)
+	private void parseLex (Lex lex, MethodDeclaration method, int lineNumber)
 	{
 		if (lex == null)
 			return;
@@ -208,6 +255,10 @@ class ClassVisitor implements DeclarationVisitor
 
 		PatternDoc pattern = new PatternDoc ();
 		pattern.setPattern (lex.pattern ());
+		if (lineNumber < 0)
+			pattern.setLineNumber (getAnnotationLineNumber (method, Lex.class.getName ()));
+		else
+			pattern.setLineNumber (lineNumber);
 
 		rule.addPattern (pattern);
 		rule.addStates (lex.state ());
@@ -218,11 +269,13 @@ class ClassVisitor implements DeclarationVisitor
 		if (rules == null)
 			return;
 
+		int[] pos = getAnnotationArrayLineNumbers (method, Rules.class.getName (), "rules");
+		int i = 0;
 		for (Rule rule : rules.rules ())
-			parseRule (rule, method);
+			parseRule (rule, method, pos == null ? 0 : pos[i++]);
 	}
 
-	private void parseRule (Rule rule, MethodDeclaration method)
+	private void parseRule (Rule rule, MethodDeclaration method, int lineNumber)
 	{
 		if (rule == null)
 			return;
@@ -230,6 +283,10 @@ class ClassVisitor implements DeclarationVisitor
 		GrammarDoc grammar = getParser ().getGrammar (rule.lhs ());
 		RhsDoc rhs = new RhsDoc ();
 		rhs.setTerms (rule.rhs ());
+		if (lineNumber < 0)
+			rhs.setLineNumber (getAnnotationLineNumber (method, Rule.class.getName ()));
+		else
+			rhs.setLineNumber (lineNumber);
 		String precedence = rule.precedence ().trim ();
 		if (precedence.length () > 0)
 			rhs.setPrecedence (precedence);
@@ -394,11 +451,11 @@ class ClassVisitor implements DeclarationVisitor
 	public void visitMethodDeclaration (MethodDeclaration method)
 	{
 		parseLexs (method.getAnnotation (Lexs.class), method);
-		parseLex (method.getAnnotation (Lex.class), method);
+		parseLex (method.getAnnotation (Lex.class), method, -1);
 		parseShortcuts (method.getAnnotation (Shortcuts.class));
 		parseShortcut (method.getAnnotation (Shortcut.class));
 		parseRules (method.getAnnotation (Rules.class), method);
-		parseRule (method.getAnnotation (Rule.class), method);
+		parseRule (method.getAnnotation (Rule.class), method, -1);
 	}
 
 	public void visitAnnotationTypeElementDeclaration (AnnotationTypeElementDeclaration annotationTypeElementDeclaration)

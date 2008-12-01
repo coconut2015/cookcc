@@ -21,6 +21,9 @@ import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Vector;
 </#if>
+<#if lexer?has_content>
+import java.util.Stack;
+</#if>
 
 <#if code.classheader?has_content>
 ${code.classheader}
@@ -147,6 +150,8 @@ ${code.classheader}
 	private int _yyTextStart;
 	private int _yyLength;
 
+	private Stack _yyLexerStack;
+
 <#if lexer.bol>
 	// we need to track beginning of line (BOL) status
 	private boolean _yyIsNextBOL = true;
@@ -252,6 +257,29 @@ ${code.classheader}
 	protected void begin (int baseState)
 	{
 		_yyBaseState = baseState;
+	}
+
+	/**
+	 * Push the current state onto lexer state onto stack and
+	 * begin the new state specified by the user.
+	 *
+	 * @param	newState
+	 *			the new state.
+	 */
+	protected void yyPushLexerState (int newState)
+	{
+		if (_yyLexerStack == null)
+			_yyLexerStack = new Stack ();
+		_yyLexerStack.push (new Integer (_yyBaseState));
+		begin (newState);
+	}
+
+	/**
+	 * Restore the previous lexer state.
+	 */
+	protected void yyPopLexerState ()
+	{
+		begin (((Integer)_yyLexerStack.pop ()).intValue ());
 	}
 
 	<#if debug>

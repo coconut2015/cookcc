@@ -1,0 +1,40 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<!--
+		This test checks when a pattern is shared among several states,
+		if things work correctly.
+	-->
+	<lexer>
+		<shortcut name="ws">[ \t]</shortcut>
+		<state name="INITIAL">
+			<rule state="BLOCKCOMMENT">
+				<pattern>\n</pattern>
+				<pattern>{ws}</pattern>
+				<action>System.out.println ("-[" + yyText () + "]-");</action>
+			</rule>
+			<rule>
+				<pattern>"/*"</pattern>
+				<action>echo (); begin (BLOCKCOMMENT);</action>
+			</rule>
+			<rule>
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>return 0;</action>
+			</rule>
+		</state>
+		<state name="BLOCKCOMMENT">
+			<rule>
+				<pattern>"*/"</pattern>
+				<action>echo (); begin (INITIAL);</action>
+			</rule>
+			<rule>
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>return 0;</action>
+			</rule>
+			<rule state="INITIAL">
+				<pattern>.</pattern>
+				<action>/* ignore */</action>
+			</rule>
+		</state>
+	</lexer>
+</cookcc>

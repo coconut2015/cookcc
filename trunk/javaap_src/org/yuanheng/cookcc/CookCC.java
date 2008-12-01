@@ -140,9 +140,48 @@ public abstract class CookCC
 	 * This function is used to change the initial state for the lexer.
 	 *
 	 * @param	state
+	 *			the state value
+	 */
+	public void begin (int state)
+	{
+	}
+
+	/**
+	 * This function is used to change the initial state for the lexer.
+	 *
+	 * @param	state
 	 *			the name of the state
 	 */
 	public void begin (String state)
+	{
+	}
+
+	/**
+	 * Push the current state onto lexer state onto stack and
+	 * begin the new state specified by the user.
+	 *
+	 * @param	newState
+	 * 			the new state.
+	 */
+	protected void yyPushLexerState (int newState)
+	{
+	}
+
+	/**
+	 * Push the current state onto lexer state onto stack and
+	 * begin the new state specified by the user.
+	 *
+	 * @param	newState
+	 * 			the new state.
+	 */
+	protected void yyPushLexerState (String newState)
+	{
+	}
+
+	/**
+	 * Restore the previous lexer state.
+	 */
+	protected void yyPopLexerState ()
 	{
 	}
 

@@ -138,10 +138,12 @@ public class RuleDoc extends TreeDoc
 	 */
 	public void addStates (String states)
 	{
-		StringTokenizer tokenizer = new StringTokenizer (states, ",");
+		StringTokenizer tokenizer = new StringTokenizer (states, ", ");
 		while (tokenizer.hasMoreTokens ())
 		{
 			String tok = tokenizer.nextToken ().trim ();
+			if (tok.length () == 0)
+				continue;
 			LexerStateDoc lexerState = m_lexer.getLexerState (tok);
 			if (!m_states.contains (lexerState))
 			{

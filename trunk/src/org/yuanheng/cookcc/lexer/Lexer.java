@@ -482,8 +482,6 @@ public class Lexer
 		ESet s0 = eClosure (startSet);
 		ESet s1 = eClosure (bolSet);
 
-		ESet U = new ESet ();
-
 		int dfaBase = m_dfa.size ();
 		int esetBase = _Dstates.size ();
 
@@ -540,7 +538,7 @@ public class Lexer
 				a = lookup[j];
 
 				// U := e_closure (move (T, a));
-				U = eClosure (move (T, a));
+				ESet U = eClosure (move (T, a));
 
 				if (U.getSet ().size () == 0)
 				{

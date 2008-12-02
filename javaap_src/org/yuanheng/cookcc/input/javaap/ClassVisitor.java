@@ -308,16 +308,10 @@ class ClassVisitor implements DeclarationVisitor
 		}
 
 		String returnType = method.getReturnType ().toString ();
-		boolean callSetValue = false;
 		if (!"void".equals (returnType))
-		{
-			buffer.append ("yySetValue (");
-			callSetValue = true;
-		}
+			buffer.append ("_yyValue = ");
 
 		buffer.append (THIS_STR).append (method.getSimpleName ()).append (" ()");
-		if (callSetValue)
-			buffer.append (")");
 		buffer.append (";");
 
 		if ("$".equals (token))
@@ -334,14 +328,10 @@ class ClassVisitor implements DeclarationVisitor
 		StringBuffer buffer = new StringBuffer ();
 
 		String returnType = method.getReturnType ().toString ();
-		boolean callSetValue = false;
 		if ("int".equals (returnType))
 			buffer.append ("return ");
 		else if (!"void".equals (returnType))
-		{
-			buffer.append ("yySetValue (");
-			callSetValue = true;
-		}
+		buffer.append ("_yyValue = ");
 
 		buffer.append (THIS_STR).append (method.getSimpleName ()).append (" (");
 
@@ -356,12 +346,11 @@ class ClassVisitor implements DeclarationVisitor
 				buffer.append (", ");
 			int v = argv[i];
 			String cl = params[i].getType ().toString ();
-			buffer.append ("(").append (cl).append (")").append ("yyGetValue (").append (v).append (")");
+			if ("java.lang.Object" != cl)
+				buffer.append ("(").append (cl).append (")");
+			buffer.append ("yyGetValue (").append (v).append (")");
 		}
 		buffer.append (")");
-
-		if (callSetValue)
-			buffer.append (")");
 
 		buffer.append (";");
 		return buffer.toString ();

@@ -1,3 +1,9 @@
+<#if code?has_content && code.fileheader?has_content>
+%{
+${code.fileheader}
+%}
+</#if>
+
 <#if tokens?has_content>
 <#list tokens as i>
 <#if i.type?has_content>%${i.type}<#else>%nonassoc</#if><#list i.tokens as j> ${j}</#list>

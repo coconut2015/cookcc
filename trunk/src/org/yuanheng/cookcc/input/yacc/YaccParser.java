@@ -461,6 +461,9 @@ public class YaccParser extends YaccLexer
 	public static Document parse (File file) throws IOException
 	{
 		YaccParser parser = new YaccParser ();
+		int fileSize = (int)file.length ();
+		if (fileSize > 4096)
+			parser.setBufferSize (fileSize);
 		parser.setInput (new FileInputStream (file));
 		if (parser.yyParse () > 0)
 			Main.error ("errors in input");

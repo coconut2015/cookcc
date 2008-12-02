@@ -70,10 +70,11 @@ public class YaccParser extends YaccLexer
 	////////////////////////////////////////////////////////////////
 
 	@Shortcuts (shortcuts = {
-		@Shortcut (name = "WS", pattern = "[ \t]+"),
-		@Shortcut (name = "OPTWS", pattern = "[ \t]*"),
+		@Shortcut (name = "WS", pattern = "[ \\t]+"),
+		@Shortcut (name = "OPTWS", pattern = "[ \\t]*"),
 		@Shortcut (name = "NL", pattern = "\\r?\\n"),
-		@Shortcut (name = "NAME", pattern = "[a-zA-Z_][a-zA-Z_0-9]*")
+		@Shortcut (name = "NAME", pattern = "[a-zA-Z_][a-zA-Z_0-9]*"),
+		@Shortcut (name = "ESC", pattern = "[\\\\](.|(u[a-fA-F0-9]{4})|([0-9]{1,3})|(x[a-fA-F0-9]{1,2}))")
 	})
 
 	@Lex (pattern = "{WS}", state = "INITIAL, SECTION2")
@@ -257,12 +258,6 @@ public class YaccParser extends YaccLexer
 		++m_lineNum;
 	}
 
-	@Lex (pattern = "{NAME}", token = "TOKEN", state = "INITIAL")
-	String scanToken ()
-	{
-		return yyText ();
-	}
-
 	@Lex (pattern = "<<EOF>>", state = "INITIAL")
 	void earlyEof ()
 	{
@@ -272,8 +267,8 @@ public class YaccParser extends YaccLexer
 	////////////// SECTION 2 //////////////////////////////////////////////////
 
 	@Lexs (patterns = {
-		@Lex (pattern = "{NAME}", token = "TOKEN", state = "SECTION2"),
-		@Lex(pattern = "['][^\\'][']", token = "TOKEN", state = "SECTION2")
+		@Lex (pattern = "{NAME}", token = "TOKEN", state = "INITIAL, SECTION2"),
+		@Lex(pattern = "[']([^\\\\']|{ESC})[']", token = "TOKEN", state = "INITIAL, SECTION2")
 	})
 	String parseToken ()
 	{

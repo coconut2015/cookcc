@@ -52,7 +52,7 @@ public class Bar
 
 === Buffer Size ===
 
-When a particular pattern exceeds the buffer size (default 4096), CookCC would enter an infinite loop.  This behavior is intentional to avoid complicated and slow memory reallocations.  Change the buffer size to a bigger one when there is an expectation of matching of very long patterns.
+When a particular pattern exceeds the buffer size (default 4096), CookCC would enter an infinite loop.  Change the buffer size to a bigger one when there is an expectation of matching of very long patterns.
 
 === Unicode Support ===
 

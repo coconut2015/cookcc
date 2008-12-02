@@ -1,14 +1,31 @@
-#summary Description of Yacc input
+#summary Describes Yacc grammar input
+<wiki:toc/>
 
 = Yacc Input =
+
 CookCC Yacc input allows CookCC to read traditional yacc/bison input files.  However, there are some deviations since some features are not support by CookCC.
 
-== Limitations ==
- * Embedded actions are not supported.  For example:
+== Deviations ==
+
+=== Embedded actions are not supported ===
+
+Yacc input does not allow embedded action.
+
+An embedded action is like the following:
 {{{
 	A	: B { /* embedded action */ } C
 		  { /* regular action */ }
 		;
 }}}
 
- * Tokens declared using {{{%token}}} are treated as non-associative terminals in CookCC (same as {{{%nonassoc}}}).  In yacc / bison, tokens by default have the lowest precedence can be specified later again in {{{%left}}}, {{{%right}}}, {{{%nonassoc}}} directives to specify the precedence and associativity.  CookCC does not allow tokens specified in {{{%token}}} directives to be specified in other token directives.
+=== Token declaration works somewhat differently ===
+
+In CookCC, tokens declared using {{{%token}}} are treated as non-associative terminals(same as {{{%nonassoc}}}).
+
+In contrast, in yacc / bison, tokens by default have the lowest precedence can be specified later again in {{{%left}}}, {{{%right}}}, {{{%nonassoc}}} directives to specify the precedence and associativity.  CookCC does not allow tokens specified in {{{%token}}} directives to be specified in other token directives.
+
+== Code Sections ==
+
+The code surrounded by {{{ %{ }}} and {{{ %} }}} pairs in section 1 of yacc input are treated as {{{"fileheader"}}} code.
+
+The section 3 code of yacc input are treated as {{{"default"}}} code.

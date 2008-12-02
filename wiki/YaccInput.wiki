@@ -1,0 +1,14 @@
+#summary Description of Yacc input
+
+= Yacc Input =
+CookCC Yacc input allows CookCC to read traditional yacc/bison input files.  However, there are some deviations since some features are not support by CookCC.
+
+== Limitations ==
+ * Embedded actions are not supported.  For example:
+{{{
+	A	: B { /* embedded action */ } C
+		  { /* regular action */ }
+		;
+}}}
+
+ * Tokens declared using {{{%token}}} are treated as non-associative terminals.  In yacc / bison, tokens by default have the lowest precedence can be specified later again in {{{%left}}}, {{{%right}}}, {{{%nonassoc}}} directives to specify the precedence and associativity.  CookCC does not allow tokens specified in {{{%token}}} directives to be specified in other token directives.

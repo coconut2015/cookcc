@@ -633,7 +633,7 @@ ${code.classheader}
 		if (toState == 0)
 			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", error");
 		else if (toState < 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", reduce");
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", reduce " + cc_parser.symbols[cc_parser.lhs[-toState]]);
 		else
 			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", shift");
 		return true;

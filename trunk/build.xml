@@ -7,7 +7,7 @@
 	<property name="build" value="${basedir}/cookcc_classes"/>
 
 	<property name="license" value="LICENSE_cookcc.txt"/>
-	<property name="version" value="0.3.1"/>
+	<property name="version" value="0.3.2"/>
 
 	<target name="init">
 		<mkdir dir="${dist}"/>
@@ -87,6 +87,11 @@
 
 	<target name="FileHeaderLexer.java" depends="initcookcc">
 		<cookcc srcdir="${basedir}/javaap_src" src="org/yuanheng/cookcc/input/javaap/FileHeaderScanner.java"/>
+	</target>
+	<target name="YaccLexer.java" depends="initcookcc">
+		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/input/yacc/YaccParser.java">
+			<option name="-analysis"/>
+		</cookcc>
 	</target>
 	<target name="TokenParser.java" depends="initcookcc">
 		<cookcc src="${basedir}/src/org/yuanheng/cookcc/util/TokenParser.xcc">

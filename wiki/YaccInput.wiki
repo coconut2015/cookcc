@@ -11,4 +11,4 @@ CookCC Yacc input allows CookCC to read traditional yacc/bison input files.  How
 		;
 }}}
 
- * Tokens declared using {{{%token}}} are treated as non-associative terminals in CookCC.  In yacc / bison, tokens by default have the lowest precedence can be specified later again in {{{%left}}}, {{{%right}}}, {{{%nonassoc}}} directives to specify the precedence and associativity.  CookCC does not allow tokens specified in {{{%token}}} directives to be specified in other token directives.
+ * Tokens declared using {{{%token}}} are treated as non-associative terminals in CookCC (same as {{{%nonassoc}}}).  In yacc / bison, tokens by default have the lowest precedence can be specified later again in {{{%left}}}, {{{%right}}}, {{{%nonassoc}}} directives to specify the precedence and associativity.  CookCC does not allow tokens specified in {{{%token}}} directives to be specified in other token directives.

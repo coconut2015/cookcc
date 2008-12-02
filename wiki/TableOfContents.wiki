@@ -20,6 +20,7 @@
    * [TargetLanguageJava Java]
    * [TargetLanguagePlain Plain]
    * [TargetLanguageXML XML]
+   * [TargetLanguageYacc Yacc]
  * [AntTask Ant Task]
  * [http://code.google.com/p/cookcc/source/browse/trunk/tests/ Test Cases]
 ===== [http://www.yuanheng.org/forum/viewforum.php?f=6 Forum] =====

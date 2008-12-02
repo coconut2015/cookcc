@@ -37,6 +37,8 @@ public class Bar
 
 	public int yyParse ()
 	{
+		// code name = "parserprolog"
+
 		// case switch codes
 	}
 
@@ -47,6 +49,10 @@ public class Bar
 == Lexer ==
 
 [http://code.google.com/p/cookcc/source/browse/trunk/tests/#tests/fastwc Word count tests] on large files (5 MB - 22 MB) have shown that {{{ecs}}} table has about the same performance as the {{{full}}} table for Java.
+
+=== Buffer Size ===
+
+When a particular pattern exceeds the buffer size (default 4096), CookCC would enter an infinite loop.  This behavior is intentional to avoid complicated and slow memory reallocations.  Change the buffer size to a bigger one when there is an expectation of matching of very long patterns.
 
 === Unicode Support ===
 

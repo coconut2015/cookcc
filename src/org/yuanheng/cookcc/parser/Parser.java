@@ -803,6 +803,7 @@ public class Parser
 			if (reduceSet.size () > 1)
 			{
 				++m_reduceConflict;
+				verbose ("\treduce/reduce conflict");
 			}
 			// pick the earlier rule to reduce
 			//return*(reduceSet.begin ());

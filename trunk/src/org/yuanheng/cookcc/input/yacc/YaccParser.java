@@ -44,7 +44,7 @@ public class YaccParser extends YaccLexer
 	@CookCCToken
 	static enum Token
 	{
-		TOKEN, PARTIAL_ACTION, ACTION_CODE
+		TYPE, TOKEN, START, SEPARATOR, PARTIAL_ACTION, ACTION_CODE
 	}
 
 	private final Document m_doc = new Document ();
@@ -227,82 +227,40 @@ public class YaccParser extends YaccLexer
 
 	////////////// INITIAL STATE //////////////////////////////////////////////////
 
-	@Lex (pattern = "'%%'", state = "INITIAL")
+	@Lex (pattern = "'%%'", token = "SEPARATOR", state = "INITIAL")
 	void startSection2 ()
 	{
 		begin ("SECTION2");
 	}
 
-	@Lex (pattern = "^{OPTWS}'%token'{WS}.*\\n")
-	void addTokens () throws IOException
+	@Lexs (patterns = {
+		@Lex (pattern = "^{OPTWS}%token", token = "TYPE", state = "INITIAL"),
+		@Lex (pattern = "^{OPTWS}%left", token = "TYPE", state = "INITIAL"),
+		@Lex (pattern = "^{OPTWS}%right", token = "TYPE", state = "INITIAL"),
+		@Lex (pattern = "^{OPTWS}%nonassoc", token = "TYPE", state = "INITIAL")
+	})
+	String scanTokenDirective () throws IOException
 	{
 		String text = yyText ();
-		int index = text.indexOf ("%token") + "%token".length ();
-		String tokens = text.substring (index).trim ();
-		TokensDoc tokensDoc = new TokensDoc ();
-		tokensDoc.setLineNumber (m_lineNum);
-		tokensDoc.setTokens (tokens);
-		m_doc.addTokens (tokensDoc);
-		++m_lineNum;
+		return text.substring (text.indexOf ('%'));
 	}
 
-	@Lex (pattern = "^{OPTWS}'%left'{WS}.*\\n")
-	void addLeftTokens () throws IOException
-	{
-		String text = yyText ();
-		int index = text.indexOf ("%left") + "%left".length ();
-		String tokens = text.substring (index).trim ();
-		TokensDoc tokensDoc = new TokensDoc ();
-		tokensDoc.setLineNumber (m_lineNum);
-		tokensDoc.setType ("left");
-		tokensDoc.setTokens (tokens);
-		m_doc.addTokens (tokensDoc);
-		++m_lineNum;
-	}
-
-	@Lex (pattern = "^{OPTWS}'%right'{WS}.*\\n")
-	void addRightTokens () throws IOException
-	{
-		String text = yyText ();
-		int index = text.indexOf ("%right") + "%right".length ();
-		String tokens = text.substring (index).trim ();
-		TokensDoc tokensDoc = new TokensDoc ();
-		tokensDoc.setLineNumber (m_lineNum);
-		tokensDoc.setType ("right");
-		tokensDoc.setTokens (tokens);
-		m_doc.addTokens (tokensDoc);
-		++m_lineNum;
-	}
-
-	@Lex (pattern = "^{OPTWS}'%nonassoc'{WS}.*\\n")
-	void addNonAssocTokens () throws IOException
-	{
-		String text = yyText ();
-		int index = text.indexOf ("%nonassoc") + "%nonassoc".length ();
-		String tokens = text.substring (index).trim ();
-		TokensDoc tokensDoc = new TokensDoc ();
-		tokensDoc.setLineNumber (m_lineNum);
-		tokensDoc.setType ("nonassoc");
-		tokensDoc.setTokens (tokens);
-		m_doc.addTokens (tokensDoc);
-		++m_lineNum;
-	}
-
-	@Lex (pattern = "^{OPTWS}'%start'{WS}{NAME}{OPTWS}{NL}")
+	@Lex (pattern = "%start", token = "START", state = "INITIAL")
 	void setStartToken ()
 	{
-		String text = yyText ();
-		int index = text.indexOf ("%start") + "%start".length ();
-		String name = text.substring (index).trim ();
-		m_parser.setStart (name);
-		++m_lineNum;
 	}
 
-	@Lex (pattern = "^{OPTWS}%{NAME}.*\\n")
+	@Lex (pattern = "^{OPTWS}%{NAME}")
 	void unknownDirective ()
 	{
 		warn ("unknown directive: " + yyText ());
 		++m_lineNum;
+	}
+
+	@Lex (pattern = "{NAME}", token = "TOKEN", state = "INITIAL")
+	String scanToken ()
+	{
+		return yyText ();
 	}
 
 	@Lex (pattern = "<<EOF>>", state = "INITIAL")
@@ -373,10 +331,45 @@ public class YaccParser extends YaccLexer
 	//
 	////////////////////////////////////////////////////////////////
 
-	@Rule (lhs = "section2", rhs = "rules")
-	int parseSection2 ()
+	@Rules (rules = {
+			@Rule (lhs = "yacc", rhs = "section1 SEPARATOR section2"),
+			@Rule (lhs = "section1", rhs = "section1 precedence"),
+			@Rule (lhs = "section1", rhs = "section1 start"),
+			@Rule (lhs = "section1", rhs = ""),
+			@Rule (lhs = "section2", rhs = "rules")
+	})
+	void parseYacc ()
 	{
-		return 0;
+	}
+
+	@Rule (lhs = "precedence", rhs = "TYPE tokenList", args = "1 2")
+	void parsePrecedence (String type, String tokenList) throws IOException
+	{
+		TokensDoc tokensDoc = new TokensDoc ();
+		tokensDoc.setTokens (tokenList);
+		if ("%left".equals (type))
+			tokensDoc.setType ("left");
+		else if ("%right".equals (type))
+			tokensDoc.setType ("right");
+		m_doc.addTokens (tokensDoc);
+	}
+
+	@Rule (lhs = "tokenList", rhs = "tokenList TOKEN", args = "1 2")
+	String parseTokenList (String list, String token)
+	{
+		return list + " " + token;
+	}
+
+	@Rule (lhs = "tokenList", rhs = "TOKEN", args = "1")
+	String parseTokenList (String token)
+	{
+		return token;
+	}
+
+	@Rule (lhs = "start", rhs = "START TOKEN", args = "2")
+	void parseStart (String start)
+	{
+		m_parser.setStart (start);
 	}
 
 	@Rules (rules = {
@@ -475,7 +468,7 @@ public class YaccParser extends YaccLexer
 		YaccParser parser = new YaccParser ();
 		parser.setInput (new FileInputStream (file));
 		if (parser.yyParse () > 0)
-			return null;
+			Main.error ("errors in input");
 		return parser.m_doc;
 	}
 }

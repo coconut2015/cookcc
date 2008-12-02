@@ -89,14 +89,16 @@ class LALR
 	{
 		boolean changed = true;
 
+		Vector<ItemSet> dfaStates = m_parser._DFAStates;
+
 		while (changed)
 		{
 			changed = false;
 
 			// go through all item sets
-			for (int i = 0; i < m_parser._DFAStates.size (); ++i)
+			for (int i = 0; i < dfaStates.size (); ++i)
 			{
-				ItemSet itemSet = m_parser._DFAStates.get (i);
+				ItemSet itemSet = dfaStates.get (i);
 
 				if (!itemSet.isChanged ())
 					continue;

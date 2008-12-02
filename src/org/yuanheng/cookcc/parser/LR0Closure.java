@@ -59,8 +59,8 @@ class LR0Closure implements Closure
 			//
 			// pre-compute the FIRST for the non-terminal to optimize things a little
 			//
-			m_parser.computeFirst (production, pos + 1, production.length, item.getFirst ());
-			TokenSet first = item.getFirst ().clone ();
+			TokenSet first = m_parser.createTokenSet ();
+			m_parser.computeFirst (production, pos + 1, production.length, first);
 			first.setEpsilon (false);	// important, since the above computeFirst () does not
 										// have the lookahead tokens appeneded.
 

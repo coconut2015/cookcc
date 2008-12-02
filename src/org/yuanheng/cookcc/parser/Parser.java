@@ -585,7 +585,6 @@ public class Parser
 	void propagateClosure (ItemSet itemSet)
 	{
 		boolean changed;
-
 		Item dummyItem = createDummyItem (null);
 		do
 		{
@@ -605,24 +604,27 @@ public class Parser
 					production[pos] <= m_maxTerminal)
 					continue;
 
+				int nextPos;
+				for (nextPos = pos + 1; nextPos < production.length; ++nextPos)
+				{
+					if (production[nextPos] <= m_maxTerminal)
+						break;
+					if (!m_firstSetVal.get (production[pos]).hasEpsilon ())
+						break;
+				}
+				if (nextPos < production.length)
+					continue;
+
 				changed = true;
+				itemSet.setChanged (true);
 
 				// okay a non-terminal is found,
-
 				int nonTerminal = production[pos];
-
-				// check if need to update this non-terminals lookahead
-
-				if (item.getFirst ().hasEpsilon () == false)
-					continue;
 
 				// hmm, needs update, so do the update
 
-				TokenSet first = item.getFirst ().clone ();
-				first.setEpsilon (false);
-				first.or (item.getLookahead ());
-
-				// check if that non-terminal's first contain epsilon
+				TokenSet lookahead = item.getLookahead ().clone ();
+				lookahead.setEpsilon (false);
 
 				Production[] table = m_productionMap.get (nonTerminal);
 				for (Production k : table)
@@ -630,7 +632,7 @@ public class Parser
 					dummyItem.setProduction (k);
 					Item subItem = itemSet.find (dummyItem);
 
-					subItem.updateLookahead (first);
+					subItem.updateLookahead (lookahead);
 				}
 			}
 		}

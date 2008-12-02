@@ -109,7 +109,8 @@ class Item
 	public boolean updateLookahead (TokenSet src)
 	{
 		boolean changed = m_lookahead.or (src);
-		m_changed = changed;
+		if (changed)
+			m_changed = true;
 		return changed;
 	}
 

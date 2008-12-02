@@ -89,9 +89,7 @@
 		<cookcc srcdir="${basedir}/javaap_src" src="org/yuanheng/cookcc/input/javaap/FileHeaderScanner.java"/>
 	</target>
 	<target name="YaccLexer.java" depends="initcookcc">
-		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/input/yacc/YaccParser.java">
-			<option name="-analysis"/>
-		</cookcc>
+		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/input/yacc/YaccParser.java"/>
 	</target>
 	<target name="TokenParser.java" depends="initcookcc">
 		<cookcc src="${basedir}/src/org/yuanheng/cookcc/util/TokenParser.xcc">

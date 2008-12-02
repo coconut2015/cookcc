@@ -8,5 +8,6 @@ Currently, the following languages are currently supported.
 
 || *Language* || *Description* ||
 || *Java* || This is the main language output. ||
-|| XML || This is a debugging only output format that dumps the internal tree representation of the user input. ||
 || Plain || This is a simple text format that produces computed tables in CSV format. ||
+|| XML || This is a debugging only output format that dumps the internal tree representation of the user input. ||
+|| Yacc || This is a debugging only output format that dumps the internal tree representation of the user input. ||

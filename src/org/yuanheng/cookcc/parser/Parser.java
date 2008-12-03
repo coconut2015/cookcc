@@ -309,6 +309,11 @@ public class Parser
 
 	private int parseTerm (int lineNumber, String terms, int[] pos)
 	{
+		if (terms.startsWith ("'\\''"))
+		{
+			pos[0] = "'\\''".length ();
+			return getSymbol (lineNumber, "'\\''");
+		}
 		if (terms.charAt (0) == '\'')
 		{
 			int index = terms.indexOf ('\'', 1);

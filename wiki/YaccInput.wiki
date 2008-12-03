@@ -11,6 +11,10 @@ CookCC Yacc input allows CookCC to read traditional yacc/bison input files.  How
 
 The pattern of non-terminal names recognized by CookCC is {{{[_a-zA-Z][_a-zA-Z0-9]*}}}.
 
+=== Type not supported ===
+
+Currently, {{{%type}}} as well as the type specified along with {{{%token}}} are ignored since CookCC uses a different approach.
+
 === Embedded actions are not supported ===
 
 CookCC does not allow embedded action for yacc input at present.

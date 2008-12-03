@@ -39,11 +39,13 @@ class LR0Closure implements Closure
 		m_parser = parser;
 	}
 
-	//
-	// does epsilon closure for LR(0) items
-	//
-	// only consider spontaneously generated tokens
-	//
+	/**
+	 * Does epsilon closure for LR(0) items.
+	 * Only consider spontaneously generated tokens
+	 *
+	 * @param	itemSet
+	 * 			the ItemSet to perform closure operation on
+	 */
 	public void closure (ItemSet itemSet)
 	{
 		for (int i = 0; i < itemSet.size (); ++i)
@@ -73,5 +75,5 @@ class LR0Closure implements Closure
 			for (Production k : table)
 				itemSet.insertClosureItem (m_parser.createItem (k, 0, first));
 		}
-}
+	}
 }

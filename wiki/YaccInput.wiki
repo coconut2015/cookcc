@@ -11,9 +11,9 @@ CookCC Yacc input allows CookCC to read traditional yacc/bison input files.  How
 
 The pattern of non-terminal names recognized by CookCC is {{{[_a-zA-Z][_a-zA-Z0-9]*}}}.
 
-=== Type not supported ===
+=== $$ and $# not supported ===
 
-Currently, {{{%type}}} as well as the type specified along with {{{%token}}} are ignored since CookCC uses a different approach.
+Currently, no efforts have been made to add a translator for {{{$$}}}, {{{$1}}} etc.
 
 === Embedded actions are not supported ===
 
@@ -28,7 +28,7 @@ An embedded action is like the following:
 
 === Token declaration works somewhat differently ===
 
-In CookCC, tokens declared using {{{%token}}} are treated as non-associative terminals(same as {{{%nonassoc}}}).
+In CookCC, tokens declared using {{{%token}}} are treated as non-associative terminals (same as {{{%nonassoc}}}).
 
 In contrast, in yacc / bison, tokens by default have the lowest precedence can be specified later again in {{{%left}}}, {{{%right}}}, {{{%nonassoc}}} directives to specify the precedence and associativity.  CookCC does not allow tokens specified in {{{%token}}} directives to be specified in other token directives.
 

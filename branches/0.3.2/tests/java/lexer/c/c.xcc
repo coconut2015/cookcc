@@ -1,0 +1,554 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<!-- C lexer, translated from
+		 ftp://ftp.uu.net/usenet/net.sources/ansi.c.grammar.Z
+	-->
+	<tokens>CASE DEFAULT IF ELSE SWITCH WHILE DO FOR GOTO CONTINUE BREAK RETURN</tokens>
+	<tokens>STRUCT UNION ENUM ELIPSIS RANGE TYPE_NAME</tokens>
+	<tokens>CHAR SHORT INT LONG SIGNED UNSIGNED FLOAT DOUBLE CONST VOLATILE VOID</tokens>
+	<tokens>IDENTIFIER CONSTANT STRING_LITERAL SIZEOF</tokens>
+	<tokens>TYPEDEF EXTERN STATIC AUTO REGISTER</tokens>
+
+	<tokens type="right">
+			SUB_ASSIGN LEFT_ASSIGN RIGHT_ASSIGN AND_ASSIGN
+			XOR_ASSIGN OR_ASSIGN '='
+			MUL_ASSIGN DIV_ASSIGN MOD_ASSIGN ADD_ASSIGN
+	</tokens>
+
+	<tokens type="right"><![CDATA[ '?' ':' ]]></tokens>
+
+	<tokens type="left">OR_OP</tokens>
+	<tokens type="left">AND_OP</tokens>
+	<tokens type="left">'|'</tokens>
+	<tokens type="left">'^'</tokens>
+
+	<tokens type="left">EQ_OP NE_OP</tokens>
+	<tokens type="left">LEFT_OP RIGHT_OP LE_OP GE_OP </tokens>
+	<tokens type="left"><![CDATA['+' '-' '*' '/']]></tokens>
+	<tokens type="nonassoc"><![CDATA[ '!' '~' '&' ]]></tokens>
+	<tokens type="left">'(' ')' '[' ']' '.' PTR_OP INC_OP DEC_OP</tokens>
+
+	<lexer table="ecs">
+		<shortcut name="D">[0-9]</shortcut>
+		<shortcut name="L">[a-zA-Z_]</shortcut>
+		<shortcut name="H">[a-fA-F0-9]</shortcut>
+		<shortcut name="E">[Ee][+-]?{D}+</shortcut>
+		<shortcut name="FS">(f|F|l|L)</shortcut>
+		<shortcut name="IS">(u|U|l|L)*</shortcut>
+		<rule>
+			<pattern>"/*"</pattern>
+			<action>count (); begin (BLOCKCOMMENT);</action>
+		</rule>
+		<rule><pattern>"auto"</pattern><action>count (); return AUTO;</action></rule>
+		<rule><pattern>"break"</pattern><action>count (); return BREAK;</action></rule>
+		<rule><pattern>"case"</pattern><action>count (); return CASE;</action></rule>
+		<rule><pattern>"char"</pattern><action>count (); return CHAR;</action></rule>
+		<rule><pattern>"const"</pattern><action>count (); return CONST;</action></rule>
+		<rule><pattern>"continue"</pattern><action>count (); return CONTINUE;</action></rule>
+		<rule><pattern>"default"</pattern><action>count (); return DEFAULT;</action></rule>
+		<rule><pattern>"do"</pattern><action>count (); return DO;</action></rule>
+		<rule><pattern>"double"</pattern><action>count (); return DOUBLE;</action></rule>
+		<rule><pattern>"else"</pattern><action>count (); return ELSE;</action></rule>
+		<rule><pattern>"enum"</pattern><action>count (); return ENUM;</action></rule>
+		<rule><pattern>"extern"</pattern><action>count (); return EXTERN;</action></rule>
+		<rule><pattern>"float"</pattern><action>count (); return FLOAT;</action></rule>
+		<rule><pattern>"for"</pattern><action>count (); return FOR;</action></rule>
+		<rule><pattern>"goto"</pattern><action>count (); return GOTO;</action></rule>
+		<rule><pattern>"if"</pattern><action>count (); return IF;</action></rule>
+		<rule><pattern>"int"</pattern><action>count (); return INT;</action></rule>
+		<rule><pattern>"long"</pattern><action>count (); return LONG;</action></rule>
+		<rule><pattern>"register"</pattern><action>count (); return REGISTER;</action></rule>
+		<rule><pattern>"return"</pattern><action>count (); return RETURN;</action></rule>
+		<rule><pattern>"short"</pattern><action>count (); return SHORT;</action></rule>
+		<rule><pattern>"signed"</pattern><action>count (); return SIGNED;</action></rule>
+		<rule><pattern>"sizeof"</pattern><action>count (); return SIZEOF;</action></rule>
+		<rule><pattern>"static"</pattern><action>count (); return STATIC;</action></rule>
+		<rule><pattern>"struct"</pattern><action>count (); return STRUCT;</action></rule>
+		<rule><pattern>"switch"</pattern><action>count (); return SWITCH;</action></rule>
+		<rule><pattern>"typedef"</pattern><action>count (); return TYPEDEF;</action></rule>
+		<rule><pattern>"union"</pattern><action>count (); return UNION;</action></rule>
+		<rule><pattern>"unsigned"</pattern><action>count (); return UNSIGNED;</action></rule>
+		<rule><pattern>"void"</pattern><action>count (); return VOID;</action></rule>
+		<rule><pattern>"volatile"</pattern><action>count (); return VOLATILE;</action></rule>
+		<rule><pattern>"while"</pattern><action>count (); return WHILE;</action></rule>
+		<rule>
+			<pattern>{L}({L}|{D})*</pattern>
+			<action>count (); return check_type ();</action>
+		</rule>
+		<rule>
+			<pattern>0[xX]{H}+{IS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>0{D}+{IS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>{D}+{IS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>{D}+{E}{FS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>{D}*"."{D}+({E})?{FS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule>
+			<pattern>{D}+"."{D}*({E})?{FS}?</pattern>
+			<action>count (); return CONSTANT;</action>
+		</rule>
+		<rule><pattern>">>="</pattern><action>count (); return RIGHT_ASSIGN;</action></rule>
+		<rule><pattern><![CDATA["<<="]]></pattern><action>count (); return LEFT_ASSIGN;</action></rule>
+		<rule><pattern>"+="</pattern><action>count (); return ADD_ASSIGN;</action></rule>
+		<rule><pattern>"-="</pattern><action>count (); return SUB_ASSIGN;</action></rule>
+		<rule><pattern>"*="</pattern><action>count (); return MUL_ASSIGN;</action></rule>
+		<rule><pattern>"/="</pattern><action>count (); return DIV_ASSIGN;</action></rule>
+		<rule><pattern>"%="</pattern><action>count (); return MOD_ASSIGN;</action></rule>
+		<rule><pattern><![CDATA["&="]]></pattern><action>count (); return AND_ASSIGN;</action></rule>
+		<rule><pattern>"^="</pattern><action>count (); return XOR_ASSIGN;</action></rule>
+		<rule><pattern>"|="</pattern><action>count (); return OR_ASSIGN;</action></rule>
+		<rule><pattern>">>"</pattern><action>count (); return RIGHT_OP;</action></rule>
+		<rule><pattern><![CDATA["<<"]]></pattern><action>count (); return LEFT_OP;</action></rule>
+		<rule><pattern>"++"</pattern><action>count (); return INC_OP;</action></rule>
+		<rule><pattern>"--"</pattern><action>count (); return DEC_OP;</action></rule>
+		<rule><pattern>"->"</pattern><action>count (); return PTR_OP;</action></rule>
+		<rule><pattern><![CDATA["&&"]]></pattern><action>count (); return AND_OP;</action></rule>
+		<rule><pattern>"||"</pattern><action>count (); return OR_OP;</action></rule>
+		<rule><pattern><![CDATA["<="]]></pattern><action>count (); return LE_OP;</action></rule>
+		<rule><pattern>">="</pattern><action>count (); return GE_OP;</action></rule>
+		<rule><pattern>"=="</pattern><action>count (); return EQ_OP;</action></rule>
+		<rule><pattern>"!="</pattern><action>count (); return NE_OP;</action></rule>
+		<rule><pattern>";"</pattern><action>count (); return ';';</action></rule>
+		<rule><pattern>"{"</pattern><action>count (); return '{';</action></rule>
+		<rule><pattern>"}"</pattern><action>count (); return '}';</action></rule>
+		<rule><pattern>","</pattern><action>count (); return ',';</action></rule>
+		<rule><pattern>":"</pattern><action>count (); return ':';</action></rule>
+		<rule><pattern>"("</pattern><action>count (); return '(';</action></rule>
+		<rule><pattern>")"</pattern><action>count (); return ')';</action></rule>
+		<rule><pattern>"["</pattern><action>count (); return '[';</action></rule>
+		<rule><pattern>"]"</pattern><action>count (); return ']';</action></rule>
+		<rule><pattern>"."</pattern><action>count (); return '.';</action></rule>
+		<rule><pattern><![CDATA["&"]]></pattern><action><![CDATA[count (); return '&';]]></action></rule>
+		<rule><pattern>"!"</pattern><action>count (); return '!';</action></rule>
+		<rule><pattern>"~"</pattern><action>count (); return '~';</action></rule>
+		<rule><pattern>"-"</pattern><action>count (); return '-';</action></rule>
+		<rule><pattern>"+"</pattern><action>count (); return '+';</action></rule>
+		<rule><pattern>"*"</pattern><action>count (); return '*';</action></rule>
+		<rule><pattern>"/"</pattern><action>count (); return '/';</action></rule>
+		<rule><pattern>"%"</pattern><action>count (); return '%';</action></rule>
+		<rule><pattern><![CDATA["<"]]></pattern><action><![CDATA[count (); return '<';]]></action></rule>
+		<rule><pattern>">"</pattern><action>count (); return '>';</action></rule>
+		<rule><pattern>"|"</pattern><action>count (); return '|';</action></rule>
+		<rule><pattern>"?"</pattern><action>count (); return '?';</action></rule>
+		<rule>
+			<pattern>[ \t\v\n\f]</pattern>
+			<action>count ();</action>
+		</rule>
+		<rule>
+			<pattern>.</pattern>
+			<action>throw new IOException ("Invalid character: " + yyText ());</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+		<state name="BLOCKCOMMENT">
+			<rule>
+				<pattern>[*]*"*/"</pattern><action>count (); begin (INITIAL);</action>
+			</rule>
+			<rule>
+				<pattern>[^*]+</pattern>
+				<pattern>.</pattern>
+				<action>count ();</action>
+			</rule>
+			<rule>
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>throw new IOException ("Unclosed block comment");</action>
+			</rule>
+		</state>
+	</lexer>
+	<parser start="file">
+		<grammar rule="primary_expr">
+			<rhs>identifier</rhs>
+			<rhs>CONSTANT</rhs>
+			<rhs>STRING_LITERAL</rhs>
+			<rhs>'(' expr ')'</rhs>
+		</grammar>
+		<grammar rule="postfix_expr">
+			<rhs>primary_expr</rhs>
+			<rhs>postfix_expr '[' expr ']'</rhs>
+			<rhs>postfix_expr '(' ')'</rhs>
+			<rhs>postfix_expr '(' argument_expr_list ')'</rhs>
+			<rhs>postfix_expr '.' identifier</rhs>
+			<rhs>postfix_expr PTR_OP identifier</rhs>
+			<rhs>postfix_expr INC_OP</rhs>
+			<rhs>postfix_expr DEC_OP</rhs>
+		</grammar>
+		<grammar rule="argument_expr_list">
+			<rhs>assignment_expr</rhs>
+			<rhs>argument_expr_list ',' assignment_expr</rhs>
+		</grammar>
+		<grammar rule="unary_expr">
+			<rhs>postfix_expr</rhs>
+			<rhs>INC_OP unary_expr</rhs>
+			<rhs>DEC_OP unary_expr</rhs>
+			<rhs>unary_operator cast_expr</rhs>
+			<rhs>SIZEOF unary_expr</rhs>
+			<rhs>SIZEOF '(' type_name ')'</rhs>
+		</grammar>
+		<grammar rule="unary_operator">
+			<rhs><![CDATA['&']]></rhs>
+			<rhs>'*'</rhs>
+			<rhs>'+'</rhs>
+			<rhs>'-'</rhs>
+			<rhs>'~'</rhs>
+			<rhs>'!'</rhs>
+		</grammar>
+		<grammar rule="cast_expr">
+			<rhs>unary_expr</rhs>
+			<rhs>'(' type_name ')' cast_expr</rhs>
+		</grammar>
+		<grammar rule="multiplicative_expr">
+			<rhs>cast_expr</rhs>
+			<rhs>multiplicative_expr '*' cast_expr</rhs>
+			<rhs>multiplicative_expr '/' cast_expr</rhs>
+			<rhs>multiplicative_expr '%' cast_expr</rhs>
+		</grammar>
+		<grammar rule="additive_expr">
+			<rhs>multiplicative_expr</rhs>
+			<rhs>additive_expr '+' multiplicative_expr</rhs>
+			<rhs>additive_expr '-' multiplicative_expr</rhs>
+		</grammar>
+		<grammar rule="shift_expr">
+			<rhs>additive_expr</rhs>
+			<rhs>shift_expr LEFT_OP additive_expr</rhs>
+			<rhs>shift_expr RIGHT_OP additive_expr</rhs>
+		</grammar>
+		<grammar rule="relational_expr">
+			<rhs>shift_expr</rhs>
+			<rhs><![CDATA[relational_expr '<' shift_expr]]></rhs>
+			<rhs>relational_expr '>' shift_expr</rhs>
+			<rhs>relational_expr LE_OP shift_expr</rhs>
+			<rhs>relational_expr GE_OP shift_expr</rhs>
+		</grammar>
+		<grammar rule="equality_expr">
+			<rhs>relational_expr</rhs>
+			<rhs>equality_expr EQ_OP relational_expr</rhs>
+			<rhs>equality_expr NE_OP relational_expr</rhs>
+		</grammar>
+		<grammar rule="and_expr">
+			<rhs>equality_expr</rhs>
+			<rhs><![CDATA[and_expr '&' equality_expr]]></rhs>
+		</grammar>
+		<grammar rule="exclusive_or_expr">
+			<rhs>and_expr</rhs>
+			<rhs>exclusive_or_expr '^' and_expr</rhs>
+		</grammar>
+		<grammar rule="inclusive_or_expr">
+			<rhs>exclusive_or_expr</rhs>
+			<rhs>inclusive_or_expr '|' exclusive_or_expr</rhs>
+		</grammar>
+		<grammar rule="logical_and_expr">
+			<rhs>inclusive_or_expr</rhs>
+			<rhs>logical_and_expr AND_OP inclusive_or_expr</rhs>
+		</grammar>
+		<grammar rule="logical_or_expr">
+			<rhs>logical_and_expr</rhs>
+			<rhs>logical_or_expr OR_OP logical_and_expr</rhs>
+		</grammar>
+		<grammar rule="conditional_expr">
+			<rhs>logical_or_expr</rhs>
+			<rhs>logical_or_expr '?' logical_or_expr ':' conditional_expr</rhs>
+		</grammar>
+		<grammar rule="assignment_expr">
+			<rhs>conditional_expr</rhs>
+			<rhs>unary_expr assignment_operator assignment_expr</rhs>
+		</grammar>
+		<grammar rule="assignment_operator">
+			<rhs>'='</rhs>
+			<rhs>MUL_ASSIGN</rhs>
+			<rhs>DIV_ASSIGN</rhs>
+			<rhs>MOD_ASSIGN</rhs>
+			<rhs>ADD_ASSIGN</rhs>
+			<rhs>SUB_ASSIGN</rhs>
+			<rhs>LEFT_ASSIGN</rhs>
+			<rhs>RIGHT_ASSIGN</rhs>
+			<rhs>AND_ASSIGN</rhs>
+			<rhs>XOR_ASSIGN</rhs>
+			<rhs>OR_ASSIGN</rhs>
+		</grammar>
+		<grammar rule="expr">
+			<rhs>assignment_expr</rhs>
+			<rhs>expr ',' assignment_expr</rhs>
+		</grammar>
+		<grammar rule="constant_expr">
+			<rhs>conditional_expr</rhs>
+		</grammar>
+		<grammar rule="declaration">
+			<rhs>declaration_specifiers ';'</rhs>
+			<rhs>declaration_specifiers init_declarator_list ';'</rhs>
+		</grammar>
+		<grammar rule="declaration_specifiers">
+			<rhs>storage_class_specifier</rhs>
+			<rhs>storage_class_specifier declaration_specifiers</rhs>
+			<rhs>type_specifier</rhs>
+			<rhs>type_specifier declaration_specifiers</rhs>
+		</grammar>
+		<grammar rule="init_declarator_list">
+			<rhs>init_declarator</rhs>
+			<rhs>init_declarator_list ',' init_declarator</rhs>
+		</grammar>
+		<grammar rule="init_declarator">
+			<rhs>declarator</rhs>
+			<rhs>declarator '=' initializer</rhs>
+		</grammar>
+		<grammar rule="storage_class_specifier">
+			<rhs>TYPEDEF</rhs>
+			<rhs>EXTERN</rhs>
+			<rhs>STATIC</rhs>
+			<rhs>AUTO</rhs>
+			<rhs>REGISTER</rhs>
+		</grammar>
+		<grammar rule="type_specifier">
+			<rhs>CHAR</rhs>
+			<rhs>SHORT</rhs>
+			<rhs>INT</rhs>
+			<rhs>LONG</rhs>
+			<rhs>SIGNED</rhs>
+			<rhs>UNSIGNED</rhs>
+			<rhs>FLOAT</rhs>
+			<rhs>DOUBLE</rhs>
+			<rhs>CONST</rhs>
+			<rhs>VOLATILE</rhs>
+			<rhs>VOID</rhs>
+			<rhs>struct_or_union_specifier</rhs>
+			<rhs>enum_specifier</rhs>
+			<rhs>TYPE_NAME</rhs>
+		</grammar>
+		<grammar rule="struct_or_union_specifier">
+			<rhs>struct_or_union identifier '{' struct_declaration_list '}'</rhs>
+			<rhs>struct_or_union '{' struct_declaration_list '}'</rhs>
+			<rhs>struct_or_union identifier</rhs>
+		</grammar>
+		<grammar rule="struct_or_union">
+			<rhs>STRUCT</rhs>
+			<rhs>UNION</rhs>
+		</grammar>
+		<grammar rule="struct_declaration_list">
+			<rhs>struct_declaration</rhs>
+			<rhs>struct_declaration_list struct_declaration</rhs>
+		</grammar>
+		<grammar rule="struct_declaration">
+			<rhs>type_specifier_list struct_declarator_list ';'</rhs>
+		</grammar>
+		<grammar rule="struct_declarator_list">
+			<rhs>struct_declarator</rhs>
+			<rhs>struct_declarator_list ',' struct_declarator</rhs>
+		</grammar>
+		<grammar rule="struct_declarator">
+			<rhs>declarator</rhs>
+			<rhs>':' constant_expr</rhs>
+			<rhs>declarator ':' constant_expr</rhs>
+		</grammar>
+		<grammar rule="enum_specifier">
+			<rhs>ENUM '{' enumerator_list '}'</rhs>
+			<rhs>ENUM identifier '{' enumerator_list '}'</rhs>
+			<rhs>ENUM identifier</rhs>
+		</grammar>
+		<grammar rule="enumerator_list">
+			<rhs>enumerator</rhs>
+			<rhs>enumerator_list ',' enumerator</rhs>
+		</grammar>
+		<grammar rule="enumerator">
+			<rhs>identifier</rhs>
+			<rhs>identifier '=' constant_expr</rhs>
+		</grammar>
+		<grammar rule="declarator">
+			<rhs>declarator2</rhs>
+			<rhs>pointer declarator2</rhs>
+		</grammar>
+		<grammar rule="declarator2">
+			<rhs>identifier</rhs>
+			<rhs>'(' declarator ')'</rhs>
+			<rhs>declarator2 '[' ']'</rhs>
+			<rhs>declarator2 '[' constant_expr ']'</rhs>
+			<rhs>declarator2 '(' ')'</rhs>
+			<rhs>declarator2 '(' parameter_type_list ')'</rhs>
+			<rhs>declarator2 '(' parameter_identifier_list ')'</rhs>
+		</grammar>
+		<grammar rule="pointer">
+			<rhs>'*'</rhs>
+			<rhs>'*' type_specifier_list</rhs>
+			<rhs>'*' pointer</rhs>
+			<rhs>'*' type_specifier_list pointer</rhs>
+		</grammar>
+		<grammar rule="type_specifier_list">
+			<rhs>type_specifier</rhs>
+			<rhs>type_specifier_list type_specifier</rhs>
+		</grammar>
+		<grammar rule="parameter_identifier_list">
+			<rhs>identifier_list</rhs>
+			<rhs>identifier_list ',' ELIPSIS</rhs>
+		</grammar>
+		<grammar rule="identifier_list">
+			<rhs>identifier</rhs>
+			<rhs>identifier_list ',' identifier</rhs>
+		</grammar>
+		<grammar rule="parameter_type_list">
+			<rhs>parameter_list</rhs>
+			<rhs>parameter_list ',' ELIPSIS</rhs>
+		</grammar>
+		<grammar rule="parameter_list">
+			<rhs>parameter_declaration</rhs>
+			<rhs>parameter_list ',' parameter_declaration</rhs>
+		</grammar>
+		<grammar rule="parameter_declaration">
+			<rhs>type_specifier_list declarator</rhs>
+			<rhs>type_name</rhs>
+		</grammar>
+		<grammar rule="type_name">
+			<rhs>type_specifier_list</rhs>
+			<rhs>type_specifier_list abstract_declarator</rhs>
+		</grammar>
+		<grammar rule="abstract_declarator">
+			<rhs>pointer</rhs>
+			<rhs>abstract_declarator2</rhs>
+			<rhs>pointer abstract_declarator2</rhs>
+		</grammar>
+		<grammar rule="abstract_declarator2">
+			<rhs>'(' abstract_declarator ')'</rhs>
+			<rhs>'[' ']'</rhs>
+			<rhs>'[' constant_expr ']'</rhs>
+			<rhs>abstract_declarator2 '[' ']'</rhs>
+			<rhs>abstract_declarator2 '[' constant_expr ']'</rhs>
+			<rhs>'(' ')'</rhs>
+			<rhs>'(' parameter_type_list ')'</rhs>
+			<rhs>abstract_declarator2 '(' ')'</rhs>
+			<rhs>abstract_declarator2 '(' parameter_type_list ')'</rhs>
+		</grammar>
+		<grammar rule="initializer">
+			<rhs>assignment_expr</rhs>
+			<rhs>'{' initializer_list '}'</rhs>
+			<rhs>'{' initializer_list ',' '}'</rhs>
+		</grammar>
+		<grammar rule="initializer_list">
+			<rhs>initializer</rhs>
+			<rhs>initializer_list ',' initializer</rhs>
+		</grammar>
+		<grammar rule="statement">
+			<rhs>labeled_statement</rhs>
+			<rhs>compound_statement</rhs>
+			<rhs>expression_statement</rhs>
+			<rhs>selection_statement</rhs>
+			<rhs>iteration_statement</rhs>
+			<rhs>jump_statement</rhs>
+		</grammar>
+		<grammar rule="labeled_statement">
+			<rhs>identifier ':' statement</rhs>
+			<rhs>CASE constant_expr ':' statement</rhs>
+			<rhs>DEFAULT ':' statement</rhs>
+		</grammar>
+		<grammar rule="compound_statement">
+			<rhs>'{' '}'</rhs>
+			<rhs>'{' statement_list '}'</rhs>
+			<rhs>'{' declaration_list '}'</rhs>
+			<rhs>'{' declaration_list statement_list '}'</rhs>
+		</grammar>
+		<grammar rule="declaration_list">
+			<rhs>declaration</rhs>
+			<rhs>declaration_list declaration</rhs>
+		</grammar>
+		<grammar rule="statement_list">
+			<rhs>statement</rhs>
+			<rhs>statement_list statement</rhs>
+		</grammar>
+		<grammar rule="expression_statement">
+			<rhs>';'</rhs>
+			<rhs>expr ';'</rhs>
+		</grammar>
+		<grammar rule="selection_statement">
+			<rhs>IF '(' expr ')' statement</rhs>
+			<rhs>IF '(' expr ')' statement ELSE statement</rhs>
+			<rhs>SWITCH '(' expr ')' statement</rhs>
+		</grammar>
+		<grammar rule="iteration_statement">
+			<rhs>WHILE '(' expr ')' statement</rhs>
+			<rhs>DO statement WHILE '(' expr ')' ';'</rhs>
+			<rhs>FOR '(' ';' ';' ')' statement</rhs>
+			<rhs>FOR '(' ';' ';' expr ')' statement</rhs>
+			<rhs>FOR '(' ';' expr ';' ')' statement</rhs>
+			<rhs>FOR '(' ';' expr ';' expr ')' statement</rhs>
+			<rhs>FOR '(' expr ';' ';' ')' statement</rhs>
+			<rhs>FOR '(' expr ';' ';' expr ')' statement</rhs>
+			<rhs>FOR '(' expr ';' expr ';' ')' statement</rhs>
+			<rhs>FOR '(' expr ';' expr ';' expr ')' statement</rhs>
+		</grammar>
+		<grammar rule="jump_statement">
+			<rhs>GOTO identifier ';'</rhs>
+			<rhs>CONTINUE ';'</rhs>
+			<rhs>BREAK ';'</rhs>
+			<rhs>RETURN ';'</rhs>
+			<rhs>RETURN expr ';'</rhs>
+		</grammar>
+		<grammar rule="file">
+			<rhs>external_definition</rhs>
+			<rhs>file external_definition</rhs>
+		</grammar>
+		<grammar rule="external_definition">
+			<rhs>function_definition</rhs>
+			<rhs>declaration</rhs>
+		</grammar>
+		<grammar rule="function_definition">
+			<rhs>declarator function_body</rhs>
+			<rhs>declaration_specifiers declarator function_body</rhs>
+		</grammar>
+		<grammar rule="function_body">
+			<rhs>compound_statement</rhs>
+			<rhs>declaration_list compound_statement</rhs>
+		</grammar>
+		<grammar rule="identifier">
+			<rhs>IDENTIFIER</rhs>
+		</grammar>
+	</parser>
+	<code><![CDATA[
+		int column = 0;
+
+		void count()
+		{
+			String text = yyText ();
+
+			for (int i = 0; i < text.length (); ++i)
+			{
+				char ch = text.charAt (i);
+				if (ch == '\n')
+					column = 0;
+				else if (ch == '\t')
+					column += 8 - (column % 8);
+				else
+					column++;
+			}
+			echo ();
+		}
+
+		int check_type()
+		{
+			/*
+			* pseudo code --- this is what it should check
+			*
+			*	if (yytext == type_name)
+			*		return(TYPE_NAME);
+			*
+			*	return(IDENTIFIER);
+			*/
+
+			/*
+			 *	it actually will only return IDENTIFIER
+			 */
+
+			return IDENTIFIER;
+		}
+	]]></code>
+</cookcc>

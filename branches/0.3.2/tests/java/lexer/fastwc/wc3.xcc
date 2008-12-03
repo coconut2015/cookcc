@@ -1,0 +1,45 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<code name="lexerprolog">int cc = 0, wc = 0, lc = 0;</code>
+
+	<lexer>
+		<shortcut name="ws">[ \t]</shortcut>
+		<shortcut name="nonws">[^ \t\n]</shortcut>
+		<shortcut name="word">{ws}*{nonws}+</shortcut>
+		<shortcut name="words">{word}{ws}+</shortcut>
+
+		<rule>
+			<pattern>{word}{ws}*</pattern>
+			<action>cc += _yyLength; ++wc;</action>
+		</rule>
+		<rule>
+			<pattern>{word}{ws}*\n</pattern>
+			<action>cc += _yyLength; ++wc; ++lc;</action>
+		</rule>
+		<rule>
+			<pattern>{words}{word}{ws}*</pattern>
+			<action>cc += _yyLength; wc += 2;</action>
+		</rule>
+		<rule>
+			<pattern>{words}{2}{word}{ws}*</pattern>
+			<action>cc += _yyLength; wc += 3;</action>
+		</rule>
+		<rule>
+			<pattern>{words}{3}{word}{ws}*</pattern>
+			<action>cc += _yyLength; wc += 4;</action>
+		</rule>
+		<rule>
+			<pattern>{ws}+</pattern>
+			<action>cc += _yyLength;</action>
+		</rule>
+		<rule>
+			<pattern>\n+</pattern>
+			<action>cc += _yyLength; lc += _yyLength;</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>System.out.println (lc + ", " + wc + ", " + cc ); return 0;</action>
+		</rule>
+	</lexer>
+</cookcc>

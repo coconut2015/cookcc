@@ -1,0 +1,310 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<tokens>VARIABLE INTEGER WHILE IF PRINT</tokens>
+	<tokens type="nonassoc">IFX</tokens>
+	<tokens type="nonassoc">ELSE</tokens>
+	<tokens type="left"><![CDATA[GE LE EQ NE '>' '<']]></tokens>
+	<tokens type="left">'+' '-'</tokens>
+	<tokens type="left">'*' '/'</tokens>
+	<tokens type="nonassoc">UMINUS</tokens>
+	<lexer>
+		<rule>
+			<pattern>[0-9]+</pattern>
+			<action>
+				_yyValue = new Integer (Integer.parseInt (yyText ()));
+				return INTEGER;
+			</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[[\-()<>=+*/;{}.]]]></pattern>
+			<action>return yyText ().charAt (0);</action>
+		</rule>
+		<rule>
+			<pattern>">="</pattern>
+			<action>return GE;</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA["<="]]></pattern>
+			<action>return LE;</action>
+		</rule>
+		<rule>
+			<pattern>"=="</pattern>
+			<action>return EQ;</action>
+		</rule>
+		<rule>
+			<pattern>"!="</pattern>
+			<action>return NE;</action>
+		</rule>
+		<rule>
+			<pattern>"while"</pattern>
+			<action>return WHILE;</action>
+		</rule>
+		<rule>
+			<pattern>"if"</pattern>
+			<action>return IF;</action>
+		</rule>
+		<rule>
+			<pattern>"else"</pattern>
+			<action>return ELSE;</action>
+		</rule>
+		<rule>
+			<pattern>"print"</pattern>
+			<action>return PRINT;</action>
+		</rule>
+		<rule>
+			<pattern>[a-z]+</pattern>
+			<action>
+				_yyValue = yyText ();
+				return VARIABLE;
+			</action>
+		</rule>
+		<rule>
+			<pattern>[ \t\r\n]+</pattern>
+			<action>/* ignore white space */</action>
+		</rule>
+		<rule>
+			<pattern>.</pattern>
+			<action>throw new IOException ("Illegal character: " + yyText ());</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+	</lexer>
+	<parser start="program">
+		<type format="((Node){0})">stmt expr stmt_list</type>
+		<type format="((String){0})">VARIABLE</type>
+		<type format="((Integer){0})">INTEGER</type>
+		<grammar rule="program">
+			<rhs>function</rhs>
+			<action>return 0;</action>
+		</grammar>
+		<grammar rule="function">
+			<rhs>function stmt</rhs>
+			<action>interpret ($2);</action>
+			<rhs></rhs>
+		</grammar>
+		<grammar rule="stmt">
+			<rhs>';'</rhs>
+			<action>$$ = new SemiColonNode ();</action>
+
+			<rhs>expr ';'</rhs>
+			<action>$$ = $1;</action>
+
+			<rhs>PRINT expr ';'</rhs>
+			<action>$$ = new PrintNode ($2);</action>
+
+			<rhs>VARIABLE '=' expr ';'</rhs>
+			<action>$$ = new AssignNode ($1, $3);</action>
+
+			<rhs>WHILE '(' expr ')' stmt</rhs>
+			<action>$$ = new WhileNode ($3, $5);</action>
+
+			<rhs precedence="IFX">IF '(' expr ')' stmt</rhs>
+			<action>$$ = new IfNode ($3, $5, null);</action>
+
+			<rhs>IF '(' expr ')' stmt ELSE stmt</rhs>
+			<action>$$ = new IfNode ($3, $5, $7);</action>
+
+			<rhs>'{' stmt_list '}'</rhs>
+			<action>$$ = $2;</action>
+		</grammar>
+		<grammar rule="stmt_list">
+			<rhs>stmt</rhs>
+			<action>$$ = $1;</action>
+
+			<rhs>stmt_list stmt</rhs>
+			<action>$$ = new SemiColonNode ($1, $2);</action>
+		</grammar>
+		<grammar rule="expr">
+			<rhs>INTEGER</rhs>
+			<action>$$ = new ConstantNode ($1);</action>
+
+			<rhs>VARIABLE</rhs>
+			<action>
+				String var = (String)$1;
+				IdNode idNode = (IdNode)m_varMap.get (var);
+				if (idNode == null)
+				{
+					idNode = new IdNode (var);
+					m_varMap.put (var, idNode);
+				}
+				$$ = idNode;
+			</action>
+
+			<rhs precedence="UMINUS">'-' expr</rhs>
+			<action>$$ = new ExprNode (UMINUS, $2, null);</action>
+
+			<rhs>expr '+' expr</rhs>
+			<action>$$ = new ExprNode ('+', $1, $3);</action>
+
+			<rhs>expr '-' expr</rhs>
+			<action>$$ = new ExprNode ('-', $1, $3);</action>
+
+			<rhs>expr '*' expr</rhs>
+			<action>$$ = new ExprNode ('*', $1, $3);</action>
+
+			<rhs>expr '/' expr</rhs>
+			<action>$$ = new ExprNode ('/', $1, $3);</action>
+
+			<rhs><![CDATA[expr '<' expr]]></rhs>
+			<action><![CDATA[$$ = new ExprNode ('<', $1, $3);]]></action>
+
+			<rhs>expr '>' expr</rhs>
+			<action>$$ = new ExprNode ('>', $1, $3);</action>
+
+			<rhs>expr GE expr</rhs>
+			<action>$$ = new ExprNode (GE, $1, $3);</action>
+
+			<rhs>expr LE expr</rhs>
+			<action>$$ = new ExprNode (LE, $1, $3);</action>
+
+			<rhs>expr NE expr</rhs>
+			<action>$$ = new ExprNode (NE, $1, $3);</action>
+
+			<rhs>expr EQ expr</rhs>
+			<action>$$ = new ExprNode (EQ, $1, $3);</action>
+
+			<rhs>'(' expr ')'</rhs>
+			<action>$$ = $2;</action>
+		</grammar>
+	</parser>
+	<code name="classheader">
+		import java.util.HashMap;
+	</code>
+	<code><![CDATA[
+		private final HashMap m_varMap = new HashMap ();
+
+		private static class Node
+		{
+		}
+
+		private static class IdNode extends Node
+		{
+			String name;
+			int value;
+			public IdNode (String name) { this.name = name; }
+		}
+
+		private static class ConstantNode extends Node
+		{
+			int value;
+			public ConstantNode (Integer value) { this.value = value.intValue (); }
+		}
+
+		private static class OpNode extends Node
+		{
+			final int type;
+			public OpNode (int type) { this.type = type; }
+		}
+
+		private static class SemiColonNode extends OpNode
+		{
+			Node stmt1;
+			Node stmt2;
+			public SemiColonNode () { super (';'); }
+			public SemiColonNode (Node stmt1, Node stmt2) { super (';'); this.stmt1 = stmt1; this.stmt2 = stmt2; }
+		}
+
+		private static class PrintNode extends OpNode
+		{
+			Node expr;
+			public PrintNode (Node expr) { super (PRINT); this.expr = expr; }
+		}
+
+		private static class AssignNode extends OpNode
+		{
+			String var;
+			Node expr;
+			public AssignNode (String var, Node expr) { super ('='); this.var = var; this.expr = expr; }
+		}
+
+		private static class WhileNode extends OpNode
+		{
+			Node expr;
+			Node stmt;
+			public WhileNode (Node expr, Node stmt) { super (WHILE); this.expr = expr; this.stmt = stmt; }
+		}
+
+		private static class IfNode extends OpNode
+		{
+			Node expr;
+			Node stmt1;
+			Node stmt2;
+			public IfNode (Node expr, Node stmt1, Node stmt2) { super (IF); this.expr = expr; this.stmt1 = stmt1; this.stmt2 = stmt2;}
+		}
+
+		private static class ExprNode extends OpNode
+		{
+			Node expr1;
+			Node expr2;
+			public ExprNode (int type, Node expr1, Node expr2) { super (type); this.expr1 = expr1; this.expr2 = expr2; }
+		}
+
+		int interpret (Node p)
+		{
+			if (p == null)
+				return 0;
+			if (p instanceof ConstantNode)
+				return ((ConstantNode)p).value;
+			if (p instanceof IdNode)
+				return ((IdNode)p).value;
+			// should be all OpNodes from this point on
+
+			switch (((OpNode)p).type)
+			{
+				case WHILE:
+					while (interpret (((WhileNode)p).expr) > 0)
+						interpret (((WhileNode)p).stmt);
+					return 0;
+				case IF:
+					if (interpret (((IfNode)p).expr) > 0)
+						interpret (((IfNode)p).stmt1);
+					else
+						interpret (((IfNode)p).stmt2);
+					return 0;
+				case PRINT:
+					System.out.println (interpret (((PrintNode)p).expr));
+					return 0;
+				case ';':
+					interpret (((SemiColonNode)p).stmt1);
+					return interpret (((SemiColonNode)p).stmt2);
+				case '=':
+				{
+					String var = ((AssignNode)p).var;
+					IdNode idNode = (IdNode)m_varMap.get (var);
+					if (idNode == null)
+					{
+						idNode = new IdNode (var);
+						m_varMap.put (var, idNode);
+					}
+					return idNode.value = interpret (((AssignNode)p).expr);
+				}
+				case UMINUS:
+					return -interpret (((ExprNode)p).expr1);
+				case '+':
+					return interpret (((ExprNode)p).expr1) + interpret (((ExprNode)p).expr2);
+				case '-':
+					return interpret (((ExprNode)p).expr1) - interpret (((ExprNode)p).expr2);
+				case '*':
+					return interpret (((ExprNode)p).expr1) * interpret (((ExprNode)p).expr2);
+				case '/':
+					return interpret (((ExprNode)p).expr1) / interpret (((ExprNode)p).expr2);
+				case '<':
+					return interpret (((ExprNode)p).expr1) < interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case '>':
+					return interpret (((ExprNode)p).expr1) > interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case GE:
+					return interpret (((ExprNode)p).expr1) >= interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case LE:
+					return interpret (((ExprNode)p).expr1) <= interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case NE:
+					return interpret (((ExprNode)p).expr1) != interpret (((ExprNode)p).expr2) ? 1 : 0;
+				case EQ:
+					return interpret (((ExprNode)p).expr1) == interpret (((ExprNode)p).expr2) ? 1 : 0;
+			}
+			return 0;
+		}
+	]]></code>
+</cookcc>

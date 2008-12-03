@@ -1,0 +1,52 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<lexer>
+		<shortcut name="ws">[ \t]</shortcut>
+		<state name="INITIAL">
+			<rule>
+				<pattern>{ws}+</pattern>
+				<action>/* ignore */</action>
+			</rule>
+			<rule>
+				<pattern>"//".*\n</pattern>
+				<action>System.out.println (yyText ().substring (2));</action>
+			</rule>
+			<rule>
+				<pattern>"/"[*]+</pattern>
+				<action>begin (BLOCKCOMMENT);</action>
+			</rule>
+			<rule>
+				<pattern>{ws}*[^ \t\r]</pattern>
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>return 0;</action>
+			</rule>
+		</state>
+		<state name="BLOCKCOMMENT">
+			<rule>
+				<pattern>^{ws}*[*]</pattern>
+				<action>/* ignore */</action>
+			</rule>
+			<rule>
+				<pattern>{ws}*[*]+[/]</pattern>
+				<action>begin (INITIAL);</action>
+			</rule>
+			<rule>
+				<pattern>{ws}+</pattern>
+				<action>echo ();</action>
+			</rule>
+			<rule>
+				<pattern>[^ \t*/]+</pattern>
+				<action>echo ();</action>
+			</rule>
+			<rule>
+				<pattern>.</pattern>
+				<action>echo ();</action>
+			</rule>
+			<rule>
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>return 0;</action>
+			</rule>
+		</state>
+	</lexer>
+</cookcc>

@@ -7,6 +7,10 @@ CookCC Yacc input allows CookCC to read traditional yacc/bison input files.  How
 
 == Deviations ==
 
+=== Non-terminal name restrictions ===
+
+The pattern of non-terminal names recognized by CookCC is {{{[_a-zA-Z][_a-zA-Z0-9]*}}}.
+
 === Embedded actions are not supported ===
 
 Yacc input does not allow embedded action.

@@ -13,7 +13,7 @@ The pattern of non-terminal names recognized by CookCC is {{{[_a-zA-Z][_a-zA-Z0-
 
 === Embedded actions are not supported ===
 
-Yacc input does not allow embedded action.
+CookCC does not allow embedded action for yacc input at present.
 
 An embedded action is like the following:
 {{{

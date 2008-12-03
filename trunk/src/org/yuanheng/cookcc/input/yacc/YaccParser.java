@@ -44,11 +44,12 @@ public class YaccParser extends YaccLexer
 	@CookCCToken
 	static enum Token
 	{
-		TYPE, TOKEN, START, SEPARATOR, PARTIAL_ACTION, ACTION_CODE
+		TOKENTYPE, TYPE, TYPEINFO, TOKEN, START, SEPARATOR, PREC, PARTIAL_ACTION, ACTION_CODE
 	}
 
 	private final Document m_doc = new Document ();
 	private final ParserDoc m_parser = new ParserDoc ();
+	private final TokensDoc m_plainTokens = new TokensDoc ();
 
 	private int m_lineNum = 1;		// starts with line number 1
 
@@ -61,6 +62,7 @@ public class YaccParser extends YaccLexer
 	private YaccParser ()
 	{
 		m_doc.setParser (m_parser);
+		m_doc.addTokens (m_plainTokens);
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -235,10 +237,10 @@ public class YaccParser extends YaccLexer
 	}
 
 	@Lexs (patterns = {
-		@Lex (pattern = "^{OPTWS}%token", token = "TYPE", state = "INITIAL"),
-		@Lex (pattern = "^{OPTWS}%left", token = "TYPE", state = "INITIAL"),
-		@Lex (pattern = "^{OPTWS}%right", token = "TYPE", state = "INITIAL"),
-		@Lex (pattern = "^{OPTWS}%nonassoc", token = "TYPE", state = "INITIAL")
+		@Lex (pattern = "^{OPTWS}%token", token = "TOKENTYPE", state = "INITIAL"),
+		@Lex (pattern = "^{OPTWS}%left", token = "TOKENTYPE", state = "INITIAL"),
+		@Lex (pattern = "^{OPTWS}%right", token = "TOKENTYPE", state = "INITIAL"),
+		@Lex (pattern = "^{OPTWS}%nonassoc", token = "TOKENTYPE", state = "INITIAL")
 	})
 	String scanTokenDirective () throws IOException
 	{
@@ -246,9 +248,19 @@ public class YaccParser extends YaccLexer
 		return text.substring (text.indexOf ('%'));
 	}
 
-	@Lex (pattern = "%start", token = "START", state = "INITIAL")
-	void setStartToken ()
+	@Lexs (patterns = {
+		@Lex (pattern = "%start", token = "START", state = "INITIAL"),
+		@Lex (pattern = "%type", token = "TYPE", state = "INITIAL")
+	})
+	void scanDirective ()
 	{
+	}
+
+	@Lex (pattern = "[<][^>]*[>]", token = "TYPEINFO", state = "INITIAL")
+	String scanTypeInfo ()
+	{
+		String type = yyText ();
+		return type.substring (1, type.length () - 1);
 	}
 
 	@Lex (pattern = "^{OPTWS}%{NAME}")
@@ -273,6 +285,11 @@ public class YaccParser extends YaccLexer
 	String parseToken ()
 	{
 		return yyText ();
+	}
+
+	@Lex (pattern = "%prec", token = "PREC", state = "SECTION2")
+	void scanPrec ()
+	{
 	}
 
 	@Lex (pattern = "[:|;]", state = "SECTION2")
@@ -327,26 +344,58 @@ public class YaccParser extends YaccLexer
 	////////////////////////////////////////////////////////////////
 
 	@Rules (rules = {
-			@Rule (lhs = "yacc", rhs = "section1 SEPARATOR section2"),
-			@Rule (lhs = "section1", rhs = "section1 precedence"),
-			@Rule (lhs = "section1", rhs = "section1 start"),
-			@Rule (lhs = "section1", rhs = ""),
-			@Rule (lhs = "section2", rhs = "rules")
+		@Rule (lhs = "yacc", rhs = "section1 SEPARATOR section2"),
+		@Rule (lhs = "section1", rhs = "section1 precedence"),
+		@Rule (lhs = "section1", rhs = "section1 start"),
+		@Rule (lhs = "section1", rhs = "section1 type"),
+		@Rule (lhs = "section1", rhs = ""),
+		@Rule (lhs = "optTypeInfo", rhs = ""),
+		@Rule (lhs = "section2", rhs = "rules")
 	})
 	void parseYacc ()
 	{
 	}
 
-	@Rule (lhs = "precedence", rhs = "TYPE tokenList", args = "1 2")
-	void parsePrecedence (String type, String tokenList) throws IOException
+	@Rule (lhs = "precedence", rhs = "TOKENTYPE optTypeInfo tokenList", args = "1 2 3")
+	void parsePrecedence (String type, String dataType, String tokenList) throws IOException
 	{
-		TokensDoc tokensDoc = new TokensDoc ();
-		tokensDoc.setTokens (tokenList);
-		if ("%left".equals (type))
-			tokensDoc.setType ("left");
-		else if ("%right".equals (type))
-			tokensDoc.setType ("right");
-		m_doc.addTokens (tokensDoc);
+		if (tokenList == null)
+			return;
+		TokensDoc tokensDoc;
+		if ("%token".equals (type))
+			tokensDoc = m_plainTokens;
+		else
+		{
+			tokensDoc = new TokensDoc ();
+			if ("%left".equals (type))
+				tokensDoc.setType ("left");
+			else if ("%right".equals (type))
+				tokensDoc.setType ("right");
+			m_doc.addTokens (tokensDoc);
+		}
+		tokensDoc.addTokens (tokenList);
+		if (dataType != null)
+		{
+			TypeDoc typeDoc = new TypeDoc ();
+			typeDoc.setFormat ("((" + dataType + "){0})");
+			typeDoc.setSymbols (tokenList);
+			m_parser.addType (typeDoc);
+		}
+	}
+
+	@Rule (lhs = "optTypeInfo", rhs = "TYPEINFO", args = "1")
+	String parseTypeInfo (String type)
+	{
+		return type;
+	}
+
+	@Rule (lhs = "type", rhs = "TYPE TYPEINFO tokenList", args = "2 3")
+	void parseType (String dataType, String list) throws IOException
+	{
+		TypeDoc typeDoc = new TypeDoc ();
+		typeDoc.setFormat ("((" + dataType + "){0})");
+		typeDoc.setSymbols (list);
+		m_parser.addType (typeDoc);
 	}
 
 	@Rule (lhs = "tokenList", rhs = "tokenList TOKEN", args = "1 2")
@@ -395,24 +444,28 @@ public class YaccParser extends YaccLexer
 			grammar.addRhs (rhs);
 	}
 
-	@Rule (lhs = "rhsList", rhs = "rhsList '|' terms action", args = "1 2 3 4")
-	ArrayList<RhsDoc> parseRhsList (ArrayList<RhsDoc> list, Integer lineNumber, String terms, String action)
+	@Rule (lhs = "rhs", rhs = "terms prec action", args = "1 2 3")
+	RhsDoc parseRhsList (String terms, String precedence, String action)
 	{
 		RhsDoc rhs = new RhsDoc ();
 		rhs.setTerms (terms);
-		rhs.setLineNumber (lineNumber);
 		rhs.setAction (action);
+		rhs.setPrecedence (precedence);
+		return rhs;
+	}
+
+	@Rule (lhs = "rhsList", rhs = "rhsList '|' rhs", args = "1 2 3")
+	ArrayList<RhsDoc> parseRhsList (ArrayList<RhsDoc> list, Integer lineNumber, RhsDoc rhs)
+	{
+		rhs.setLineNumber (lineNumber);
 		list.add (rhs);
 		return list;
 	}
 
-	@Rule (lhs = "rhsList", rhs = "':' terms action", args = "1 2 3")
-	ArrayList<RhsDoc> parseRhsList (Integer lineNumber, String terms, String action)
+	@Rule (lhs = "rhsList", rhs = "':' rhs", args = "1 2")
+	ArrayList<RhsDoc> parseRhsList (Integer lineNumber, RhsDoc rhs)
 	{
-		RhsDoc rhs = new RhsDoc ();
-		rhs.setTerms (terms);
 		rhs.setLineNumber (lineNumber);
-		rhs.setAction (action);
 		ArrayList<RhsDoc> list = new ArrayList<RhsDoc> ();
 		list.add (rhs);
 		return list;
@@ -444,6 +497,18 @@ public class YaccParser extends YaccLexer
 		@Rule (lhs = "complete_action", rhs = "")
 	})
 	String parseAction ()
+	{
+		return null;
+	}
+
+	@Rule (lhs = "prec", rhs = "PREC TOKEN", args = "2")
+	String parsePrec (String prec)
+	{
+		return prec;
+	}
+
+	@Rule (lhs = "prec", rhs = "")
+	String parsePrec ()
 	{
 		return null;
 	}

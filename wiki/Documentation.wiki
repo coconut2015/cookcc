@@ -9,8 +9,6 @@ A unique feature of CookCC is allowing lexer/parser to be specified using Java a
 
 CookCC requires JRE 1.5+ to run, although the generated Java code can be compiled by earlier versions of JDK.
 
-The current release is 0.3.1.
-
 == Command Line Options ==
 
 || {{{-help}}} || Display available command line options. ||

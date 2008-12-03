@@ -609,7 +609,7 @@ public class Parser
 				{
 					if (production[nextPos] <= m_maxTerminal)
 						break;
-					if (!m_firstSetVal.get (production[pos]).hasEpsilon ())
+					if (!m_firstSetVal.get (production[nextPos]).hasEpsilon ())
 						break;
 				}
 				if (nextPos < production.length)

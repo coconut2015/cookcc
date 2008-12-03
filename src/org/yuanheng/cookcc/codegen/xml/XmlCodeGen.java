@@ -54,8 +54,10 @@ public class XmlCodeGen implements CodeGen
 	{
 		for (TokensDoc tokens : doc.getTokens ())
 		{
-			p.print ("\t<tokens" + (tokens.getType () == null ? "" : " type=\"" + tokens.getType () + "\"") + "><![CDATA[");
 			String[] ts = tokens.getTokens ();
+			if (ts == null)
+				continue;
+			p.print ("\t<tokens" + (tokens.getType () == null ? "" : " type=\"" + tokens.getType () + "\"") + "><![CDATA[");
 			for (int i = 0; i < ts.length; ++i)
 			{
 				if ((i % 5) > 0)

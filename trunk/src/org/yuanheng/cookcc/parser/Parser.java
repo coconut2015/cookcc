@@ -229,7 +229,10 @@ public class Parser
 		for (TokensDoc tokensDoc : tokensDocs)
 		{
 			int level = precedenceLevel++;
-			for (String name : tokensDoc.getTokens ())
+			String[] names = tokensDoc.getTokens ();
+			if (names == null)
+				continue;
+			for (String name : names)
 			{
 				if (m_terminals.containsKey (name))
 					throw new ParserException (tokensDoc.getLineNumber (), "Duplicate token " + name + " specified.");

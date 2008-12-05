@@ -7,38 +7,7 @@ One of the cool feature of CookCC is being able to directly specify the lexer/pa
 
 This capability can be extended to other languages, such as Python or C#, even C / C++.
 
-== The Old Way of Writing Lexer/Parser ==
-
-Traditionally, one would have to write lexer/parser in {{{*.l}}} or {{{*.y}}} input files.  There are several problems with using such proprietary file formats.
-
- * Difficult to write
-   * Proprietary file format
-     * The parsing of lex/yaccfiles are non-trivial and not easily portable for different languages
-   * Lagging support in terms of modern IDE features such as
-     * Syntax highlighting
-     * Context sensitive help
-     * Instant error check, including semantic check as well as variable/function call checks.
-     * Variable / function usage highlight and analysis.
-     * Automatic code/template insertions that reduce typing.
-     * Many many more.
-   * Fragmented code
- * Difficult to maintain
-   * Can’t perform refactoring.
- * Difficult to document
-   * Can't use generic documentation tools to extract comments etc.
-
-XML input only solves part of the problem that being able to accept action codes for all languages, but it does not solve other problems.
-
-== The New Way: Annotation Based Lex/Parse ==
-
- * Advantages
-   * Write code as normal and take the full advantage of the modern IDEs.
-   * No longer have to deal with $$, $1 etc.
-   * Coherent code without fragmentation
-   * Comments can be easily extracted using generic documentation tools.
-   * Most languages have documentation tools that can be utilized to deal with annotations.
- * Disadvantages
-   * Need to write a language specific annotation parser.  But developers do not need to worry about these issues.
+You can check out the [http://cookcc.googlecode.com/svn/trunk/doc/CookCC.pdf CookCC presentation slides] to get started.
 
 == CookCC Input Using Java Annotation ==
 

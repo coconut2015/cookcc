@@ -338,10 +338,12 @@ class ClassVisitor implements DeclarationVisitor
 		ParameterDeclaration[] params = method.getParameters ().toArray (new ParameterDeclaration[method.getParameters ().size ()]);
 
 		int[] argv = getArgs (args);
+
+		if (argv.length != params.length)
+			throw new IllegalArgumentException ("Method " + method + " does not have the same number of arguments as specified.");
+
 		for (int i = 0; i < argv.length; ++i)
 		{
-			if (i >= params.length)
-				throw new IllegalArgumentException ("Method " + method  + " does not have so many arguments for " + args);
 			if (i > 0)
 				buffer.append (", ");
 			int v = argv[i];

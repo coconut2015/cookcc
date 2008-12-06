@@ -429,17 +429,15 @@ public class Main
 
 	public static void error (Exception ex)
 	{
-		if (s_quiet)
-			return;
-		ex.printStackTrace (System.err);
+		if (!s_quiet)
+			ex.printStackTrace (System.err);
 		System.exit (1);
 	}
 
 	public static void error (String msg)
 	{
-		if (s_quiet)
-			return;
-		System.err.println (msg);
+		if (!s_quiet)
+			System.err.println (msg);
 		System.exit (1);
 	}
 

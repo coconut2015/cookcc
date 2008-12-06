@@ -5,9 +5,12 @@ ${code.fileheader}
 </#if>
 
 <#if tokens?has_content>
-<#list tokens as i>
+<#list tokens as i><#if i.tokens?has_content>
 <#if i.type?has_content>%${i.type}<#else>%nonassoc</#if><#list i.tokens as j> ${j}</#list>
-</#list>
+</#if></#list>
+</#if>
+<#if parser.start?has_content>
+%start ${parser.start}
 </#if>
 %%
 <#list parser.grammars as grammar>

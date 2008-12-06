@@ -19,7 +19,7 @@ In this case, the value associated with the non-terminal of the LHS is null.
 	}
 }}}
 
-=== Case 2: Function returns an Object ===
+=== Case 2: Function returns a non-int value ===
 
 In this case, the return value is automatically associated with the non-terminal on the LHS.
 

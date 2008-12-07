@@ -310,6 +310,8 @@ ${code.classheader}
 		{
 			if (_yyBufferEnd > _yyMatchStart)
 			{
+				if (_yyMatchStart == 0 && _yyBufferEnd == _yyBufferSize)
+					throw new IOException ("Pattern is too long to fit in the buffer.");
 				System.arraycopy (_yyBuffer, _yyMatchStart, _yyBuffer, 0, _yyBufferEnd - _yyMatchStart);
 				_yyBufferEnd -= _yyMatchStart;
 				_yyMatchStart = 0;

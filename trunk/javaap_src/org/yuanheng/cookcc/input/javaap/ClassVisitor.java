@@ -26,7 +26,6 @@
  */
 package org.yuanheng.cookcc.input.javaap;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -402,7 +401,7 @@ class ClassVisitor implements DeclarationVisitor
 		{
 			m_doc.addCode ("fileheader", generateFileHeader (FileHeaderScanner.getFileHeader (superClass.getPosition ().file ())));
 		}
-		catch (IOException e)
+		catch (Exception ex)
 		{
 		}
 		// try to get the class header

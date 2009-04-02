@@ -22,6 +22,18 @@ An embedded action is like the following:
 		;
 }}}
 
+It is equivalent to
+
+{{{
+	A	: B T C
+		  { /* regular action */ }
+		;
+	T	:
+		  { /* embedded action */ }
+		;
+}}}
+
+
 === Token declaration works somewhat differently ===
 
 In CookCC, tokens declared using {{{%token}}} are treated as non-associative terminals (same as {{{%nonassoc}}}).

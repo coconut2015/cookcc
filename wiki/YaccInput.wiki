@@ -11,10 +11,6 @@ CookCC Yacc input allows CookCC to read traditional yacc/bison input files.  How
 
 The pattern of non-terminal names recognized by CookCC is {{{[_a-zA-Z][_a-zA-Z0-9]*}}}.
 
-=== $$ and $# not supported ===
-
-Currently, no efforts have been made to add a translator for {{{$$}}}, {{{$1}}} etc.
-
 === Embedded actions are not supported ===
 
 CookCC does not allow embedded action for yacc input at present.  The presence of such grammar would result in parsing error.

@@ -194,6 +194,17 @@ ${code.classheader}
 	{
 		return _yyBOL;
 	}
+
+	/**
+	 * Set whether or not the next token at the beginning of the line.
+	 *
+	 * @param	bol
+	 *			the bol status
+	 */
+	public void setBOL (boolean bol)
+	{
+		_yyIsNextBOL = bol;
+	}
 </#if>
 
 	/**

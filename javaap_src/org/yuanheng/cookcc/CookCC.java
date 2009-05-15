@@ -50,6 +50,16 @@ public abstract class CookCC
 	}
 
 	/**
+	 * Set whether or not the next token at the beginning of the line.
+	 *
+	 * @param	bol
+	 *			the bol status
+	 */
+	public void setBOL (boolean bol)
+	{
+	}
+
+	/**
 	 * Print the current string token to the standard output.
 	 */
 	public void echo ()

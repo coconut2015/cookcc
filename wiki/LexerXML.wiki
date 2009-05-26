@@ -40,6 +40,7 @@ Options for the lexer are specified as attributes of the {{{<lexer>}}} tag.
 || *Attribute* || *Description* ||
 || *{{{table}}}* || The DFA table format.  Can be one of {{{"ecs"}}}, {{{"full"}}}, {{{"compressed"}}} options.  Command line options can override the choice here.  ||
 || *{{{bol}}}* || Instruct the lexer to keep track of the BOL (beginning of line) information even when there are no patterns use that information. ||
+|| *{{{warnbackup}}}* || Generate warning of backup lexer states if set to true.  Default is false. ||
 
 === {{{<shortcut>}}} ===
 This tag is used to specify frequently used subset of patterns.  In the above example, when the pattern {{{ {word} }}} is seen, it is replaced with {{{({nonws})}}}, which is in turn replaced with {{{([^ \t\r\n])}}}.  So the actual pattern is {{{[^ \t\r\n]+}}}.

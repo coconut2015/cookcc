@@ -2,6 +2,4 @@
 
 = CookCC Input Files =
 
-Currently, there are two ways input lexer/parser specification, [XMLInput XML] and [JavaInput Java].
-
 Input files must have the exact file extensions since CookCC internally uses file extension to find the correct input filter.

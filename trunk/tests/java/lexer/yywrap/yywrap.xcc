@@ -1,0 +1,34 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<lexer yywrap="true">
+		<rule>
+			<pattern><![CDATA[f/<<EOF>>]]></pattern>
+			<action>System.out.print ("*" + yyText () + "*");</action>
+		</rule>
+		<rule>
+			<pattern>.|\n</pattern>
+			<action>echo ();</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>System.out.println ("[[EOF]]"); return 0;</action>
+		</rule>
+	</lexer>
+	<code name="header"><![CDATA[
+import java.io.FileInputStream;
+	]]></code>
+	<code name="default"><![CDATA[
+	private boolean m_first = true;
+	protected boolean yyWrap () throws IOException
+	{
+		if (m_first)
+		{
+			m_first = false;
+			setInput (new java.io.FileInputStream ("test.input"));
+			return false;
+		}
+		return true;
+	}
+	]]></code>
+</cookcc>

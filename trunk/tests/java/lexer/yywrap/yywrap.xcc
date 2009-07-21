@@ -15,7 +15,7 @@
 			<action>System.out.println ("[[EOF]]"); return 0;</action>
 		</rule>
 	</lexer>
-	<code name="header"><![CDATA[
+	<code name="fileheader"><![CDATA[
 import java.io.FileInputStream;
 	]]></code>
 	<code name="default"><![CDATA[
@@ -25,7 +25,7 @@ import java.io.FileInputStream;
 		if (m_first)
 		{
 			m_first = false;
-			setInput (new java.io.FileInputStream ("test.input"));
+			setInput (new FileInputStream ("test.input"));
 			return false;
 		}
 		return true;

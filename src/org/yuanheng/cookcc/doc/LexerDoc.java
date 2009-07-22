@@ -24,6 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package org.yuanheng.cookcc.doc;
 
 import java.util.HashMap;
@@ -47,6 +48,8 @@ public class LexerDoc extends TreeDoc
 	private boolean m_bol;
 
 	private boolean m_warnBackup;
+
+	private boolean m_yywrap;
 
 	public LexerStateDoc getLexerState (String stateName)
 	{
@@ -142,5 +145,26 @@ public class LexerDoc extends TreeDoc
 	public void setWarnBackup (boolean warnBackup)
 	{
 		m_warnBackup = warnBackup;
+	}
+
+	/**
+	 * Check if yywrap function should be called when EOF is encountered.
+	 *
+	 * @return	if yywrap function should be called when EOF is encountered.
+	 */
+	public boolean isYywrap ()
+	{
+		return m_yywrap;
+	}
+
+	/**
+	 * Set if yywrap function should be called when EOF is encountered.
+	 *
+	 * @param	yywrap
+	 * 			if yywrap function should be called when EOF is encountered.
+	 */
+	public void setYywrap (boolean yywrap)
+	{
+		m_yywrap = yywrap;
 	}
 }

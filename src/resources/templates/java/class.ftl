@@ -151,6 +151,7 @@ ${code.classheader}
 	private int _yyLength;
 
 	private Stack _yyLexerStack;
+	private Stack _yyInputStack;
 
 <#if lexer.bol>
 	// we need to track beginning of line (BOL) status
@@ -161,26 +162,180 @@ ${code.classheader}
 
 <#if lexer?has_content>
 <#if unicode>
+	/**
+	 * Set the current input.
+	 *
+	 * @param	reader
+	 *			the new input.
+	 */
 	public void setInput (Reader reader)
 	{
 		_yyIs = reader;
 	}
 
+	/**
+	 * Obtain the current input.
+	 *
+	 * @return	the current input
+	 */
 	public Reader getInput ()
 	{
 		return _yyIs;
 	}
+
+	/**
+	 * Switch the current input to the new input.  The old input and already
+	 * buffered characters are pushed onto the stack.
+	 *
+	 * @param	is
+	 * 			the new input
+	 */
+	public void yyPushInput (Reader is)
+	{
+		int len = _yyBufferEnd - _yyMatchStart;
+		char[] leftOver = new char[len];
+		System.arraycopy (_yyBuffer, _yyMatchStart, leftOver, 0, len);
+
+		Object[] states = new Object[4];
+		states[0] = _yyIs;
+		states[1] = leftOver;
+
+		if (_yyInputStack == null)
+			_yyInputStack = new Stack ();
+		_yyInputStack.push (states);
+
+		_yyIs = is;
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+	}
+
+	/**
+	 * Switch the current input to the old input on stack.  The current input
+	 * and its buffered characters are all switch to the old ones.
+	 */
+	public void yyPopInput ()
+	{
+		Object[] states = (Object[])_yyInputStack.pop ();
+		_yyIs = (Reader)states[0];
+		char[] leftOver = (char[])states[1];
+
+		int curLen = _yyBufferEnd - _yyMatchStart;
+
+		if ((leftOver.length + curLen) > _yyBuffer.length)
+		{
+			char[] newBuffer = new char[leftOver.length + curLen];
+			System.arraycopy (_yyBuffer, _yyMatchStart, newBuffer, 0, curLen);
+			System.arraycopy (leftOver, 0, newBuffer, curLen, leftOver.length);
+			_yyBuffer = newBuffer;
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+		else
+		{
+			int start = _yyMatchStart;
+			int end = _yyBufferEnd;
+			char[] buffer = _yyBuffer;
+
+			for (int i = 0; start < end; ++i, ++start)
+				buffer[i] = buffer[start];
+			System.arraycopy (leftOver, 0, buffer, curLen, leftOver.length);
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+	}
 <#else>
+	/**
+	 * Set the current input.
+	 *
+	 * @param	is
+	 *			the new input.
+	 */
 	public void setInput (InputStream is)
 	{
 		_yyIs = is;
 	}
 
+	/**
+	 * Obtain the current input.
+	 *
+	 * @return	the current input
+	 */
 	public InputStream getInput ()
 	{
 		return _yyIs;
 	}
+
+	/**
+	 * Switch the current input to the new input.  The old input and already
+	 * buffered characters are pushed onto the stack.
+	 *
+	 * @param	is
+	 * 			the new input
+	 */
+	public void yyPushInput (InputStream is)
+	{
+		int len = _yyBufferEnd - _yyMatchStart;
+		byte[] leftOver = new byte[len];
+		System.arraycopy (_yyBuffer, _yyMatchStart, leftOver, 0, len);
+
+		Object[] states = new Object[4];
+		states[0] = _yyIs;
+		states[1] = leftOver;
+
+		if (_yyInputStack == null)
+			_yyInputStack = new Stack ();
+		_yyInputStack.push (states);
+
+		_yyIs = is;
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+	}
+
+	/**
+	 * Switch the current input to the old input on stack.  The currently
+	 * buffered characters are inserted infront of the old buffered characters.
+	 */
+	public void yyPopInput ()
+	{
+		Object[] states = (Object[])_yyInputStack.pop ();
+		_yyIs = (InputStream)states[0];
+		byte[] leftOver = (byte[])states[1];
+
+		int curLen = _yyBufferEnd - _yyMatchStart;
+
+		if ((leftOver.length + curLen) > _yyBuffer.length)
+		{
+			byte[] newBuffer = new byte[leftOver.length + curLen];
+			System.arraycopy (_yyBuffer, _yyMatchStart, newBuffer, 0, curLen);
+			System.arraycopy (leftOver, 0, newBuffer, curLen, leftOver.length);
+			_yyBuffer = newBuffer;
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+		else
+		{
+			int start = _yyMatchStart;
+			int end = _yyBufferEnd;
+			byte[] buffer = _yyBuffer;
+
+			for (int i = 0; start < end; ++i, ++start)
+				buffer[i] = buffer[start];
+			System.arraycopy (leftOver, 0, buffer, curLen, leftOver.length);
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+	}
 </#if>
+
+	/**
+	 * Obtain the number of input objects on the stack.
+	 *
+	 * @return	the number of input objects on the stack.
+	 */
+	public int yyInputStackSize ()
+	{
+		return _yyInputStack == null ? 0 : _yyInputStack.size ();
+	}
 
 <#if lexer.bol>
 	/**
@@ -336,6 +491,10 @@ ${code.classheader}
 		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBufferSize - _yyBufferEnd);
 		if (readSize > 0)
 			_yyBufferEnd += readSize;
+	<#if lexer.yywrap>
+		else if (readSize < 0 && !yyWrap ())		// since we are at EOF, call yyWrap ().  If the return value of yyWrap is false, refresh buffer again
+			return yyRefreshBuffer ();
+	</#if>
 		return readSize >= 0;
 	}
 

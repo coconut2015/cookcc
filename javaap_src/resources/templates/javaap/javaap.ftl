@@ -37,4 +37,17 @@
 	</#list>
 		throw new IllegalArgumentException ("Unknown lexer state: " + state);
 	}
+
+	/**
+	 * Check if there are more inputs.  This function is called when EOF is
+	 * encountered.
+	 *
+	 * @return	true to indicate no more inputs.
+	 * @throws	IOException
+	 * 			in case of an IO error
+	 */
+	protected boolean yyWrap () throws IOException
+	{
+		return true;
+	}
 </#if>

@@ -24,6 +24,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package org.yuanheng.cookcc.input.javaap;
 
 import java.util.ArrayList;
@@ -192,6 +193,7 @@ class ClassVisitor implements DeclarationVisitor
 			lexer = new LexerDoc ();
 			lexer.setTable (m_option.lexerTable ());
 			lexer.setWarnBackup (m_option.warnBackup ());
+			lexer.setYywrap (true);
 			m_doc.setLexer (lexer);
 		}
 		return lexer;

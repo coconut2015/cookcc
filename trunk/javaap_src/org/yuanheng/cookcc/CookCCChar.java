@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * CookCC Copyright (c) 2008-2009, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,14 +9,14 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY Heng Yuan ''AS IS'' AND ANY
+ * THIS SOFTWARE IS PROVIDED BY <copyright holder> ''AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL Heng Yuan BE LIABLE FOR ANY
+ * DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -26,7 +26,6 @@
  */
 package org.yuanheng.cookcc;
 
-import java.io.IOException;
 import java.io.Reader;
 
 /**
@@ -37,20 +36,34 @@ import java.io.Reader;
  */
 public abstract class CookCCChar extends CookCC
 {
+	/**
+	 * Set the current input.
+	 *
+	 * @param	reader
+	 *			the new input.
+	 */
 	public void setInput (Reader reader)
 	{
 	}
 
 	/**
-	 * Read more data from input.
+	 * Obtain the current input.
 	 *
-	 * @param	bufferEnd
-	 * @return	the internal buffer if refresh is successful, otherwise null.
-	 * @throws	java.io.IOException
-	 * 			in case of error.
+	 * @return	the current input
 	 */
-	public char[] yyRefreshBuffer (int[] bufferEnd) throws IOException
+	public Reader getInput ()
 	{
 		return null;
+	}
+
+	/**
+	 * Switch the current input to the new input.  The old input and already
+	 * buffered characters are pushed onto the stack.
+	 *
+	 * @param	reader
+	 *			the new input
+	 */
+	public void yyPushInput (Reader reader)
+	{
 	}
 }

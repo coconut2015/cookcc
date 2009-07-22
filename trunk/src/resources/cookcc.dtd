@@ -49,6 +49,7 @@
 <!ATTLIST lexer		table (full|ecs|compressed) #IMPLIED>
 <!ATTLIST lexer		bol (true|false) #IMPLIED>
 <!ATTLIST lexer		warnbackup (true|false) #IMPLIED>
+<!ATTLIST lexer		yywrap (true|false) #IMPLIED>
 
 <!ATTLIST shortcut	name CDATA #REQUIRED>
 <!ATTLIST rule		state CDATA #IMPLIED>

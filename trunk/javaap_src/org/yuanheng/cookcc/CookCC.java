@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * CookCC Copyright (c) 2008-2009, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,14 +9,14 @@
  *     * Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *     * Neither the name of the <organization> nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY Heng Yuan ''AS IS'' AND ANY
+ * THIS SOFTWARE IS PROVIDED BY <copyright holder> ''AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL Heng Yuan BE LIABLE FOR ANY
+ * DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -113,7 +113,7 @@ public abstract class CookCC
 	 * @throws	IOException
 	 *			in case of I/O error.
 	 */
-	public int yyLex ()
+	public int yyLex () throws IOException
 	{
 		return 0;
 	}
@@ -248,5 +248,36 @@ public abstract class CookCC
 	 */
 	protected void yySetValue (Object value)
 	{
+	}
+
+	/**
+	 * Switch the current input to the old input on stack.  The current input
+	 * and its buffered characters are all switch to the old ones.
+	 */
+	public void yyPopInput ()
+	{
+	}
+
+	/**
+	 * Obtain the number of input objects on the stack.
+	 *
+	 * @return	the number of input objects on the stack.
+	 */
+	public int yyInputStackSize ()
+	{
+		return 0;
+	}
+
+	/**
+	 * Check if there are more inputs.  This function is called when EOF is
+	 * encountered.
+	 *
+	 * @return	true to indicate no more inputs.
+	 * @throws	IOException
+	 * 			in case of an IO error
+	 */
+	protected boolean yyWrap () throws IOException
+	{
+		return true;
 	}
 }

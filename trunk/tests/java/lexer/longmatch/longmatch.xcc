@@ -1,0 +1,32 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc main="false">
+	<!-- Test long match.  _yyBuffer should automatically increased. -->
+	<lexer table="ecs">
+		<rule>
+			<pattern>(.|\n)*</pattern>
+			<action>
+				System.out.println (m_count++);
+				System.out.println (_yyBuffer.length);
+				System.out.println (yyText ());
+			</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+	</lexer>
+	<code name="default">
+	private int m_count = 0;
+
+	public static void main (String[] args) throws Exception
+	{
+		Lexer tmpLexer = new Lexer ();
+		if (args.length > 0)
+			tmpLexer.setInput (new java.io.FileInputStream (args[0])
+		);
+		tmpLexer.setBufferSize (10);
+		tmpLexer.yyLex ();
+	}
+	</code>
+</cookcc>

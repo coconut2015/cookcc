@@ -476,8 +476,6 @@ ${code.classheader}
 		{
 			if (_yyBufferEnd > _yyMatchStart)
 			{
-				if (_yyMatchStart == 0 && _yyBufferEnd == _yyBufferSize)
-					throw new IOException ("Pattern is too long to fit in the buffer.");
 				System.arraycopy (_yyBuffer, _yyMatchStart, _yyBuffer, 0, _yyBufferEnd - _yyMatchStart);
 				_yyBufferEnd -= _yyMatchStart;
 				_yyMatchStart = 0;
@@ -488,7 +486,18 @@ ${code.classheader}
 				_yyBufferEnd = 0;
 			}
 		}
-		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBufferSize - _yyBufferEnd);
+		else if (_yyBufferEnd == _yyBuffer.length)
+		{
+<#if unicode>
+			char[] newBuffer = new char[_yyBuffer.length + _yyBuffer.length / 2];
+<#else>
+			byte[] newBuffer = new byte[_yyBuffer.length + _yyBuffer.length / 2];
+</#if>
+			System.arraycopy (_yyBuffer, 0, newBuffer, 0, _yyBufferEnd);
+			_yyBuffer = newBuffer;
+		}
+
+		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBuffer.length - _yyBufferEnd);
 		if (readSize > 0)
 			_yyBufferEnd += readSize;
 	<#if lexer.yywrap>

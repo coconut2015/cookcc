@@ -1,0 +1,3 @@
+1234567890
+#include include2.txt
+1234567890

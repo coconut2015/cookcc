@@ -1,0 +1,20 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<!-- This is a case that guarrantees to have no default cases, since all
+		 states except the base state are 0's.
+	-->
+	 <lexer>
+		 <rule>
+			 <pattern>a</pattern>
+			 <pattern>b</pattern>
+			 <pattern>c</pattern>
+			 <pattern>.|\n</pattern>
+			 <action>echo ();</action>
+		 </rule>
+		 <rule>
+			 <pattern><![CDATA[<<EOF>>]]></pattern>
+			 <action>return 0;</action>
+		 </rule>
+	 </lexer>
+ </cookcc>

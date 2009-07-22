@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<!-- Test EOL conditions.  Only work for Unix text files since
+		 DOS text files have \r before \n -->
+	<lexer table="ecs">
+		<rule>
+			<pattern>a\n</pattern>
+			<action>System.out.print ("1");</action>
+		</rule>
+		<rule>
+			<!-- ab$ is equivalent to ab/\n -->
+			<pattern>ab$</pattern>
+			<action>System.out.print ("2");</action>
+		</rule>
+		<rule>
+			<pattern>abc/\n</pattern>
+			<action>System.out.print ("3");</action>
+		</rule>
+		<rule>
+			<pattern>.|\n</pattern>
+			<action>echo ();</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+	</lexer>
+</cookcc>

@@ -52,7 +52,19 @@ public class Bar
 
 === Buffer Size ===
 
-When a particular pattern exceeds the buffer size (default 4096), CookCC would enter an infinite loop.  Change the buffer size to a bigger one when there is an expectation of matching of very long patterns.
+When a particular match exceeds the buffer size (default 4096), CookCC would increase the buffer length by 50%.  For very long matches (such as code dumping near the end), for the best performance, set the initial buffer size to the size of the input.
+
+=== yywrap ==
+
+By default, when the end of file of the current input is reached, a special {{{<<EOF>>}}} character is generated.  However, if one wishes to hook this event, set the {{{yywrap="true"}}} option for the lexer and define the {{{protected boolean yywrap ()}}} function, which would be called.
+
+The {{{yywrap}}} function should return {{{true}}} if no further action should be done, and {{{false}}} if the lexer should attempt to read from the input again.
+
+=== Input Stack ===
+
+Sometimes, it maybe useful to halt the current input and switch to another input temporarily.  For instance, {{{#include "file"}}}.  In these cases, {{{yyPushInput}}}, {{{yyPopInput}}}, {{{yyInputStackSize}}} functions are provided.
+
+A [http://code.google.com/p/cookcc/source/browse/trunk/tests/java/lexer/pushinput/pushinput.xcc test example] is provided.
 
 === Unicode Support ===
 

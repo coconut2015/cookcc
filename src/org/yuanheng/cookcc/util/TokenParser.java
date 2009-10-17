@@ -26,9 +26,13 @@
  */
 package org.yuanheng.cookcc.util;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.util.Stack;
+
+
+import java.io.ByteArrayInputStream;
 import java.util.LinkedList;
 
 /**
@@ -64,15 +68,100 @@ public class TokenParser
 	private int _yyTextStart;
 	private int _yyLength;
 
+	private Stack<Integer> _yyLexerStack;
+	private Stack<Object[]> _yyInputStack;
 
+
+	/**
+	 * Set the current input.
+	 *
+	 * @param	is
+	 *			the new input.
+	 */
 	public void setInput (InputStream is)
 	{
 		_yyIs = is;
 	}
 
+	/**
+	 * Obtain the current input.
+	 *
+	 * @return	the current input
+	 */
 	public InputStream getInput ()
 	{
 		return _yyIs;
+	}
+
+	/**
+	 * Switch the current input to the new input.  The old input and already
+	 * buffered characters are pushed onto the stack.
+	 *
+	 * @param	is
+	 * 			the new input
+	 */
+	public void yyPushInput (InputStream is)
+	{
+		int len = _yyBufferEnd - _yyMatchStart;
+		byte[] leftOver = new byte[len];
+		System.arraycopy (_yyBuffer, _yyMatchStart, leftOver, 0, len);
+
+		Object[] states = new Object[4];
+		states[0] = _yyIs;
+		states[1] = leftOver;
+
+		if (_yyInputStack == null)
+			_yyInputStack = new Stack<Object[]> ();
+		_yyInputStack.push (states);
+
+		_yyIs = is;
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+	}
+
+	/**
+	 * Switch the current input to the old input on stack.  The currently
+	 * buffered characters are inserted infront of the old buffered characters.
+	 */
+	public void yyPopInput ()
+	{
+		Object[] states = (Object[])_yyInputStack.pop ();
+		_yyIs = (InputStream)states[0];
+		byte[] leftOver = (byte[])states[1];
+
+		int curLen = _yyBufferEnd - _yyMatchStart;
+
+		if ((leftOver.length + curLen) > _yyBuffer.length)
+		{
+			byte[] newBuffer = new byte[leftOver.length + curLen];
+			System.arraycopy (_yyBuffer, _yyMatchStart, newBuffer, 0, curLen);
+			System.arraycopy (leftOver, 0, newBuffer, curLen, leftOver.length);
+			_yyBuffer = newBuffer;
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+		else
+		{
+			int start = _yyMatchStart;
+			int end = _yyBufferEnd;
+			byte[] buffer = _yyBuffer;
+
+			for (int i = 0; start < end; ++i, ++start)
+				buffer[i] = buffer[start];
+			System.arraycopy (leftOver, 0, buffer, curLen, leftOver.length);
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+	}
+
+	/**
+	 * Obtain the number of input objects on the stack.
+	 *
+	 * @return	the number of input objects on the stack.
+	 */
+	public int yyInputStackSize ()
+	{
+		return _yyInputStack == null ? 0 : _yyInputStack.size ();
 	}
 
 
@@ -139,6 +228,29 @@ public class TokenParser
 		_yyBaseState = baseState;
 	}
 
+	/**
+	 * Push the current state onto lexer state onto stack and
+	 * begin the new state specified by the user.
+	 *
+	 * @param	newState
+	 *			the new state.
+	 */
+	protected void yyPushLexerState (int newState)
+	{
+		if (_yyLexerStack == null)
+			_yyLexerStack = new Stack<Integer> ();
+		_yyLexerStack.push (new Integer (_yyBaseState));
+		begin (newState);
+	}
+
+	/**
+	 * Restore the previous lexer state.
+	 */
+	protected void yyPopLexerState ()
+	{
+		begin (((Integer)_yyLexerStack.pop ()).intValue ());
+	}
+
 
 	// read more data from the input
 	protected boolean yyRefreshBuffer () throws IOException
@@ -159,7 +271,14 @@ public class TokenParser
 				_yyBufferEnd = 0;
 			}
 		}
-		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBufferSize - _yyBufferEnd);
+		else if (_yyBufferEnd == _yyBuffer.length)
+		{
+			byte[] newBuffer = new byte[_yyBuffer.length + _yyBuffer.length / 2];
+			System.arraycopy (_yyBuffer, 0, newBuffer, 0, _yyBufferEnd);
+			_yyBuffer = newBuffer;
+		}
+
+		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBuffer.length - _yyBufferEnd);
 		if (readSize > 0)
 			_yyBufferEnd += readSize;
 		return readSize >= 0;

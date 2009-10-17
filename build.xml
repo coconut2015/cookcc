@@ -96,6 +96,7 @@
 			<option name="-class" value="org.yuanheng.cookcc.util.TokenParser"/>
 			<option name="-d" value="${basedir}/src"/>
 			<option name="-public"/>
+			<option name="-generics"/>
 		</cookcc>
 	</target>
 

@@ -220,6 +220,8 @@ public class Task extends org.apache.tools.ant.Task
 
 		cmd.createArgument ().setValue ("-nocompile");
 
+		// always turn on generics since we are using Java 1.5+ anyways
+		cmd.createArgument ().setValue ("-Agenerics");
 		if (m_analysis)
 			cmd.createArgument ().setValue ("-Aanalysis");
 		if (m_debug)

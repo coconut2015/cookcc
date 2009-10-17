@@ -119,10 +119,18 @@ ${code.classheader}
 		}
 	}
 
+<#if generics?has_content && generics?string == "true">
+	// lookahead stack for the parser
+	private final LinkedList<YYParserState> _yyLookaheadStack = new LinkedList<YYParserState> ();
+	// state stack for the parser
+	private final Vector<YYParserState> _yyStateStack = new Vector<YYParserState> (512, 512);
+<#else>
 	// lookahead stack for the parser
 	private final LinkedList _yyLookaheadStack = new LinkedList ();
 	// state stack for the parser
 	private final Vector _yyStateStack = new Vector (512, 512);
+</#if>
+
 <#if parser.recovery>
 	// flag that indicates error
 	private boolean _yyInError;
@@ -150,8 +158,13 @@ ${code.classheader}
 	private int _yyTextStart;
 	private int _yyLength;
 
+<#if generics?has_content && generics?string == "true">
+	private Stack<Integer> _yyLexerStack;
+	private Stack<Object[]> _yyInputStack;
+<#else>
 	private Stack _yyLexerStack;
 	private Stack _yyInputStack;
+</#if>
 
 <#if lexer.bol>
 	// we need to track beginning of line (BOL) status
@@ -201,7 +214,11 @@ ${code.classheader}
 		states[1] = leftOver;
 
 		if (_yyInputStack == null)
+<#if generics?has_content && generics?string == "true">
+			_yyInputStack = new Stack<Object[]> ();
+<#else>
 			_yyInputStack = new Stack ();
+</#if>
 		_yyInputStack.push (states);
 
 		_yyIs = is;
@@ -283,7 +300,11 @@ ${code.classheader}
 		states[1] = leftOver;
 
 		if (_yyInputStack == null)
+<#if generics?has_content && generics?string == "true">
+			_yyInputStack = new Stack<Object[]> ();
+<#else>
 			_yyInputStack = new Stack ();
+</#if>
 		_yyInputStack.push (states);
 
 		_yyIs = is;
@@ -435,7 +456,11 @@ ${code.classheader}
 	protected void yyPushLexerState (int newState)
 	{
 		if (_yyLexerStack == null)
+<#if generics?has_content && generics?string == "true">
+			_yyLexerStack = new Stack<Integer> ();
+<#else>
 			_yyLexerStack = new Stack ();
+</#if>
 		_yyLexerStack.push (new Integer (_yyBaseState));
 		begin (newState);
 	}
@@ -828,6 +853,9 @@ ${code.classheader}
 	 * @throws	IOException
 	 *			in case of error
 	 */
+<#if generics?has_content && generics?string == "true">
+	@SuppressWarnings ("unchecked")
+</#if>
 	public int yyParse () throws IOException
 	{
  <#if code.parserprolog?has_content>
@@ -854,9 +882,13 @@ ${code.classheader}
 		char[] cc_rule = cc_parser.rule;
 		char[] cc_lhs = cc_parser.lhs;
 
+<#if generics?has_content && generics?string == "true">
+		LinkedList<YYParserState> cc_lookaheadStack = _yyLookaheadStack;
+		Vector<YYParserState> cc_stateStack = _yyStateStack;
+<#else>
 		LinkedList cc_lookaheadStack = _yyLookaheadStack;
 		Vector cc_stateStack = _yyStateStack;
-
+</#if>
 		if (cc_stateStack.size () == 0)
 			cc_stateStack.add (new YYParserState ());
 

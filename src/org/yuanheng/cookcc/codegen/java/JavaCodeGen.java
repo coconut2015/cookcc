@@ -53,6 +53,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 	public final static String TEMPLATE_URI = "resources/templates/java/class.ftl";
 
 	public static String OPTION_PUBLIC = "-public";
+	public static String OPTION_GENERICS = "-generics";
 
 	private static class Resources
 	{
@@ -99,6 +100,28 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	};
 
+	private OptionHandler m_genericsOption = new OptionHandler()
+	{
+		public String getOption ()
+		{
+			return OPTION_GENERICS;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
+		}
+
+		public String toString ()
+		{
+			return OPTION_GENERICS + "\t\t\t\tGenerate Java code with generics.";
+		}
+	};
+
 	private OptionHandler m_abstractOption = new AbstractOption ();
 
 	private OptionMap m_options = new OptionMap ();
@@ -107,6 +130,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		m_options.registerOptionHandler (m_outputDirectoryOption);
 		m_options.registerOptionHandler (m_classOption);
 		m_options.registerOptionHandler (m_publicOption);
+		m_options.registerOptionHandler (m_genericsOption);
 		m_options.registerOptionHandler (m_abstractOption);
 	}
 
@@ -135,6 +159,8 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 		if (m_options.hasOption (OPTION_PUBLIC))
 			map.put ("public", Boolean.TRUE);
+		if (m_options.hasOption (OPTION_GENERICS))
+			map.put ("generics", Boolean.TRUE);
 		if (m_options.hasOption (AbstractOption.OPTION_ABSTRACT))
 		{
 			map.put ("abstract", Boolean.TRUE);

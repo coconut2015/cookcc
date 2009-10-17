@@ -43,6 +43,7 @@ import freemarker.template.TemplateModelException;
  */
 public class ActionCodeBI extends BuiltIn
 {
+	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
 		BuiltIn.builtins.put ("actioncode", new ActionCodeBI ());

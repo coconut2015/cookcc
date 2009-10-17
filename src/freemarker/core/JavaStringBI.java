@@ -45,6 +45,7 @@ public class JavaStringBI extends BuiltIn
 {
 	private final static int MAX_ARRAY_LEN = 32768;
 
+	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
 		BuiltIn.builtins.put ("javastring", new JavaStringBI ());

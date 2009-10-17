@@ -118,7 +118,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 		public String toString ()
 		{
-			return OPTION_GENERICS + "\t\t\t\tGenerate Java code with generics.";
+			return OPTION_GENERICS + "\t\t\tGenerate Java code with generics.";
 		}
 	};
 

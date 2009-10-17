@@ -15,6 +15,7 @@ Java is the default output language of CookCC.  It can also be selected using th
 || {{{-class <className>}}} || 0.1+ || Set the class name.  By default, the class name is {{{Lexer}}}.  The output Java file would be generated under the appropriate package subdirectories of the output directory.  The subdirectories would be created if they do not exist.  ||
 || {{{-public}}} || 0.1+ || set class scope to {{{public}}}.  By default, the class generated is in the package scope. ||
 || {{{-abstract}}} || 0.3+ || set the generated class to be abstract.  It also disables the generation of {{{main}}} function. ||
+|| {{{-generics}}} || 0.3.4+ || generate Java code with generics. ||
 
 == Code Locations ==
 For codes in {{{<code name="name"></code>}}}, their locations in the generated file can be seen in the following example.  If the name is not given, the name is assumed to be "default".

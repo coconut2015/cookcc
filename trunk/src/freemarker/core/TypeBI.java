@@ -46,6 +46,7 @@ import freemarker.template.*;
  */
 public class TypeBI extends BuiltIn
 {
+	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
 		BuiltIn.builtins.put ("type", new TypeBI ());
@@ -70,6 +71,7 @@ public class TypeBI extends BuiltIn
 			m_production = (Production)((RhsDoc)str.getWrappedObject ()).getProperty ("Production");
 		}
 
+		@SuppressWarnings ("unchecked")
 		public TemplateModel exec (List args) throws TemplateModelException
 		{
 			String t = ((SimpleScalar)args.get (0)).getAsString ();

@@ -29,6 +29,7 @@ package org.yuanheng.cookcc.input.javaap;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.Stack;
 
 /**
  * @author Heng Yuan
@@ -38,14 +39,14 @@ abstract class FileHeaderLexer
 {
 
 	protected final static int INITIAL = 0;
-	protected final static int BLOCKCOMMENT = 17;
+	protected final static int BLOCKCOMMENT = 14;
 
 	// an internal class for lazy initiation
 	private final static class cc_lexer
 	{
-		private static char[] accept = ("\000\000\006\001\002\006\007\005\001\002\005\001\004\000\005\001\003\000\000\015\014\015\016\016\017\014\012\014\000\013\014\012").toCharArray ();
+		private static char[] accept = ("\000\000\006\001\002\006\007\005\001\005\004\000\005\003\000\000\015\014\015\016\016\017\014\012\014\000\013\014").toCharArray ();
 		private static char[] ecs = ("\000\000\000\000\000\000\000\000\000\001\002\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\000\000\000\003\000\000\000\000\004\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\005").toCharArray ();
-		private static char[][] next = {("\002\003\004\002\005\006").toCharArray (),("\007\010\011\007\012\006").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\013\000\000\000\000").toCharArray (),("\000\000\004\000\000\000").toCharArray (),("\000\000\000\014\015\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\016\017\016\016\016\000").toCharArray (),("\000\000\004\000\000\000").toCharArray (),("\000\000\000\014\015\000").toCharArray (),("\000\013\000\000\000\000").toCharArray (),("\000\000\000\014\000\000").toCharArray (),("\015\015\020\015\015\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\016\017\016\016\016\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\023\024\025\026\027\030").toCharArray (),("\023\031\025\032\027\030").toCharArray (),("\025\000\025\000\000\000").toCharArray (),("\000\033\000\034\000\000").toCharArray (),("\025\000\025\000\000\000").toCharArray (),("\000\000\000\034\035\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\036\000\037\000\000").toCharArray (),("\000\000\000\034\035\000").toCharArray (),("\000\033\000\034\000\000").toCharArray (),("\000\000\000\034\035\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\036\000\037\000\000").toCharArray (),("\000\000\000\034\035\000").toCharArray ()};
+		private static char[][] next = {("\002\003\004\002\005\006").toCharArray (),("\007\010\004\007\011\006").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\003\000\000\000\000").toCharArray (),("\000\000\004\000\000\000").toCharArray (),("\000\000\000\012\013\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\014\010\014\014\014\000").toCharArray (),("\000\000\000\012\013\000").toCharArray (),("\000\000\000\012\000\000").toCharArray (),("\013\013\015\013\013\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\020\021\022\023\024\025").toCharArray (),("\020\026\022\027\024\025").toCharArray (),("\022\000\022\000\000\000").toCharArray (),("\000\030\000\031\000\000").toCharArray (),("\022\000\022\000\000\000").toCharArray (),("\000\000\000\031\032\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\033\000\027\000\000").toCharArray (),("\000\000\000\031\032\000").toCharArray (),("\000\030\000\031\000\000").toCharArray (),("\000\000\000\031\032\000").toCharArray (),("\000\000\000\000\000\000").toCharArray (),("\000\033\000\027\000\000").toCharArray ()};
 	}
 
 
@@ -60,18 +61,103 @@ abstract class FileHeaderLexer
 	private int _yyTextStart;
 	private int _yyLength;
 
+	private Stack<Integer> _yyLexerStack;
+	private Stack<Object[]> _yyInputStack;
+
 	// we need to track beginning of line (BOL) status
 	private boolean _yyIsNextBOL = true;
 	private boolean _yyBOL = true;
 
+	/**
+	 * Set the current input.
+	 *
+	 * @param	is
+	 *			the new input.
+	 */
 	public void setInput (InputStream is)
 	{
 		_yyIs = is;
 	}
 
+	/**
+	 * Obtain the current input.
+	 *
+	 * @return	the current input
+	 */
 	public InputStream getInput ()
 	{
 		return _yyIs;
+	}
+
+	/**
+	 * Switch the current input to the new input.  The old input and already
+	 * buffered characters are pushed onto the stack.
+	 *
+	 * @param	is
+	 * 			the new input
+	 */
+	public void yyPushInput (InputStream is)
+	{
+		int len = _yyBufferEnd - _yyMatchStart;
+		byte[] leftOver = new byte[len];
+		System.arraycopy (_yyBuffer, _yyMatchStart, leftOver, 0, len);
+
+		Object[] states = new Object[4];
+		states[0] = _yyIs;
+		states[1] = leftOver;
+
+		if (_yyInputStack == null)
+			_yyInputStack = new Stack<Object[]> ();
+		_yyInputStack.push (states);
+
+		_yyIs = is;
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+	}
+
+	/**
+	 * Switch the current input to the old input on stack.  The currently
+	 * buffered characters are inserted infront of the old buffered characters.
+	 */
+	public void yyPopInput ()
+	{
+		Object[] states = (Object[])_yyInputStack.pop ();
+		_yyIs = (InputStream)states[0];
+		byte[] leftOver = (byte[])states[1];
+
+		int curLen = _yyBufferEnd - _yyMatchStart;
+
+		if ((leftOver.length + curLen) > _yyBuffer.length)
+		{
+			byte[] newBuffer = new byte[leftOver.length + curLen];
+			System.arraycopy (_yyBuffer, _yyMatchStart, newBuffer, 0, curLen);
+			System.arraycopy (leftOver, 0, newBuffer, curLen, leftOver.length);
+			_yyBuffer = newBuffer;
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+		else
+		{
+			int start = _yyMatchStart;
+			int end = _yyBufferEnd;
+			byte[] buffer = _yyBuffer;
+
+			for (int i = 0; start < end; ++i, ++start)
+				buffer[i] = buffer[start];
+			System.arraycopy (leftOver, 0, buffer, curLen, leftOver.length);
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+	}
+
+	/**
+	 * Obtain the number of input objects on the stack.
+	 *
+	 * @return	the number of input objects on the stack.
+	 */
+	public int yyInputStackSize ()
+	{
+		return _yyInputStack == null ? 0 : _yyInputStack.size ();
 	}
 
 	/**
@@ -84,6 +170,17 @@ abstract class FileHeaderLexer
 	public boolean isBOL ()
 	{
 		return _yyBOL;
+	}
+
+	/**
+	 * Set whether or not the next token at the beginning of the line.
+	 *
+	 * @param	bol
+	 *			the bol status
+	 */
+	public void setBOL (boolean bol)
+	{
+		_yyIsNextBOL = bol;
 	}
 
 	/**
@@ -149,6 +246,29 @@ abstract class FileHeaderLexer
 		_yyBaseState = baseState;
 	}
 
+	/**
+	 * Push the current state onto lexer state onto stack and
+	 * begin the new state specified by the user.
+	 *
+	 * @param	newState
+	 *			the new state.
+	 */
+	protected void yyPushLexerState (int newState)
+	{
+		if (_yyLexerStack == null)
+			_yyLexerStack = new Stack<Integer> ();
+		_yyLexerStack.push (new Integer (_yyBaseState));
+		begin (newState);
+	}
+
+	/**
+	 * Restore the previous lexer state.
+	 */
+	protected void yyPopLexerState ()
+	{
+		begin (((Integer)_yyLexerStack.pop ()).intValue ());
+	}
+
 
 	// read more data from the input
 	protected boolean yyRefreshBuffer () throws IOException
@@ -169,9 +289,18 @@ abstract class FileHeaderLexer
 				_yyBufferEnd = 0;
 			}
 		}
-		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBufferSize - _yyBufferEnd);
+		else if (_yyBufferEnd == _yyBuffer.length)
+		{
+			byte[] newBuffer = new byte[_yyBuffer.length + _yyBuffer.length / 2];
+			System.arraycopy (_yyBuffer, 0, newBuffer, 0, _yyBufferEnd);
+			_yyBuffer = newBuffer;
+		}
+
+		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBuffer.length - _yyBufferEnd);
 		if (readSize > 0)
 			_yyBufferEnd += readSize;
+		else if (readSize < 0 && !yyWrap ())		// since we are at EOF, call yyWrap ().  If the return value of yyWrap is false, refresh buffer again
+			return yyRefreshBuffer ();
 		return readSize >= 0;
 	}
 
@@ -405,6 +534,41 @@ abstract class FileHeaderLexer
 		throw new IllegalArgumentException ("Unknown lexer state: " + state);
 	}
 
+	/**
+	 * Push the current state onto lexer state onto stack and
+	 * begin the new state specified by the user.
+	 *
+	 * @param	state
+	 *			the new state.
+	 */
+	protected void yyPushLexerState (String state)
+	{
+		if ("INITIAL".equals (state))
+		{
+			yyPushLexerState (INITIAL);
+			return;
+		}
+		if ("BLOCKCOMMENT".equals (state))
+		{
+			yyPushLexerState (BLOCKCOMMENT);
+			return;
+		}
+		throw new IllegalArgumentException ("Unknown lexer state: " + state);
+	}
+
+	/**
+	 * Check if there are more inputs.  This function is called when EOF is
+	 * encountered.
+	 *
+	 * @return	true to indicate no more inputs.
+	 * @throws	IOException
+	 * 			in case of an IO error
+	 */
+	protected boolean yyWrap () throws IOException
+	{
+		return true;
+	}
+
 
 /*
  * lexer properties:
@@ -414,12 +578,12 @@ abstract class FileHeaderLexer
  * cases = 15
  * table = ecs
  * ecs = 6
- * states = 32
+ * states = 28
  * max symbol value = 256
  *
  * memory usage:
- * full table = 8224
- * ecs table = 449
+ * full table = 7196
+ * ecs table = 425
  *
  */
 }

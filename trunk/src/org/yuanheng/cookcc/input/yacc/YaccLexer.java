@@ -28,9 +28,10 @@ package org.yuanheng.cookcc.input.yacc;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.util.LinkedList;
-import java.util.Stack;
 import java.util.Vector;
+import java.util.Stack;
 
 /**
  * @author Heng Yuan
@@ -99,9 +100,10 @@ abstract class YaccLexer
 	}
 
 	// lookahead stack for the parser
-	private final LinkedList _yyLookaheadStack = new LinkedList ();
+	private final LinkedList<YYParserState> _yyLookaheadStack = new LinkedList<YYParserState> ();
 	// state stack for the parser
-	private final Vector _yyStateStack = new Vector (512, 512);
+	private final Vector<YYParserState> _yyStateStack = new Vector<YYParserState> (512, 512);
+
 	// flag that indicates error
 	private boolean _yyInError;
 	// internal track of the argument start
@@ -120,20 +122,103 @@ abstract class YaccLexer
 	private int _yyTextStart;
 	private int _yyLength;
 
-	private Stack _yyLexerStack;
+	private Stack<Integer> _yyLexerStack;
+	private Stack<Object[]> _yyInputStack;
 
 	// we need to track beginning of line (BOL) status
 	private boolean _yyIsNextBOL = true;
 	private boolean _yyBOL = true;
 
+	/**
+	 * Set the current input.
+	 *
+	 * @param	is
+	 *			the new input.
+	 */
 	public void setInput (InputStream is)
 	{
 		_yyIs = is;
 	}
 
+	/**
+	 * Obtain the current input.
+	 *
+	 * @return	the current input
+	 */
 	public InputStream getInput ()
 	{
 		return _yyIs;
+	}
+
+	/**
+	 * Switch the current input to the new input.  The old input and already
+	 * buffered characters are pushed onto the stack.
+	 *
+	 * @param	is
+	 * 			the new input
+	 */
+	public void yyPushInput (InputStream is)
+	{
+		int len = _yyBufferEnd - _yyMatchStart;
+		byte[] leftOver = new byte[len];
+		System.arraycopy (_yyBuffer, _yyMatchStart, leftOver, 0, len);
+
+		Object[] states = new Object[4];
+		states[0] = _yyIs;
+		states[1] = leftOver;
+
+		if (_yyInputStack == null)
+			_yyInputStack = new Stack<Object[]> ();
+		_yyInputStack.push (states);
+
+		_yyIs = is;
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+	}
+
+	/**
+	 * Switch the current input to the old input on stack.  The currently
+	 * buffered characters are inserted infront of the old buffered characters.
+	 */
+	public void yyPopInput ()
+	{
+		Object[] states = (Object[])_yyInputStack.pop ();
+		_yyIs = (InputStream)states[0];
+		byte[] leftOver = (byte[])states[1];
+
+		int curLen = _yyBufferEnd - _yyMatchStart;
+
+		if ((leftOver.length + curLen) > _yyBuffer.length)
+		{
+			byte[] newBuffer = new byte[leftOver.length + curLen];
+			System.arraycopy (_yyBuffer, _yyMatchStart, newBuffer, 0, curLen);
+			System.arraycopy (leftOver, 0, newBuffer, curLen, leftOver.length);
+			_yyBuffer = newBuffer;
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+		else
+		{
+			int start = _yyMatchStart;
+			int end = _yyBufferEnd;
+			byte[] buffer = _yyBuffer;
+
+			for (int i = 0; start < end; ++i, ++start)
+				buffer[i] = buffer[start];
+			System.arraycopy (leftOver, 0, buffer, curLen, leftOver.length);
+			_yyMatchStart = 0;
+			_yyBufferEnd = leftOver.length + curLen;
+		}
+	}
+
+	/**
+	 * Obtain the number of input objects on the stack.
+	 *
+	 * @return	the number of input objects on the stack.
+	 */
+	public int yyInputStackSize ()
+	{
+		return _yyInputStack == null ? 0 : _yyInputStack.size ();
 	}
 
 	/**
@@ -146,6 +231,17 @@ abstract class YaccLexer
 	public boolean isBOL ()
 	{
 		return _yyBOL;
+	}
+
+	/**
+	 * Set whether or not the next token at the beginning of the line.
+	 *
+	 * @param	bol
+	 *			the bol status
+	 */
+	public void setBOL (boolean bol)
+	{
+		_yyIsNextBOL = bol;
 	}
 
 	/**
@@ -221,7 +317,7 @@ abstract class YaccLexer
 	protected void yyPushLexerState (int newState)
 	{
 		if (_yyLexerStack == null)
-			_yyLexerStack = new Stack ();
+			_yyLexerStack = new Stack<Integer> ();
 		_yyLexerStack.push (new Integer (_yyBaseState));
 		begin (newState);
 	}
@@ -254,9 +350,18 @@ abstract class YaccLexer
 				_yyBufferEnd = 0;
 			}
 		}
-		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBufferSize - _yyBufferEnd);
+		else if (_yyBufferEnd == _yyBuffer.length)
+		{
+			byte[] newBuffer = new byte[_yyBuffer.length + _yyBuffer.length / 2];
+			System.arraycopy (_yyBuffer, 0, newBuffer, 0, _yyBufferEnd);
+			_yyBuffer = newBuffer;
+		}
+
+		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBuffer.length - _yyBufferEnd);
 		if (readSize > 0)
 			_yyBufferEnd += readSize;
+		else if (readSize < 0 && !yyWrap ())		// since we are at EOF, call yyWrap ().  If the return value of yyWrap is false, refresh buffer again
+			return yyRefreshBuffer ();
 		return readSize >= 0;
 	}
 
@@ -592,6 +697,7 @@ abstract class YaccLexer
 	 * @throws	IOException
 	 *			in case of error
 	 */
+	@SuppressWarnings ("unchecked")
 	public int yyParse () throws IOException
 	{
 		char[] cc_ecs = cc_parser.ecs;
@@ -599,9 +705,8 @@ abstract class YaccLexer
 		char[] cc_rule = cc_parser.rule;
 		char[] cc_lhs = cc_parser.lhs;
 
-		LinkedList cc_lookaheadStack = _yyLookaheadStack;
-		Vector cc_stateStack = _yyStateStack;
-
+		LinkedList<YYParserState> cc_lookaheadStack = _yyLookaheadStack;
+		Vector<YYParserState> cc_stateStack = _yyStateStack;
 		if (cc_stateStack.size () == 0)
 			cc_stateStack.add (new YYParserState ());
 
@@ -1020,6 +1125,19 @@ abstract class YaccLexer
 			return;
 		}
 		throw new IllegalArgumentException ("Unknown lexer state: " + state);
+	}
+
+	/**
+	 * Check if there are more inputs.  This function is called when EOF is
+	 * encountered.
+	 *
+	 * @return	true to indicate no more inputs.
+	 * @throws	IOException
+	 * 			in case of an IO error
+	 */
+	protected boolean yyWrap () throws IOException
+	{
+		return true;
 	}
 
 

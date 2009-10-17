@@ -46,6 +46,7 @@ class ItemSet implements Comparable<ItemSet>
 		m_closureSet = new TreeMap<Item,Item> (Item.getClosureComparator ());
 	}
 
+	@SuppressWarnings ("unchecked")
 	private ItemSet (ItemSet other)
 	{
 		m_itemList = (LinkedList<Item>)other.m_itemList.clone ();

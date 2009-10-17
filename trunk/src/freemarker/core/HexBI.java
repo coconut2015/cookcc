@@ -39,6 +39,7 @@ import freemarker.template.*;
  */
 public class HexBI extends BuiltIn
 {
+	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
 		BuiltIn.builtins.put ("hex", new HexBI ());

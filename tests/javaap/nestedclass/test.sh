@@ -11,7 +11,7 @@ if [ -z "$COOKCC" ]; then
 fi
 
 classpath="${COOKCC};."
-apt="${JAVA_HOME}/apt -nocompile -cp $classpath -s ."
+apt="${JAVA_HOME}/bin/apt -nocompile -cp $classpath -s ."
 
 for v in WC?.java
 do
@@ -22,10 +22,10 @@ do
 	cp $CL\$Lexer.java.orig $CL\$Lexer.java
 
 	$apt $v
-	${JAVA_HOME}/javac -classpath $classpath $v > /dev/null 2> /dev/null
+	${JAVA_HOME}/bin/javac -classpath $classpath $v > /dev/null 2> /dev/null
 	if [ $? -ne 0 ]; then echo test for $v failed; exit 1; fi
 
-	${JAVA_HOME}/java -cp . $CL ../../java/lexer/fastwc/test.input > output
+	${JAVA_HOME}/bin/java -cp . $CL ../../java/lexer/fastwc/test.input > output
 	if [ $? -ne 0 ]; then echo test for $v failed; exit 1; fi
 	diff output test.output > /dev/null
 	if [ $? -ne 0 ]; then echo test for $v failed; exit 1; fi

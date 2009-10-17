@@ -10,7 +10,7 @@ if [ -z "$COOKCC" ]; then
 	exit 1
 fi
 
-cookcc="${JAVA_HOME}/java -jar ${COOKCC}"
+cookcc="${JAVA_HOME}/bin/java -jar ${COOKCC}"
 
 rm -f output
 for v in *.y

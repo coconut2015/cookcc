@@ -16,7 +16,7 @@ The following grammar shortcuts are available.
  * Optional
    {{{  <rhs>A B?</rhs>  }}}
    It is equivalent to
-   {{  Goal = A C;  C = B | /* empty */;  }}}
+   {{{  Goal = A C;  C = B | /* empty */;  }}}
  * Optional list
    {{{	<rhs>A B*</rhs>  }}}
    It is equivalent to

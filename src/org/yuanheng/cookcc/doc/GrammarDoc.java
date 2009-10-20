@@ -38,11 +38,36 @@ public class GrammarDoc extends TreeDoc
 
 	private final LinkedList<RhsDoc> m_rhs = new LinkedList<RhsDoc> ();
 
+	private char m_type = 'n';
+
 	public GrammarDoc (String rule)
 	{
 		if (rule == null || rule.length () == 0)
 			throw new IllegalArgumentException ("rule must not be empty.");
 		m_rule = rule;
+	}
+
+	/**
+	 * Internally called for internally generated grammar rules.
+	 *
+	 * @param	type
+	 * 			One of 'n', '?', '+', '*'.
+	 */
+	public void setType (char type)
+	{
+		m_type = type;
+	}
+
+	/**
+	 * The type of the rule.  For non-internally generated rules should
+	 * have a character 'n'.  '?' means optional token, '*' is an optional list,
+	 * '+' is a list.
+	 *
+	 * @return	One of 'n', '?', '+', '*'.
+	 */
+	public char getType ()
+	{
+		return m_type;
 	}
 
 	public String getRule ()

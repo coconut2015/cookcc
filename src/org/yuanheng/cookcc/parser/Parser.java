@@ -258,8 +258,13 @@ public class Parser
 	private void parseProductions ()
 	{
 		int[] pos = new int[1];
-		for (GrammarDoc grammar : m_doc.getParser ().getGrammars ())
+		char[] type = new char[1];
+		ParserDoc parserDoc = m_doc.getParser ();
+		// because iterator disallow modifying the list (even from the same thread)
+		// have to use the index approach.
+		for (int grammarId = 0; grammarId < parserDoc.getGrammarCount (); ++grammarId)
 		{
+			GrammarDoc grammar = parserDoc.getGrammar (grammarId);
 			int lhs = getNonterminal (grammar.getRule ());
 			LinkedList<Production> prods = new LinkedList<Production> ();
 			for (RhsDoc rhs : grammar.getRhs ())
@@ -271,9 +276,53 @@ public class Parser
 				while (terms.length () > 0)
 				{
 					pos[0] = 0;
-					int sym = parseTerm (lineNumber, terms, pos);
-					if (sym <= m_maxTerminal)
-						production.setPrecedence (m_terminalMap.get (sym));
+					int sym = parseTerm (lineNumber, terms, pos, type);
+					if (type[0] == '\0')
+					{
+						if (sym <= m_maxTerminal)
+							production.setPrecedence (m_terminalMap.get (sym));
+					}
+					else
+					{
+						// we need a new symbol to handle the new grammar.
+						String tmpSymbol = grammar.getRule ();
+						GrammarDoc tmpGrammar;
+						for (int i = 0; ; ++i)
+						{
+							if (parserDoc.hasGrammar (tmpSymbol + "_" + i))
+								continue;
+							tmpSymbol = tmpSymbol + "_" + i;
+							tmpGrammar = parserDoc.getGrammar (tmpSymbol);
+							tmpGrammar.setType (type[0]);
+							break;
+						}
+						if (type[0] == '?')
+						{
+							RhsDoc emptyRhs = new RhsDoc ();
+							RhsDoc optRhs = new RhsDoc ();
+							optRhs.setTerms (m_symbolMap.get (sym));
+							tmpGrammar.addRhs (emptyRhs);
+							tmpGrammar.addRhs (optRhs);
+						}
+						else if (type[0] == '*')
+						{
+							RhsDoc initRhs = new RhsDoc ();
+							RhsDoc listRhs = new RhsDoc ();
+							listRhs.setTerms (tmpSymbol + " " + m_symbolMap.get (sym));
+							tmpGrammar.addRhs (initRhs);
+							tmpGrammar.addRhs (listRhs);
+						}
+						else if (type[0] == '+')
+						{
+							RhsDoc initRhs = new RhsDoc ();
+							initRhs.setTerms (m_symbolMap.get (sym));
+							RhsDoc listRhs = new RhsDoc ();
+							listRhs.setTerms (tmpSymbol + " " + m_symbolMap.get (sym));
+							tmpGrammar.addRhs (initRhs);
+							tmpGrammar.addRhs (listRhs);
+						}
+						sym = getNonterminal (tmpSymbol);
+					}
 					terms = terms.substring (pos[0]).trim ();
 					symbolList.add (sym);
 				}
@@ -310,11 +359,19 @@ public class Parser
 		}
 	}
 
-	private int parseTerm (int lineNumber, String terms, int[] pos)
+	private int parseTerm (int lineNumber, String terms, int[] pos, char[] type)
 	{
 		if (terms.startsWith ("'\\''"))
 		{
 			pos[0] = "'\\''".length ();
+			if (terms.length () > pos[0] &&
+				"+?*".indexOf (terms.charAt (pos[0])) >= 0)
+			{
+				type[0] = terms.charAt (pos[0]);
+				++pos[0];
+			}
+			else
+				pos[0] = '\0';
 			return getSymbol (lineNumber, "'\\''");
 		}
 		if (terms.charAt (0) == '\'')
@@ -325,22 +382,41 @@ public class Parser
 				String name = terms.substring (0, index + 1);
 				int symbol = getSymbol (lineNumber, name);
 				pos[0] = index + 1;
+				if (terms.length () > pos[0] &&
+					"+?*".indexOf (terms.charAt (pos[0])) >= 0)
+				{
+					type[0] = terms.charAt (pos[0]);
+					++pos[0];
+				}
+				else
+					type[0] = '\0';
 				return symbol;
 			}
 		}
 		else
 		{
-			String name;
-			int index = terms.indexOf (' ');
-			if (index < 0)
-				index = terms.indexOf ('\t');
-			if (index < 0)
-				index = terms.indexOf ('\r');
-			if (index < 0)
-				index = terms.indexOf ('\n');
-			if (index < 0)
-				index = terms.length ();
-			name = terms.substring (0, index);
+			String name = terms;
+			int index = name.indexOf (' ');
+			if (index > 0)
+				name = name.substring (0, index);
+			index = terms.indexOf ('\t');
+			if (index > 0)
+				name = name.substring (0, index);
+			index = terms.indexOf ('\r');
+			if (index > 0)
+				name = name.substring (0, index);
+			index = terms.indexOf ('\n');
+			if (index > 0)
+				name = name.substring (0, index);
+			index = name.length ();
+			if (name.length () > 0 &&
+				("+?*".indexOf (name.charAt (index - 1)) >= 0))
+			{
+				type[0] = name.charAt (index - 1);
+				name = name.substring (0, index - 1);
+			}
+			else
+				type[0] = '\0';
 			int symbol = getSymbol (lineNumber, name);
 			pos[0] = index;
 			return symbol;

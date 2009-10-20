@@ -1054,6 +1054,7 @@ ${code.classheader}
 				case 1:					// accept
 					return 0;
 <#list parser.cases as i>
+<#if i.type == 'n'>
 <#list i.rhs as p>
 				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
 				{
@@ -1061,6 +1062,49 @@ ${code.classheader}
 				}
 				case ${p.caseValue + parser.caseCount}: break;
 </#list>
+<#elseif i.type == '?'>
+<#list i.rhs as p>
+				// internally generated optional rule
+				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
+				{
+				<#if p_index == 0>
+					_yyValue = null;
+				<#else>
+					_yyValue = yyGetValue (1);
+				</#if>
+					break;
+				}
+</#list>
+<#elseif i.type == '*'>
+<#list i.rhs as p>
+				// internally generated optional list rule
+				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
+				{
+				<#if p_index == 0>
+					_yyValue = new LinkedList ();
+				<#else>
+					_yyValue = yyGetValue (1);
+					((LinkedList)_yyValue).add (yyGetValue (2));
+				</#if>
+					break;
+				}
+</#list>
+<#elseif i.type == '+'>
+<#list i.rhs as p>
+				// internally generated list rule
+				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
+				{
+				<#if p_index == 0>
+					_yyValue = new LinkedList ();
+					((LinkedList)_yyValue).add (yyGetValue (1));
+				<#else>
+					_yyValue = yyGetValue (1);
+					((LinkedList)_yyValue).add (yyGetValue (2));
+				</#if>
+					break;
+				}
+</#list>
+</#if>
 </#list>
 				default:
 					throw new IOException ("Internal error in ${ccclass} parser.");

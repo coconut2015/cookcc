@@ -1,0 +1,41 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<!-- This example shows popping an extra token and inserting a missing token.  -->
+	<tokens>A B C</tokens>
+	<lexer>
+		<rule>
+			<pattern>a</pattern>
+			<action>_yyValue = "A"; return A;</action>
+		</rule>
+		<rule>
+			<pattern>b</pattern>
+			<action>_yyValue = "B"; return B;</action>
+		</rule>
+		<rule>
+			<pattern>c</pattern>
+			<action>_yyValue = "C"; return C;</action>
+		</rule>
+		<rule>
+			<pattern>.|\n</pattern>
+			<action>/* ignore */</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0; /* 0 is the EOF token */</action>
+		</rule>
+	</lexer>
+	<parser start="program">
+		<grammar rule="program">
+			<rhs>stmt_list</rhs>
+		</grammar>
+		<grammar rule="stmt_list">
+			<rhs>stmt C</rhs>
+			<rhs>stmt_list stmt C</rhs>
+		</grammar>
+		<grammar rule="stmt">
+			<rhs>A B*</rhs>
+			<action>System.out.println ("statement: " + $2);</action>
+		</grammar>
+	</parser>
+</cookcc>

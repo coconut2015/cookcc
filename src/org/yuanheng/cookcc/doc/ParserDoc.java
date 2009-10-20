@@ -26,6 +26,7 @@
  */
 package org.yuanheng.cookcc.doc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -39,7 +40,7 @@ public class ParserDoc extends TreeDoc
 	public final static String DEFAULT_TABLE_TYPE = "ecs";
 
 	// we use linked list to keep the state being used in order, may be useful.
-	private final LinkedList<GrammarDoc> m_grammarList = new LinkedList<GrammarDoc> ();
+	private final ArrayList<GrammarDoc> m_grammarList = new ArrayList<GrammarDoc> ();
 	private final HashMap<String, GrammarDoc> m_grammarMap = new HashMap<String, GrammarDoc> ();
 
 	private final LinkedList<TypeDoc> m_types = new LinkedList<TypeDoc> ();
@@ -93,6 +94,11 @@ public class ParserDoc extends TreeDoc
 		m_parseError = parseerror;
 	}
 
+	public boolean hasGrammar (String term)
+	{
+		return m_grammarMap.containsKey (term);
+	}
+
 	public GrammarDoc getGrammar (String term)
 	{
 		if (term == null || term.length () == 0)
@@ -129,6 +135,16 @@ public class ParserDoc extends TreeDoc
 	public GrammarDoc[] getGrammars ()
 	{
 		return m_grammarList.toArray (new GrammarDoc[m_grammarList.size ()]);
+	}
+
+	public int getGrammarCount ()
+	{
+		return m_grammarList.size ();
+	}
+
+	public GrammarDoc getGrammar (int index)
+	{
+		return m_grammarList.get (index);
 	}
 
 	public TypeDoc[] getTypes ()

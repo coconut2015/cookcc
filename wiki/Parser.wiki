@@ -15,10 +15,16 @@ The grammar is specified as a series of terminals and non-terminals.  For exampl
 The following grammar shortcuts are available.
  * Optional
    {{{	<rhs>A B?</rhs>}}}
+   It is equivalent to
+   {{{  Goal = A C;  C = B | /* empty */;  }}}
  * Optional list
    {{{	<rhs>A B*</rhs>}}}
+   It is equivalent to
+   {{{  Goal = A C;  C = C B | /* empty */;  }}}
  * List
    {{{	<rhs>A B+</rhs>}}}
+   It is equivalent to
+   {{{  Goal = A C;  C = C B | B;  }}}
 
 For Java output language, both optional list and list values are stored in !LinkedList objects.
 

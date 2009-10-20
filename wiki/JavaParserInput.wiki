@@ -5,8 +5,6 @@
 
 {{{@Rule}}} specifies a single grammar rule.  {{{@Rules}}} can be used to specify multiple rules that share the same function action.
 
-Refer to [ParserXML] rhs section for the rhs attribute values.
-
 There are also three cases of functions marked using {{{@Rule}}}
 
 === Case 1: Function returns void ===

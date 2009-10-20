@@ -75,6 +75,18 @@ The attribute value of {{{rule}}} is a non-terminal.  All the productions in {{{
 
 This tag represents the production for the non-terminal of the parent {{{grammar}}} tag.  Its action code should be immediately followed.  If not, there are no actions performed for this particular production.
 
+The grammar is specified as a series of terminals and non-terminals.  For example,
+{{{	<rhs>VARIABLE '=' expr ';'</rhs>}}}
+
+Grammar shortcuts are also available.
+ * Optional {{{	<rhs>A B?</rhs>}}}
+ * Optional list {{{	<rhs>A B*</rhs>}}}
+ * List {{{	<rhs>A B+</rhs>}}}
+
+For Java output language, both optional list and list values are stored in LinkedList objects.
+
+The attributes for the {{{rhs}}} tag are
+
 || *Attribute* || *Description* ||
 || *{{{precedence}}}* || Specify the precedence for the production to the precedence of a particular terminal. ||
 

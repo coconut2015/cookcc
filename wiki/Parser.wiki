@@ -7,6 +7,21 @@
 
 The generated parser is [http://en.wikipedia.org/wiki/LALR_parser LALR(1)].
 
+The grammar is specified as a series of terminals and non-terminals.  For example,
+{{{	<rhs>VARIABLE '=' expr ';'</rhs>}}}
+
+== Grammar Shortcuts ==
+
+The following grammar shortcuts are available.
+ * Optional
+   {{{	<rhs>A B?</rhs>}}}
+ * Optional list
+   {{{	<rhs>A B*</rhs>}}}
+ * List
+   {{{	<rhs>A B+</rhs>}}}
+
+For Java output language, both optional list and list values are stored in !LinkedList objects.
+
 == Parser Table Format ==
 
 Currently, the following table formats are supported.

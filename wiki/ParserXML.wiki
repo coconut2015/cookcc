@@ -83,7 +83,7 @@ Grammar shortcuts are also available.
  * Optional list {{{	<rhs>A B*</rhs>}}}
  * List {{{	<rhs>A B+</rhs>}}}
 
-For Java output language, both optional list and list values are stored in LinkedList objects.
+For Java output language, both optional list and list values are stored in !LinkedList objects.
 
 The attributes for the {{{rhs}}} tag are
 

@@ -1,14 +1,12 @@
 #!/bin/sh
 
-if [ -z "$JAVA_HOME" ]; then
-	echo need to set JAVA_HOME env
-	exit 1
-fi
+function error ()
+{
+	echo $@ && exit 1
+}
 
-if [ -z "$COOKCC" ]; then
-	echo need to set COOKCC
-	exit 1
-fi
+test -z "$JAVA_HOME" && error need to set JAVA_HOME env
+test -z "$COOKCC" && error need to set COOKCC env
 
 classpath="${COOKCC};."
 apt="${JAVA_HOME}/bin/apt -nocompile -cp $classpath -s ."
@@ -22,13 +20,9 @@ do
 	cp Lexer$num.java.orig Lexer$num.java
 
 	$apt $v
-	${JAVA_HOME}/bin/javac -classpath $classpath $v > /dev/null 2> /dev/null
-	if [ $? -ne 0 ]; then echo test for $v failed; exit 1; fi
-
-	${JAVA_HOME}/bin/java -cp . WC$num ../../java/lexer/fastwc/test.input > output
-	if [ $? -ne 0 ]; then echo test for $v failed; exit 1; fi
-	diff output test.output > /dev/null
-	if [ $? -ne 0 ]; then echo test for $v failed; exit 1; fi
+	${JAVA_HOME}/bin/javac -classpath $classpath $v > /dev/null 2> /dev/null || error test for $v failed
+	${JAVA_HOME}/bin/java -cp . WC$num ../../java/lexer/fastwc/test.input > output || error test for $v failed
+	diff output test.output > /dev/null || error test for $v failed
 
 	rm -f Lexer$num.java
 	rm -f *.class

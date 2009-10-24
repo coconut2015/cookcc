@@ -2,4 +2,4 @@
 
 = CookCC High Level Design =
 
-http://code.google.com/p/cookcc/source/browse/trunk/doc/HighLevelDesignView.png
+http://cookcc.googlecode.com/svn/trunk/doc/HighLevelDesignView.png

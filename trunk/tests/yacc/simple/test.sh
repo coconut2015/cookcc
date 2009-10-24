@@ -1,14 +1,12 @@
 #!/bin/sh
 
-if [ -z "$JAVA_HOME" ]; then
-	echo need to set JAVA_HOME env
-	exit 1
-fi
+function error ()
+{
+	echo $@ && exit 1
+}
 
-if [ -z "$COOKCC" ]; then
-	echo need to set COOKCC
-	exit 1
-fi
+test -z "$JAVA_HOME" && error need to set JAVA_HOME env
+test -z "$COOKCC" && error need to set COOKCC env
 
 cookcc="${JAVA_HOME}/bin/java -jar ${COOKCC}"
 
@@ -20,8 +18,7 @@ do
 	$cookcc $v > /dev/null 2>> output
 done
 
-diff output test.output > /dev/null
-if [ $? -ne 0 ]; then echo test failed; exit 1; fi
+diff output test.output > /dev/null || error test failed
 
 rm -f Lexer.java
 rm -f output

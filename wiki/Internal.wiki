@@ -1,5 +1,5 @@
 #summary CookCC Internal Design
 
-= CookCC High Level Design =
+= Work Flow =
 
 http://cookcc.googlecode.com/svn/trunk/doc/HighLevelDesignView.png

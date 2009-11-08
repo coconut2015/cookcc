@@ -38,6 +38,7 @@ public @interface CookCCOption
 	 * @return	whether or not unicode is supported for the generated lexer/parser.
 	 */
 	boolean unicode () default false;
+
 	/**
 	 * The default lexer DFA table format.  Available options are "full", "ecs",
 	 * and "compressed", in the order of decreasing table size, but increasing
@@ -46,12 +47,13 @@ public @interface CookCCOption
 	 * @return	the lexer dfa table format.
 	 */
 	String lexerTable () default "compressed";
+
 	/**
 	 * The default parser DFA table format.  Available options are "ecs",
 	 * and "compressed", in the order of decreasing table size, but increasing
 	 * cost of performances.
 	 *
-	 * @return the parser dfa table format.
+	 * @return	the parser dfa table format.
 	 */
 	String parserTable () default "compressed";
 
@@ -69,9 +71,18 @@ public @interface CookCCOption
 	String tokenClass () default "";
 
 	/**
+	 * The starting grammar symbol.  By default the starting grammar symbol is
+	 * the LHS of the first Rule annotation.  Use this attribute to set a
+	 * different start symbol.
+	 *
+	 * @return	the starting grammar symbol
+	 */
+	String start () default "";
+
+	/**
 	 * Whether or not warn the backup states in the lexer.  Default is false.
 	 *
-	 * @return whether or not warn the backup states in the lexer
+	 * @return	whether or not warn the backup states in the lexer
 	 */
 	boolean warnBackup () default false;
 }

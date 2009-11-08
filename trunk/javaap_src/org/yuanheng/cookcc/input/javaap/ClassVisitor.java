@@ -177,6 +177,7 @@ class ClassVisitor implements DeclarationVisitor
 
 	/** the current document being worked on */
 	private final Document m_doc = new Document ();
+	private String m_start;
 	private final CookCCVisitor m_parent;
 	private CookCCOption m_option;
 
@@ -207,6 +208,8 @@ class ClassVisitor implements DeclarationVisitor
 			parser = new ParserDoc ();
 			parser.setTable (m_option.parserTable ());
 			m_doc.setParser (parser);
+			if (m_start != null)
+				parser.setStart (m_start);
 		}
 		return parser;
 	}
@@ -394,6 +397,7 @@ class ClassVisitor implements DeclarationVisitor
 			m_doc.setProperty (PROP_PUBLIC, Boolean.TRUE);
 
 		m_doc.setUnicode (option.unicode ());
+		m_start = option.start ();
 
 		String tokenClass = option.tokenClass ();
 		if (tokenClass != null && (tokenClass = tokenClass.trim ()).length () != 0)

@@ -91,9 +91,11 @@ class ClassVisitor implements DeclarationVisitor
 
 	static String generateFileHeader (String docComment)
 	{
-		if (docComment == null)
+		if (docComment == null || docComment.length () == 0)
 			return "";
 		String[] lines = docComment.split ("\n");
+		if (lines.length == 0)
+			return "";
 		StringBuffer buffer = new StringBuffer ();
 		boolean firstLine = true;
 		for (String line : lines)

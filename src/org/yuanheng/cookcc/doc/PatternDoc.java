@@ -76,6 +76,8 @@ public class PatternDoc extends TreeDoc
 
 	/**
 	 * Obtain the case value in the lexer.
+	 *
+	 * @return  the case value in the lexer.
 	 */
 	public int getCaseValue ()
 	{

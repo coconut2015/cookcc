@@ -279,12 +279,12 @@ class NFA
 			if (str.length () == 1)
 				buffer.append ('\'').append (str).append ("' ");
 			else
-				buffer.append (str + "  ");
+				buffer.append (str).append ("  ");
 		}
 		else if (thisChar == ISCCL)
 		{
 			if (cclStr.length () <= 3)
-				buffer.append (cclStr + "    ".substring (cclStr.length ()));
+				buffer.append (cclStr).append ("    ".substring (cclStr.length ()));
 			else
 				buffer.append ("CCL ");
 		}

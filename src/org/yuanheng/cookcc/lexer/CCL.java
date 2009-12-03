@@ -128,7 +128,7 @@ public class CCL
 		{
 			++pos;					// skip '\\'
 			if (pos >= input.length ())
-				throw new EscapeSequenceException (new String ("\\"));
+				throw new EscapeSequenceException ("\\");
 			char ch = input.charAt (pos++);
 			currentPos[0] = pos;
 			switch (ch)

@@ -239,7 +239,7 @@ public class Main
 		public String toString ()
 		{
 			StringBuffer buffer = new StringBuffer ();
-			buffer.append (OPTION_LANG + "\t\t\t\tSelect output language.  Default is ");
+			buffer.append (OPTION_LANG).append ("\t\t\t\tSelect output language.  Default is ");
 			buffer.append (s_codeGenDrivers.getProperty ("default"));
 			buffer.append ("\t\tAvailable languages:\t\t");
 			Set<Object> keys = s_codeGenDrivers.keySet ();

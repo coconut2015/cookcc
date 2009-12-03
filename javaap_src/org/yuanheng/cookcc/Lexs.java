@@ -37,7 +37,7 @@ public @interface Lexs
 	/**
 	 * A list of lexical patterns which all share the same actions.
 	 *
-	 * @return	an array of {@Link Lex}.
+	 * @return	an array of {@link Lex}.
 	 */
 	public Lex[]  patterns ();
 }

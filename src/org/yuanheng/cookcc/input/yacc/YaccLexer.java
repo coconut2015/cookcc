@@ -182,7 +182,7 @@ abstract class YaccLexer
 	 */
 	public void yyPopInput ()
 	{
-		Object[] states = (Object[])_yyInputStack.pop ();
+		Object[] states = _yyInputStack.pop ();
 		_yyIs = (InputStream)states[0];
 		byte[] leftOver = (byte[])states[1];
 
@@ -327,7 +327,7 @@ abstract class YaccLexer
 	 */
 	protected void yyPopLexerState ()
 	{
-		begin (((Integer)_yyLexerStack.pop ()).intValue ());
+		begin (_yyLexerStack.pop ());
 	}
 
 
@@ -731,10 +731,10 @@ abstract class YaccLexer
 				cc_lookaheadStack.add (cc_lookahead);
 			}
 			else
-				cc_lookahead = (YYParserState)cc_lookaheadStack.getLast ();
+				cc_lookahead = cc_lookaheadStack.getLast ();
 
 			cc_ch = cc_ecs[cc_lookahead.token];
-			cc_fromState = ((YYParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state;
+			cc_fromState = cc_stateStack.get (cc_stateStack.size () - 1).state;
 			cc_toState = (short)cc_next[cc_fromState][cc_ch];
 
 
@@ -791,7 +791,7 @@ abstract class YaccLexer
 			//
 			// find the state that said need this non-terminal
 			//
-			cc_fromState = ((YYParserState)cc_stateStack.get (_yyArgStart)).state;
+			cc_fromState = cc_stateStack.get (_yyArgStart).state;
 
 			//
 			// find the state to goto after shifting the non-terminal
@@ -974,7 +974,7 @@ abstract class YaccLexer
 	 */
 	protected YYParserState yyPeekLookahead ()
 	{
-		return (YYParserState)_yyLookaheadStack.getLast ();
+		return _yyLookaheadStack.getLast ();
 	}
 
 	/**
@@ -1025,7 +1025,7 @@ abstract class YaccLexer
 	 */
 	protected Object yyGetValue (int arg)
 	{
-		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).value;
+		return _yyStateStack.get (_yyArgStart + arg).value;
 	}
 
 	/**

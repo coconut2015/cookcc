@@ -43,7 +43,7 @@ public abstract class TreeDoc
 		if (m_properties == null)
 			m_properties = new HashMap<String,Object> ();
 		if (value == null)
-			m_properties.remove (value);
+			m_properties.remove (property);
 		else
 			m_properties.put (property, value);
 	}

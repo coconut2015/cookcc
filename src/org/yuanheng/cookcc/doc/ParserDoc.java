@@ -61,6 +61,12 @@ public class ParserDoc extends TreeDoc
 
 	public void setStart (String start)
 	{
+		if (start != null)
+		{
+			start = start.trim ();
+			if (start.length () == 0)
+				start = null;
+		}
 		m_start = start;
 	}
 

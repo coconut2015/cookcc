@@ -208,8 +208,7 @@ class ClassVisitor implements DeclarationVisitor
 			parser = new ParserDoc ();
 			parser.setTable (m_option.parserTable ());
 			m_doc.setParser (parser);
-			if (m_start != null)
-				parser.setStart (m_start);
+			parser.setStart (m_start);
 		}
 		return parser;
 	}

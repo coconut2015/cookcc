@@ -354,7 +354,7 @@ class ClassVisitor implements DeclarationVisitor
 				buffer.append (", ");
 			int v = argv[i];
 			String cl = params[i].getType ().toString ();
-			if ("java.lang.Object" != cl)
+			if (!"java.lang.Object".equals (cl))
 				buffer.append ("(").append (cl).append (")");
 			buffer.append ("yyGetValue (").append (v).append (")");
 		}

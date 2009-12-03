@@ -39,7 +39,7 @@ public @interface Rules
 	 * <p>
 	 * Typically, it is only used in cases of empty actions.
 	 *
-	 * @return	an array of {@Link Rule}.
+	 * @return	an array of {@link Rule}.
 	 */
 	Rule[]  rules ();
 }

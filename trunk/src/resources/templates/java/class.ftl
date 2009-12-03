@@ -232,7 +232,11 @@ ${code.classheader}
 	 */
 	public void yyPopInput ()
 	{
+<#if generics?has_content && generics?string == "true">
+		Object[] states = _yyInputStack.pop ();
+<#else>
 		Object[] states = (Object[])_yyInputStack.pop ();
+</#if>
 		_yyIs = (Reader)states[0];
 		char[] leftOver = (char[])states[1];
 
@@ -318,7 +322,11 @@ ${code.classheader}
 	 */
 	public void yyPopInput ()
 	{
+<#if generics?has_content && generics?string == "true">
+		Object[] states = _yyInputStack.pop ();
+<#else>
 		Object[] states = (Object[])_yyInputStack.pop ();
+</#if>
 		_yyIs = (InputStream)states[0];
 		byte[] leftOver = (byte[])states[1];
 
@@ -470,7 +478,11 @@ ${code.classheader}
 	 */
 	protected void yyPopLexerState ()
 	{
+<#if generics?has_content && generics?string == "true">
+		begin (_yyLexerStack.pop ());
+<#else>
 		begin (((Integer)_yyLexerStack.pop ()).intValue ());
+</#if>
 	}
 
 	<#if debug>
@@ -913,10 +925,18 @@ ${code.classheader}
 				cc_lookaheadStack.add (cc_lookahead);
 			}
 			else
+<#if generics?has_content && generics?string == "true">
+				cc_lookahead = cc_lookaheadStack.getLast ();
+<#else>
 				cc_lookahead = (YYParserState)cc_lookaheadStack.getLast ();
+</#if>
 
 			cc_ch = cc_ecs[cc_lookahead.token];
+<#if generics?has_content && generics?string == "true">
+			cc_fromState = cc_stateStack.get (cc_stateStack.size () - 1).state;
+<#else>
 			cc_fromState = ((YYParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state;
+</#if>
 <#if parser.table == "ecs">
 			cc_toState = (short)cc_next[cc_fromState][cc_ch];
 <#else>
@@ -1019,7 +1039,11 @@ ${code.classheader}
 			//
 			// find the state that said need this non-terminal
 			//
+<#if generics?has_content && generics?string == "true">
+			cc_fromState = cc_stateStack.get (_yyArgStart).state;
+<#else>
 			cc_fromState = ((YYParserState)cc_stateStack.get (_yyArgStart)).state;
+</#if>
 
 			//
 			// find the state to goto after shifting the non-terminal
@@ -1126,7 +1150,11 @@ ${code.classheader}
 	 */
 	protected YYParserState yyPeekLookahead ()
 	{
+<#if generics?has_content && generics?string == "true">
+		return _yyLookaheadStack.getLast ();
+<#else>
 		return (YYParserState)_yyLookaheadStack.getLast ();
+</#if>
 	}
 
 	/**
@@ -1183,7 +1211,11 @@ ${code.classheader}
 	 */
 	protected Object yyGetValue (int arg)
 	{
+<#if generics?has_content && generics?string == "true">
+		return _yyStateStack.get (_yyArgStart + arg).value;
+<#else>
 		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).value;
+</#if>
 	}
 
 	/**

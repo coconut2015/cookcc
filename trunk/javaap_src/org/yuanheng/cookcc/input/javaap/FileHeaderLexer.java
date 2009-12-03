@@ -121,7 +121,7 @@ abstract class FileHeaderLexer
 	 */
 	public void yyPopInput ()
 	{
-		Object[] states = (Object[])_yyInputStack.pop ();
+		Object[] states = _yyInputStack.pop ();
 		_yyIs = (InputStream)states[0];
 		byte[] leftOver = (byte[])states[1];
 
@@ -266,7 +266,7 @@ abstract class FileHeaderLexer
 	 */
 	protected void yyPopLexerState ()
 	{
-		begin (((Integer)_yyLexerStack.pop ()).intValue ());
+		begin (_yyLexerStack.pop ());
 	}
 
 

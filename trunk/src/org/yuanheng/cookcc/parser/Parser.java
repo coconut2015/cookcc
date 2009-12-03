@@ -71,7 +71,7 @@ public class Parser
 			return null;
 		Object obj = parserDoc.getProperty (PROP_PARSER);
 		Parser parser;
-		if (obj == null | !(obj instanceof Parser))
+		if (obj == null || !(obj instanceof Parser))
 		{
 			parser = new Parser (doc, options);
 			parser.parse ();
@@ -747,7 +747,7 @@ public class Parser
 	//
 	// it only takes care of shifts and no reduces
 	//
-	// depending on _compareLA and the closureFunction,	
+	// depending on _compareLA and the closureFunction,
 	// the states built are quite different
 	//
 	void buildStates (Closure closureFunctor, Comparator<Item> kernelSorter)

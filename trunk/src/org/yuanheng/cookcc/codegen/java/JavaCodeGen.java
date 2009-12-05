@@ -26,12 +26,7 @@
  */
 package org.yuanheng.cookcc.codegen.java;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
+import freemarker.template.Template;
 import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
 import org.yuanheng.cookcc.codegen.options.AbstractOption;
@@ -41,7 +36,11 @@ import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionHandler;
 
-import freemarker.template.Template;
+import java.io.File;
+import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * @author Heng Yuan
@@ -54,6 +53,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 	public static String OPTION_PUBLIC = "-public";
 	public static String OPTION_GENERICS = "-generics";
+	public static String OPTION_EXTEND = "-extend";
 
 	private static class Resources
 	{
@@ -122,6 +122,28 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	};
 
+	private OptionHandler m_extendOption = new OptionHandler()
+	{
+		public String getOption ()
+		{
+			return OPTION_EXTEND;
+		}
+
+		public boolean requireArguments ()
+		{
+			return true;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
+		}
+
+		public String toString ()
+		{
+			return OPTION_EXTEND + "\t\t\t\tSet the parent class of the generated class.";
+		}
+	};
+
 	private OptionHandler m_abstractOption = new AbstractOption ();
 
 	private OptionMap m_options = new OptionMap ();
@@ -132,6 +154,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		m_options.registerOptionHandler (m_publicOption);
 		m_options.registerOptionHandler (m_genericsOption);
 		m_options.registerOptionHandler (m_abstractOption);
+		m_options.registerOptionHandler (m_extendOption);
 	}
 
 	private void generateTemplateOutput (Document doc, File file) throws Exception
@@ -165,6 +188,12 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		{
 			map.put ("abstract", Boolean.TRUE);
 			map.put ("main", Boolean.FALSE);		// force disable output main since we can't instantiate the class
+		}
+		if (m_options.hasOption (OPTION_EXTEND))
+		{
+			String parentClass = m_options.getArgument (OPTION_EXTEND);
+			if (parentClass != null && (parentClass = parentClass.trim ()).length () > 0)
+				map.put ("extend", parentClass);
 		}
 		setup (map, doc);
 		FileWriter fw = new FileWriter (file);

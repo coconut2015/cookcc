@@ -31,6 +31,7 @@ package org.yuanheng.cookcc;
  *
  * @author Heng Yuan
  * @version $Id$
+ * @since 0.3
  */
 public @interface Shortcuts
 {

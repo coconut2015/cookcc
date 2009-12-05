@@ -28,7 +28,7 @@ import java.util.Stack;
 <#if code.classheader?has_content>
 ${code.classheader}
 </#if>
-<#if public?has_content && public?string == "true">public </#if><#if abstract?has_content && abstract?string == "true">abstract </#if>class ${ccclass}
+<#if public?has_content && public?string == "true">public </#if><#if abstract?has_content && abstract?string == "true">abstract </#if>class ${ccclass}<#if extend?has_content> extends ${extend}</#if>
 {
 <#if parser?has_content && parser.tokens?has_content>
 <#list parser.tokens as i>
@@ -102,10 +102,6 @@ ${code.classheader}
 		YYParserState ()	// EOF token construction
 		{
 			this (0, null, 0);
-		}
-		YYParserState (int token)
-		{
-			this (token, null, 0);
 		}
 		YYParserState (int token, Object value)
 		{
@@ -486,15 +482,15 @@ ${code.classheader}
 	}
 
 	<#if debug>
-	protected boolean debugLexer (int matchedState, int accept)
+	protected boolean debugLexer (int baseState, int matchedState, int accept)
 	{
-		System.err.println ("lexer: " + _yyBaseState + ", " + matchedState + ", " + accept + ", " + yyText ());
+		System.err.println ("lexer: " + baseState + ", " + matchedState + ", " + accept + ", " + yyText ());
 		return true;
 	}
 
-	protected boolean debugLexerBackup (int backupState, String backupString)
+	protected boolean debugLexerBackup (int baseState, int backupState, String backupString)
 	{
-		System.err.println ("lexer backup: " + _yyBaseState + ", " + backupState + ", " + backupString);
+		System.err.println ("lexer backup: " + baseState + ", " + backupState + ", " + backupString);
 		return true;
 	}
 	</#if>
@@ -688,7 +684,7 @@ ${code.classheader}
 					if (cc_toState == 0)
 					{
 	<#if debug>
-						debugLexerBackup (cc_matchedState, new String (_yyBuffer, _yyMatchStart, matchedLength));
+						debugLexerBackup (_yyBaseState, cc_matchedState, new String (_yyBuffer, _yyMatchStart, matchedLength));
 	</#if>
 						cc_matchedState = cc_backupMatchedState;
 						matchedLength = cc_backupMatchedLength;
@@ -778,7 +774,7 @@ ${code.classheader}
 			_yyLength = matchedLength;
 
 <#if debug>
-			debugLexer (cc_matchedState, cc_accept[cc_matchedState]);
+			debugLexer (_yyBaseState, cc_matchedState, cc_accept[cc_matchedState]);
 </#if>
 
 			switch (cc_accept[cc_matchedState])
@@ -846,14 +842,14 @@ ${code.classheader}
 
 <#if parser?has_content>
 	<#if debug>
-	protected boolean debugParser (int fromState, int toState, int ecsToken)
+	protected boolean debugParser (int fromState, int toState, int reduceState, String reduceStateName, int ecsToken, String tokenName)
 	{
 		if (toState == 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", error");
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + tokenName + ", error");
 		else if (toState < 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", reduce " + cc_parser.symbols[cc_parser.lhs[-toState]]);
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + tokenName + ", reduce " + reduceStateName);
 		else
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + cc_parser.symbols[ecsToken] + ", shift");
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + tokenName + ", shift");
 		return true;
 	}
 	</#if>
@@ -904,7 +900,7 @@ ${code.classheader}
 		if (cc_stateStack.size () == 0)
 			cc_stateStack.add (new YYParserState ());
 
-		int cc_toState = 0;
+		int cc_toState;
 
 		for (;;)
 		{
@@ -974,7 +970,7 @@ ${code.classheader}
 </#if>
 
 <#if debug>
-			debugParser (cc_fromState, cc_toState, cc_ch);
+			debugParser (cc_fromState, cc_toState, cc_toState < 0 ? cc_parser.lhs[-cc_toState] : 0, cc_toState < 0 ? cc_parser.symbols[cc_parser.lhs[-cc_toState]] : "", cc_ch, cc_parser.symbols[cc_ch]);
 </#if>
 
 			//

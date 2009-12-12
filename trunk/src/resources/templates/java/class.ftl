@@ -1322,7 +1322,7 @@ ${code.default}
  * non-terminals = ${parser.nonTerminalCount}
  * rules = ${parser.rules?size - 1}
  * shift/reduce conflicts = ${parser.shiftConflict}
- * reduct/reduce conflicts = ${parser.reduceConflict}
+ * reduce/reduce conflicts = ${parser.reduceConflict}
  *
  * memory usage:
  * ecs table = ${(parser.ecs?size + (parser.usedTerminalCount + parser.nonTerminalCount) * parser.dfa.size)}

@@ -24,16 +24,15 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.input.javaap;
+package org.yuanheng.cookcc.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.util.Stack;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: FileHeaderLexer.java 715 2009-12-03 08:15:28Z superduperhengyuan $
  */
 abstract class FileHeaderLexer
 {
@@ -511,7 +510,7 @@ abstract class FileHeaderLexer
 
 
 
-	private final org.yuanheng.cookcc.input.javaap.FileHeaderScanner m_this = (org.yuanheng.cookcc.input.javaap.FileHeaderScanner)this;
+	private final FileHeaderScanner m_this = (FileHeaderScanner)this;
 
 	/**
 	 * This function is used to change the initial state for the lexer.

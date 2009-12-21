@@ -26,10 +26,11 @@
  */
 package org.yuanheng.cookcc.input.javaap;
 
+import org.junit.Test;
+import org.yuanheng.cookcc.util.FileHeaderScanner;
+
 import java.io.File;
 import java.io.IOException;
-
-import org.junit.Test;
 
 /**
  * Tests file header scanning.

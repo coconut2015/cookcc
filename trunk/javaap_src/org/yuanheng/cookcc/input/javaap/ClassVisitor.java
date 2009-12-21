@@ -27,18 +27,18 @@
 
 package org.yuanheng.cookcc.input.javaap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-
-import org.yuanheng.cookcc.*;
-import org.yuanheng.cookcc.doc.*;
-
 import com.sun.mirror.declaration.*;
 import com.sun.mirror.type.ClassType;
 import com.sun.mirror.type.DeclaredType;
 import com.sun.mirror.util.DeclarationVisitor;
 import com.sun.mirror.util.SourcePosition;
+import org.yuanheng.cookcc.*;
+import org.yuanheng.cookcc.doc.*;
+import org.yuanheng.cookcc.util.FileHeaderScanner;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author Heng Yuan

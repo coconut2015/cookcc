@@ -24,20 +24,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.input.javaap;
+package org.yuanheng.cookcc.util;
+
+import org.yuanheng.cookcc.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.yuanheng.cookcc.*;
-
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: FileHeaderScanner.java 503 2008-11-12 16:46:21Z superduperhengyuan $
  */
 @CookCCOption (lexerTable = "ecs")
-class FileHeaderScanner extends FileHeaderLexer
+public class FileHeaderScanner extends FileHeaderLexer
 {
 	private StringBuffer m_buffer = new StringBuffer ();
 
@@ -96,7 +96,7 @@ class FileHeaderScanner extends FileHeaderLexer
 		return 0;
 	}
 
-	static String getFileHeader (File file) throws IOException
+	public static String getFileHeader (File file) throws IOException
 	{
 		FileHeaderScanner scanner = new FileHeaderScanner ();
 		FileInputStream is = new FileInputStream (file);

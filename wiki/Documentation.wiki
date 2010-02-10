@@ -3,7 +3,7 @@
 
 = CookCC Documentation =
 
-CookCC is a lexer and parser ([http://en.wikipedia.org/wiki/LALR_parser LALR (1)]) generator project, combined.  It is written in Java, but the [TargetLanguages target languages] can vary.  It uses a template approach to generate source codes, so it is quite easy to add a new target language.  CookCC also comes with a suite of [http://code.google.com/p/cookcc/source/browse/trunk/tests/ test cases] to assist creating and testing new target languages.
+CookCC is a [http://en.wikipedia.org/wiki/Lexical_analysis lexer] and [http://en.wikipedia.org/wiki/Parsing parser] ([http://en.wikipedia.org/wiki/LALR_parser LALR (1)]) generator project, combined.  It is written in Java, but the [TargetLanguages target languages] can vary.  It uses a template approach to generate source codes, so it is quite easy to add a new target language.  CookCC also comes with a suite of [http://code.google.com/p/cookcc/source/browse/trunk/tests/ test cases] to assist creating and testing new target languages.
 
 A unique feature of CookCC is allowing lexer/parser to be specified using Java annotation. This feature greatly simplifies and eases the writing of lexer and parser for Java.
 

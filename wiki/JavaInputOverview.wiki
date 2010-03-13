@@ -25,7 +25,7 @@ public class Calculator extends Parser
 }
 }}}
 
-The generated class is actually the parent class of {{{Calculator}}}, in this case, {{{Parser}}} class (which needs to be in the same package as Calculator).  Since we haven't really generated this class yet, so what we needed to do to work on the {{{Calculator}}} class without the error in editor (assuming that you are using a decent Java IDE such as Eclipse or IntelliJ IDEA) is to create an empty {{{Parser.java}}} like the following code.
+The generated class is actually the parent class of {{{Calculator}}}, in this case, {{{Parser}}} class (which needs to be in the same package as {{Calculator}}).  Since we haven't really generated this class yet, so what we needed to do to work on the {{{Calculator}}} class without the error in editor (assuming that you are using a decent Java IDE such as Eclipse or IntelliJ IDEA) is to create an empty {{{Parser.java}}} like the following code.
 
 {{{
 /* Copyright (c) 2008 by Heng Yuan */

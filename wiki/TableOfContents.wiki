@@ -25,4 +25,3 @@
  * [AntTask Ant task]
  * [http://code.google.com/p/cookcc/source/browse/trunk/tests/ Test cases]
  * [Internal]
-===== [http://www.yuanheng.org/forum/viewforum.php?f=6 Forum] =====

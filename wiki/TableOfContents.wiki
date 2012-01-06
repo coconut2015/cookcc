@@ -23,6 +23,6 @@
    * [TargetLanguageXML XML]
    * [TargetLanguageYacc Yacc]
  * [AntTask Ant task]
- * [Trouble Shooting]
+ * [TroubleShooting Trouble Shooting]
  * [http://code.google.com/p/cookcc/source/browse/trunk/tests/ Test cases]
  * [Internal]

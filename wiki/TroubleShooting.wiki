@@ -6,7 +6,6 @@
 For the following exception
 
 {{{
-   [cookcc] "C:\Program Files\Java\jdk1.6.0_22\bin\apt.exe" -cp D:\workspace\jteq\tools\cookcc-0.3.3.jar;D:\workspace\jteq\src -s D:\workspace\jteq\src -nocompile -Agenerics -Ad=D:\workspace\jteq\src D:\workspace\jteq\src\com\teradata\jteq\CommandParser.java
    [cookcc] An exception has occurred in apt (1.6.0_22). Please file a bug at the Java Developer Connection (http://java.sun.com/webapps/bugreport)  after checking the Bug Parade for duplicates. Include your program and the following diagnostic in your report.  Thank you.
    [cookcc] java.lang.ClassCastException: com.sun.tools.javac.tree.JCTree$JCErroneous cannot be cast to com.sun.tools.javac.tree.JCTree$JCAnnotation
    [cookcc] 	at com.sun.tools.javac.comp.Annotate.enterAttributeValue(Annotate.java:205)

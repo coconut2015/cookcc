@@ -861,9 +861,6 @@ ${code.classheader}
 	 * @throws	IOException
 	 *			in case of error
 	 */
-<#if generics?has_content && generics?string == "true">
-	@SuppressWarnings ("unchecked")
-</#if>
 	public int yyParse () throws IOException
 	{
  <#if code.parserprolog?has_content>

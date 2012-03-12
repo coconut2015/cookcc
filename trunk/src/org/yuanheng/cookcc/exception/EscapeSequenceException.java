@@ -45,6 +45,6 @@ public class EscapeSequenceException extends RuntimeException
 
 	public String toString ()
 	{
-		return ERROR_MSG.format (m_esc);
+		return ERROR_MSG.format (new String[]{ m_esc });
 	}
 }

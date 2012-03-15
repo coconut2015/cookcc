@@ -71,9 +71,9 @@ ${code.classheader}
 	{
 		private static char[] rule = <@intarray parser.rules/>;
 		private static char[] ecs = <@intarray parser.ecs/>;
-	<#if parser.table == "ecs">
+<#if parser.table == "ecs">
 		private static char[][] next = {<#list parser.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
-	<#else>
+<#else>
 		private static char[] base = <@intarray parser.dfa.base/>;
 		private static char[] next = <@intarray parser.dfa.next/>;
 		private static char[] check = <@intarray parser.dfa.check/>;
@@ -86,11 +86,11 @@ ${code.classheader}
 		<#if parser.dfa.gotoDefault?has_content>
 		private static char[] gotoDefault = <@intarray parser.dfa.gotoDefault/>;
 		</#if>
-	</#if>
+</#if>
 		private static char[] lhs = <@intarray parser.lhs/>;
-	<#if debug>
+<#if debug>
 		private static String[] symbols = {<#list parser.symbols as i><#if i_index &gt; 0>,</#if>"${i}"</#list>};
-	</#if>
+</#if>
 	}
 
 	private final static class YYParserState	// internal tracking tool
@@ -569,6 +569,48 @@ ${code.classheader}
 			_yyBuffer = new char[bufferSize];
 <#else>
 			_yyBuffer = new byte[bufferSize];
+</#if>
+	}
+
+	/**
+	 * Reset the internal state to reuse the same parser.
+	 *
+	 * Note, it does not change the buffer size, the input buffer, and the input stream.
+	 *
+	 * Making this function protected so that it can be enabled only if the child class
+	 * decides to make it public.
+	 */
+	protected void reset ()
+	{
+<#if parser?has_content>
+		// reset parser state
+		_yyLookaheadStack.clear ();
+		_yyStateStack.clear ();
+		_yyArgStart = 0;
+		_yyValue = null;
+<#if parser.recovery>
+		_yyInError = false;
+</#if>
+</#if>
+
+<#if lexer?has_content>
+		// reset lexer state
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+		_yyBaseState = 0;
+		_yyTextStart = 0;
+		_yyLength = 0;
+
+		if (_yyLexerStack != null)
+			_yyLexerStack.clear ();
+		if (_yyInputStack != null)
+			_yyInputStack.clear ();
+
+<#if lexer.bol>
+		_yyIsNextBOL = true;
+		_yyBOL = true;
+</#if>
+
 </#if>
 	}
 

@@ -48,6 +48,11 @@
 	 */
 	protected boolean yyWrap () throws IOException
 	{
+		if (yyInputStackSize () > 0)
+		{
+			yyPopInput ();
+			return false;
+		}
 		return true;
 	}
 </#if>

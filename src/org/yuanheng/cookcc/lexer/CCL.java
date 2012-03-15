@@ -378,6 +378,9 @@ public class CCL
 			case '\r':
 				j = 'r';
 				break;
+			case ' ':
+				j = 's';
+				break;
 			case '"':
 			case '\'':
 			case '\\':

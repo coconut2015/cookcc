@@ -313,6 +313,32 @@ public class TokenParser
 	}
 
 	/**
+	 * Reset the internal state to reuse the same parser.
+	 *
+	 * Note, it does not change the buffer size, the input buffer, and the input stream.
+	 *
+	 * Making this function protected so that it can be enabled only if the child class
+	 * decides to make it public.
+	 */
+	protected void reset ()
+	{
+
+		// reset lexer state
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+		_yyBaseState = 0;
+		_yyTextStart = 0;
+		_yyLength = 0;
+
+		if (_yyLexerStack != null)
+			_yyLexerStack.clear ();
+		if (_yyInputStack != null)
+			_yyInputStack.clear ();
+
+
+	}
+
+	/**
 	 * Call this function to start the scanning of the input.
 	 *
 	 * @return	a token or status value.

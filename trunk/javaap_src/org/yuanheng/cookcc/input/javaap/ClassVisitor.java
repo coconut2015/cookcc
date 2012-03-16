@@ -27,18 +27,50 @@
 
 package org.yuanheng.cookcc.input.javaap;
 
-import com.sun.mirror.declaration.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+
+import org.yuanheng.cookcc.CookCCOption;
+import org.yuanheng.cookcc.Lex;
+import org.yuanheng.cookcc.Lexs;
+import org.yuanheng.cookcc.Rule;
+import org.yuanheng.cookcc.Rules;
+import org.yuanheng.cookcc.Shortcut;
+import org.yuanheng.cookcc.Shortcuts;
+import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.doc.GrammarDoc;
+import org.yuanheng.cookcc.doc.LexerDoc;
+import org.yuanheng.cookcc.doc.ParserDoc;
+import org.yuanheng.cookcc.doc.PatternDoc;
+import org.yuanheng.cookcc.doc.RhsDoc;
+import org.yuanheng.cookcc.doc.RuleDoc;
+import org.yuanheng.cookcc.doc.ShortcutDoc;
+import org.yuanheng.cookcc.util.FileHeaderScanner;
+
+import com.sun.mirror.declaration.AnnotationMirror;
+import com.sun.mirror.declaration.AnnotationTypeDeclaration;
+import com.sun.mirror.declaration.AnnotationTypeElementDeclaration;
+import com.sun.mirror.declaration.AnnotationValue;
+import com.sun.mirror.declaration.ClassDeclaration;
+import com.sun.mirror.declaration.ConstructorDeclaration;
+import com.sun.mirror.declaration.Declaration;
+import com.sun.mirror.declaration.EnumConstantDeclaration;
+import com.sun.mirror.declaration.EnumDeclaration;
+import com.sun.mirror.declaration.ExecutableDeclaration;
+import com.sun.mirror.declaration.FieldDeclaration;
+import com.sun.mirror.declaration.InterfaceDeclaration;
+import com.sun.mirror.declaration.MemberDeclaration;
+import com.sun.mirror.declaration.MethodDeclaration;
+import com.sun.mirror.declaration.Modifier;
+import com.sun.mirror.declaration.PackageDeclaration;
+import com.sun.mirror.declaration.ParameterDeclaration;
+import com.sun.mirror.declaration.TypeDeclaration;
+import com.sun.mirror.declaration.TypeParameterDeclaration;
 import com.sun.mirror.type.ClassType;
 import com.sun.mirror.type.DeclaredType;
 import com.sun.mirror.util.DeclarationVisitor;
 import com.sun.mirror.util.SourcePosition;
-import org.yuanheng.cookcc.*;
-import org.yuanheng.cookcc.doc.*;
-import org.yuanheng.cookcc.util.FileHeaderScanner;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * @author Heng Yuan
@@ -50,6 +82,7 @@ class ClassVisitor implements DeclarationVisitor
 	private final static String PROP_INPUT = "inputClass";
 	private final static String PROP_TOKEN = "tokenClass";
 	private final static String PROP_PUBLIC = "publicClass";
+	private final static String PROP_SUPPRESSING_UNCHECK_WARNING = "SuppressUnCheckWarning";
 
 	private static String THIS_STR = "m_this.";
 
@@ -149,14 +182,14 @@ class ClassVisitor implements DeclarationVisitor
 			{
 				if (!attr.equals (key.getSimpleName ()))
 					continue;
-				Collection c = (Collection)map.get (key).getValue ();
+				@SuppressWarnings ("unchecked")
+				Collection<AnnotationValue> c = (Collection<AnnotationValue>)map.get (key).getValue ();
 				if (c == null)
 					return null;
 				int[] returnVal = new int[c.size ()];
 				int i = 0;
-				for (Object o : c)
+				for (AnnotationValue v : c)
 				{
-					AnnotationValue v = (AnnotationValue)o;
 					SourcePosition pos = v.getPosition ();
 					if (pos == null)
 						returnVal[i++] = 0;
@@ -321,7 +354,9 @@ class ClassVisitor implements DeclarationVisitor
 		buffer.append (";");
 
 		if ("$".equals (token))
-			buffer.append (" return 0;");
+			buffer.append (" return 0;  // token = $");
+		else if ("error".equals (token))
+			buffer.append (" return 1;  // token = error");
 		else
 			buffer.append (" return ").append (token).append (";");
 		return buffer.toString ();
@@ -355,7 +390,13 @@ class ClassVisitor implements DeclarationVisitor
 			int v = argv[i];
 			String cl = params[i].getType ().toString ();
 			if (!"java.lang.Object".equals (cl))
+			{
 				buffer.append ("(").append (cl).append (")");
+				if (cl.indexOf ('<') > 0)
+				{
+					getParser ().setProperty (PROP_SUPPRESSING_UNCHECK_WARNING, Boolean.TRUE);
+				}
+			}
 			buffer.append ("yyGetValue (").append (v).append (")");
 		}
 		buffer.append (")");

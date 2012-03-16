@@ -122,7 +122,7 @@ public class ECS
 	private void compute ()
 	{
 		HashMap<Integer,Integer> numberMap = new HashMap<Integer,Integer> ();
-		int j;
+
 		m_groupCount = 0;
 		for (int c = 0; c < m_groups.length; c++)
 		{
@@ -139,6 +139,7 @@ public class ECS
 		m_lookup = null;
 	}
 
+	@Override
 	public String toString ()
 	{
 		return "equivalent classes: " + getGroupCount ();

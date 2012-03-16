@@ -51,6 +51,7 @@ public class JavaStringBI extends BuiltIn
 		BuiltIn.builtins.put ("javastring", new JavaStringBI ());
 	}
 
+	@Override
 	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
 	{
 		TemplateModel model = target.getAsTemplateModel (env);
@@ -70,6 +71,7 @@ public class JavaStringBI extends BuiltIn
 			m_seq = seq;
 		}
 
+		@SuppressWarnings ("rawtypes")
 		public TemplateModel exec (List args) throws TemplateModelException
 		{
 			StringBuffer buffer = new StringBuffer ();

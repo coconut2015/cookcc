@@ -45,6 +45,7 @@ public class HexBI extends BuiltIn
 		BuiltIn.builtins.put ("hex", new HexBI ());
 	}
 
+	@Override
 	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
 	{
 		TemplateModel model = target.getAsTemplateModel (env);
@@ -54,6 +55,7 @@ public class HexBI extends BuiltIn
 		return new Hexanizer (nModel.getAsNumber ().intValue ());
 	}
 
+	@SuppressWarnings ("rawtypes")
 	private class Hexanizer implements TemplateMethodModelEx
 	{
 		int value;

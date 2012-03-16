@@ -83,10 +83,6 @@ abstract class YaccLexer
 		{
 			this (0, null, 0);
 		}
-		YYParserState (int token)
-		{
-			this (token, null, 0);
-		}
 		YYParserState (int token, Object value)
 		{
 			this (token, value, 0);
@@ -394,6 +390,40 @@ abstract class YaccLexer
 	}
 
 	/**
+	 * Reset the internal state to reuse the same parser.
+	 *
+	 * Note, it does not change the buffer size, the input buffer, and the input stream.
+	 *
+	 * Making this function protected so that it can be enabled only if the child class
+	 * decides to make it public.
+	 */
+	protected void reset ()
+	{
+		// reset parser state
+		_yyLookaheadStack.clear ();
+		_yyStateStack.clear ();
+		_yyArgStart = 0;
+		_yyValue = null;
+		_yyInError = false;
+
+		// reset lexer state
+		_yyMatchStart = 0;
+		_yyBufferEnd = 0;
+		_yyBaseState = 0;
+		_yyTextStart = 0;
+		_yyLength = 0;
+
+		if (_yyLexerStack != null)
+			_yyLexerStack.clear ();
+		if (_yyInputStack != null)
+			_yyInputStack.clear ();
+
+		_yyIsNextBOL = true;
+		_yyBOL = true;
+
+	}
+
+	/**
 	 * Call this function to start the scanning of the input.
 	 *
 	 * @return	a token or status value.
@@ -697,7 +727,7 @@ abstract class YaccLexer
 	 * @throws	IOException
 	 *			in case of error
 	 */
-	@SuppressWarnings ("unchecked")
+	@SuppressWarnings ("unchecked") 
 	public int yyParse () throws IOException
 	{
 		char[] cc_ecs = cc_parser.ecs;
@@ -710,7 +740,7 @@ abstract class YaccLexer
 		if (cc_stateStack.size () == 0)
 			cc_stateStack.add (new YYParserState ());
 
-		int cc_toState = 0;
+		int cc_toState;
 
 		for (;;)
 		{
@@ -1137,6 +1167,11 @@ abstract class YaccLexer
 	 */
 	protected boolean yyWrap () throws IOException
 	{
+		if (yyInputStackSize () > 0)
+		{
+			yyPopInput ();
+			return false;
+		}
 		return true;
 	}
 
@@ -1163,7 +1198,7 @@ abstract class YaccLexer
  * non-terminals = 17
  * rules = 30
  * shift/reduce conflicts = 0
- * reduct/reduce conflicts = 0
+ * reduce/reduce conflicts = 0
  *
  * memory usage:
  * ecs table = 1505

@@ -52,6 +52,7 @@ public class TypeBI extends BuiltIn
 		BuiltIn.builtins.put ("type", new TypeBI ());
 	}
 
+	@Override
 	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
 	{
 		TemplateModel model = target.getAsTemplateModel (env);
@@ -61,6 +62,7 @@ public class TypeBI extends BuiltIn
 		return new TypeBuilder (seq);
 	}
 
+	@SuppressWarnings ("rawtypes")
 	private class TypeBuilder implements TemplateMethodModelEx
 	{
 		private final Production m_production;

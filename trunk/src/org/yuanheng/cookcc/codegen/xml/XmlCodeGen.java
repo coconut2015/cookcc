@@ -28,6 +28,7 @@ package org.yuanheng.cookcc.codegen.xml;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Map;
 
 import org.yuanheng.cookcc.OptionMap;
@@ -98,13 +99,26 @@ public class XmlCodeGen implements CodeGen
 	public void generateOutput (Document doc) throws Exception
 	{
 		PrintWriter p;
+		StringWriter sw;
 		if (m_outputOption.getOutput () == null)
+		{
 			p = new PrintWriter (System.out);
+			sw = null;
+		}
 		else
-			p = new PrintWriter (new FileWriter (m_outputOption.getOutput ()));
+		{
+			sw = new StringWriter ();
+			p = new PrintWriter (sw);
+		}
 		printDocument (doc, p);
 		p.flush ();
 		p.close ();
+		if (sw != null)
+		{
+			FileWriter fw = new FileWriter (m_outputOption.getOutput ());
+			fw.write (sw.toString ());
+			fw.close ();
+		}
 	}
 
 	public OptionMap getOptions ()

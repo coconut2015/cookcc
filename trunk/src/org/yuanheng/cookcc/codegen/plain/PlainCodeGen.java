@@ -28,6 +28,7 @@ package org.yuanheng.cookcc.codegen.plain;
 
 import java.io.FileWriter;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,13 +73,26 @@ public class PlainCodeGen extends TemplatedCodeGen implements CodeGen
 
 		Map<String, Object> map = new HashMap<String, Object> ();
 		Writer writer;
+		boolean bufferFirst;
 		if (m_outputOption.getOutput () == null)
+		{
 			writer = new OutputStreamWriter (System.out);
+			bufferFirst = false;
+		}
 		else
-			writer = new FileWriter (m_outputOption.getOutput ());
+		{
+			bufferFirst = true;
+			writer = new StringWriter ();
+		}
 		setup (map, doc);
 		Resources.template.process (map, writer);
 		writer.close ();
+		if (bufferFirst)
+		{
+			FileWriter fw = new FileWriter (m_outputOption.getOutput ());
+			fw.write (writer.toString ());
+			fw.close ();
+		}
 	}
 
 	public OptionMap getOptions ()

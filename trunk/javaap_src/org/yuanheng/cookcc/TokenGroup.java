@@ -26,6 +26,9 @@
  */
 package org.yuanheng.cookcc;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * This annotation is to mark a Enum value (and the values after it
  * until the next TokenGroup annotation) belongs to a particular
@@ -37,6 +40,7 @@ package org.yuanheng.cookcc;
  * @version $Id$
  * @since 0.3
  */
+@Retention (value = RetentionPolicy.SOURCE)
 public @interface TokenGroup
 {
 	/** The association of the token. */

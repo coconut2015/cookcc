@@ -26,6 +26,9 @@
  */
 package org.yuanheng.cookcc;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Use this annotation to mark a function which is called when the pattern
  * specified is matched.
@@ -34,6 +37,7 @@ package org.yuanheng.cookcc;
  * @version $Id$
  * @since 0.3
  */
+@Retention (value = RetentionPolicy.SOURCE)
 public @interface Lex
 {
 	/**

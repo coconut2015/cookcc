@@ -136,6 +136,18 @@ public abstract class CookCCChar
 	}
 
 	/**
+	 * Reset the internal state to reuse the same parser.
+	 *
+	 * Note, it does not change the buffer size, the input buffer, and the input stream.
+	 *
+	 * Making this function protected so that it can be enabled only if the child class
+	 * decides to make it public.
+	 */
+	protected void reset ()
+	{
+	}
+
+	/**
 	 * Put all but n characters back to the input stream.  Be aware that calling
 	 * yyLess (0) is allowed, but be sure to change the state some how to avoid
 	 * an endless loop.

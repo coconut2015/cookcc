@@ -95,6 +95,7 @@ class ESet implements Comparable<ESet>
 	 * Debugging function.
 	 * @return	debug info for this set.
 	 */
+	@Override
 	public String toString ()
 	{
 		if (m_set.size () == 0)

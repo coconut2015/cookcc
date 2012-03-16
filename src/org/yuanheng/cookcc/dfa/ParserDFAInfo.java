@@ -186,4 +186,9 @@ public class ParserDFAInfo
 	{
 		return m_parser.getReduceConflict ();
 	}
+
+	public Object getProperty (String property)
+	{
+		return m_parserDoc.getProperty (property);
+	}
 }

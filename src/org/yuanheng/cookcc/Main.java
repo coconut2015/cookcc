@@ -361,11 +361,11 @@ public class Main
 		String codeGen = (String)s_codeGenDrivers.get (lang);
 		if (codeGen == null)
 			throw new IllegalArgumentException ("unknown output language: " + s_lang);
-		Class codeGenClass = Class.forName (codeGen);
-		Constructor ctor = codeGenClass.getConstructor (new Class[0]);
+		Class<? extends CodeGen> codeGenClass = Class.forName (codeGen).asSubclass (CodeGen.class);
+		Constructor<? extends CodeGen> ctor = codeGenClass.getConstructor (new Class[0]);
 		if (ctor == null)
 			throw new IllegalArgumentException ("default constructor not found in the doclet class.");
-		return (CodeGen)ctor.newInstance (new Object[0]);
+		return ctor.newInstance (new Object[0]);
 	}
 
 	public static CodeGen getCodeGen () throws Exception
@@ -391,7 +391,7 @@ public class Main
 				error ("no input file specified.");
 
 			File file = new File (args[fileIndex]);
-			Class parserClass = getParser (getExtension (file.getName ()));
+			Class<?> parserClass = getParser (getExtension (file.getName ()));
 			if (parserClass == null)
 				error ("Unknown file type: " + args[fileIndex]);
 			Document doc = (Document)parserClass.getMethod ("parse", File.class).invoke (null, file);
@@ -412,7 +412,7 @@ public class Main
 		return fileName.substring (index);
 	}
 
-	private static Class getParser (String extension)
+	private static Class<?> getParser (String extension)
 	{
 		String className = s_inputParsers.getProperty (extension);
 		if (className == null)

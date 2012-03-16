@@ -49,6 +49,7 @@ public class ActionCodeBI extends BuiltIn
 		BuiltIn.builtins.put ("actioncode", new ActionCodeBI ());
 	}
 
+	@Override
 	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
 	{
 		TemplateModel model = target.getAsTemplateModel (env);
@@ -68,6 +69,7 @@ public class ActionCodeBI extends BuiltIn
 			m_str = str;
 		}
 
+		@SuppressWarnings ("rawtypes")
 		public TemplateModel exec (List args) throws TemplateModelException
 		{
 			return new StringArraySequence (parseActionCode (m_str.getAsString ()));

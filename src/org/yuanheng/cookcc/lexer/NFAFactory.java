@@ -99,6 +99,7 @@ class NFAFactory
 		m_spareNFAs.add (nfa);
 	}
 
+	@Override
 	public String toString ()
 	{
 		return "total NFAs: " + getTotalNFACount () + ", maximum NFAs: " + m_nfaCounter;

@@ -306,6 +306,7 @@ class NFA
 		buffer.append ('\n');
 	}
 
+	@Override
 	public String toString ()
 	{
 		StringBuffer buffer = new StringBuffer ();

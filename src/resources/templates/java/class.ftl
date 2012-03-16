@@ -903,6 +903,9 @@ ${code.classheader}
 	 * @throws	IOException
 	 *			in case of error
 	 */
+<#if parser.getProperty("SuppressUnCheckWarning")?has_content && parser.getProperty("SuppressUnCheckWarning")?string == 'true'>
+	@SuppressWarnings ("unchecked") 
+</#if>
 	public int yyParse () throws IOException
 	{
  <#if code.parserprolog?has_content>

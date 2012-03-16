@@ -26,7 +26,13 @@
  */
 package org.yuanheng.cookcc.codegen.java;
 
-import freemarker.template.Template;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+
 import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
 import org.yuanheng.cookcc.codegen.options.AbstractOption;
@@ -36,11 +42,7 @@ import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionHandler;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import freemarker.template.Template;
 
 /**
  * @author Heng Yuan
@@ -196,8 +198,10 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 				map.put ("extend", parentClass);
 		}
 		setup (map, doc);
+		StringWriter sw = new StringWriter ();
+		Resources.template.process (map, sw);
 		FileWriter fw = new FileWriter (file);
-		Resources.template.process (map, fw);
+		fw.write (sw.toString ());
 		fw.close ();
 	}
 

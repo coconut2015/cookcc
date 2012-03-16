@@ -26,6 +26,9 @@
  */
 package org.yuanheng.cookcc;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Use this annotation to create a lexical shortcut.  When a particular
  * <tt>{name}</tt> in any lexical patterns, CookCC would try to find the
@@ -40,6 +43,7 @@ package org.yuanheng.cookcc;
  * @version $Id$
  * @since 0.3
  */
+@Retention (value = RetentionPolicy.SOURCE)
 public @interface Shortcut
 {
 	/**

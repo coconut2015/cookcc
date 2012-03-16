@@ -26,11 +26,15 @@
  */
 package org.yuanheng.cookcc;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * @author Heng Yuan
  * @version $Id$
  * @since 0.3
  */
+@Retention (value = RetentionPolicy.SOURCE)
 public @interface CookCCOption
 {
 	/**

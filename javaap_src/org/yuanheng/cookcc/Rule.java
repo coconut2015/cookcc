@@ -26,6 +26,9 @@
  */
 package org.yuanheng.cookcc;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Use this interface to mark a function which is called when
  *
@@ -33,6 +36,7 @@ package org.yuanheng.cookcc;
  * @version $Id$
  * @since 0.3
  */
+@Retention (value = RetentionPolicy.SOURCE)
 public @interface Rule
 {
 	/**

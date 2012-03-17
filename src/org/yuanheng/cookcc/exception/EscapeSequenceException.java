@@ -43,6 +43,7 @@ public class EscapeSequenceException extends RuntimeException
 		m_esc = esc;
 	}
 
+	@Override
 	public String toString ()
 	{
 		return ERROR_MSG.format (new String[]{ m_esc });

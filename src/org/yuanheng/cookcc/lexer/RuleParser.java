@@ -107,12 +107,6 @@ public class RuleParser
 			return true;
 		}
 
-		public void unread (String str)
-		{
-			m_currentStr = str + m_currentStr.substring (m_pos);
-			m_pos = 0;
-		}
-
 		public boolean ifMatch (String str)
 		{
 			if ((m_currentStr.length () - m_pos) < str.length ())

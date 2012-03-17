@@ -43,6 +43,7 @@ public class UnknownOptionException extends Exception
 		m_option = option;
 	}
 
+	@Override
 	public String toString ()
 	{
 		return ERROR_MSG.format (new Object[]{ m_option });

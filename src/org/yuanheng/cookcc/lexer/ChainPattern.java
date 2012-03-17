@@ -10,12 +10,23 @@ class ChainPattern implements Pattern
 {
 	private final ArrayList<Pattern> m_patterns = new ArrayList<Pattern> ();
 
+	private int m_subExpId;
 	private int m_length;
 
 	public ChainPattern (Pattern pattern)
 	{
 		m_patterns.add (pattern);
 		m_length = pattern.getLength ();
+	}
+
+	public void setSubExpId (int id)
+	{
+		m_subExpId = id;
+	}
+
+	public int getSubExpId ()
+	{
+		return m_subExpId;
 	}
 
 	public int size ()

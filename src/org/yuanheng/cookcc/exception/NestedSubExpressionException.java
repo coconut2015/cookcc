@@ -24,32 +24,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.input.xml;
+package org.yuanheng.cookcc.exception;
 
-import org.yuanheng.cookcc.doc.LexerDoc;
-import org.yuanheng.cookcc.doc.RuleDoc;
-
-import cookxml.core.interfaces.NoAdd;
+import java.text.MessageFormat;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: CCLException.java 2 2008-10-13 00:33:52Z superduperhengyuan $
  */
-public class LexerStateHelper implements NoAdd
+public class NestedSubExpressionException extends CookCCException
 {
-	private String m_name;
+	public static MessageFormat ERROR_MSG = new MessageFormat ("Nested subexpression is not supported: {0}");
 
-	public LexerStateHelper (LexerDoc lexer)
+	private final String m_pattern;
+
+	public NestedSubExpressionException (int lineNumber, String pattern)
 	{
+		super (lineNumber, ERROR_MSG.format (new Object[]{ pattern }));
+		m_pattern = pattern;
 	}
 
-	public void setName (String name)
+	public String getPattern ()
 	{
-		m_name = name;
-	}
-
-	public void add (RuleDoc ruleDoc)
-	{
-		ruleDoc.addStates (m_name);
+		return m_pattern;
 	}
 }

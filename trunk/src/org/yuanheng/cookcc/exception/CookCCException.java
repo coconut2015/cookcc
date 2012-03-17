@@ -50,6 +50,7 @@ public class CookCCException extends RuntimeException
 		return m_lineNumber;
 	}
 
+	@Override
 	public String toString ()
 	{
 		Object[] objs = new Object[]{ new Integer (m_lineNumber), m_msg };

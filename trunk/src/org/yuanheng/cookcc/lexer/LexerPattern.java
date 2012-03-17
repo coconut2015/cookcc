@@ -3,14 +3,18 @@ package org.yuanheng.cookcc.lexer;
 public class LexerPattern implements Pattern
 {
 	private final boolean m_bol;
+	private final boolean m_eol;
 	private final ChainPattern m_pattern;
+	private final ChainPattern m_trailPattern;
 	private int m_precedence;
 	private String m_originalText;
 
-	public LexerPattern (ChainPattern pattern, boolean bol)
+	public LexerPattern (ChainPattern pattern, ChainPattern trailPattern, boolean bol, boolean eol)
 	{
 		m_pattern = pattern;
+		m_trailPattern = trailPattern;
 		m_bol = bol;
+		m_eol = eol;
 	}
 
 	public int getPrecedence ()
@@ -28,6 +32,11 @@ public class LexerPattern implements Pattern
 		return m_bol;
 	}
 
+	public boolean isEol ()
+	{
+		return m_eol;
+	}
+
 	public ChainPattern getPattern ()
 	{
 		return m_pattern;
@@ -36,8 +45,16 @@ public class LexerPattern implements Pattern
 	@Override
 	public String toString ()
 	{
+		StringBuffer buffer = new StringBuffer ();
 		if (m_bol)
-			return "^" + m_pattern;
+			buffer.append ('^');
+		buffer.append (m_pattern);
+		if (m_trailPattern != null)
+		{
+			buffer.append ('/').append (m_trailPattern);
+		}
+		if (m_eol)
+			buffer.append ('$');
 		return m_pattern.toString ();
 	}
 

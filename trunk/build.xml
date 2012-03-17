@@ -17,7 +17,9 @@
 	</target>
 
 	<target name="compile" depends="init">
-		<delete dir="{build}"/>
+		<delete includeemptydirs="true">
+		    <fileset dir="${build}" includes="**/**"/>
+		</delete>
 		<mkdir dir="${build}"/>
 		<javac debug="true" deprecation="true" destdir="${build}" optimize="true" includes="**/**.java" source="1.5" target="1.5">
 			<src path="${src}"/>

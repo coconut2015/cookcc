@@ -49,6 +49,7 @@ public class CCLException extends RuntimeException
 		m_input = input;
 	}
 
+	@Override
 	public String toString ()
 	{
 		return ERROR_MSG.format (new Object[]{ m_input });

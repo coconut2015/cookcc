@@ -41,15 +41,15 @@ public class zz_PatternParser
 	{
 		PatternParser parser = new PatternParser (CCL.getByteCCL ());
 		LexerPattern pattern;
-		pattern = parser.parse ("abcdefg");
+		pattern = parser.parse (1, "abcdefg");
 		Assert.assertEquals ("(abcdefg)", pattern.toString ());
-		pattern = parser.parse ("a[a-z]{-}[abc]{+}[c]b");
+		pattern = parser.parse (1, "a[a-z]{-}[abc]{+}[c]b");
 		Assert.assertEquals ("(a[c-z]b)", pattern.toString ());
-		pattern = parser.parse ("a*a+a?a{1}a{1,}a{,1}a{1,2}");
+		pattern = parser.parse (1, "a*a+a?a{1}a{1,}a{,1}a{1,2}");
 		Assert.assertEquals ("(a*a+a?a{1}a{1,}a{,1}a{1,2})", pattern.toString ());
-		pattern = parser.parse ("ca[t]|d(og)");
+		pattern = parser.parse (1, "ca[t]|d(og)");
 		Assert.assertEquals ("((ca[t])|(d(og)))", pattern.toString ());
-		pattern = parser.parse ("a*b*|c*d+|e?f{2,3}");
+		pattern = parser.parse (1, "a*b*|c*d+|e?f{2,3}");
 		Assert.assertEquals ("(((a*b*)|(c*d+))|(e?f{2,3}))", pattern.toString ());
 	}
 
@@ -58,9 +58,9 @@ public class zz_PatternParser
 	{
 		PatternParser parser = new PatternParser (CCL.getByteCCL ());
 		LexerPattern pattern;
-		pattern = parser.parse ("a|b|c|d");
+		pattern = parser.parse (1, "a|b|c|d");
 		Assert.assertEquals ("[a-d]", pattern.toString ());
-		pattern = parser.parse ("[a-d]|b|c|[x-z]");
+		pattern = parser.parse (1, "[a-d]|b|c|[x-z]");
 		Assert.assertEquals ("[a-dx-z]", pattern.toString ());
 	}
 
@@ -69,11 +69,11 @@ public class zz_PatternParser
 	{
 		PatternParser parser = new PatternParser (CCL.getByteCCL ());
 		LexerPattern pattern;
-		pattern = parser.parse ("[a]|[b]");
+		pattern = parser.parse (1, "[a]|[b]");
 		Assert.assertEquals ("[ab]", pattern.toString ());
 		//pattern = parser.parse ("[[:alpha:]]");
 		//Assert.assertEquals ("[A-Za-z]", pattern.toString ());
-		pattern = parser.parse ("[a-zA-Z]");
+		pattern = parser.parse (1, "[a-zA-Z]");
 		Assert.assertEquals ("[A-Za-z]", pattern.toString ());
 	}
 
@@ -82,19 +82,19 @@ public class zz_PatternParser
 	{
 		PatternParser parser = new PatternParser (CCL.getByteCCL ());
 		LexerPattern pattern;
-		pattern = parser.parse ("'a'");
+		pattern = parser.parse (1, "'a'");
 		Assert.assertEquals ("a", pattern.toString ());
-		pattern = parser.parse ("\"a\"");
+		pattern = parser.parse (1, "\"a\"");
 		Assert.assertEquals ("a", pattern.toString ());
-		pattern = parser.parse ("'ab'");
+		pattern = parser.parse (1, "'ab'");
 		Assert.assertEquals ("(ab)", pattern.toString ());
-		pattern = parser.parse ("\"ab\"");
+		pattern = parser.parse (1, "\"ab\"");
 		Assert.assertEquals ("(ab)", pattern.toString ());
-		pattern = parser.parse ("\"'ab'\"");
+		pattern = parser.parse (1, "\"'ab'\"");
 		Assert.assertEquals ("(\\'ab\\')", pattern.toString ());
-		pattern = parser.parse ("'\"ab\"'");
+		pattern = parser.parse (1, "'\"ab\"'");
 		Assert.assertEquals ("(\\\"ab\\\")", pattern.toString ());
-		pattern = parser.parse ("'\\s\\t'");
+		pattern = parser.parse (1, "'\\s\\t'");
 		Assert.assertEquals ("(\\s\\t)", pattern.toString ());
 	}
 }

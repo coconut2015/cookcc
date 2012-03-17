@@ -45,6 +45,7 @@ public class OptionException extends Exception
 		m_value = value;
 	}
 
+	@Override
 	public String toString ()
 	{
 		return ERROR_MSG.format (new Object[]{ m_option, m_value });

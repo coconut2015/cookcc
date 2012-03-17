@@ -37,6 +37,7 @@ import org.yuanheng.cookcc.Shortcut;
 import org.yuanheng.cookcc.Shortcuts;
 import org.yuanheng.cookcc.TokenGroup;
 import org.yuanheng.cookcc.TokenType;
+import org.yuanheng.cookcc.exception.NestedSubExpressionException;
 
 /**
  * @author Heng Yuan
@@ -50,7 +51,12 @@ public class PatternParser extends PatternScanner
 	{
 		LQUOTE,
 		RQUOTE,
+		LPAREN,
+		RPAREN,
+		SUBEXPLPAREN,
+		SUBEXPRPAREN,
 		SLASH,
+		DOT,
 
 		@TokenGroup (type = TokenType.LEFT)
 		OR,
@@ -58,12 +64,9 @@ public class PatternParser extends PatternScanner
 		CCMINUS,
 
 		@TokenGroup
-		DOT,
 		DOLLAR,
 		CHARCLASS,
 		CHAR,
-		LPAREN,
-		RPAREN,
 
 		@TokenGroup
 		STAR,
@@ -74,8 +77,11 @@ public class PatternParser extends PatternScanner
 
 	private final CCL m_ccl;
 
+	private int m_lineNumber;
+	private String m_text;
 	private StringBuffer m_cclBuffer;
 	private boolean m_bol;
+	private int m_subExpIdCounter;
 	private LexerPattern m_pattern;
 
 	public PatternParser (CCL ccl)
@@ -83,14 +89,16 @@ public class PatternParser extends PatternScanner
 		m_ccl = ccl;
 	}
 
-	public LexerPattern parse (String pattern)
+	public LexerPattern parse (int lineNumber, String text)
 	{
 		try
 		{
-			setInput (new StringReader (pattern));
+			m_lineNumber = lineNumber;
+			m_text = text;
+			setInput (new StringReader (text));
 			boolean ok = (yyParse () == 0);
 			LexerPattern p = m_pattern;
-			p.setOriginalText (pattern);
+			p.setOriginalText (text);
 			reset ();
 			m_pattern = null;
 			if (ok)
@@ -110,6 +118,7 @@ public class PatternParser extends PatternScanner
 		super.reset ();
 		m_pattern = null;
 		m_bol = false;
+		m_subExpIdCounter = 0;
 	}
 
 	////////////////////////////////////////////////////////////////////////
@@ -145,6 +154,18 @@ public class PatternParser extends PatternScanner
 	{
 	}
 
+	@Lex (pattern = "'(/'", token = "SUBEXPLPAREN")
+	Integer scanSubExpStart ()
+	{
+		return ++m_subExpIdCounter;
+	}
+
+	@Lex (pattern = "'/)'", token = "SUBEXPRPAREN")
+	Integer scanSubExpEnd ()
+	{
+		return m_subExpIdCounter;
+	}
+
 	@Lex (pattern = "'['")
 	void scanCCLStart ()
 	{
@@ -177,12 +198,11 @@ public class PatternParser extends PatternScanner
 
 	// Invalid cases for escape characters
 	@Lexs (patterns = {
-		@Lex (pattern = "'\\\\x'", state = "INITIAL, SQUOTE, DQUOTE"),
-		@Lex (pattern = "'\\\\u'", state = "INITIAL, SQUOTE, DQUOTE")
+		@Lex (pattern = "'\\\\x'", state = "INITIAL, SQUOTE, DQUOTE", token = "error"),
+		@Lex (pattern = "'\\\\u'", state = "INITIAL, SQUOTE, DQUOTE", token = "error")
 	})
-	int scanEscapeError ()
+	void scanEscapeError ()
 	{
-		return 1;
 	}
 
 	@Lex (pattern = "'\\\\'.", token = "CHAR", state = "INITIAL, SQUOTE, DQUOTE")
@@ -192,10 +212,9 @@ public class PatternParser extends PatternScanner
 	}
 
 	// This is the case where escape character is the last character in the pattern
-	@Lex (pattern = "'\\\\'", state = "INITIAL, SQUOTE, DQUOTE")
-	int scanEscapeError2 ()
+	@Lex (pattern = "'\\\\'", state = "INITIAL, SQUOTE, DQUOTE", token = "error")
+	void scanEscapeError2 ()
 	{
-		return 1;
 	}
 
 	@Lex (pattern = "'{[a-zA-Z_][a-zA-Z0-9_]*}'")
@@ -240,10 +259,9 @@ public class PatternParser extends PatternScanner
 		return new Repeat (Integer.parseInt (texts[0].trim ()), Integer.parseInt (texts[1].trim ()));
 	}
 
-	@Lex (pattern = "'{'")
-	int scanRepeatError ()
+	@Lex (pattern = "'{'", token = "error")
+	void scanRepeatError ()
 	{
-		return 1;
 	}
 
 	@Lex (pattern = "[\']", token = "LQUOTE")
@@ -281,10 +299,9 @@ public class PatternParser extends PatternScanner
 		return m_ccl.parseCCL (m_cclBuffer.toString ());
 	}
 
-	@Lex (pattern = "'['", state = "CCLSTATE")
-	int scanCCLError ()
+	@Lex (pattern = "'['", state = "CCLSTATE", token = "error")
+	void scanCCLError ()
 	{
-		return 1;
 	}
 
 	@Lexs (patterns = {
@@ -316,10 +333,9 @@ public class PatternParser extends PatternScanner
 		return yyText ().charAt (0);
 	}
 
-	@Lex (pattern = "<<EOF>>", state = "CCLSTATE, SQUOTE, DQUOTE")
-	int scanEofError ()
+	@Lex (pattern = "<<EOF>>", state = "CCLSTATE, SQUOTE, DQUOTE", token = "error")
+	void scanEofError ()
 	{
-		return 1;
 	}
 
 	////////////////////////////////////////////////////////////////////////
@@ -328,11 +344,35 @@ public class PatternParser extends PatternScanner
 	//
 	////////////////////////////////////////////////////////////////////////
 
-	@Rule (lhs = "Start", rhs = "Patterns", args = "1")
-	int parsePattern (ChainPattern pattern)
+	@Rule (lhs = "Start", rhs = "LexerPattern", args = "1")
+	int parseStart (LexerPattern lexerPattern)
 	{
-		m_pattern = new LexerPattern (pattern, m_bol);
+		m_pattern = lexerPattern;
 		return 0;
+	}
+
+	@Rule (lhs = "LexerPattern", rhs = "Patterns", args = "1")
+	LexerPattern parseLexerPattern (ChainPattern pattern)
+	{
+		return new LexerPattern (pattern, null, m_bol, false);
+	}
+
+	@Rule (lhs = "LexerPattern", rhs = "Patterns DOLLAR", args = "1")
+	LexerPattern parseLexerPatternEol (ChainPattern pattern)
+	{
+		return new LexerPattern (pattern, null, m_bol, true);
+	}
+	
+	@Rule (lhs = "LexerPattern", rhs = "Patterns SLASH Patterns", args = "1 3")
+	LexerPattern parseLexerPattern (ChainPattern pattern, ChainPattern trailPattern)
+	{
+		return new LexerPattern (pattern, trailPattern, m_bol, false);
+	}
+
+	@Rule (lhs = "LexerPattern", rhs = "Patterns SLASH Patterns DOLLAR", args = "1 3")
+	LexerPattern parseLexerPatternEol (ChainPattern pattern, ChainPattern trailPattern)
+	{
+		return new LexerPattern (pattern, trailPattern, m_bol, true);
 	}
 
 	@Rule (lhs = "Patterns", rhs = "Pattern", args = "1")
@@ -355,9 +395,20 @@ public class PatternParser extends PatternScanner
 	}
 
 	@Rule (lhs = "Pattern", rhs = "LPAREN Patterns RPAREN", args = "2")
-	ChainPattern parseParenPattern (Pattern pattern)
+	ChainPattern parseParenPattern (ChainPattern pattern)
 	{
-		return new ChainPattern (pattern);
+		return pattern;
+	}
+
+	@Rule (lhs = "Pattern", rhs = "SUBEXPLPAREN Patterns SUBEXPRPAREN", args = "1 2 3")
+	ChainPattern parseSubExpPattern (Integer subExpId, ChainPattern pattern, Integer matchingSubExpId)
+	{
+		if (subExpId.intValue () != matchingSubExpId.intValue ())
+		{
+			throw new NestedSubExpressionException (m_lineNumber, m_text);
+		}
+		pattern.setSubExpId (subExpId);
+		return pattern;
 	}
 
 	@Rule (lhs = "Pattern", rhs = "LQUOTE Patterns RQUOTE", args = "2")

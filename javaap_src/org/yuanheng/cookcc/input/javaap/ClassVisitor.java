@@ -288,7 +288,7 @@ class ClassVisitor implements DeclarationVisitor
 
 		rule.setAction (getLexAction (method, lex.token ()));
 
-		PatternDoc pattern = new PatternDoc ();
+		PatternDoc pattern = new PatternDoc (false);
 		pattern.setPattern (lex.pattern ());
 		if (lineNumber < 0)
 			pattern.setLineNumber (getAnnotationLineNumber (method, Lex.class.getName ()));

@@ -62,6 +62,7 @@ class NFA
 	NFA next;
 	NFA next2;
 	boolean mark;
+	int precedence = Integer.MAX_VALUE;
 	int lineNumber = Integer.MAX_VALUE;
 
 	final int id;
@@ -82,14 +83,16 @@ class NFA
 		next = null;
 		next2 = null;
 		mark = false;
+		precedence = Integer.MAX_VALUE;
 		lineNumber = Integer.MAX_VALUE;
 	}
 
-	public void setState (int caseValue, int lineNumber, int trail)
+	public void setState (int caseValue, int precedence, int lineNumber, int trail)
 	{
 		anchor = trail;
 		NFA end = last ();
 		end.caseValue = caseValue;
+		end.precedence = precedence;
 		end.lineNumber = lineNumber;
 		end.anchor = trail;
 		/*
@@ -120,6 +123,7 @@ class NFA
 		next = other.next;
 		next2 = other.next2;
 		mark = other.mark;
+		precedence = other.precedence;
 		lineNumber = other.lineNumber;
 	}
 

@@ -52,11 +52,11 @@ public class RuleDoc extends TreeDoc
 	{
 		RuleDoc rule = new RuleDoc (lexer);
 		rule.setInternal ();
-		PatternDoc pattern = new PatternDoc ();
+		PatternDoc pattern = new PatternDoc (true);
 		pattern.setPattern (".|\\n");
 		pattern.setInternal ();
 		rule.addPattern (pattern);
-		pattern = new PatternDoc ();
+		pattern = new PatternDoc (true);
 		pattern.setPattern ("<<EOF>>");
 		pattern.setInternal ();
 		rule.addPattern (pattern);

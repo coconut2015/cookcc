@@ -32,6 +32,13 @@ package org.yuanheng.cookcc.doc;
  */
 public class PatternDoc extends TreeDoc
 {
+	private static int s_idCounter;
+
+	private static int newId ()
+	{
+		return ++s_idCounter;
+	}
+
 	private String m_pattern;
 	private boolean m_nocase;
 	private boolean m_bol;
@@ -39,9 +46,19 @@ public class PatternDoc extends TreeDoc
 	private boolean m_internal;
 	private int m_trailContext;
 	private int m_lineNumber;
+	private int m_precedence;
 
-	public PatternDoc ()
+	public PatternDoc (boolean internal)
 	{
+		if (internal)
+			m_precedence = Integer.MAX_VALUE;
+		else
+			m_precedence = newId ();
+	}
+
+	public int getPrecedence ()
+	{
+		return m_precedence;
 	}
 
 	public void setPattern (String pattern)

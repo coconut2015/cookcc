@@ -286,10 +286,6 @@ class ClassVisitor implements DeclarationVisitor
 
 		RuleDoc rule = new RuleDoc (getLexer ());
 
-		SourcePosition pos = method.getPosition ();
-		if (pos != null)
-			rule.setLineNumber (pos.line ());
-
 		rule.setAction (getLexAction (method, lex.token ()));
 
 		PatternDoc pattern = new PatternDoc ();

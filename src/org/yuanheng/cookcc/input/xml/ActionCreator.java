@@ -50,9 +50,6 @@ class ActionCreator implements Creator
 		if (parentObj instanceof RuleDoc)
 		{
 			((RuleDoc)parentObj).setAction ((String)obj);
-			Integer lineNum = (Integer)elm.getUserData ("line");
-			if (lineNum != null)
-				((RuleDoc)parentObj).setLineNumber (lineNum.intValue ());
 		}
 		else if (parentObj instanceof GrammarHelper)
 		{

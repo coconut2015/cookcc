@@ -68,8 +68,6 @@ public class RuleDoc extends TreeDoc
 	private final LexerDoc m_lexer;
 	private final int m_id;
 
-	private int m_lineNumber;
-
 	private final LinkedList<PatternDoc> m_patterns = new LinkedList<PatternDoc> ();
 
 	private String m_action = "";
@@ -92,20 +90,6 @@ public class RuleDoc extends TreeDoc
 	public int getId ()
 	{
 		return m_id;
-	}
-
-	/**
-	 * Obtain the line number information of the pattern.  It may not be available.
-	 * @return	the line number information of the pattern.
-	 */
-	public int getLineNumber ()
-	{
-		return m_lineNumber;
-	}
-
-	public void setLineNumber (int lineNumber)
-	{
-		m_lineNumber = lineNumber;
 	}
 
 	public void addPattern (PatternDoc pattern)
@@ -166,6 +150,5 @@ public class RuleDoc extends TreeDoc
 	private void setInternal ()
 	{
 		m_internal = true;
-		m_lineNumber = Integer.MAX_VALUE;
 	}
 }

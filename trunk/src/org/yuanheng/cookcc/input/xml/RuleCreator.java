@@ -46,11 +46,7 @@ public class RuleCreator implements Creator
 			p = decodeEngine.getParent (p);
 		if (p == null)
 			return null;
-		RuleDoc doc = new RuleDoc ((LexerDoc)p);
-		Integer lineNum = (Integer)elm.getUserData ("line");
-		if (lineNum != null)
-			doc.setLineNumber (lineNum.intValue ());
-		return doc;
+		return new RuleDoc ((LexerDoc)p);
 	}
 
 	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception

@@ -230,7 +230,7 @@ public class Lexer
 					if (pattern.getCaseValue () < 0)
 					{
 						RuleParser parser = new RuleParser (this, m_nfaFactory, pattern.isNocase ());
-						nfa = parser.parse (pattern.getLineNumber (), pattern.getPattern ());
+						nfa = parser.parse (pattern.getPrecedence (), pattern.getLineNumber (), pattern.getPattern ());
 						pattern.setCaseValue (nfa.last ().caseValue);
 						if (parser.isBOL ())
 							pattern.setBOL (true);
@@ -428,9 +428,9 @@ public class Lexer
 					lastAcceptNFA = t;
 				else if (lastAcceptNFA == t)
 					continue;
-				else if (lastAcceptNFA.lineNumber < t.lineNumber && t.next2 == null)
+				else if (lastAcceptNFA.precedence < t.precedence && t.next2 == null)
 					continue;
-				else if (lastAcceptNFA.lineNumber > t.lineNumber)
+				else if (lastAcceptNFA.precedence > t.precedence)
 				{
 					if (lastAcceptNFA.next2 == null)
 						st.getSet ().remove (lastAcceptNFA);

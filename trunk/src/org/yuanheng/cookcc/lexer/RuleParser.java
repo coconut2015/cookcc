@@ -183,7 +183,7 @@ public class RuleParser
 		return m_bol;
 	}
 
-	public NFA parse (int lineNumber, String input)
+	public NFA parse (int precedence, int lineNumber, String input)
 	{
 		m_lineNumber = lineNumber;
 		m_lex = new RuleLexer (input);
@@ -229,7 +229,7 @@ public class RuleParser
 			head = head.cat (m_nfaFactory.createNFA ('\n', null));
 		}
 
-		head.setState (m_lexer.incCaseCounter (), lineNumber, m_trailContext);
+		head.setState (m_lexer.incCaseCounter (), precedence, lineNumber, m_trailContext);
 		return head;
 	}
 

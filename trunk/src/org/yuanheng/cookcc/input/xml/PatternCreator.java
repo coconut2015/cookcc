@@ -43,7 +43,7 @@ class PatternCreator implements Creator
 	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
 	{
 		decodeEngine.setDoAdd (false);
-		PatternDoc pattern = new PatternDoc ();
+		PatternDoc pattern = new PatternDoc (false);
 		pattern.setPattern (TextUtils.getText (elm));
 		Integer lineNum = (Integer)elm.getUserData ("line");
 		if (lineNum != null)

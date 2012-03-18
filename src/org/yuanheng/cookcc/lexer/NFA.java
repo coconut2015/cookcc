@@ -26,13 +26,16 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-class NFA
+class NFA implements Comparable<NFA>
 {
 	public final static int EPSILON = -1;
 	public final static int ISCCL = -2;
@@ -43,15 +46,6 @@ class NFA
 	public final static int TRAIL_FIXHEAD = 0x01;
 	public final static int TRAIL_FIXTAIL = 0x02;
 	public final static int TRAIL_VAR = 0x03;
-
-	/* for sorting NFA in printing */
-	private final static Comparator<NFA> s_comparator = new Comparator<NFA> ()
-	{
-		public int compare (NFA o1, NFA o2)
-		{
-			return o1.id - o2.id;
-		}
-	};
 
 	private NFAFactory m_factory;
 
@@ -348,6 +342,11 @@ class NFA
 
 	public static Set<NFA> getSortedSet ()
 	{
-		return new TreeSet<NFA> (s_comparator);
+		return new TreeSet<NFA> ();
+	}
+
+	public int compareTo (NFA o)
+	{
+		return id - o.id;
 	}
 }

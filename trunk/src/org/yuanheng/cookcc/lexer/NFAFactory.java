@@ -73,6 +73,13 @@ class NFAFactory
 		return nfa;
 	}
 
+	public NFA createNFA (NFA sample)
+	{
+		NFA nfa = createNFA ();
+		nfa.copyStates (sample);
+		return nfa;
+	}
+
 	public NFA createNFA (int ch, boolean[] ccl)
 	{
 		NFA nfa = createNFA ();

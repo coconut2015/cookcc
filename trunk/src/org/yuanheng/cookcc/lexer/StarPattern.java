@@ -26,9 +26,9 @@ class StarPattern implements Pattern
 
 	public NFA constructNFA (NFAFactory factory, NFA start)
 	{
-		start.next = factory.createNFA ();
+		start.next = factory.createNFA (start);
 		NFA end = m_pattern.constructNFA (factory, start.next);
-		end.next = factory.createNFA ();
+		end.next = factory.createNFA (start);
 		end.next2 = start.next;
 		start.next2 = end.next;
 		return end.next;

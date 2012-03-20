@@ -41,7 +41,7 @@ class RepeatPattern implements Pattern
 
 		for (int i = min; i < max; ++i)
 		{
-			start.next = factory.createNFA ();
+			start.next = factory.createNFA (start);
 			NFA end = m_pattern.constructNFA (factory, start.next);
 			start.next2 = end;
 			start = end;

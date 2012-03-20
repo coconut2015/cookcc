@@ -77,11 +77,11 @@ class OrPattern implements Pattern
 
 	public NFA constructNFA (NFAFactory factory, NFA start)
 	{
-		start.next = factory.createNFA ();
-		start.next2 = factory.createNFA ();
+		start.next = factory.createNFA (start);
+		start.next2 = factory.createNFA (start);
 		NFA leftEnd = m_left.constructNFA (factory, start.next);
 		NFA rightEnd = m_right.constructNFA (factory, start.next2);
-		NFA end = factory.createNFA ();
+		NFA end = factory.createNFA (start);
 		leftEnd.next = end;
 		rightEnd.next = end;
 		return end;

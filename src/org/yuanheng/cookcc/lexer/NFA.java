@@ -81,6 +81,14 @@ class NFA implements Comparable<NFA>
 		lineNumber = Integer.MAX_VALUE;
 	}
 
+	void copyStates (NFA nfa)
+	{
+		precedence = nfa.precedence;
+		lineNumber = nfa.lineNumber;
+		caseValue = nfa.caseValue;
+		anchor = nfa.anchor;
+	}
+
 	public void setState (int caseValue, int precedence, int lineNumber, int trail)
 	{
 		anchor = trail;

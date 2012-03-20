@@ -39,7 +39,7 @@ class CharPattern implements Pattern
 	public NFA constructNFA (NFAFactory factory, NFA start)
 	{
 		start.thisChar = m_char;
-		NFA end = factory.createNFA ();
+		NFA end = factory.createNFA (start);
 		start.next = end;
 		return end;
 	}

@@ -36,7 +36,7 @@ public class CCLPattern implements Pattern
 	public NFA constructNFA (NFAFactory factory, NFA start)
 	{
 		start.charSet = m_charSet;
-		NFA end = factory.createNFA ();
+		NFA end = factory.createNFA (start);
 		start.next = end;
 		return end;
 	}

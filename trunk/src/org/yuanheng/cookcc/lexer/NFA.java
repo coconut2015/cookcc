@@ -51,7 +51,7 @@ class NFA implements Comparable<NFA>
 
 	int thisChar;
 	boolean[] charSet;
-	int anchor;
+	int trailContext;
 	int caseValue;
 	NFA next;
 	NFA next2;
@@ -72,7 +72,7 @@ class NFA implements Comparable<NFA>
 	{
 		thisChar = EPSILON;
 		charSet = null;
-		anchor = 0;
+		trailContext = 0;
 		caseValue = 0;
 		next = null;
 		next2 = null;
@@ -86,17 +86,17 @@ class NFA implements Comparable<NFA>
 		precedence = nfa.precedence;
 		lineNumber = nfa.lineNumber;
 		caseValue = nfa.caseValue;
-		anchor = nfa.anchor;
+		trailContext = nfa.trailContext;
 	}
 
 	public void setState (int caseValue, int precedence, int lineNumber, int trail)
 	{
-		anchor = trail;
+		trailContext = trail;
 		NFA end = last ();
 		end.caseValue = caseValue;
 		end.precedence = precedence;
 		end.lineNumber = lineNumber;
-		end.anchor = trail;
+		end.trailContext = trail;
 		/*
 		if (trail != 0)
 		{
@@ -120,7 +120,7 @@ class NFA implements Comparable<NFA>
 	{
 		thisChar = other.thisChar;
 		charSet = other.charSet;
-		anchor = other.anchor;
+		trailContext = other.trailContext;
 		caseValue = other.caseValue;
 		next = other.next;
 		next2 = other.next2;
@@ -337,7 +337,7 @@ class NFA implements Comparable<NFA>
 		return (flag & TRAIL_MASK) != 0;
 	}
 
-	public static int setTrailContext (int distance, boolean fixhead, boolean fixtail)
+	public static int getTrailContext (int distance, boolean fixhead, boolean fixtail)
 	{
 		distance <<= 2;
 		if (fixhead)

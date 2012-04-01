@@ -40,4 +40,9 @@ public class CCLPattern implements Pattern
 		start.next = end;
 		return end;
 	}
+
+	public boolean hasSubExpression ()
+	{
+		return false;
+	}
 }

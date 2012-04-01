@@ -17,6 +17,21 @@ public class LexerPattern implements Pattern
 		m_eol = eol;
 	}
 
+	public boolean requiresPreprocessing ()
+	{
+		return m_eol || m_trailPattern != null || m_pattern.hasSubExpression ();
+	}
+
+	public int getTrailContext ()
+	{
+		if (m_trailPattern == null)
+			return 0;
+		if (m_pattern.getLength () > 0)
+			return NFA.getTrailContext (m_pattern.getLength (), true, false);
+		else
+			return NFA.getTrailContext (m_trailPattern.getLength (), false, true);
+	}
+
 	public int getPrecedence ()
 	{
 		return m_precedence;
@@ -75,6 +90,15 @@ public class LexerPattern implements Pattern
 
 	public NFA constructNFA (NFAFactory factory, NFA start)
 	{
-		return m_pattern.constructNFA (factory, start);
+		start.trailContext = getTrailContext ();
+		NFA end = m_pattern.constructNFA (factory, start);
+		if (m_trailPattern == null)
+			return end;
+		return m_trailPattern.constructNFA (factory, end);
+	}
+
+	public boolean hasSubExpression ()
+	{
+		return m_pattern.hasSubExpression ();
 	}
 }

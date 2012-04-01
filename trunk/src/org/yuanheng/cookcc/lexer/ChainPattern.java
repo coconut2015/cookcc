@@ -80,4 +80,9 @@ class ChainPattern implements Pattern
 		}
 		return start;
 	}
+
+	public boolean hasSubExpression ()
+	{
+		return m_subExpId > 0;
+	}
 }

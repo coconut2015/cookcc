@@ -54,4 +54,9 @@ class RepeatPattern implements Pattern
 	{
 		return m_pattern.toString () + m_repeat.toString ();
 	}
+
+	public boolean hasSubExpression ()
+	{
+		return m_pattern.hasSubExpression ();
+	}
 }

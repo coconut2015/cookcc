@@ -32,4 +32,9 @@ class QuestionPattern implements Pattern
 	{
 		return m_pattern + "?";
 	}
+
+	public boolean hasSubExpression ()
+	{
+		return m_pattern.hasSubExpression ();
+	}
 }

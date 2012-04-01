@@ -33,4 +33,9 @@ class StarPattern implements Pattern
 		start.next2 = end.next;
 		return end.next;
 	}
+
+	public boolean hasSubExpression ()
+	{
+		return m_pattern.hasSubExpression ();
+	}
 }

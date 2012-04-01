@@ -201,7 +201,7 @@ public class RuleParser
 				throw new MultipleTrailContextException (lineNumber, input);
 			if (m_varLen)
 				m_ruleLen = 0;
-			m_trailContext = NFA.setTrailContext (m_ruleLen, !m_varLen, false);
+			m_trailContext = NFA.getTrailContext (m_ruleLen, !m_varLen, false);
 
 			NFA tail = parseRegex ();
 			if (m_lex.ifMatch ('$'))
@@ -217,7 +217,7 @@ public class RuleParser
 				if (m_varLen)
 					throw new VariableTrailContextException (lineNumber, input);
 				else
-					m_trailContext = NFA.setTrailContext (m_ruleLen, false, true);
+					m_trailContext = NFA.getTrailContext (m_ruleLen, false, true);
 			}
 			head = head.cat (tail);
 		}
@@ -225,7 +225,7 @@ public class RuleParser
 		{
 			if (NFA.hasTrail (m_trailContext))
 				throw new MultipleTrailContextException (lineNumber, input);
-			m_trailContext = NFA.setTrailContext (1, false, true);
+			m_trailContext = NFA.getTrailContext (1, false, true);
 			head = head.cat (m_nfaFactory.createNFA ('\n', null));
 		}
 

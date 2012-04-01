@@ -32,4 +32,9 @@ class PlusPattern implements Pattern
 		end.next2 = start.next;
 		return end.next;
 	}
+
+	public boolean hasSubExpression ()
+	{
+		return m_pattern.hasSubExpression ();
+	}
 }

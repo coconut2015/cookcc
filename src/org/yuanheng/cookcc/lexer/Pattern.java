@@ -6,6 +6,8 @@ package org.yuanheng.cookcc.lexer;
  */
 interface Pattern
 {
+	public boolean hasSubExpression ();
+
 	public int getLength ();
 
 	/**

@@ -38,6 +38,7 @@ import org.yuanheng.cookcc.Shortcuts;
 import org.yuanheng.cookcc.TokenGroup;
 import org.yuanheng.cookcc.TokenType;
 import org.yuanheng.cookcc.exception.NestedSubExpressionException;
+import org.yuanheng.cookcc.exception.VariableTrailContextException;
 
 /**
  * @author Heng Yuan
@@ -78,7 +79,7 @@ public class PatternParser extends PatternScanner
 	private final CCL m_ccl;
 
 	private int m_lineNumber;
-	private String m_text;
+	private String m_input;
 	private StringBuffer m_cclBuffer;
 	private boolean m_bol;
 	private int m_subExpIdCounter;
@@ -89,12 +90,29 @@ public class PatternParser extends PatternScanner
 		m_ccl = ccl;
 	}
 
+	private void validateLexerPattern (ChainPattern pattern, ChainPattern trailPattern)
+	{
+		if (trailPattern != null)
+		{
+			if (pattern.getLength () < 0 &&
+				trailPattern.getLength () < 0)
+			{
+				throw new VariableTrailContextException (m_lineNumber, m_input);
+			}
+
+			if (trailPattern.hasSubExpression ())
+			{
+				throw new NestedSubExpressionException (m_lineNumber, m_input);
+			}
+		}
+	}
+
 	public LexerPattern parse (int lineNumber, String text)
 	{
 		try
 		{
 			m_lineNumber = lineNumber;
-			m_text = text;
+			m_input = text;
 			setInput (new StringReader (text));
 			boolean ok = (yyParse () == 0);
 			LexerPattern p = m_pattern;
@@ -366,12 +384,14 @@ public class PatternParser extends PatternScanner
 	@Rule (lhs = "LexerPattern", rhs = "Patterns SLASH Patterns", args = "1 3")
 	LexerPattern parseLexerPattern (ChainPattern pattern, ChainPattern trailPattern)
 	{
+		validateLexerPattern (pattern, trailPattern);
 		return new LexerPattern (pattern, trailPattern, m_bol, false);
 	}
 
 	@Rule (lhs = "LexerPattern", rhs = "Patterns SLASH Patterns DOLLAR", args = "1 3")
 	LexerPattern parseLexerPatternEol (ChainPattern pattern, ChainPattern trailPattern)
 	{
+		validateLexerPattern (pattern, trailPattern);
 		return new LexerPattern (pattern, trailPattern, m_bol, true);
 	}
 
@@ -405,7 +425,7 @@ public class PatternParser extends PatternScanner
 	{
 		if (subExpId.intValue () != matchingSubExpId.intValue ())
 		{
-			throw new NestedSubExpressionException (m_lineNumber, m_text);
+			throw new NestedSubExpressionException (m_lineNumber, m_input);
 		}
 		pattern.setSubExpId (subExpId);
 		return pattern;

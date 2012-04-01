@@ -43,4 +43,9 @@ class CharPattern implements Pattern
 		start.next = end;
 		return end;
 	}
+
+	public boolean hasSubExpression ()
+	{
+		return false;
+	}
 }

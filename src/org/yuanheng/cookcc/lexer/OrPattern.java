@@ -86,4 +86,9 @@ class OrPattern implements Pattern
 		rightEnd.next = end;
 		return end;
 	}
+
+	public boolean hasSubExpression ()
+	{
+		return m_left.hasSubExpression () || m_right.hasSubExpression ();
+	}
 }

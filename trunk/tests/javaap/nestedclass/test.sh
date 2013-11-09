@@ -8,7 +8,7 @@ function error ()
 test -z "$JAVA_HOME" && error need to set JAVA_HOME env
 test -z "$COOKCC" && error need to set COOKCC env
 
-classpath="${COOKCC};."
+classpath="${COOKCC}:."
 apt="${JAVA_HOME}/bin/apt -nocompile -cp $classpath -s ."
 
 for v in WC?.java

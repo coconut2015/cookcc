@@ -24,13 +24,35 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.parser;
+package org.yuanheng.cookcc.lexer;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-interface Closure
+class EOFPattern implements Pattern
 {
-	void closure (ItemSet itemSet);
+	public boolean hasSubExpression ()
+	{
+		return false;
+	}
+
+	public int getLength ()
+	{
+		return 1;
+	}
+
+	public NFA constructNFA (NFAFactory factory, NFA start)
+	{
+		factory.setNFA (start, factory.getCCL ().EOF, null);
+		NFA end = factory.createNFA (start);
+		start.next = end;
+		return end;
+	}
+
+	@Override
+	public String toString ()
+	{
+		return "<<EOF>>";
+	}
 }

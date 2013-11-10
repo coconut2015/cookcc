@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -203,7 +203,7 @@ class NFA implements Comparable<NFA>
 	/**
 	 * Create a complete deep copy of this NFA.
 	 *
-	 * @return	a deep copy of this NFA
+	 * @return a deep copy of this NFA
 	 */
 	private NFA duplicate ()
 	{
@@ -247,9 +247,9 @@ class NFA implements Comparable<NFA>
 	{
 		if (max == -1)
 		{
-			if (min == 0)					// n{0,} == n*
+			if (min == 0)                    // n{0,} == n*
 				return star ();
-			if (min == 1)					// n{1,} = n+
+			if (min == 1)                    // n{1,} = n+
 				return plus ();
 			NFA copy = duplicate ();        // n{3,} = nnn+
 			NFA n = repeat (min - 1);
@@ -268,8 +268,8 @@ class NFA implements Comparable<NFA>
 
 	/**
 	 * Debugging function.  Print only this NFA to the buffer.
-	 * @param	buffer
-	 * 			the output string buffer.
+	 *
+	 * @param    buffer the output string buffer.
 	 */
 	void toString (StringBuffer buffer)
 	{
@@ -326,7 +326,7 @@ class NFA implements Comparable<NFA>
 		Collection<NFA> set = getSortedSet ();
 		set.addAll (nfaMap.keySet ());
 
-		for (NFA n: set)
+		for (NFA n : set)
 			n.toString (buffer);
 
 		return buffer.toString ();

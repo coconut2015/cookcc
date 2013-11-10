@@ -1,22 +1,22 @@
 <!--
-  ~ CookCC Copyright (c) 2008-2009, Heng Yuan
+  ~ Copyright (c) 2008-2013, Heng Yuan
   ~ All rights reserved.
   ~
   ~ Redistribution and use in source and binary forms, with or without
   ~ modification, are permitted provided that the following conditions are met:
-  ~     * Redistributions of source code must retain the above copyright
+  ~    Redistributions of source code must retain the above copyright
   ~       notice, this list of conditions and the following disclaimer.
-  ~     * Redistributions in binary form must reproduce the above copyright
+  ~    Redistributions in binary form must reproduce the above copyright
   ~       notice, this list of conditions and the following disclaimer in the
   ~       documentation and/or other materials provided with the distribution.
-  ~     * Neither the name of the <organization> nor the
+  ~    Neither the name of the Heng Yuan nor the
   ~       names of its contributors may be used to endorse or promote products
   ~       derived from this software without specific prior written permission.
   ~
-  ~ THIS SOFTWARE IS PROVIDED BY <copyright holder> ''AS IS'' AND ANY
+  ~ THIS SOFTWARE IS PROVIDED BY Heng Yuan ''AS IS'' AND ANY
   ~ EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
   ~ WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  ~ DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
+  ~ DISCLAIMED. IN NO EVENT SHALL Heng Yuan BE LIABLE FOR ANY
   ~ DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
   ~ (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
   ~ LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -25,46 +25,46 @@
   ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-<!ELEMENT cookcc ((code | tokens | lexer | parser)*)>
-<!ELEMENT tokens	(#PCDATA)>
-<!ELEMENT lexer		(shortcut*, (state | rule)+)>
-<!ELEMENT parser	(type*, grammar+)>
-<!ELEMENT code		(#PCDATA)>
+	<!ELEMENT cookcc ((code | tokens | lexer | parser)*)>
+	<!ELEMENT tokens    (#PCDATA)>
+	<!ELEMENT lexer        (shortcut*, (state | rule)+)>
+	<!ELEMENT parser    (type*, grammar+)>
+	<!ELEMENT code        (#PCDATA)>
 
-<!ELEMENT shortcut	(#PCDATA)>
-<!ELEMENT state		(rule+)>
-<!ELEMENT rule		(pattern+, action)>
-<!ELEMENT pattern	(#PCDATA)>
-<!ELEMENT action	(#PCDATA)>
+	<!ELEMENT shortcut    (#PCDATA)>
+	<!ELEMENT state        (rule+)>
+	<!ELEMENT rule        (pattern+, action)>
+	<!ELEMENT pattern    (#PCDATA)>
+	<!ELEMENT action    (#PCDATA)>
 
-<!ATTLIST cookcc	unicode (true|false) #IMPLIED>
-<!ATTLIST cookcc	main (true|false) #IMPLIED>
+	<!ATTLIST cookcc    unicode (true|false) #IMPLIED>
+	<!ATTLIST cookcc    main (true|false) #IMPLIED>
 
-<!ATTLIST code		name CDATA #IMPLIED>
+	<!ATTLIST code        name CDATA #IMPLIED>
 
-<!ATTLIST tokens	type (left|right|nonassoc) #IMPLIED>
+	<!ATTLIST tokens    type (left|right|nonassoc) #IMPLIED>
 
-<!ATTLIST state		name CDATA #IMPLIED>
+	<!ATTLIST state        name CDATA #IMPLIED>
 
-<!ATTLIST lexer		table (full|ecs|compressed) #IMPLIED>
-<!ATTLIST lexer		bol (true|false) #IMPLIED>
-<!ATTLIST lexer		warnbackup (true|false) #IMPLIED>
-<!ATTLIST lexer		yywrap (true|false) #IMPLIED>
+	<!ATTLIST lexer        table (full|ecs|compressed) #IMPLIED>
+	<!ATTLIST lexer        bol (true|false) #IMPLIED>
+	<!ATTLIST lexer        warnbackup (true|false) #IMPLIED>
+	<!ATTLIST lexer        yywrap (true|false) #IMPLIED>
 
-<!ATTLIST shortcut	name CDATA #REQUIRED>
-<!ATTLIST rule		state CDATA #IMPLIED>
-<!ATTLIST pattern	bol (true|false) #IMPLIED>
-<!ATTLIST pattern	nocase (true|false) #IMPLIED>
+	<!ATTLIST shortcut    name CDATA #REQUIRED>
+	<!ATTLIST rule        state CDATA #IMPLIED>
+	<!ATTLIST pattern    bol (true|false) #IMPLIED>
+	<!ATTLIST pattern    nocase (true|false) #IMPLIED>
 
-<!ELEMENT type		(#PCDATA)>
-<!ELEMENT grammar	((rhs,action?)+)>
-<!ELEMENT rhs		(#PCDATA)>
+	<!ELEMENT type        (#PCDATA)>
+	<!ELEMENT grammar    ((rhs,action?)+)>
+	<!ELEMENT rhs        (#PCDATA)>
 
-<!ATTLIST parser	start CDATA #IMPLIED>
-<!ATTLIST parser	table (ecs|compressed) #IMPLIED>
-<!ATTLIST parser	defaultreduce (true|false) #IMPLIED>
-<!ATTLIST parser	recovery (true|false) #IMPLIED>
-<!ATTLIST parser	parseerror (true|false) #IMPLIED>
-<!ATTLIST type		format CDATA #REQUIRED>
-<!ATTLIST grammar	rule CDATA #REQUIRED>
-<!ATTLIST rhs		precedence CDATA #IMPLIED>
+	<!ATTLIST parser    start CDATA #IMPLIED>
+	<!ATTLIST parser    table (ecs|compressed) #IMPLIED>
+	<!ATTLIST parser    defaultreduce (true|false) #IMPLIED>
+	<!ATTLIST parser    recovery (true|false) #IMPLIED>
+	<!ATTLIST parser    parseerror (true|false) #IMPLIED>
+	<!ATTLIST type        format CDATA #REQUIRED>
+	<!ATTLIST grammar    rule CDATA #REQUIRED>
+	<!ATTLIST rhs        precedence CDATA #IMPLIED>

@@ -1,22 +1,22 @@
 /*
- * CookCC Copyright (c) 2008-2009, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the <organization> nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY <copyright holder> ''AS IS'' AND ANY
+ * THIS SOFTWARE IS PROVIDED BY Heng Yuan ''AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
+ * DISCLAIMED. IN NO EVENT SHALL Heng Yuan BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -26,13 +26,26 @@
  */
 package org.yuanheng.cookcc.lexer;
 
+import java.io.IOException;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+import java.util.Vector;
 
 import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.dfa.DFARow;
 import org.yuanheng.cookcc.dfa.DFATable;
-import org.yuanheng.cookcc.doc.*;
+import org.yuanheng.cookcc.doc.Document;
+import org.yuanheng.cookcc.doc.LexerDoc;
+import org.yuanheng.cookcc.doc.LexerStateDoc;
+import org.yuanheng.cookcc.doc.PatternDoc;
+import org.yuanheng.cookcc.doc.RuleDoc;
 import org.yuanheng.cookcc.exception.NoInitialStateException;
 
 /**
@@ -53,7 +66,7 @@ public class Lexer
 	private final static String PROP_START_SET = "START_SET";
 	private final static String PROP_BOL_SET = "BOL_SET";
 
-	public static Lexer getLexer (Document doc)
+	public static Lexer getLexer (Document doc) throws IOException
 	{
 		if (doc == null)
 			return null;
@@ -117,15 +130,18 @@ public class Lexer
 	private int[] m_beginLocations;
 
 	private Map<LexerStateDoc, Collection<PatternDoc>> m_backupPatterns;
-	private Map<LexerStateDoc,Collection<PatternDoc>> m_unusedPatterns;
+	private Map<LexerStateDoc, Collection<PatternDoc>> m_unusedPatterns;
 	private Set<LexerStateDoc> m_incompleteStates;
 
 	private final RuleDoc m_defaultRule;
+
+	private final PatternParser m_patternParser;
 
 	private Lexer (Document doc)
 	{
 		m_doc = doc;
 		m_nfaFactory = doc.isUnicode () ? new NFAFactory (CCL.getCharacterCCL ()) : new NFAFactory (CCL.getByteCCL ());
+		m_patternParser = new PatternParser (this, getCCL ());
 
 		m_defaultRule = RuleDoc.createInternalRule (doc.getLexer ());
 	}
@@ -199,10 +215,10 @@ public class Lexer
 
 	public void warn (String msg)
 	{
-		System.out.println (WARN_MSG.format (new Object[]{ msg }));
+		System.out.println (WARN_MSG.format (new Object[]{msg}));
 	}
 
-	public void parse ()
+	public void parse () throws IOException
 	{
 		LexerDoc lexer = m_doc.getLexer ();
 		if (lexer == null)
@@ -217,7 +233,7 @@ public class Lexer
 
 			RuleDoc[] rules = lexerState.getRules ();
 			if (rules.length == 0)
-				warn (WARN_NO_RULES.format (new Object[]{ lexerState.getName () }));
+				warn (WARN_NO_RULES.format (new Object[]{lexerState.getName ()}));
 
 			ESet startSet = new ESet ();
 			ESet bolSet = new ESet ();
@@ -229,10 +245,12 @@ public class Lexer
 					NFA nfa;
 					if (pattern.getCaseValue () < 0)
 					{
-						RuleParser parser = new RuleParser (this, m_nfaFactory, pattern.isNocase ());
-						nfa = parser.parse (pattern.getPrecedence (), pattern.getLineNumber (), pattern.getPattern ());
-						pattern.setCaseValue (nfa.last ().caseValue);
-						if (parser.isBOL ())
+						int caseValue = incCaseCounter ();
+						pattern.setCaseValue (caseValue);
+
+						LexerPattern lp = m_patternParser.parse (pattern.getPrecedence (), pattern.getLineNumber (), pattern.getPattern ());
+						nfa = lp.constructNFA (m_nfaFactory, caseValue, pattern.getLineNumber ());
+						if (lp.isBol ())
 							pattern.setBOL (true);
 						if (nfa.trailContext != 0)
 							pattern.setTrailContext (nfa.trailContext);
@@ -488,12 +506,10 @@ public class Lexer
 
 		// initially, e_closure (s0) is the only state in _Dstates and it is unmarked
 		m_dfaStates.add (s0);
-		statesSet.put (s0, new Integer (m_dfaStates.size () - 1));
 
 		if (m_bolStates)
 		{
 			m_dfaStates.add (s1);
-			statesSet.put (s1, new Integer (m_dfaStates.size () - 1));
 		}
 
 		// while there is an unmarked state T in _Dstates
@@ -567,7 +583,7 @@ public class Lexer
 				row.setState (j, toState);
 			}
 
-			m_dfa.add (row);		// add to the DFA table
+			m_dfa.add (row);        // add to the DFA table
 		}
 		return dfaBase;
 	}

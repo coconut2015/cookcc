@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -74,7 +74,7 @@ public class Main
 	private static CodeGen s_codeGen;
 	private static boolean s_quiet;
 
-	private static OptionHandler s_helpOption = new OptionHandler()
+	private static OptionHandler s_helpOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -97,7 +97,7 @@ public class Main
 
 	};
 
-	private static OptionHandler s_quietOption = new OptionHandler()
+	private static OptionHandler s_quietOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -120,7 +120,7 @@ public class Main
 		}
 	};
 
-	private static OptionHandler s_analysisOption = new OptionHandler()
+	private static OptionHandler s_analysisOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -142,7 +142,7 @@ public class Main
 		}
 	};
 
-	private static OptionHandler s_defaultReduceOption = new OptionHandler()
+	private static OptionHandler s_defaultReduceOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -164,7 +164,7 @@ public class Main
 		}
 	};
 
-	private static OptionHandler s_lexerTableOption = new OptionHandler()
+	private static OptionHandler s_lexerTableOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -188,11 +188,11 @@ public class Main
 		public String toString ()
 		{
 			return OPTION_LEXERTABLE + "\t\t\tSelect lexer DFA table format.\n" +
-				   "\tAvailable formats:\t\t[ecs, full, compressed]";
+				"\tAvailable formats:\t\t[ecs, full, compressed]";
 		}
 	};
 
-	private static OptionHandler s_parserTableOption = new OptionHandler()
+	private static OptionHandler s_parserTableOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -215,11 +215,11 @@ public class Main
 		public String toString ()
 		{
 			return OPTION_PARSERTABLE + "\t\t\tSelect parser DFA table format.\n" +
-				   "\tAvailable formats:\t\t[ecs, compressed]";
+				"\tAvailable formats:\t\t[ecs, compressed]";
 		}
 	};
 
-	private static OptionHandler s_langOption = new OptionHandler()
+	private static OptionHandler s_langOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -249,7 +249,7 @@ public class Main
 		}
 	};
 
-	private static OptionHandler s_debugOption = new OptionHandler()
+	private static OptionHandler s_debugOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -289,7 +289,7 @@ public class Main
 	{
 		OptionMap optionParsers = s_options;
 		int i;
-		for (i = 0; i < args.length;)
+		for (i = 0; i < args.length; )
 		{
 			int count = optionParsers.handleOption (args, i);
 
@@ -301,7 +301,7 @@ public class Main
 
 		CodeGen codeGen = getCodeGen ();
 		optionParsers = codeGen.getOptions ();
-		for (; i < args.length;)
+		for (; i < args.length; )
 		{
 			int count = optionParsers.handleOption (args, i);
 			if (count > 0)
@@ -421,7 +421,7 @@ public class Main
 		{
 			return Class.forName (className);
 		}
-		catch (Throwable t)		// use throwable since sometimes fetal errors occur and they are not exceptions
+		catch (Throwable t)        // use throwable since sometimes fetal errors occur and they are not exceptions
 		{
 			return null;
 		}

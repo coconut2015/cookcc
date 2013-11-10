@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -58,7 +58,7 @@ public class Parser
 	public static int FINISH = 0;
 	public static int ERROR = 1;
 
-//	private static Token s_epsilon = new Token ("{e}", 0, EPSILON, Token.NONASSOC);
+	//	private static Token s_epsilon = new Token ("{e}", 0, EPSILON, Token.NONASSOC);
 	private static Token s_finish = new Token ("$", 0, FINISH, Token.NONASSOC);
 	private static Token s_error = new Token ("error", 0, ERROR, Token.NONASSOC);
 
@@ -160,7 +160,7 @@ public class Parser
 		// add start condition
 		Production startProduction = new Production (getNonterminal (START), m_productionIdCounter++);
 		m_productions.add (startProduction);
-		m_productionMap.put (m_nonTerminals.get (START), new Production[]{ startProduction });
+		m_productionMap.put (m_nonTerminals.get (START), new Production[]{startProduction});
 
 		parseProductions ();
 
@@ -176,7 +176,7 @@ public class Parser
 		Integer startNonTerminal = parserDoc.getStart () == null ? (m_productions.size () > 1 ? m_productions.get (1).getSymbol () : null) : m_nonTerminals.get (parserDoc.getStart ());
 		if (startNonTerminal == null)
 			throw new ParserException (0, "Unable to find the start symbol for the parser.");
-		startProduction.setProduction (new int[]{ startNonTerminal });
+		startProduction.setProduction (new int[]{startNonTerminal});
 
 		// now we need to add the internal symbols
 
@@ -639,9 +639,9 @@ public class Parser
 
 	/**
 	 * Dummy items are for searching purpose.
-	 * @param	production
-	 *			the production to be used, can be null.
-	 * @return	a dummy Item with null lookahead and first
+	 *
+	 * @param    production the production to be used, can be null.
+	 * @return a dummy Item with null lookahead and first
 	 */
 	Item createDummyItem (Production production)
 	{
@@ -655,7 +655,8 @@ public class Parser
 
 	/**
 	 * For output purpose.
-	 * @return	user defined tokens that needs value definitions.
+	 *
+	 * @return user defined tokens that needs value definitions.
 	 */
 	public LinkedList<Token> getTokens ()
 	{
@@ -806,7 +807,7 @@ public class Parser
 					// the only state that shift on FINISH lookahead is accept
 					// so just make it the accept state
 
-					currentDFA.getStates ()[j] = -1;	   // -1 is for case 1, which is accept
+					currentDFA.getStates ()[j] = -1;       // -1 is for case 1, which is accept
 					continue;
 				}
 
@@ -854,8 +855,8 @@ public class Parser
 			{
 				if (reduceState == null)
 					reduceState = item.getProduction ();
-				else if (item.getProduction ().getId () < reduceState.getId ())	// no problem in logic
-					reduceState = item.getProduction ();						// pick earlier rule to reduce
+				else if (item.getProduction ().getId () < reduceState.getId ())    // no problem in logic
+					reduceState = item.getProduction ();                        // pick earlier rule to reduce
 			}
 		}
 		return reduceState;

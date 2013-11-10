@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -43,7 +43,7 @@ class ItemSet implements Comparable<ItemSet>
 	{
 		m_itemList = new LinkedList<Item> ();
 		m_kernelSet = new TreeSet<Item> (kernelSorter);
-		m_closureSet = new TreeMap<Item,Item> (Item.getClosureComparator ());
+		m_closureSet = new TreeMap<Item, Item> (Item.getClosureComparator ());
 	}
 
 	@SuppressWarnings ("unchecked")
@@ -51,7 +51,7 @@ class ItemSet implements Comparable<ItemSet>
 	{
 		m_itemList = (LinkedList<Item>)other.m_itemList.clone ();
 		m_kernelSet = (TreeSet<Item>)other.m_kernelSet.clone ();
-		m_closureSet = (TreeMap<Item,Item>)other.m_closureSet.clone ();
+		m_closureSet = (TreeMap<Item, Item>)other.m_closureSet.clone ();
 	}
 
 	public Item getItem (int index)
@@ -97,8 +97,8 @@ class ItemSet implements Comparable<ItemSet>
 		Iterator<Item> i1;
 		Iterator<Item> i2;
 		for (i1 = m_kernelSet.iterator (),
-			 i2 = other.m_kernelSet.iterator ();
-			 i1.hasNext ();)
+				 i2 = other.m_kernelSet.iterator ();
+			 i1.hasNext (); )
 		{
 			Item item1 = i1.next ();
 			Item item2 = i2.next ();

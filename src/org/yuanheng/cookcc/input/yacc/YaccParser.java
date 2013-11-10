@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -51,7 +51,7 @@ public class YaccParser extends YaccLexer
 	private final ParserDoc m_parser = new ParserDoc ();
 	private final TokensDoc m_plainTokens = new TokensDoc ();
 
-	private int m_lineNum = 1;		// starts with line number 1
+	private int m_lineNum = 1;        // starts with line number 1
 
 	private int m_braceLevel = 0;
 
@@ -156,8 +156,8 @@ public class YaccParser extends YaccLexer
 	}
 
 	@Lexs (patterns = {
-			@Lex (pattern = "[^%{\\n]+", state = "CODEINCLUDE"),
-			@Lex (pattern = ".", state = "CODEINCLUDE")
+		@Lex (pattern = "[^%{\\n]+", state = "CODEINCLUDE"),
+		@Lex (pattern = ".", state = "CODEINCLUDE")
 	})
 	void codeIncludeContent ()
 	{
@@ -188,11 +188,11 @@ public class YaccParser extends YaccLexer
 	 * This is a slightly complicated situation.  Since CookCC only allows
 	 * a single type (either turn a value or do not return a value) for a
 	 * lexer function, we will just have to use a hack.
-	 * <p>
+	 * <p/>
 	 * We will just directly return the value (since our code does not need
 	 * to be compiled to pass through APT correctly).
 	 *
-	 * @return	token
+	 * @return token
 	 */
 	@Lex (pattern = "'}'", state = "ACTION")
 	int actionRB ()
@@ -280,7 +280,7 @@ public class YaccParser extends YaccLexer
 
 	@Lexs (patterns = {
 		@Lex (pattern = "{NAME}", token = "TOKEN", state = "INITIAL, SECTION2"),
-		@Lex(pattern = "[']([^\\\\']|{ESC})[']", token = "TOKEN", state = "INITIAL, SECTION2")
+		@Lex (pattern = "[']([^\\\\']|{ESC})[']", token = "TOKEN", state = "INITIAL, SECTION2")
 	})
 	String parseToken ()
 	{

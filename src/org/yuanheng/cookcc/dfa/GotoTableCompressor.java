@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -127,7 +127,7 @@ class GotoTableCompressor
 		for (i = column.length - 1; i > 0; --i)
 			if (column[i] != SHORT_MIN)
 				break;
-		minMax[1]= i;
+		minMax[1] = i;
 
 		//DEBUGMSG ("row = " << row << ", min = " << min << ", max = " << max);
 		return minMax[1] - minMax[0] + 1;
@@ -272,7 +272,7 @@ class GotoTableCompressor
 			// ignore those empty ones
 			int errorCount = getErrorCount (i);
 			int rowLength = m_dfa.get (i).length;
-			if (errorCount == rowLength)		// ok, this state is full of 0's
+			if (errorCount == rowLength)        // ok, this state is full of 0's
 				continue;
 
 			// search the DFA for a nearest state

@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -81,7 +81,7 @@ class ESet implements Comparable<ESet>
 
 		Iterator<NFA> i1 = m_set.iterator ();
 		Iterator<NFA> i2 = o.m_set.iterator ();
-		for (; i1.hasNext ();)
+		for (; i1.hasNext (); )
 		{
 			NFA n1 = i1.next ();
 			NFA n2 = i2.next ();
@@ -93,7 +93,8 @@ class ESet implements Comparable<ESet>
 
 	/**
 	 * Debugging function.
-	 * @return	debug info for this set.
+	 *
+	 * @return debug info for this set.
 	 */
 	@Override
 	public String toString ()

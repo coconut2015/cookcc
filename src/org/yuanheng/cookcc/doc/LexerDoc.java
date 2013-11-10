@@ -1,22 +1,22 @@
 /*
- * CookCC Copyright (c) 2008-2009, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the <organization> nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
- * THIS SOFTWARE IS PROVIDED BY <copyright holder> ''AS IS'' AND ANY
+ * THIS SOFTWARE IS PROVIDED BY Heng Yuan ''AS IS'' AND ANY
  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
+ * DISCLAIMED. IN NO EVENT SHALL Heng Yuan BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
  * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -104,7 +104,7 @@ public class LexerDoc extends TreeDoc
 	/**
 	 * Check if the user set a global option that checks BOL state in the lexer.
 	 *
-	 * @return	the global bol option
+	 * @return the global bol option
 	 */
 	public boolean isBol ()
 	{
@@ -116,8 +116,7 @@ public class LexerDoc extends TreeDoc
 	 * this option would force the generated code to maintain BOL status even
 	 * if no patterns required the BOL information.
 	 *
-	 * @param	bol
-	 * 			the global bol option
+	 * @param    bol the global bol option
 	 */
 	public void setBol (boolean bol)
 	{
@@ -128,7 +127,7 @@ public class LexerDoc extends TreeDoc
 	/**
 	 * Check if the lexer backup states should be warned.
 	 *
-	 * @return	whether the lexer backup states should be warned.
+	 * @return whether the lexer backup states should be warned.
 	 */
 	public boolean isWarnBackup ()
 	{
@@ -139,8 +138,7 @@ public class LexerDoc extends TreeDoc
 	 * Set a global option that warns the occurance of backup lexer states.
 	 * By default, this option is false.
 	 *
-	 * @param	warnBackup
-	 * 			the warning option
+	 * @param    warnBackup the warning option
 	 */
 	public void setWarnBackup (boolean warnBackup)
 	{
@@ -150,7 +148,7 @@ public class LexerDoc extends TreeDoc
 	/**
 	 * Check if yywrap function should be called when EOF is encountered.
 	 *
-	 * @return	if yywrap function should be called when EOF is encountered.
+	 * @return if yywrap function should be called when EOF is encountered.
 	 */
 	public boolean isYywrap ()
 	{
@@ -160,8 +158,7 @@ public class LexerDoc extends TreeDoc
 	/**
 	 * Set if yywrap function should be called when EOF is encountered.
 	 *
-	 * @param	yywrap
-	 * 			if yywrap function should be called when EOF is encountered.
+	 * @param    yywrap if yywrap function should be called when EOF is encountered.
 	 */
 	public void setYywrap (boolean yywrap)
 	{

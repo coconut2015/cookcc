@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -25,6 +25,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package org.yuanheng.cookcc.lexer;
+
+import java.util.HashMap;
 
 import org.yuanheng.cookcc.exception.CCLException;
 import org.yuanheng.cookcc.exception.EscapeSequenceException;
@@ -77,6 +79,10 @@ public class CCL
 	public final boolean[] XDIGIT;
 	public final boolean[] SPACE;
 
+	public final boolean[] WORD;    // this one is non-standard
+
+	private final HashMap<String, boolean[]> m_posixCCL;
+
 	private CCL (int maxSymbol)
 	{
 		MAX_SYMBOL = maxSymbol + 1;
@@ -100,33 +106,59 @@ public class CCL
 		CNTRL = parseCCL ("[\\x0-\\x1f\\x7f]");
 		XDIGIT = parseCCL ("[0-9a-fA-F]");
 		SPACE = parseCCL ("[ \\t\\n\\x0B\\f\\r]");
+		WORD = parseCCL ("[a-zA-Z0-9_]");
+
+		m_posixCCL = new HashMap<String, boolean[]> ();
+		m_posixCCL.put ("[:lower:]", LOWER);
+		m_posixCCL.put ("[:upper:]", UPPER);
+		m_posixCCL.put ("[:ascii:]", ASCII);
+		m_posixCCL.put ("[:alpha:]", ALPHA);
+		m_posixCCL.put ("[:digit:]", DIGIT);
+		m_posixCCL.put ("[:alnum:]", ALNUM);
+		m_posixCCL.put ("[:punct:]", PUNCT);
+		m_posixCCL.put ("[:graph:]", GRAPH);
+		m_posixCCL.put ("[:print:]", PRINT);
+		m_posixCCL.put ("[:blank:]", BLANK);
+		m_posixCCL.put ("[:cntrl:]", CNTRL);
+		m_posixCCL.put ("[:xdigit:]", XDIGIT);
+		m_posixCCL.put ("[:space:]", SPACE);
+		m_posixCCL.put ("[:word:]", WORD);
+
+		String[] keys = new String[m_posixCCL.size ()];
+		m_posixCCL.keySet ().toArray (keys);
+		for (String key : keys)
+		{
+			m_posixCCL.put ("[:^" + key.substring (2), CCL.subtract (ANY.clone (), m_posixCCL.get (key)));
+		}
+	}
+
+	public boolean[] getPosixCCL (String name)
+	{
+		return m_posixCCL.get (name);
 	}
 
 	/**
 	 * Compute the escape sequence character.
 	 *
-	 * @param	input
-	 * 			input char array
-	 * @param	currentPos
-	 * 			an array size 1 of the current position to be scanned.  New
-	 * 			position after scan is stored back into this array.
-	 * @return	the character scanned, or -1 on error (end of input etc).  pos
-	 * 			also stores the scanned position.
-	 * @throws	org.yuanheng.cookcc.exception.EscapeSequenceException
-	 * 			when the input has invalid format or is empty
+	 * @param    input input char array
+	 * @param    currentPos an array size 1 of the current position to be scanned.  New
+	 * position after scan is stored back into this array.
+	 * @return the character scanned, or -1 on error (end of input etc).  pos
+	 * also stores the scanned position.
+	 * @throws org.yuanheng.cookcc.exception.EscapeSequenceException when the input has invalid format or is empty
 	 */
 	public static char esc (String input, int[] currentPos) throws EscapeSequenceException
 	{
-		int start = currentPos[0];	// remember the original position for error reporting
+		int start = currentPos[0];    // remember the original position for error reporting
 		int pos = currentPos[0];
 		if (input.charAt (pos) != '\\')
 		{
 			++currentPos[0];
-			return input.charAt (pos);	// not a escape code
+			return input.charAt (pos);    // not a escape code
 		}
 		else
 		{
-			++pos;					// skip '\\'
+			++pos;                    // skip '\\'
 			if (pos >= input.length ())
 				throw new EscapeSequenceException ("\\");
 			char ch = input.charAt (pos++);
@@ -276,12 +308,12 @@ public class CCL
 
 		boolean[] map = new boolean[MAX_SYMBOL + 1];
 
-		pos++;						// skip past the [
+		pos++;                        // skip past the [
 		boolean negative = input.charAt (pos) == '^';
-		if (negative)				// check for negative
+		if (negative)                // check for negative
 			pos++;
 
-		int start = pos;			// mark the start
+		int start = pos;            // mark the start
 
 		try
 		{
@@ -289,24 +321,24 @@ public class CCL
 			char ch;
 			while (pos < input.length () && (ch = input.charAt (pos)) != ']')
 			{
-				if (ch != '-')			// potentially the first side of a range
+				if (ch != '-')            // potentially the first side of a range
 				{
 					escPos[0] = pos;
-					first = esc (input, escPos);	// check escape sequence
+					first = esc (input, escPos);    // check escape sequence
 					map[first] = true;
 					pos = escPos[0];
 				}
-				else if (pos == start)	// leading '-'
+				else if (pos == start)    // leading '-'
 				{
 					map['-'] = true;
 					++pos;
 				}
-				else					// now we have a range
+				else                    // now we have a range
 				{
 					char last;
-					++pos;				// skip '-'
+					++pos;                // skip '-'
 					escPos[0] = pos;
-					last = esc (input, escPos);	// check escape sequence
+					last = esc (input, escPos);    // check escape sequence
 					pos = escPos[0];
 					if (last < first)
 					{
@@ -325,11 +357,11 @@ public class CCL
 		}
 
 		if (input.charAt (pos) != ']')
-			throw new CCLException (input);			// give error
+			throw new CCLException (input);            // give error
 
 		if (negative)
-			for (int i = 0; i < MAX_SYMBOL; ++i)	// don't count EOF
-				map[i] = !map[i];					// invert all bits except EOF
+			for (int i = 0; i < MAX_SYMBOL; ++i)    // don't count EOF
+				map[i] = !map[i];                    // invert all bits except EOF
 
 		return map;
 	}
@@ -350,7 +382,7 @@ public class CCL
 
 	public static boolean[] negate (boolean[] c)
 	{
-		for (int i = 0; i < (c.length - 1); ++i)	// does not count EOF
+		for (int i = 0; i < (c.length - 1); ++i)    // does not count EOF
 			c[i] = !c[i];
 		return c;
 	}
@@ -406,7 +438,7 @@ public class CCL
 		int cont = 0;
 		int i;
 
-		for (i = 0; i < MAX_SYMBOL; i++)		// don't count EOF
+		for (i = 0; i < MAX_SYMBOL; i++)        // don't count EOF
 		{
 			if (ccl[i])
 			{
@@ -436,9 +468,7 @@ public class CCL
 		return s;
 	}
 
-	/**
-	 * Convert a CCL map to a string representation for debugging purpose.
-	 */
+	/** Convert a CCL map to a string representation for debugging purpose. */
 	public String toString (boolean[] ccl)
 	{
 		if (ccl == ANY)
@@ -450,16 +480,19 @@ public class CCL
 		String s1 = printCCL (ccl);
 		String s2 = printCCL (neg);
 
-		String s = "[";
-		if (s1.length () <= s2.length ())
-			s += s1;
+		if (s1.length () < s2.length ())
+			return "[" + s1 + "]";
 		else
 		{
-			s += '^';
-			s += s2;
+			if (s2.length () == 0)
+			{
+				return "(.|\\n)";
+			}
+			else if (s2.equals ("\\n"))
+			{
+				return ".";
+			}
+			return "[^" + s2 + "]";
 		}
-		s += ']';
-
-		return s;
 	}
 }

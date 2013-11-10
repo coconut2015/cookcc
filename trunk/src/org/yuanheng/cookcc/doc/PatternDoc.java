@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -42,7 +42,7 @@ public class PatternDoc extends TreeDoc
 	private String m_pattern;
 	private boolean m_nocase;
 	private boolean m_bol;
-	private int m_caseValue = -1;			// special value indicating no case value set, since we do get case 0.
+	private int m_caseValue = -1;            // special value indicating no case value set, since we do get case 0.
 	private boolean m_internal;
 	private int m_trailContext;
 	private int m_lineNumber;
@@ -94,7 +94,7 @@ public class PatternDoc extends TreeDoc
 	/**
 	 * Obtain the case value in the lexer.
 	 *
-	 * @return  the case value in the lexer.
+	 * @return the case value in the lexer.
 	 */
 	public int getCaseValue ()
 	{
@@ -104,8 +104,7 @@ public class PatternDoc extends TreeDoc
 	/**
 	 * Set the case value in the lexer.  This function is for internal use.
 	 *
-	 * @param	caseValue
-	 * 			Computed caes value in DFA.
+	 * @param    caseValue Computed caes value in DFA.
 	 */
 	public void setCaseValue (int caseValue)
 	{
@@ -115,7 +114,7 @@ public class PatternDoc extends TreeDoc
 	/**
 	 * Check if this pattern is internally generaeted.
 	 *
-	 * @return	if the rule is internally generated.
+	 * @return if the rule is internally generated.
 	 */
 	public boolean isInternal ()
 	{
@@ -132,8 +131,7 @@ public class PatternDoc extends TreeDoc
 	 * This is an internal function which is called after processing the pattern
 	 * to determine the trail context.
 	 *
-	 * @param	trailContext
-	 * 			the trail context of the pattern.
+	 * @param    trailContext the trail context of the pattern.
 	 */
 	public void setTrailContext (int trailContext)
 	{
@@ -142,7 +140,8 @@ public class PatternDoc extends TreeDoc
 
 	/**
 	 * Get the trail context of the pattern.
-	 * @return	the trail context of the pattern.
+	 *
+	 * @return the trail context of the pattern.
 	 */
 	public int getTrailContext ()
 	{

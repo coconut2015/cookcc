@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -60,10 +60,12 @@ class TableCompressor
 		{
 			return m_error;
 		}
+
 		public void setError (short[] error)
 		{
 			m_error = error;
 		}
+
 		public short getDefaultValue ()
 		{
 			return m_defaultValue;
@@ -133,7 +135,7 @@ class TableCompressor
 	{
 		if (src != null)
 		{
-			if (src.length == newSize)		// no need to do anything in this case.
+			if (src.length == newSize)        // no need to do anything in this case.
 				return src;
 		}
 
@@ -824,7 +826,7 @@ class TableCompressor
 		//
 		int expand;
 		if (m_useDefault)
-			expand = m_ecsError.getGroupCount ();	// reserve space for default error state
+			expand = m_ecsError.getGroupCount ();    // reserve space for default error state
 		else
 			expand = 0;
 

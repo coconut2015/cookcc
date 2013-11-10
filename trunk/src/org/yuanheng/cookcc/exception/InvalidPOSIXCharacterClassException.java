@@ -24,13 +24,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.parser;
+package org.yuanheng.cookcc.exception;
+
+import java.text.MessageFormat;
 
 /**
  * @author Heng Yuan
  * @version $Id$
  */
-interface Closure
+public class InvalidPOSIXCharacterClassException extends InvalidRegExException
 {
-	void closure (ItemSet itemSet);
+	public static MessageFormat ERROR_MSG = new MessageFormat ("Invalid POSIX Character Class: {0}");
+
+	public InvalidPOSIXCharacterClassException (int lineNumber, String name, String input)
+	{
+		super (lineNumber, ERROR_MSG.format (new Object[]{name}), input);
+	}
 }

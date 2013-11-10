@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -93,7 +93,7 @@ public class ECS
 		int newGroup = ++m_groupCount;
 		for (int i = 0; i < ccl.length; ++i)
 			if (ccl[i])
-				m_groups[i] += newGroup;		// guarranteed to be larger than existing maximum number of groups
+				m_groups[i] += newGroup;        // guarranteed to be larger than existing maximum number of groups
 		compute ();
 	}
 
@@ -101,10 +101,9 @@ public class ECS
 	 * All non-zero values are treated as a group.  This function
 	 * is for computing DFA compression error group.
 	 *
-	 * @param	error
-	 * 			an error vector
+	 * @param    error an error vector
 	 */
-	public void add (short[] error)				// for computing ecs for error array
+	public void add (short[] error)                // for computing ecs for error array
 	{
 		int newGroup = ++m_groupCount;
 		for (int i = 0; i < error.length; i++)
@@ -121,7 +120,7 @@ public class ECS
 	 */
 	private void compute ()
 	{
-		HashMap<Integer,Integer> numberMap = new HashMap<Integer,Integer> ();
+		HashMap<Integer, Integer> numberMap = new HashMap<Integer, Integer> ();
 
 		m_groupCount = 0;
 		for (int c = 0; c < m_groups.length; c++)

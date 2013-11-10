@@ -101,6 +101,9 @@
 			<option name="-generics"/>
 		</cookcc>
 	</target>
+	<target name="CCLScanner.java" depends="initcookcc">
+		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/lexer/CCLParser.java"/>
+	</target>
 	<target name="PatternScanner.java" depends="initcookcc">
 		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/lexer/PatternParser.java">
 			<!-- <option name="-analysis"/> -->

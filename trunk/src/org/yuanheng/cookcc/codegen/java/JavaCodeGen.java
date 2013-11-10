@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -80,7 +80,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 
 	private ClassOption m_classOption = new ClassOption ();
 
-	private OptionHandler m_publicOption = new OptionHandler()
+	private OptionHandler m_publicOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -102,7 +102,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	};
 
-	private OptionHandler m_genericsOption = new OptionHandler()
+	private OptionHandler m_genericsOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -124,7 +124,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 	};
 
-	private OptionHandler m_extendOption = new OptionHandler()
+	private OptionHandler m_extendOption = new OptionHandler ()
 	{
 		public String getOption ()
 		{
@@ -189,7 +189,7 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		if (m_options.hasOption (AbstractOption.OPTION_ABSTRACT))
 		{
 			map.put ("abstract", Boolean.TRUE);
-			map.put ("main", Boolean.FALSE);		// force disable output main since we can't instantiate the class
+			map.put ("main", Boolean.FALSE);        // force disable output main since we can't instantiate the class
 		}
 		if (m_options.hasOption (OPTION_EXTEND))
 		{

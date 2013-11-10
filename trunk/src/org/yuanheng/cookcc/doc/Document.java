@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -43,7 +43,7 @@ public class Document extends TreeDoc
 {
 	private Boolean m_main;
 	private boolean m_unicode;
-	private final Map<String,String> m_code = new HashMap<String,String> ();
+	private final Map<String, String> m_code = new HashMap<String, String> ();
 	private final Collection<TokensDoc> m_tokens = new LinkedList<TokensDoc> ();
 	private LexerDoc m_lexer;
 	private ParserDoc m_parser;
@@ -51,7 +51,7 @@ public class Document extends TreeDoc
 	/**
 	 * Check if the user specifically asked for main function.
 	 *
-	 * @return	if user wants to have a main function or not.  null indicates flag not set.
+	 * @return if user wants to have a main function or not.  null indicates flag not set.
 	 */
 	public Boolean getMain ()
 	{
@@ -83,7 +83,7 @@ public class Document extends TreeDoc
 		m_parser = parserDoc;
 	}
 
-	public Map<String,String> getCode ()
+	public Map<String, String> getCode ()
 	{
 		return m_code;
 	}

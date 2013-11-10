@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2008, Heng Yuan
+ * Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
+ *    Redistributions of source code must retain the above copyright
  *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
+ *    Redistributions in binary form must reproduce the above copyright
  *       notice, this list of conditions and the following disclaimer in the
  *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the Heng Yuan nor the
+ *    Neither the name of the Heng Yuan nor the
  *       names of its contributors may be used to endorse or promote products
  *       derived from this software without specific prior written permission.
  *
@@ -38,7 +38,7 @@ import org.yuanheng.cookcc.exception.*;
  * @author Heng Yuan
  * @version $Id$
  */
-public class RuleParser
+class RuleParser
 {
 	private final static Pattern m_replaceName = Pattern.compile ("\\{[a-zA-Z_][a-zA-Z0-9_-]*[}]");
 
@@ -82,7 +82,7 @@ public class RuleParser
 			if (!ifMatch ('\\'))
 				return null;
 			--m_pos;
-			int[] escPos = new int[]{ m_pos };
+			int[] escPos = new int[]{m_pos};
 			char ch = CCL.esc (m_currentStr, escPos);
 			m_pos = escPos[0];
 			return new Character (ch);
@@ -92,7 +92,7 @@ public class RuleParser
 		{
 			if (!ifMatch ('{'))
 				return false;
-			--m_pos;		// rewind the forward;
+			--m_pos;        // rewind the forward;
 			m_currentStr = m_currentStr.substring (m_pos);
 			m_pos = 0;
 			Matcher matcher = m_replaceName.matcher (m_currentStr);
@@ -458,7 +458,7 @@ public class RuleParser
 		m_lex.match (']');
 		if (matchNext)
 		{
-			for (;;)
+			for (; ; )
 			{
 				if (m_lex.ifMatch ("{-}"))
 				{
@@ -484,7 +484,7 @@ public class RuleParser
 	private boolean[] parseCCL (boolean[] ccl)
 	{
 		while (parseCCE (ccl) != null ||
-			   parseCCLChar (ccl) != null)
+			parseCCLChar (ccl) != null)
 			;
 		return ccl;
 	}

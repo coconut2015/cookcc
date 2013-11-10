@@ -24,26 +24,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.util;
+package org.yuanheng.cookcc.lexer;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.Stack;
 
-
-import java.io.ByteArrayInputStream;
-import java.util.LinkedList;
-
-/**
- * This class is used to parse tokens inside &lt;tokens> tag or similar tags that
- * list a series of symbols.  Things get complicated with single quoted characters
- * and such.
- *
- * @author Heng Yuan
- * @version $Id$
- */
-public class TokenParser
+abstract class CCLScanner
 {
 
 	protected final static int INITIAL = 0;
@@ -51,9 +39,13 @@ public class TokenParser
 	// an internal class for lazy initiation
 	private final static class cc_lexer
 	{
-		private static char[] accept = ("\000\007\006\007\002\001\007\010\000\004\000\003\004\005\004\005").toCharArray ();
-		private static char[] ecs = ("\000\000\000\000\000\000\000\000\000\001\002\000\000\001\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\003\000\000\000\000\001\000\000\000\004\004\004\004\004\004\004\004\004\004\000\000\000\000\000\000\000\005\005\005\005\005\005\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\000\007\000\000\006\000\005\005\005\005\005\005\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\010\006\006\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\011").toCharArray ();
-		private static char[][] next = {("\001\002\002\003\004\005\005\006\005\007").toCharArray (), ("\000\000\000\000\000\000\000\000\000\000").toCharArray (), ("\000\002\002\000\000\000\000\000\000\000").toCharArray (), ("\010\010\010\000\010\010\010\000\010\000").toCharArray (), ("\000\000\000\000\004\000\000\000\000\000").toCharArray (), ("\000\000\000\000\005\005\005\000\005\000").toCharArray (), ("\000\000\000\000\011\000\000\000\012\000").toCharArray (), ("\000\000\000\000\000\000\000\000\000\000").toCharArray (), ("\000\000\000\013\000\000\000\000\000\000").toCharArray (), ("\000\000\000\000\014\000\000\000\000\000").toCharArray (), ("\000\000\000\000\015\015\000\000\000\000").toCharArray (), ("\000\000\000\000\000\000\000\000\000\000").toCharArray (), ("\000\000\000\000\016\000\000\000\000\000").toCharArray (), ("\000\000\000\000\017\017\000\000\000\000").toCharArray (), ("\000\000\000\000\000\000\000\000\000\000").toCharArray (), ("\000\000\000\000\000\000\000\000\000\000").toCharArray ()};
+		private static char[] accept = ("\000\000\015\014\015\012\003\016\001\000\011\004\010\007\002\000\000\004\000\005\000\004\000\005\013\000\006").toCharArray ();
+		private static char[] ecs = ("\000\000\000\000\000\000\000\000\000\000\001\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\002\000\000\003\003\003\003\003\003\003\003\003\003\004\000\000\000\000\000\000\005\005\005\005\005\005\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\006\007\010\011\012\000\000\005\005\005\005\005\005\006\006\006\006\006\006\006\006\006\006\006\006\006\006\013\006\006\014\006\006\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\000\015").toCharArray ();
+		private static char[] base = ("\000\012\000\000\001\000\000\000\030\011\000\003\015\023\000\000\031\041\024\027\034\000\030\000\000\033\000\000\037\046").toCharArray ();
+		private static char[] next = ("\002\002\003\013\024\011\021\004\005\006\000\014\015\007\017\017\022\010\022\020\017\017\023\026\023\026\027\031\027\031\032\012\032\012\016\000\025\030\000\000\000\000\000\000\000\000\000").toCharArray ();
+		private static char[] check = ("\033\033\000\005\017\004\013\000\000\000\017\005\005\000\011\011\014\001\014\011\011\011\015\022\015\022\023\026\023\026\031\034\031\034\010\020\021\024\035\035\035\035\035\035\035\035\035").toCharArray ();
+		private static char[] defaults = ("\033\000\035\035\002\034\035\035\004\002\035\002\002\002\035\011\011\002\002\002\002\035\002\035\035\002\035\035\035\035").toCharArray ();
+		private static char[] meta = ("\000\001\002\001\000\000\000\002\002\002\000\001\001\003").toCharArray ();
 	}
 
 
@@ -71,6 +63,9 @@ public class TokenParser
 	private Stack<Integer> _yyLexerStack;
 	private Stack<Object[]> _yyInputStack;
 
+	// we need to track beginning of line (BOL) status
+	private boolean _yyIsNextBOL = true;
+	private boolean _yyBOL = true;
 
 	/**
 	 * Set the current input.
@@ -162,6 +157,27 @@ public class TokenParser
 		return _yyInputStack == null ? 0 : _yyInputStack.size ();
 	}
 
+	/**
+	 * Check whether or not the current token at the beginning of the line.  This
+	 * function is not accurate if the user does multi-line pattern matching or
+	 * have trail contexts at the end of the line.
+	 *
+	 * @return whether or not the current token is at the beginning of the line.
+	 */
+	public boolean isBOL ()
+	{
+		return _yyBOL;
+	}
+
+	/**
+	 * Set whether or not the next token at the beginning of the line.
+	 *
+	 * @param    bol the bol status
+	 */
+	public void setBOL (boolean bol)
+	{
+		_yyIsNextBOL = bol;
+	}
 
 	/**
 	 * Get the current token text.
@@ -272,6 +288,8 @@ public class TokenParser
 		int readSize = _yyIs.read (_yyBuffer, _yyBufferEnd, _yyBuffer.length - _yyBufferEnd);
 		if (readSize > 0)
 			_yyBufferEnd += readSize;
+		else if (readSize < 0 && !yyWrap ())        // since we are at EOF, call yyWrap ().  If the return value of yyWrap is false, refresh buffer again
+			return yyRefreshBuffer ();
 		return readSize >= 0;
 	}
 
@@ -323,6 +341,8 @@ public class TokenParser
 		if (_yyInputStack != null)
 			_yyInputStack.clear ();
 
+		_yyIsNextBOL = true;
+		_yyBOL = true;
 
 	}
 
@@ -336,7 +356,11 @@ public class TokenParser
 	{
 
 		char[] cc_ecs = cc_lexer.ecs;
-		char[][] cc_next = cc_lexer.next;
+		char[] cc_next = cc_lexer.next;
+		char[] cc_check = cc_lexer.check;
+		char[] cc_base = cc_lexer.base;
+		char[] cc_default = cc_lexer.defaults;
+		char[] cc_meta = cc_lexer.meta;
 		char[] cc_accept = cc_lexer.accept;
 
 		byte[] buffer = _yyBuffer;
@@ -344,7 +368,9 @@ public class TokenParser
 		while (true)
 		{
 			// initiate variables necessary for lookup
-			int cc_matchedState = _yyBaseState;
+			_yyBOL = _yyIsNextBOL;
+			_yyIsNextBOL = false;
+			int cc_matchedState = _yyBaseState + (_yyBOL ? 1 : 0);
 
 			int matchedLength = 0;
 
@@ -362,7 +388,15 @@ public class TokenParser
 				{
 					// now okay to process the character
 					int cc_toState;
-					cc_toState = cc_next[cc_matchedState][cc_ecs[buffer[lookahead] & 0xff]];
+					int symbol = cc_ecs[buffer[lookahead] & 0xff];
+					cc_toState = cc_matchedState;
+					while (cc_check[symbol + cc_base[cc_toState]] != cc_toState)
+					{
+						cc_toState = cc_default[cc_toState];
+						if (cc_toState >= 27)
+							symbol = cc_meta[symbol];
+					}
+					cc_toState = cc_next[symbol + cc_base[cc_toState]];
 
 					if (cc_toState == 0)
 					{
@@ -392,7 +426,16 @@ public class TokenParser
 					{
 						// <<EOF>>
 						int cc_toState;
-						cc_toState = cc_next[cc_matchedState][cc_ecs[256]];
+						int symbol = cc_ecs[256];
+						cc_toState = cc_matchedState;
+						while (cc_check[symbol + cc_base[cc_toState]] != cc_toState)
+						{
+							cc_toState = cc_default[cc_toState];
+							if (cc_toState >= 27)
+								symbol = cc_meta[symbol];
+						}
+						cc_toState = cc_next[symbol + cc_base[cc_toState]];
+
 						if (cc_toState != 0)
 							cc_matchedState = cc_toState;
 						else
@@ -412,120 +455,185 @@ public class TokenParser
 
 			switch (cc_accept[cc_matchedState])
 			{
-				case 1:    // [a-zA-Z_][a-zA-Z_0-9]*
+				case 1:    // ^'['
 				{
-					m_tokenList.add (yyText ());
-				}
-				case 12:
-					break;
-				case 2:    // [0-9]+
-				{
-					m_tokenList.add (yyText ());
-				}
-				case 13:
-					break;
-				case 3:    // \'[^\\']\'
-				{
-					m_tokenList.add (yyText ());
-				}
-				case 14:
-					break;
-				case 4:    // \\[0-9]{1,3}
-				{
-					m_tokenList.add (yyText ());
-				}
-				case 15:
-					break;
-				case 5:    // \\x[[:xdigit:]]{1,2}
-				{
-					m_tokenList.add (yyText ());
-				}
-				case 16:
-					break;
-				case 6:    // [, \r\t\n]+
-				{
-
-				}
-				case 17:
-					break;
-				case 7:    // .
-				{
-					throw new IOException ("Invalid character: " + yyText ());
+					m_this.scanCCLStart ();
 				}
 				case 18:
 					break;
-				case 8:    // <<EOF>>
+				case 2:    // ^'[^'
 				{
-					return 0;
+					m_this.scanNotCCLStart ();
 				}
 				case 19:
 					break;
-				case 9:    // .|\n
+				case 3:    // ']'
 				{
-					echo ();            // default character action
+					return m_this.scanCCLEnd ();
 				}
 				case 20:
 					break;
-				case 10:    // <<EOF>>
+				case 4:    // '\\'([0-9]{1,3})
 				{
-					return 0;            // default EOF action
+					m_this.scanOct ();
 				}
 				case 21:
 					break;
+				case 5:    // '\\x'[a-fA-F0-9]{1,2}
+				{
+					m_this.scanHex ();
+				}
+				case 22:
+					break;
+				case 6:    // '\\u'[a-fA-F0-9]{4}
+				{
+					m_this.scanUnicode ();
+				}
+				case 23:
+					break;
+				case 7:    // '\\x'
+				{
+					m_this.scanEscapeError ();
+				}
+				case 24:
+					break;
+				case 8:    // '\\u'
+				{
+					m_this.scanEscapeError ();
+				}
+				case 25:
+					break;
+				case 9:    // '\\'.
+				{
+					m_this.scanEscape ();
+				}
+				case 26:
+					break;
+				case 10:    // '\\'
+				{
+					m_this.scanEscapeError2 ();
+				}
+				case 27:
+					break;
+				case 11:    // '[:'('^'?)([a-zA-Z]+)':]'
+				{
+					m_this.scanPosixCCL ();
+				}
+				case 28:
+					break;
+				case 12:    // '-'
+				{
+					m_this.scanRange ();
+				}
+				case 29:
+					break;
+				case 13:    // .|\n
+				{
+					m_this.scanChar ();
+				}
+				case 30:
+					break;
+				case 14:    // <<EOF>>
+				{
+					return m_this.scanEOF ();
+				}
+				case 31:
+					break;
+				case 15:    // .|\n
+				{
+					echo ();            // default character action
+				}
+				case 32:
+					break;
+				case 16:    // <<EOF>>
+				{
+					return 0;            // default EOF action
+				}
+				case 33:
+					break;
 				default:
-					throw new IOException ("Internal error in TokenParser lexer.");
+					throw new IOException ("Internal error in CCLScanner lexer.");
 			}
 
+			// check BOL here since '\n' may be unput back into the stream buffer
+
+			// specifically used _yyBuffer since it could be changed by user
+			if (_yyMatchStart > 0 && _yyBuffer[_yyMatchStart - 1] == '\n')
+				_yyIsNextBOL = true;
 		}
 	}
 
 
+	private final org.yuanheng.cookcc.lexer.CCLParser m_this = (org.yuanheng.cookcc.lexer.CCLParser)this;
+
 	/**
-	 * This is a stub main function that either reads the file that user specified
-	 * or from the standard input.
+	 * This function is used to change the initial state for the lexer.
 	 *
-	 * @param    args command line arguments.
-	 * @throws Exception in case of any errors.
+	 * @param    state the name of the state
 	 */
-	public static void main (String[] args) throws Exception
+	protected void begin (String state)
 	{
-		TokenParser tmpLexer = new TokenParser ();
-		if (args.length > 0)
-			tmpLexer.setInput (new java.io.FileInputStream (args[0]));
-
-		tmpLexer.yyLex ();
+		if ("INITIAL".equals (state))
+		{
+			begin (INITIAL);
+			return;
+		}
+		throw new IllegalArgumentException ("Unknown lexer state: " + state);
 	}
 
-
-	private final LinkedList<String> m_tokenList = new LinkedList<String> ();
-
-	private TokenParser ()
+	/**
+	 * Push the current state onto lexer state onto stack and
+	 * begin the new state specified by the user.
+	 *
+	 * @param    state the new state.
+	 */
+	protected void yyPushLexerState (String state)
 	{
+		if ("INITIAL".equals (state))
+		{
+			yyPushLexerState (INITIAL);
+			return;
+		}
+		throw new IllegalArgumentException ("Unknown lexer state: " + state);
 	}
 
-	public static String[] parseString (String input) throws IOException
+	/**
+	 * Check if there are more inputs.  This function is called when EOF is
+	 * encountered.
+	 *
+	 * @return true to indicate no more inputs.
+	 * @throws IOException in case of an IO error
+	 */
+	protected boolean yyWrap () throws IOException
 	{
-		TokenParser tokenParser = new TokenParser ();
-		tokenParser.setInput (new ByteArrayInputStream (input.getBytes ("US-ASCII")));
-		tokenParser.yyLex ();
-		return tokenParser.m_tokenList.toArray (new String[tokenParser.m_tokenList.size ()]);
+		if (yyInputStackSize () > 0)
+		{
+			yyPopInput ();
+			return false;
+		}
+		return true;
 	}
 
 
 /*
  * lexer properties:
  * unicode = false
- * bol = false
+ * bol = true
  * backup = true
- * cases = 10
- * table = ecs
- * ecs = 10
- * states = 16
+ * cases = 16
+ * table = compressed
+ * ecs = 14
+ * states = 27
  * max symbol value = 256
  *
  * memory usage:
- * full table = 4112
- * ecs table = 417
+ * full table = 6939
+ * ecs table = 635
+ * next = 47
+ * check = 47
+ * default = 30
+ * meta = 14
+ * compressed table = 395
  *
  */
 }

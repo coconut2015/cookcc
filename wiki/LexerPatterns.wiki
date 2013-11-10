@@ -81,5 +81,6 @@ A character class can be manipulated in several ways:
 
 == Tips ==
  * Unless one is generating a full DFA table, it is usually a good idea not to generate new character classes.  For example, {{{(a|b)}}} can be better written as {{{[ab]}}} which would reduce the DFA table size for {{{ecs}}} and {{{compressed}}} format quite a bit.  This approach is particularly necessary when there are lots of DFA states.
+   * In 0.4, a special handling is added to handle {{{(a|b)}}} like expression so that it is treated as {{{[ab]}}}.
  * Long strings of keyword matches such as {{{"while"}}}, {{{"continue"}}} can increase the DFA table size quite a bit.  Consider using hash tables or [http://en.wikipedia.org/wiki/Perfect_hash_function perfect hash] instead if the tools are available in the target language.
  * On the other hand, specifying long patterns without causing backups can increase the lexer performances at the expense of more DFA states.

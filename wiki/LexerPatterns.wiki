@@ -65,6 +65,7 @@ Escape sequences with {{{\}}} proceeding any character that is not listed above 
 || {{{[:space:]}}} || {{{[ \t\n\x0b\f\r]}}} ||
 || {{{[:upper:]}}} || {{{[A-Z]}}} ||
 || {{{[:xdigit:]}}} || {{{a-fA-F0-9}}} ||
+|| {{{[:word:]}}} || {{{a-zA-Z0-9_}}}.  Technically, it is not part of POSIX. Added in 0.4.||
 
 For example, the following character classes are all equivalent:
 

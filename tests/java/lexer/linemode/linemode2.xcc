@@ -1,0 +1,26 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<cookcc>
+	<lexer table="ecs" linemode="true">
+		<rule>
+			<pattern>a.*b</pattern>
+			<action>System.out.print (1);</action>
+		</rule>
+		<rule>
+			<pattern>\r</pattern>
+			<action></action>
+		</rule>
+		<rule>
+			<pattern>\n</pattern>
+			<action>System.out.println (2);</action>
+		</rule>
+		<rule>
+			<pattern>.</pattern>
+			<action>echo ();</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+	</lexer>
+</cookcc>

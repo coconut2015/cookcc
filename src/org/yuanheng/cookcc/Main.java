@@ -46,13 +46,15 @@ public class Main
 	public static String OPTION_QUIET = "-quiet";
 	public static String OPTION_LANG = "-lang";
 	public static String OPTION_DEBUG = "-debug";
+	public static String OPTION_LEXER_ANALYSIS = "-lexeranalysis";
 	public static String OPTION_ANALYSIS = "-analysis";
 	public static String OPTION_DEFAULTREDUCE = "-defaultreduce";
 
 	public static String OPTION_LEXERTABLE = "-lexertable";
 	public static String OPTION_PARSERTABLE = "-parsertable";
 
-	public static String ANALYSIS_FILE = "cookcc_parser_analysis.txt";
+	public static String LEXER_ANALYSIS_FILE = "cookcc_lexer_analysis.txt";
+	public static String PARSER_ANALYSIS_FILE = "cookcc_parser_analysis.txt";
 
 	private static Properties s_codeGenDrivers = new Properties ();
 	private static Properties s_inputParsers = new Properties ();
@@ -117,6 +119,28 @@ public class Main
 		public String toString ()
 		{
 			return OPTION_QUIET + "\t\t\t\tSuppress console messages.";
+		}
+	};
+
+	private static OptionHandler s_lexerAnalysisOption = new OptionHandler ()
+	{
+		public String getOption ()
+		{
+			return OPTION_LEXER_ANALYSIS;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
+		}
+
+		public String toString ()
+		{
+			return OPTION_LEXER_ANALYSIS + "\t\t\tGenerate analysis output for the lexer.";
 		}
 	};
 
@@ -278,6 +302,7 @@ public class Main
 		s_options.registerOptionHandler (s_helpOption);
 		s_options.registerOptionHandler (s_langOption);
 		s_options.registerOptionHandler (s_quietOption);
+		s_options.registerOptionHandler (s_lexerAnalysisOption);
 		s_options.registerOptionHandler (s_analysisOption);
 		s_options.registerOptionHandler (s_defaultReduceOption);
 		s_options.registerOptionHandler (s_lexerTableOption);
@@ -453,10 +478,17 @@ public class Main
 		return s_options.hasOption (OPTION_DEBUG) || options.hasOption (OPTION_DEBUG);
 	}
 
-	public static File getAnalysisFile (OptionMap options)
+	public static File getLexerAnalysisFile (OptionMap options)
+	{
+		if (s_options.hasOption (OPTION_LEXER_ANALYSIS) || options.hasOption (OPTION_LEXER_ANALYSIS))
+			return new File (LEXER_ANALYSIS_FILE);
+		return null;
+	}
+
+	public static File getParserAnalysisFile (OptionMap options)
 	{
 		if (s_options.hasOption (OPTION_ANALYSIS) || options.hasOption (OPTION_ANALYSIS))
-			return new File (ANALYSIS_FILE);
+			return new File (PARSER_ANALYSIS_FILE);
 		return null;
 	}
 

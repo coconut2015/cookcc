@@ -227,6 +227,7 @@ class ClassVisitor implements DeclarationVisitor
 		if (lexer == null)
 		{
 			lexer = new LexerDoc ();
+			lexer.setLineMode (m_option.lineMode ());
 			lexer.setTable (m_option.lexerTable ());
 			lexer.setWarnBackup (m_option.warnBackup ());
 			lexer.setYywrap (true);

@@ -37,6 +37,7 @@ class ESet implements Comparable<ESet>
 {
 	private final Set<NFA> m_set = NFA.getSortedSet ();
 	private int m_stateId;
+	private boolean m_eol;
 
 	public ESet ()
 	{
@@ -105,8 +106,28 @@ class ESet implements Comparable<ESet>
 		for (NFA nfa : m_set)
 		{
 			nfa.toString (buffer);
-			buffer.append ("  ");
 		}
 		return buffer.toString ();
+	}
+
+	/**
+	 * Is this state reached by '\n' character?
+	 * 
+	 * @return	Indicates whether or not this state is reached via '\n' character.
+	 */
+	public boolean isEol ()
+	{
+		return m_eol;
+	}
+
+	/**
+	 * Sets whether or not this state is reached via '\n' character.
+	 * 
+	 * @parm	eol
+	 * 			whether or not this state is reached via '\n' character.
+	 */
+	public void setEol (boolean eol)
+	{
+		m_eol = eol;
 	}
 }

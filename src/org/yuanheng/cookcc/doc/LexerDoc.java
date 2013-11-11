@@ -45,6 +45,8 @@ public class LexerDoc extends TreeDoc
 	private final HashMap<String, LexerStateDoc> m_stateMap = new HashMap<String, LexerStateDoc> ();
 	private final HashMap<String, ShortcutDoc> m_shortcutMap = new HashMap<String, ShortcutDoc> ();
 
+	private boolean m_lineMode;
+
 	private boolean m_bol;
 
 	private boolean m_warnBackup;
@@ -99,6 +101,27 @@ public class LexerDoc extends TreeDoc
 	public ShortcutDoc getShortcut (String name)
 	{
 		return m_shortcutMap.get (name);
+	}
+
+	/**
+	 * Check if the user wants to use the line mode in lexer.
+	 *
+	 * @return	whether or not to use line mode in lexer.
+	 */
+	public boolean isLineMode ()
+	{
+		return m_lineMode;
+	}
+
+	/**
+	 * Whether or not to use line mode in lexer.
+	 *
+	 * @param	lineMode
+	 * 			whether or not to use line mode in lexer.
+	 */
+	public void setLineMode (boolean lineMode)
+	{
+		m_lineMode = lineMode;
 	}
 
 	/**

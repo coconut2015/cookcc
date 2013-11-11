@@ -45,6 +45,13 @@ public @interface CookCCOption
 	boolean unicode () default false;
 
 	/**
+	 * Whether or not uses line mode for the lexer.  Default is false.
+	 *
+	 * @return	Whether or not uses line mode for the lexer
+	 */
+	boolean lineMode () default false;
+
+	/**
 	 * The default lexer DFA table format.  Available options are "full", "ecs",
 	 * and "compressed", in the order of decreasing table size, but increasing
 	 * cost of performances.

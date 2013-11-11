@@ -47,6 +47,7 @@
 	<!ATTLIST state        name CDATA #IMPLIED>
 
 	<!ATTLIST lexer        table (full|ecs|compressed) #IMPLIED>
+	<!ATTLIST lexer        linemode (true|false) #IMPLIED>
 	<!ATTLIST lexer        bol (true|false) #IMPLIED>
 	<!ATTLIST lexer        warnbackup (true|false) #IMPLIED>
 	<!ATTLIST lexer        yywrap (true|false) #IMPLIED>

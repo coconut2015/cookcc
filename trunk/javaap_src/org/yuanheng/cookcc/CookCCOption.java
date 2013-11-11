@@ -1,5 +1,5 @@
 /*
- * CookCC Copyright (c) 2008-2009, Heng Yuan
+ * CookCC Copyright (c) 2008-2013, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

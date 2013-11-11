@@ -145,7 +145,7 @@ public class Parser
 
 	public void parse () throws IOException
 	{
-		File analysisFile = Main.getAnalysisFile (m_options);
+		File analysisFile = Main.getParserAnalysisFile (m_options);
 		if (analysisFile != null)
 			m_out = new PrintStream (new FileOutputStream (analysisFile));
 

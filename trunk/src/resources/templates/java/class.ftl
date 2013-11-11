@@ -686,12 +686,19 @@ ${code.classheader}
 				{
 					// now okay to process the character
 					int cc_toState;
+<#if lexer.lineMode>
+	<#if unicode>
+					char ch = buffer[lookahead];
+	<#else>
+					byte ch = buffer[lookahead];
+	</#if>
+</#if>
 <#if lexer.table == "full">
-					cc_toState = cc_next[cc_matchedState][buffer[lookahead]<#if !unicode> & 0xff</#if>];
+					cc_toState = cc_next[cc_matchedState][<#if lexer.lineMode>ch<#else>buffer[lookahead]</#if><#if !unicode> & 0xff</#if>];
 <#elseif lexer.table == "ecs">
-					cc_toState = cc_next[cc_matchedState][cc_ecs[buffer[lookahead]<#if !unicode> & 0xff</#if>]];
+					cc_toState = cc_next[cc_matchedState][cc_ecs[<#if lexer.lineMode>ch<#else>buffer[lookahead]</#if><#if !unicode> & 0xff</#if>]];
 <#else>
-					int symbol = cc_ecs[buffer[lookahead]<#if !unicode> & 0xff</#if>];
+					int symbol = cc_ecs[<#if lexer.lineMode>ch<#else>buffer[lookahead]</#if><#if !unicode> & 0xff</#if>];
 					cc_toState = cc_matchedState;
 	<#if !lexer.dfa.default?has_content>
 					if (cc_check[symbol + cc_base[cc_matchedState]] == cc_matchedState)
@@ -746,6 +753,16 @@ ${code.classheader}
 					{
 						cc_backupMatchedState = cc_toState;
 						cc_backupMatchedLength = matchedLength;
+					}
+</#if>
+<#if lexer.lineMode>
+					if (ch == '\n')
+					{
+	<#if lexer.backup>
+						cc_matchedState = cc_backupMatchedState;
+						matchedLength = cc_backupMatchedLength;
+	</#if>
+						break;
 					}
 </#if>
 				}

@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.TreeSet;
 
+import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.doc.LexerDoc;
 import org.yuanheng.cookcc.doc.LexerStateDoc;
@@ -50,9 +51,9 @@ public class LexerDFAInfo
 		}
 	};
 
-	public static LexerDFAInfo getLexerDFAInfo (Document doc) throws IOException
+	public static LexerDFAInfo getLexerDFAInfo (Document doc, OptionMap options) throws IOException
 	{
-		return new LexerDFAInfo (doc.getLexer (), Lexer.getLexer (doc));
+		return new LexerDFAInfo (doc.getLexer (), Lexer.getLexer (doc, options));
 	}
 
 	private final LexerDoc m_lexerDoc;
@@ -122,6 +123,11 @@ public class LexerDFAInfo
 	public int getCaseCount ()
 	{
 		return m_lexer.getCaseCount ();
+	}
+
+	public boolean isLineMode ()
+	{
+		return m_lexerDoc.isLineMode ();
 	}
 
 	public boolean getBackup ()

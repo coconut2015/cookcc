@@ -26,13 +26,12 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-class LexerPattern implements Pattern
+class LexerPattern
 {
 	private final boolean m_bol;
 	private final ChainPattern m_pattern;
 	private final ChainPattern m_trailPattern;
 	private int m_precedence;
-	private String m_originalText;
 
 	public LexerPattern (ChainPattern pattern, ChainPattern trailPattern, boolean bol, boolean eol)
 	{
@@ -115,28 +114,9 @@ class LexerPattern implements Pattern
 		return m_pattern.toString ();
 	}
 
-	public void setOriginalText (String originalText)
-	{
-		m_originalText = originalText;
-	}
-
-	public String getOriginalText ()
-	{
-		return m_originalText;
-	}
-
 	public int getLength ()
 	{
 		return m_pattern.getLength ();
-	}
-
-	public NFA constructNFA (NFAFactory factory, NFA start)
-	{
-		start.trailContext = getTrailContext ();
-		NFA end = m_pattern.constructNFA (factory, start);
-		if (m_trailPattern == null)
-			return end;
-		return m_trailPattern.constructNFA (factory, end);
 	}
 
 	public boolean hasSubExpression ()
@@ -147,8 +127,17 @@ class LexerPattern implements Pattern
 	public NFA constructNFA (NFAFactory factory, int caseValue, int lineNumber)
 	{
 		NFA start = factory.createNFA ();
-		constructNFA (factory, start);
-		start.setState (caseValue, m_precedence, lineNumber, start.trailContext);
+		start.caseValue = caseValue;
+		start.lineNumber = lineNumber;
+		start.precedence = m_precedence;
+		start.trailContext = getTrailContext ();
+
+		NFA end = m_pattern.constructNFA (factory, start);
+		if (m_trailPattern != null)
+		{
+			m_trailPattern.constructNFA (factory, end);
+		}
+
 		return start;
 	}
 }

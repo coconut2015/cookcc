@@ -140,7 +140,6 @@ class PatternParser extends PatternScanner
 		if (yyParse () != 0)
 			throw new LexerException (lineNumber, text);
 		LexerPattern p = m_pattern;
-		p.setOriginalText (text);
 		p.setPrecedence (precedence);
 		reset ();
 		return p;

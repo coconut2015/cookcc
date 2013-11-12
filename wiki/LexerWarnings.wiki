@@ -27,7 +27,7 @@ By default, patterns specified earlier have precedence patterns specified later.
 
 Here are some [http://code.google.com/p/cookcc/source/browse/trunk/?#trunk/tests/unreachable examples] that cause such a problem.
 
-== Multi-Line Pattern in Line Mode ==
+== Multi-Line Patterns in Line Mode ==
 
 When line mode is used in lexer.  Multi-line patterns simply cannot matched.
 

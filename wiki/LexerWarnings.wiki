@@ -21,8 +21,14 @@ CookCC also requires user to specify {{{<<EOF>>}}} conditions for all states, ju
 
 Here are some [http://code.google.com/p/cookcc/source/browse/trunk/?#trunk/tests/incomplete examples] that cause such a problem.
 
-== Some Pattern Can Never Be Matched ==
+== Some Patterns Can Never Be Matched ==
 
 By default, patterns specified earlier have precedence patterns specified later.  Thus, for some patterns, the matchable strings could always be matched by other patterns first.
 
 Here are some [http://code.google.com/p/cookcc/source/browse/trunk/?#trunk/tests/unreachable examples] that cause such a problem.
+
+== Multi-Line Pattern in Line Mode ==
+
+When line mode is used in lexer.  Multi-line patterns simply cannot matched.
+
+When this warning is given, other warnings may not be accurate until this warning is fixed.

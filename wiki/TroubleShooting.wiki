@@ -36,3 +36,5 @@ The cause of the issue is likely due to an extra comma after the last element in
 }}}
 
 Eclipse Java Compiler (ECJ) does not report the extra comma in annotation arrays as a syntax error.  Sun's APT does not report the correct error message.  So it gets a bit confusing.  Once removing this extra comma, the problem would go away.
+
+If the problem still persists, check your class path passed to APT.  The incorrect PATH separator can lead to the similar back trace as well.

@@ -498,13 +498,8 @@ ${code.classheader}
 	// read more data from the input
 	protected boolean yyRefreshBuffer () throws IOException
 	{
-<#if unicode>
 		if (_yyBuffer == null)
-			_yyBuffer = new char[_yyBufferSize];
-<#else>
-		if (_yyBuffer == null)
-			_yyBuffer = new byte[_yyBufferSize];
-</#if>
+			_yyBuffer = new <#if unicode>char<#else>byte</#if>[_yyBufferSize];
 		if (_yyMatchStart > 0)
 		{
 			if (_yyBufferEnd > _yyMatchStart)
@@ -521,11 +516,8 @@ ${code.classheader}
 		}
 		else if (_yyBufferEnd == _yyBuffer.length)
 		{
-<#if unicode>
-			char[] newBuffer = new char[_yyBuffer.length + _yyBuffer.length / 2];
-<#else>
-			byte[] newBuffer = new byte[_yyBuffer.length + _yyBuffer.length / 2];
-</#if>
+			<#if unicode>char<#else>byte</#if>[] newBuffer = new <#if unicode>char<#else>byte</#if>[_yyBuffer.length + _yyBuffer.length / 2];
+
 			System.arraycopy (_yyBuffer, 0, newBuffer, 0, _yyBufferEnd);
 			_yyBuffer = newBuffer;
 		}
@@ -565,11 +557,7 @@ ${code.classheader}
 		_yyMatchStart = 0;
 		_yyBufferEnd = 0;
 		if (_yyBuffer != null && bufferSize != _yyBuffer.length)
-<#if unicode>
-			_yyBuffer = new char[bufferSize];
-<#else>
-			_yyBuffer = new byte[bufferSize];
-</#if>
+			_yyBuffer = new <#if unicode>char<#else>byte</#if>[bufferSize];
 	}
 
 	/**
@@ -647,11 +635,7 @@ ${code.classheader}
 </#if>
 		char[] cc_accept = cc_lexer.accept;
 
-<#if unicode>
-		char[] buffer = _yyBuffer;
-<#else>
-		byte[] buffer = _yyBuffer;
-</#if>
+		<#if unicode>char<#else>byte</#if>[] buffer = _yyBuffer;
 
 		while (true)
 		{
@@ -687,11 +671,7 @@ ${code.classheader}
 					// now okay to process the character
 					int cc_toState;
 <#if lexer.lineMode>
-	<#if unicode>
-					char ch = buffer[lookahead];
-	<#else>
-					byte ch = buffer[lookahead];
-	</#if>
+					<#if unicode>char<#else>byte</#if> ch = buffer[lookahead];
 </#if>
 <#if lexer.table == "full">
 					cc_toState = cc_next[cc_matchedState][<#if lexer.lineMode>ch<#else>buffer[lookahead]</#if><#if !unicode> & 0xff</#if>];

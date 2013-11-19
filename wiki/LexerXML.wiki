@@ -42,6 +42,7 @@ Options for the lexer are specified as attributes of the {{{<lexer>}}} tag.
 || *{{{bol}}}* || Instruct the lexer to keep track of the BOL (beginning of line) information even when there are no patterns use that information. ||
 || *{{{warnbackup}}}* || Generate warning of backup lexer states if set to true.  Default is false. ||
 || *{{{yywrap}}}* || Indicates that {{{yyWrap ()}}} function should be called when EOF is encountered.  Default is false. ||
+|| *{{{linemode}}}* || Instruct the lexer to match patterns one line at a time.  This mode is primarily useful for interactive modes where inputs are delimited by {{{'\n'}}} character.  Multi-line patterns will generate warnings since they cannot be matched in this mode.  ||
 
 === {{{<shortcut>}}} ===
 This tag is used to specify frequently used subset of patterns.  In the above example, when the pattern {{{ {word} }}} is seen, it is replaced with {{{({nonws})}}}, which is in turn replaced with {{{([^ \t\r\n])}}}.  So the actual pattern is {{{[^ \t\r\n]+}}}.

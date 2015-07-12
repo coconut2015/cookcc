@@ -36,7 +36,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: Task.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class Task extends org.apache.tools.ant.Task
 {
@@ -143,7 +143,21 @@ public class Task extends org.apache.tools.ant.Task
 		if (m_xccFiles.size () > 0)
 			executeCookCC (m_xccFiles.toArray (new String[m_xccFiles.size ()]));
 		if (m_aptFiles.size () > 0)
-			executeApt (m_aptFiles.toArray (new String[m_aptFiles.size ()]));
+		{
+			int version = JavaEnvUtils.getJavaVersionNumber ();
+			if (version < JavaEnvUtils.VERSION_1_5)
+			{
+				throw new RuntimeException ("CookCC APT must be executed by Java 1.5+.");
+			}
+			if (version == JavaEnvUtils.VERSION_1_5)
+			{
+				executeAptOld (m_aptFiles.toArray (new String[m_aptFiles.size ()]));
+			}
+			else
+			{
+				executeApt (m_aptFiles.toArray (new String[m_aptFiles.size ()]));
+			}
+		}
 	}
 
 	protected void executeCookCC (String[] files)
@@ -204,7 +218,82 @@ public class Task extends org.apache.tools.ant.Task
 		throw new RuntimeException ("Unable to determine the runtime path of CookCC.");
 	}
 
+	/**
+	 * Execute newer 1.6+ Java APT
+	 *
+	 * @param	classes
+	 */
 	protected void executeApt (String[] classes)
+	{
+		Commandline cmd = new Commandline ();
+		cmd.setExecutable (JavaEnvUtils.getJdkExecutable ("javac"));
+
+		if (m_srcDir == null)
+			throw new IllegalArgumentException ("Source directory is not specified.");
+
+		// do not compile the source code
+		cmd.createArgument ().setValue ("-proc:only");
+
+		// set the CookCC APT processor
+		cmd.createArgument ().setValue ("-processor");
+		cmd.createArgument ().setValue ("org.yuanheng.cookcc.input.ap.CookCCProcessor");
+
+		cmd.createArgument ().setValue ("-cp");
+		cmd.createArgument ().setValue (getCookCCPath () + File.pathSeparatorChar + m_srcDir.getPath ());
+
+		cmd.createArgument ().setValue ("-s");
+		cmd.createArgument ().setValue (m_srcDir.getPath ());
+
+		// always turn on generics since we are using Java 1.5+ anyways
+		cmd.createArgument ().setValue ("-Agenerics");
+
+		if (m_analysis)
+			cmd.createArgument ().setValue ("-Aanalysis");
+		if (m_debug)
+			cmd.createArgument ().setValue ("-Adebug");
+		if (m_defaultReduce)
+			cmd.createArgument ().setValue ("-Adefaultreduce");
+		if (m_lexerTable != null)
+			cmd.createArgument ().setValue ("-Alexertable=" + m_lexerTable);
+		if (m_parserTable != null)
+			cmd.createArgument ().setValue ("-Aparsertable=" + m_parserTable);
+		if (m_lang != null)
+			cmd.createArgument ().setValue ("-Alang=" + m_lang);
+		if (m_lang == null || "java".equals (m_lang))
+		{
+			if (m_destDir == null)
+				m_destDir = m_srcDir;
+			cmd.createArgument ().setValue ("-Ad=" + m_destDir.getPath ());
+		}
+		for (Option option : m_options)
+		{
+			if (option.m_name == null || option.m_name.length () == 0)
+				continue;
+			String arg = option.m_name;
+			if (arg.startsWith ("-"))
+				arg = arg.substring (1);
+			arg = "-A" + arg;
+			if (option.m_value != null)
+				arg = arg + '=' + option.m_value;
+			cmd.createArgument ().setValue (arg);
+		}
+
+		for (String className : classes)
+		{
+			File file = new File (m_srcDir, className);
+			cmd.createArgument ().setValue (file.getPath ());
+		}
+
+		if (executeCmd (cmd))
+			throw new RuntimeException ("Error executing CookCC using APT");
+	}
+
+	/**
+	 * Execute legacy 1.5 Java APT.
+	 *
+	 * @param	classes
+	 */
+	protected void executeAptOld (String[] classes)
 	{
 		Commandline cmd = new Commandline ();
 		cmd.setExecutable (JavaEnvUtils.getJdkExecutable ("apt"));

@@ -22,7 +22,7 @@
 		    <fileset dir="${build}" includes="**/**"/>
 		</delete>
 		<mkdir dir="${build}"/>
-		<javac includeantruntime="yes" debug="true" deprecation="true" destdir="${build}" optimize="true" includes="**/**.java" source="1.6" target="1.6">
+		<javac includeantruntime="yes" debug="true" deprecation="true" destdir="${build}" optimize="true" includes="**/**.java" source="1.7" target="1.7">
 			<src path="${src}"/>
 			<src path="${basedir}/javaannot_src"/>
 			<src path="${basedir}/javaap_src"/>
@@ -67,6 +67,41 @@
 				<attribute name="Implementation-Vendor" value="Heng Yuan"/>
 			</manifest>
 			<fileset dir="${build}" includes="**/**.class"/>
+			<fileset dir="${src}" excludes="**/**.java"/>
+			<!-- freemarker jar files -->
+			<zipfileset src="${lib}/freemarker.jar"/>
+			<!-- cookxml jar files -->
+			<zipfileset src="${lib}/cookxml-3.0.1.jar" excludes="LICENSE"/>
+			<fileset dir="${basedir}">
+				<patternset>
+					<include name="${license}"/>
+				</patternset>
+			</fileset>
+
+			<fileset dir="${basedir}/javaap_src">
+				<include name="META-INF/**/**"/>
+				<include name="resources/**/**"/>
+			</fileset>
+		</jar>
+		<copy file="${dist}/cookcc-${version}.jar" tofile="${tool}/cookcc-latest.jar"/>
+	</target>
+	<target name="cookcc_eclipse_jar" depends="init" description="Build CookCC binary using Eclipse generated classes">
+		<tstamp>
+			<format property="today" pattern="yyyy-MM-dd" locale="en"/>
+		</tstamp>
+		<delete file="${dist}/cookcc-${version}.jar"/>
+		<jar compress="true" destfile="${dist}/cookcc-${version}.jar">
+			<manifest>
+				<attribute name="Main-CLass" value="org.yuanheng.cookcc.Main"/>
+				<attribute name="Build-Date" value="${today}"/>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Specification-Title" value="shiva"/>
+				<attribute name="Specification-Version" value="${version}"/>
+				<attribute name="Specification-Vendor" value="Heng Yuan"/>
+				<attribute name="Implementation-Version" value="${version} ${today}"/>
+				<attribute name="Implementation-Vendor" value="Heng Yuan"/>
+			</manifest>
+			<fileset dir="${basedir}/classes" includes="**/**.class"/>
 			<fileset dir="${src}" excludes="**/**.java"/>
 			<!-- freemarker jar files -->
 			<zipfileset src="${lib}/freemarker.jar"/>

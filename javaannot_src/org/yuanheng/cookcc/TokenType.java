@@ -30,7 +30,7 @@ package org.yuanheng.cookcc;
  * The associations of tokens.
  *
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: TokenType.java 764 2015-05-08 05:07:25Z superduperhengyuan@gmail.com $
  * @since 0.3
  */
 public enum TokenType

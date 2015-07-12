@@ -28,7 +28,7 @@ package org.yuanheng.cookcc.codegen.xml;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: Utils.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 class Utils
 {

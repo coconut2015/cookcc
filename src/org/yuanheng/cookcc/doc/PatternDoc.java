@@ -28,7 +28,7 @@ package org.yuanheng.cookcc.doc;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: PatternDoc.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class PatternDoc extends TreeDoc
 {
@@ -45,7 +45,7 @@ public class PatternDoc extends TreeDoc
 	private int m_caseValue = -1;            // special value indicating no case value set, since we do get case 0.
 	private boolean m_internal;
 	private int m_trailContext;
-	private int m_lineNumber;
+	private long m_lineNumber;
 	private int m_precedence;
 
 	public PatternDoc (boolean internal)
@@ -153,12 +153,12 @@ public class PatternDoc extends TreeDoc
 		return m_trailContext >> 2;
 	}
 
-	public int getLineNumber ()
+	public long getLineNumber ()
 	{
 		return m_lineNumber;
 	}
 
-	public void setLineNumber (int lineNumber)
+	public void setLineNumber (long lineNumber)
 	{
 		m_lineNumber = lineNumber;
 	}

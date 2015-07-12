@@ -28,7 +28,7 @@ package org.yuanheng.cookcc.parser;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: LR0Closure.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 class LR0Closure implements Closure
 {

@@ -31,7 +31,7 @@ import org.yuanheng.cookcc.doc.Document;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: CodeGen.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 public interface CodeGen
 {

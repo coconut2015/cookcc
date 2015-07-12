@@ -33,7 +33,7 @@ import java.util.TreeSet;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: NFA.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 class NFA implements Comparable<NFA>
 {
@@ -57,7 +57,7 @@ class NFA implements Comparable<NFA>
 	NFA next2;
 	boolean mark;
 	int precedence = Integer.MAX_VALUE;
-	int lineNumber = Integer.MAX_VALUE;
+	long lineNumber = Long.MAX_VALUE;
 
 	final int id;
 
@@ -78,7 +78,7 @@ class NFA implements Comparable<NFA>
 		next2 = null;
 		mark = false;
 		precedence = Integer.MAX_VALUE;
-		lineNumber = Integer.MAX_VALUE;
+		lineNumber = Long.MAX_VALUE;
 	}
 
 	void copyStates (NFA nfa)
@@ -89,7 +89,7 @@ class NFA implements Comparable<NFA>
 		trailContext = nfa.trailContext;
 	}
 
-	public void setState (int caseValue, int precedence, int lineNumber, int trail)
+	public void setState (int caseValue, int precedence, long lineNumber, int trail)
 	{
 		trailContext = trail;
 		NFA end = last ();

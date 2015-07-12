@@ -35,7 +35,7 @@ import cookxml.core.util.TextUtils;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: CodeCreator.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 class CodeCreator implements Creator
 {

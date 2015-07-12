@@ -28,11 +28,11 @@ package org.yuanheng.cookcc.exception;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: ParserException.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class ParserException extends CookCCException
 {
-	public ParserException (int lineNumber, String msg)
+	public ParserException (long lineNumber, String msg)
 	{
 		super (lineNumber, msg);
 	}

@@ -30,22 +30,22 @@ import java.text.MessageFormat;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: CookCCException.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class CookCCException extends RuntimeException
 {
 	public static MessageFormat ERROR_MSG = new MessageFormat ("Error on line {0}: {1}.");
 
-	private final int m_lineNumber;
+	private final long m_lineNumber;
 	private final String m_msg;
 
-	public CookCCException (int lineNumber, String msg)
+	public CookCCException (long lineNumber, String msg)
 	{
 		m_lineNumber = lineNumber;
 		m_msg = msg;
 	}
 
-	public int getLineNumber ()
+	public long getLineNumber ()
 	{
 		return m_lineNumber;
 	}
@@ -53,7 +53,7 @@ public class CookCCException extends RuntimeException
 	@Override
 	public String toString ()
 	{
-		Object[] objs = new Object[]{new Integer (m_lineNumber), m_msg};
+		Object[] objs = new Object[]{new Long (m_lineNumber), m_msg};
 		return ERROR_MSG.format (objs);
 	}
 }

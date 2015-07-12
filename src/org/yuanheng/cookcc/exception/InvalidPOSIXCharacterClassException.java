@@ -36,7 +36,7 @@ public class InvalidPOSIXCharacterClassException extends InvalidRegExException
 {
 	public static MessageFormat ERROR_MSG = new MessageFormat ("Invalid POSIX Character Class: {0}");
 
-	public InvalidPOSIXCharacterClassException (int lineNumber, String name, String input)
+	public InvalidPOSIXCharacterClassException (long lineNumber, String name, String input)
 	{
 		super (lineNumber, ERROR_MSG.format (new Object[]{name}), input);
 	}

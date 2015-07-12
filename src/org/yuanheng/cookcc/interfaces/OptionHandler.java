@@ -31,7 +31,7 @@ package org.yuanheng.cookcc.interfaces;
  * It's toString () function is used to print usage.
  *
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: OptionHandler.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 public interface OptionHandler
 {

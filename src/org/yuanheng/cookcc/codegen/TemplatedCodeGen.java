@@ -54,7 +54,7 @@ import freemarker.template.Template;
  * A utility class for code generators.
  *
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: TemplatedCodeGen.java 754 2013-11-11 12:16:08Z superduperhengyuan@gmail.com $
  */
 public abstract class TemplatedCodeGen implements CodeGen
 {

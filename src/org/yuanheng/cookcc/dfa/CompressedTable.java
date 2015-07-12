@@ -32,7 +32,7 @@ import org.yuanheng.cookcc.lexer.Lexer;
  * Perform table compression
  *
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: CompressedTable.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 public class CompressedTable
 {

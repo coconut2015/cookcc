@@ -33,7 +33,7 @@ import java.io.Reader;
  * This class is merely a place holder.
  *
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: CookCCChar.java 764 2015-05-08 05:07:25Z superduperhengyuan@gmail.com $
  * @since 0.3
  */
 public abstract class CookCCChar

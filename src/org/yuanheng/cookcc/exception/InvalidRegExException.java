@@ -30,7 +30,7 @@ import java.text.MessageFormat;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: InvalidRegExException.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class InvalidRegExException extends ParserException
 {
@@ -38,13 +38,13 @@ public class InvalidRegExException extends ParserException
 
 	private final String m_regex;
 
-	public InvalidRegExException (int lineNumber, String msg, String input)
+	public InvalidRegExException (long lineNumber, String msg, String input)
 	{
 		super (lineNumber, msg);
 		m_regex = input;
 	}
 
-	public InvalidRegExException (int lineNumber, String input)
+	public InvalidRegExException (long lineNumber, String input)
 	{
 		super (lineNumber, ERROR_MSG.format (new Object[]{input}));
 		m_regex = input;

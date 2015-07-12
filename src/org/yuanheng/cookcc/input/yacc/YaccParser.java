@@ -36,7 +36,7 @@ import org.yuanheng.cookcc.doc.*;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: YaccParser.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 @CookCCOption (lexerTable = "ecs", parserTable = "ecs")
 public class YaccParser extends YaccLexer

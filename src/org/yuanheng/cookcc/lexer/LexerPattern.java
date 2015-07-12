@@ -124,7 +124,7 @@ class LexerPattern
 		return m_pattern.hasSubExpression ();
 	}
 
-	public NFA constructNFA (NFAFactory factory, int caseValue, int lineNumber)
+	public NFA constructNFA (NFAFactory factory, int caseValue, long lineNumber)
 	{
 		NFA start = factory.createNFA ();
 		start.caseValue = caseValue;

@@ -34,7 +34,7 @@ import java.lang.annotation.RetentionPolicy;
  * specified is matched.
  *
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: Lex.java 764 2015-05-08 05:07:25Z superduperhengyuan@gmail.com $
  * @since 0.3
  */
 @Retention (value = RetentionPolicy.SOURCE)

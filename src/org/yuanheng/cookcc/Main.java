@@ -38,7 +38,7 @@ import org.yuanheng.cookcc.interfaces.OptionHandler;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: Main.java 754 2013-11-11 12:16:08Z superduperhengyuan@gmail.com $
  */
 public class Main
 {

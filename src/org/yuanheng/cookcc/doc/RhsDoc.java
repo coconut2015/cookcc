@@ -28,13 +28,13 @@ package org.yuanheng.cookcc.doc;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: RhsDoc.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class RhsDoc extends TreeDoc
 {
 	private String m_terms = "";
 	private int m_caseValue = -1;            // special value indicating no case value set, since we do get case 0.
-	private int m_lineNumber;
+	private long m_lineNumber;
 	private int m_actionLineNumber;
 	private String m_action = "";
 	private String m_precedence;
@@ -71,12 +71,12 @@ public class RhsDoc extends TreeDoc
 		m_caseValue = caseValue;
 	}
 
-	public int getLineNumber ()
+	public long getLineNumber ()
 	{
 		return m_lineNumber;
 	}
 
-	public void setLineNumber (int lineNumber)
+	public void setLineNumber (long lineNumber)
 	{
 		m_lineNumber = lineNumber;
 	}

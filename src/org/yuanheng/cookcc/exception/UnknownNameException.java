@@ -30,13 +30,13 @@ import java.text.MessageFormat;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: UnknownNameException.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class UnknownNameException extends InvalidRegExException
 {
 	public static MessageFormat ERROR_MSG = new MessageFormat ("unknown name: {0}");
 
-	public UnknownNameException (int lineNumber, String name, String input)
+	public UnknownNameException (long lineNumber, String name, String input)
 	{
 		super (lineNumber, ERROR_MSG.format (new Object[]{name}), input);
 	}

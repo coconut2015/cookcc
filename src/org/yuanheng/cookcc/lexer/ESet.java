@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: ESet.java 754 2013-11-11 12:16:08Z superduperhengyuan@gmail.com $
  */
 class ESet implements Comparable<ESet>
 {

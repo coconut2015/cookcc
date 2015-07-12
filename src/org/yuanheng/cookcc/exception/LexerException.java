@@ -28,12 +28,12 @@ package org.yuanheng.cookcc.exception;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: LexerException.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class LexerException extends CookCCException
 {
-	public LexerException (int lineNumber, String msg)
+	public LexerException (long lineNumber, String text, String msg)
 	{
-		super (lineNumber, msg);
+		super (lineNumber, "pattern: " + text + ", " + msg);
 	}
 }

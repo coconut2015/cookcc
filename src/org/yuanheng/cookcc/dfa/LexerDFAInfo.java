@@ -39,7 +39,7 @@ import org.yuanheng.cookcc.lexer.Lexer;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: LexerDFAInfo.java 754 2013-11-11 12:16:08Z superduperhengyuan@gmail.com $
  */
 public class LexerDFAInfo
 {

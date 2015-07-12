@@ -30,13 +30,13 @@ import java.text.MessageFormat;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: VariableTrailContextException.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class VariableTrailContextException extends InvalidRegExException
 {
 	public static MessageFormat ERROR_MSG = new MessageFormat ("variable head and tail trail context used: {0}");
 
-	public VariableTrailContextException (int lineNumber, String input)
+	public VariableTrailContextException (long lineNumber, String input)
 	{
 		super (lineNumber, ERROR_MSG.format (new Object[]{input}), input);
 	}

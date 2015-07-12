@@ -34,7 +34,7 @@ import org.yuanheng.cookcc.parser.Parser;
  * Perform table compression
  *
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: ECSParserTable.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 public class ECSParserTable
 {

@@ -35,7 +35,7 @@ import cookxml.core.util.TextUtils;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: ShortcutCreator.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 class ShortcutCreator implements Creator
 {

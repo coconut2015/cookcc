@@ -89,7 +89,7 @@ class PatternParser extends PatternScanner
 	private final CCL m_ccl;
 	private final CCLParser m_cclParser;
 
-	private int m_lineNumber;
+	private long m_lineNumber;
 	private String m_input;
 
 	private StringBuffer m_cclBuffer;
@@ -132,13 +132,13 @@ class PatternParser extends PatternScanner
 	 * regular expression.  It can be used to construct the
 	 * NFA.
 	 */
-	public LexerPattern parse (int precedence, int lineNumber, String text) throws IOException
+	public LexerPattern parse (int precedence, long lineNumber, String text) throws IOException
 	{
 		m_lineNumber = lineNumber;
 		m_input = text;
 		setInput (new StringReader (text));
 		if (yyParse () != 0)
-			throw new LexerException (lineNumber, text);
+			throw new LexerException (lineNumber, text, "parse error");
 		LexerPattern p = m_pattern;
 		p.setPrecedence (precedence);
 		reset ();
@@ -290,7 +290,7 @@ class PatternParser extends PatternScanner
 	@Lex (pattern = "'{'", token = "error")
 	void scanRepeatError ()
 	{
-		throw new LexerException (m_lineNumber, "Unexpected { character.");
+		throw new LexerException (m_lineNumber, m_input, "Unexpected { character.");
 	}
 
 	@Lex (pattern = "[\']", token = "LQUOTE")
@@ -333,17 +333,26 @@ class PatternParser extends PatternScanner
 	@Lex (pattern = "'['", state = "CCLSTATE")
 	void scanCCLError ()
 	{
-		throw new LexerException (m_lineNumber, "Unexpected [ character.");
+		throw new LexerException (m_lineNumber, m_input, "Unexpected [ character.");
 	}
 
 	@Lexs (patterns = {
-		@Lex (pattern = "\\.", state = "CCLSTATE"),
-		@Lex (pattern = "[^\\[\\]]+", state = "CCLSTATE"),
+		@Lex (pattern = "\\\\.", state = "CCLSTATE"),
+		@Lex (pattern = "[^\\\\\\r\\n\\[\\]]+", state = "CCLSTATE"),
 		@Lex (pattern = "'[:'('^'?)([a-zA-Z]+)':]'", state = "CCLSTATE")
 	})
 	void scanCCLText ()
 	{
 		m_cclBuffer.append (yyText ());
+	}
+
+	@Lex (pattern = ".|\\n", state = "CCLSTATE")
+	void scanInvalidCCLText ()
+	{
+		String str = yyText ();
+		if (str.equals ("\n") || str.equals ("\r"))
+			str = "new line";
+		throw new LexerException (m_lineNumber, m_input, "Unexpected " + str + " + in CCL.");
 	}
 
 	////////////////////////////////////////////////////////////////////////
@@ -368,7 +377,7 @@ class PatternParser extends PatternScanner
 	@Lex (pattern = "<<EOF>>", state = "CCLSTATE, SQUOTE, DQUOTE", token = "error")
 	void scanEofError () throws IOException
 	{
-		throw new LexerException (m_lineNumber, "Unexpected end of input.");
+		throw new LexerException (m_lineNumber, m_input, "Unexpected end of input.");
 	}
 
 	////////////////////////////////////////////////////////////////////////

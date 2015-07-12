@@ -34,7 +34,7 @@ import cookxml.core.interfaces.Creator;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: GrammarCreator.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 class GrammarCreator implements Creator
 {

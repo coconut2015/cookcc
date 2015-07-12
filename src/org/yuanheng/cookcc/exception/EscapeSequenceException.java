@@ -30,7 +30,7 @@ import java.text.MessageFormat;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: EscapeSequenceException.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 public class EscapeSequenceException extends RuntimeException
 {

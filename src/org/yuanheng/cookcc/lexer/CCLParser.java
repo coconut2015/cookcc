@@ -41,7 +41,7 @@ class CCLParser extends CCLScanner
 {
 	private final CCL m_ccl;
 
-	private int m_lineNumber;
+	private long m_lineNumber;
 	private String m_input;
 
 	private boolean m_notCCL;
@@ -54,7 +54,7 @@ class CCLParser extends CCLScanner
 		m_ccl = ccl;
 	}
 
-	public boolean[] parse (String input, int lineNumber) throws IOException
+	public boolean[] parse (String input, long lineNumber) throws IOException
 	{
 		m_lineNumber = lineNumber;
 		m_input = input;

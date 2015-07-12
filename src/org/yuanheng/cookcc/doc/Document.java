@@ -37,7 +37,7 @@ import java.util.Map;
  * format from one to another.
  *
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: Document.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class Document extends TreeDoc
 {
@@ -111,5 +111,10 @@ public class Document extends TreeDoc
 	public TokensDoc[] getTokens ()
 	{
 		return m_tokens.toArray (new TokensDoc[m_tokens.size ()]);
+	}
+
+	public boolean hasTokens ()
+	{
+		return m_tokens.size () > 0;
 	}
 }

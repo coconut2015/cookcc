@@ -44,7 +44,7 @@ import org.yuanheng.cookcc.lexer.CCL;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: Parser.java 765 2015-06-23 07:30:06Z superduperhengyuan@gmail.com $
  */
 public class Parser
 {
@@ -272,7 +272,7 @@ public class Parser
 				Production production = new Production (lhs, m_productionIdCounter++);
 				LinkedList<Integer> symbolList = new LinkedList<Integer> ();
 				String terms = rhs.getTerms ().trim ();
-				int lineNumber = rhs.getLineNumber ();
+				long lineNumber = rhs.getLineNumber ();
 				while (terms.length () > 0)
 				{
 					pos[0] = 0;
@@ -345,7 +345,7 @@ public class Parser
 						else
 							tok = m_terminalMap.get (value[0]);
 						if (tok == null)
-							throw new ParserException (lineNumber, "Invalid terminal specified for %prec.");
+							throw new ParserException (lineNumber, "Invalid terminal '" + name + "' specified for %prec.");
 						production.setPrecedence (tok);
 					}
 				}
@@ -359,7 +359,7 @@ public class Parser
 		}
 	}
 
-	private int parseTerm (int lineNumber, String terms, int[] pos, char[] type)
+	private int parseTerm (long lineNumber, String terms, int[] pos, char[] type)
 	{
 		if (terms.startsWith ("'\\''"))
 		{
@@ -424,12 +424,12 @@ public class Parser
 		throw new ParserException (lineNumber, "Invalid symbol: " + terms);
 	}
 
-	private String checkTerminalName (int lineNumber, String name, int[] value)
+	private String checkTerminalName (long lineNumber, String name, int[] value)
 	{
 		return checkTerminalName (lineNumber, name, value, false);
 	}
 
-	private String checkTerminalName (int lineNumber, String name, int[] value, boolean noInternal)
+	private String checkTerminalName (long lineNumber, String name, int[] value, boolean noInternal)
 	{
 		try
 		{
@@ -477,7 +477,7 @@ public class Parser
 		return value.intValue ();
 	}
 
-	private int getSymbol (int lineNumber, String name)
+	private int getSymbol (long lineNumber, String name)
 	{
 		int[] checkValue = new int[1];
 		name = checkTerminalName (lineNumber, name, checkValue);

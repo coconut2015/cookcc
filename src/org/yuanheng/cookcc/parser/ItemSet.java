@@ -30,7 +30,7 @@ import java.util.*;
 
 /**
  * @author Heng Yuan
- * @version $Id$
+ * @version $Id: ItemSet.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
 class ItemSet implements Comparable<ItemSet>
 {

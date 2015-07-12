@@ -38,7 +38,7 @@ public class NestedSubExpressionException extends CookCCException
 
 	private final String m_pattern;
 
-	public NestedSubExpressionException (int lineNumber, String pattern)
+	public NestedSubExpressionException (long lineNumber, String pattern)
 	{
 		super (lineNumber, ERROR_MSG.format (new Object[]{pattern}));
 		m_pattern = pattern;

@@ -17,12 +17,14 @@
 	</target>
 
 	<target name="compile" depends="init">
+		<mkdir dir="${build}"/>
 		<delete includeemptydirs="true">
 		    <fileset dir="${build}" includes="**/**"/>
 		</delete>
 		<mkdir dir="${build}"/>
-		<javac debug="true" deprecation="true" destdir="${build}" optimize="true" includes="**/**.java" source="1.5" target="1.5">
+		<javac includeantruntime="yes" debug="true" deprecation="true" destdir="${build}" optimize="true" includes="**/**.java" source="1.6" target="1.6">
 			<src path="${src}"/>
+			<src path="${basedir}/javaannot_src"/>
 			<src path="${basedir}/javaap_src"/>
 			<src path="${basedir}/anttask_src"/>
 			<classpath>
@@ -37,6 +39,7 @@
 				<patternset>
 					<include name="src/**/**.*"/>
 					<include name="lib/**/**.jar"/>
+					<include name="javaannot_src/**/**.*"/>
 					<include name="javaap_src/**/**.*"/>
 					<include name="anttask_src/**/**.*"/>
 					<include name="junit/**/**.*"/>
@@ -88,7 +91,7 @@
 	<!-- lexer/parser generated from CookCC -->
 
 	<target name="FileHeaderLexer.java" depends="initcookcc">
-		<cookcc srcdir="${basedir}/javaap_src" src="org/yuanheng/cookcc/input/javaap/FileHeaderScanner.java"/>
+		<cookcc srcdir="${basedir}/javaap_src" src="org/yuanheng/cookcc/util/FileHeaderScanner.java"/>
 	</target>
 	<target name="YaccLexer.java" depends="initcookcc">
 		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/input/yacc/YaccParser.java"/>

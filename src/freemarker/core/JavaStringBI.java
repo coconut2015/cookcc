@@ -43,12 +43,21 @@ import freemarker.template.*;
  */
 public class JavaStringBI extends BuiltIn
 {
-	private final static int MAX_ARRAY_LEN = 32000;
+	private final static int MAX_ARRAY_LEN = 32767;
 
 	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
 		BuiltIn.builtins.put ("javastring", new JavaStringBI ());
+	}
+
+	private static int getUTF8Length (int value)
+	{
+		if (value < 0x80)
+			return 1;
+		if (value < 0x800)
+			return 2;
+		return 3;
 	}
 
 	@Override
@@ -78,12 +87,17 @@ public class JavaStringBI extends BuiltIn
 			buffer.append ("(\"");
 //			buffer.append ('\"');
 			int size = m_seq.size ();
+			int utf8Size = 0;
 			for (int i = 0; i < size; ++i)
 			{
-				if (i % MAX_ARRAY_LEN == 0 && i > 0)
-					buffer.append ("\" + \"");
 				TemplateNumberModel model = (TemplateNumberModel)m_seq.get (i);
 				int value = model.getAsNumber ().shortValue () & 0xffff;
+				utf8Size += getUTF8Length(value);
+				if (utf8Size > MAX_ARRAY_LEN)
+				{
+					buffer.append ("\" + \"");
+					utf8Size = 0;
+				}
 				if (value < 128)
 				{
 					buffer.append ('\\');

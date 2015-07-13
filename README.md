@@ -2,7 +2,7 @@ CookCC is a lexer and parser (LALR (1)) generator project, combined.  It is writ
 
 CookCC comes with two unique features, which were the original motivations for this work.
 
-1. CookCC uses a unique approach of storing and loading DFA tables in Java that significantly reduces the starting up time.  Many efforts have been made to maximize the generated Java lexer and parser performances, painstakingly line-by-line, case-by-case fine turning the lexer and parser code.  I believe that CookCC is the fastest lexer for Java (see the [performance test](../../wiki/TargetLanguageJava#performance).
+1. CookCC uses a unique approach of storing and loading DFA tables in Java that significantly reduces the starting up time.  Many efforts have been made to maximize the generated Java lexer and parser performances, painstakingly line-by-line, case-by-case fine turning the lexer and parser code.  I believe that CookCC is the fastest lexer for Java ( see the [performance test](../../wiki/TargetLanguageJava#performance) ).
 1. CookCC allows lexer/parser patterns and rules to be specified using Java annotation.  This feature greatly simplifies and eases the writing of lexer and parser for Java.
 
 Other Features

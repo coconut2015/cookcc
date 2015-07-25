@@ -1,21 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 
-function error ()
-{
-	echo $@ && exit 1
-}
-
-test -z "$JAVA_HOME" && error need to set JAVA_HOME env
-test -z "$COOKCC" && error need to set COOKCC env
-
-cookcc="${JAVA_HOME}/bin/java -jar ${COOKCC}"
+source ../../../bin/settings.sh
 
 for v in *.xcc
 do
 	echo testing $v
 
-	$cookcc -lang plain -lexertable compressed $v | grep "compressed correctly" > output 2> /dev/null || error test for $v failed
-	diff output test.output > /dev/null || error test for $v failed
+	INPUT=test.input
+	OUTPUT=test.output
+
+	"$java" -jar "${COOKCC}" -lang plain -lexertable compressed $v | grep "compressed correctly" > output 2> /dev/null || testerror $v
+	diff output $OUTPUT > /dev/null || testerror $v
 
 	rm -f output
 done

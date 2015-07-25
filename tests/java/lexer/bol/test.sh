@@ -1,23 +1,19 @@
-#!/bin/sh
+#!/bin/bash
 
-function error ()
-{
-	echo $@ && exit 1
-}
-
-test -z "$JAVA_HOME" && error need to set JAVA_HOME env
-test -z "$COOKCC" && error need to set COOKCC env
-
-cookcc="${JAVA_HOME}/bin/java -jar ${COOKCC}"
+source ../../../bin/settings.sh
 
 for v in *.xcc
 do
 	echo testing $v
 
-	$cookcc $v
-	${JAVA_HOME}/bin/javac Lexer.java > /dev/null 2> /dev/null || error test for $v failed
-	${JAVA_HOME}/bin/java -cp . Lexer test.input > output || error test for $v failed
-	diff output ${v}.output > /dev/null || error test for $v failed
+	INPUT=test.input
+	OUTPUT=${v%.xcc}.output
+
+	cookcc $v
+
+	"$javac" Lexer.java > /dev/null 2> /dev/null || testerror $v
+	"$java" -cp . Lexer $INPUT > output || testerror $v
+	diff output $OUTPUT > /dev/null || testerror $v
 
 	rm -f Lexer.java
 	rm -f Lexer*.class

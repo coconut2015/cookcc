@@ -1,9 +1,0 @@
-call ();
-;
-call (me)					// missing ';'
-call (me (again)));			// extra ')'
-call (me (once (again))))	// extra ')' and missing ';'
-hang (up)					// missing ';' again
-end ();
-do (it);
-;

@@ -1,12 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-function error ()
-{
-	echo $@ && exit 1
-}
+if [ -z "$COOKCC" ]; then
+	export COOKCC="../tool/cookcc-latest.jar"
+fi
 
-test -z "$JAVA_HOME" && error need to set JAVA_HOME env
-test -z "$COOKCC" && error need to set COOKCC env
+source bin/settings.sh
 
 for v in *; do
 	if [ ! -d $v  ]; then continue; fi

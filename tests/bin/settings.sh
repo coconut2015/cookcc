@@ -49,3 +49,9 @@ function run ()
 	"$java" -cp . $1 $3 > output || testerror $2
 	diff output $4 > /dev/null || testerror $2
 }
+
+function run2 ()
+{
+	"$java" -cp . $1 $3 > output 2>&1
+	diff output $4 > /dev/null || testerror $2
+}

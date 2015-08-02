@@ -10,9 +10,8 @@ do
 	OUTPUT=${v%.xcc}.output
 
 	cookcc $v
-	"$javac" Lexer.java > /dev/null 2> /dev/null || testerror $v
-	"$java" -cp . Lexer $INPUT > output || testerror $v
-	diff output $OUTPUT > /dev/null || testerror $v
+	compile Lexer.java $v
+	run Lexer $v $INPUT $OUTPUT
 
 	time "$java" -cp . Lexer $INPUT > /dev/null
 	time "$java" -cp . Lexer $INPUT > /dev/null

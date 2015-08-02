@@ -1,0 +1,3 @@
+Following patterns can never be matched:
+	<INITIAL>abc
+	<INITIAL>a+b+c+

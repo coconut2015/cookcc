@@ -37,3 +37,15 @@ function apt ()
 {
 	"$javac" -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . $@
 }
+
+function compile ()
+{
+	"$javac" -classpath "$COOKCC:." $1 > /dev/null 2> /dev/null || testerror $2
+}
+
+
+function run ()
+{
+	"$java" -cp . $1 $3 > output || testerror $2
+	diff output $4 > /dev/null || testerror $2
+}

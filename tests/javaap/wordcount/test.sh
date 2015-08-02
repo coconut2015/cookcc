@@ -1,15 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-function error ()
-{
-	echo $@ && exit 1
-}
-
-test -z "$JAVA_HOME" && error need to set JAVA_HOME env
-test -z "$COOKCC" && error need to set COOKCC env
-
-classpath="${COOKCC};."
-apt="${JAVA_HOME}/bin/apt -nocompile -cp $classpath -s ."
+source ../../bin/settings.sh
 
 for v in WC*.java
 do
@@ -19,10 +10,9 @@ do
 
 	cp Lexer$num.java.orig Lexer$num.java
 
-	$apt $v
-	${JAVA_HOME}/bin/javac -classpath $classpath $v > /dev/null 2> /dev/null || error test for $v failed
-	${JAVA_HOME}/bin/java -cp . WC$num ../../java/lexer/fastwc/test.input > output || error test for $v failed
-	diff output test.output > /dev/null || error test for $v failed
+	apt $v
+	compile $v $v
+	run WC$num $v ../../java/lexer/fastwc/test.input test.output
 
 	rm -f Lexer$num.java
 	rm -f *.class

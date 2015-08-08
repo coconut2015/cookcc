@@ -43,7 +43,7 @@ import freemarker.template.*;
  */
 public class JavaStringBI extends BuiltIn
 {
-	private final static int MAX_ARRAY_LEN = 32767;
+	private final static int MAX_ARRAY_LEN = 65534;
 
 	@SuppressWarnings ("unchecked")
 	public static void init ()

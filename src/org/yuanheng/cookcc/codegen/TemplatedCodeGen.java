@@ -131,7 +131,7 @@ public abstract class TemplatedCodeGen implements CodeGen
 		map.put ("debug", Main.isDebug (options));
 		map.put ("tokens", doc.getTokens ());
 		map.put ("code", doc.getCode ());
-		map.put ("unicode", Boolean.valueOf (doc.isUnicode ()));
+		map.put ("unicode", Boolean.valueOf (doc.isUnicode () || Main.isUnicode (options)));
 
 		if (lexer != null)
 			map.put ("lexer", LexerDFAInfo.getLexerDFAInfo (doc, options));

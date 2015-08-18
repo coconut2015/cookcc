@@ -46,6 +46,7 @@ public class Main
 	public static String OPTION_QUIET = "-quiet";
 	public static String OPTION_LANG = "-lang";
 	public static String OPTION_DEBUG = "-debug";
+	public static String OPTION_UNICODE = "-unicode";
 	public static String OPTION_LEXER_ANALYSIS = "-lexeranalysis";
 	public static String OPTION_ANALYSIS = "-analysis";
 	public static String OPTION_DEFAULTREDUCE = "-defaultreduce";
@@ -295,6 +296,28 @@ public class Main
 		}
 	};
 
+	private static OptionHandler s_unicodeOption = new OptionHandler ()
+	{
+		public String getOption ()
+		{
+			return OPTION_UNICODE;
+		}
+
+		public boolean requireArguments ()
+		{
+			return false;
+		}
+
+		public void handleOption (String value) throws Exception
+		{
+		}
+
+		public String toString ()
+		{
+			return OPTION_UNICODE + "\t\t\tSet the input as unicode.";
+		}
+	};
+
 	private static OptionMap s_options = new OptionMap ();
 
 	static
@@ -308,6 +331,7 @@ public class Main
 		s_options.registerOptionHandler (s_lexerTableOption);
 		s_options.registerOptionHandler (s_parserTableOption);
 		s_options.registerOptionHandler (s_debugOption);
+		s_options.registerOptionHandler (s_unicodeOption);
 	}
 
 	private static int parseOptions (String[] args) throws Exception
@@ -476,6 +500,11 @@ public class Main
 	public static boolean isDebug (OptionMap options)
 	{
 		return s_options.hasOption (OPTION_DEBUG) || options.hasOption (OPTION_DEBUG);
+	}
+
+	public static boolean isUnicode (OptionMap options)
+	{
+		return s_options.hasOption (OPTION_UNICODE) || options.hasOption (OPTION_UNICODE);
 	}
 
 	public static File getLexerAnalysisFile (OptionMap options)

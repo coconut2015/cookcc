@@ -162,7 +162,7 @@ public class Lexer
 	{
 		m_doc = doc;
 		m_options = options;
-		m_nfaFactory = doc.isUnicode () ? new NFAFactory (CCL.getCharacterCCL ()) : new NFAFactory (CCL.getByteCCL ());
+		m_nfaFactory = (doc.isUnicode () || Main.isUnicode (options)) ? new NFAFactory (CCL.getCharacterCCL ()) : new NFAFactory (CCL.getByteCCL ());
 		m_patternParser = new PatternParser (this, getCCL ());
 
 		m_defaultRule = RuleDoc.createInternalRule (doc.getLexer ());

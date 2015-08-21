@@ -26,6 +26,7 @@
  */
 package freemarker.core;
 
+import java.util.IdentityHashMap;
 import java.util.List;
 
 import freemarker.ext.beans.ArrayModel;
@@ -41,14 +42,18 @@ import freemarker.template.*;
  * @author Heng Yuan
  * @version $Id: JavaStringBI.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
  */
-public class JavaStringBI extends BuiltIn
+public class JavaStringResourceBI extends BuiltIn
 {
+	private final static IdentityHashMap<Object, String> s_stringResources = new IdentityHashMap<Object, String> ();
+	private static int s_stringCounter = 0;
+
+	private final static String s_header = "\t\tprivate final static String s_s";
 	private final static int MAX_ARRAY_LEN = 16383;
 
 	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
-		BuiltIn.builtins.put ("javastring", new JavaStringBI ());
+		BuiltIn.builtins.put ("stringresource", new JavaStringResourceBI ());
 	}
 
 	private static int getUTF8Length (int value)
@@ -83,14 +88,10 @@ public class JavaStringBI extends BuiltIn
 		@SuppressWarnings ("rawtypes")
 		public TemplateModel exec (List args) throws TemplateModelException
 		{
-			String combinedString = JavaStringResourceBI.getStringResource (m_seq.getWrappedObject ());
-			if (combinedString != null)
-			{
-				return new SimpleScalar ("(" + combinedString + ").toCharArray ()");
-			}
 			StringBuffer buffer = new StringBuffer ();
-			buffer.append ("(\"");
-//			buffer.append ('\"');
+			String combinedString = null;
+			int counter = s_stringCounter;
+			buffer.append (s_header + (++counter) + " = \"");
 			int size = m_seq.size ();
 			int utf8Size = 0;
 			for (int i = 0; i < size; ++i)
@@ -100,7 +101,11 @@ public class JavaStringBI extends BuiltIn
 				utf8Size += getUTF8Length(value);
 				if (utf8Size > MAX_ARRAY_LEN)
 				{
-					buffer.append ("\" + \"");
+					if (combinedString == null)
+						combinedString = "s_s" + counter + ".toString ()";
+					buffer.append ("\";\n");
+					buffer.append (s_header + (++counter) + " = \"");
+					combinedString += " + s_s" + counter + ".toString ()";
 					utf8Size = getUTF8Length(value);
 				}
 				if (value < 128)
@@ -121,10 +126,23 @@ public class JavaStringBI extends BuiltIn
 				}
 			}
 
-			buffer.append ("\").toCharArray ()");
-//			buffer.append ("\".toCharArray ()");
+			if ((counter - s_stringCounter) == 1)
+			{
+				// no need to generate the string resource;
+				return new SimpleScalar ("");
+			}
+
+			buffer.append ("\";\n");
+
+			// we put the "s_s1 + s_s2" as the key
+			s_stringResources.put (m_seq.getWrappedObject (), combinedString);
 
 			return new SimpleScalar (buffer.toString ());
 		}
+	}
+
+	public static String getStringResource (Object key)
+	{
+		return s_stringResources.get (key);
 	}
 }

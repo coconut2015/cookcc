@@ -39,6 +39,7 @@ public class CompressedTable
 	private final Lexer m_lexer;
 	private boolean m_computed;
 
+	private int[] m_ecs;
 	private short[] m_base;
 	private short[] m_next;
 	private short[] m_check;
@@ -77,7 +78,9 @@ public class CompressedTable
 
 	public int[] getEcs ()
 	{
-		return m_lexer.getECS ().getGroups ().clone ();
+		if (m_ecs == null)
+			m_ecs = m_lexer.getECS ().getGroups ().clone ();
+		return m_ecs;
 	}
 
 	public short[] getBase ()

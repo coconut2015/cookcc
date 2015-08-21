@@ -38,6 +38,8 @@ public class FullTable
 {
 	private final Lexer m_lexer;
 
+	private int[][] m_table;
+
 	public FullTable (Lexer lexer)
 	{
 		m_lexer = lexer;
@@ -45,19 +47,23 @@ public class FullTable
 
 	public int[][] getTable ()
 	{
-		DFATable dfa = m_lexer.getDFA ();
-		int rows = dfa.size ();
-		int cols = m_lexer.getCCL ().MAX_SYMBOL + 1;
-		int[][] table = new int[rows][cols];
-		int[] groups = m_lexer.getECS ().getGroups ();
-		for (int i = 0; i < rows; ++i)
+		if (m_table == null)
 		{
-			short[] states = dfa.getRow (i).getStates ();
-			int[] array = table[i];
-			for (int j = 0; j < cols; ++j)
-				array[j] = states[groups[j]];
+			DFATable dfa = m_lexer.getDFA ();
+			int rows = dfa.size ();
+			int cols = m_lexer.getCCL ().MAX_SYMBOL + 1;
+			int[][] table = new int[rows][cols];
+			int[] groups = m_lexer.getECS ().getGroups ();
+			for (int i = 0; i < rows; ++i)
+			{
+				short[] states = dfa.getRow (i).getStates ();
+				int[] array = table[i];
+				for (int j = 0; j < cols; ++j)
+					array[j] = states[groups[j]];
+			}
+			m_table = table;
 		}
-		return table;
+		return m_table;
 	}
 
 	public int getSize ()

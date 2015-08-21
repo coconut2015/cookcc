@@ -38,6 +38,9 @@ public class ECSTable
 {
 	private final Lexer m_lexer;
 
+	private int[] m_ecs;
+	private int[][] m_table;
+
 	public ECSTable (Lexer lexer)
 	{
 		m_lexer = lexer;
@@ -45,23 +48,29 @@ public class ECSTable
 
 	public int[] getEcs ()
 	{
-		return m_lexer.getECS ().getGroups ().clone ();
+		if (m_ecs == null)
+			m_ecs = m_lexer.getECS ().getGroups ().clone ();
+		return m_ecs;
 	}
 
 	public int[][] getTable ()
 	{
-		DFATable dfa = m_lexer.getDFA ();
-		int rows = dfa.size ();
-		int cols = m_lexer.getECS ().getGroupCount ();
-		int[][] table = new int[rows][cols];
-		for (int i = 0; i < rows; ++i)
+		if (m_table == null)
 		{
-			short[] states = dfa.getRow (i).getStates ();
-			int[] array = table[i];
-			for (int j = 0; j < cols; ++j)
-				array[j] = states[j];
+			DFATable dfa = m_lexer.getDFA ();
+			int rows = dfa.size ();
+			int cols = m_lexer.getECS ().getGroupCount ();
+			int[][] table = new int[rows][cols];
+			for (int i = 0; i < rows; ++i)
+			{
+				short[] states = dfa.getRow (i).getStates ();
+				int[] array = table[i];
+				for (int j = 0; j < cols; ++j)
+					array[j] = states[j];
+			}
+			m_table = table;
 		}
-		return table;
+		return m_table;
 	}
 
 	public int getSize ()

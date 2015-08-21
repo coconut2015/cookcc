@@ -1,5 +1,6 @@
 <#setting number_format=0>
 <#macro array a><#list a as i><#if i_index &gt; 0>,</#if>${i}</#list></#macro>
+<#macro longintarray a>${a?stringresource()}</#macro>
 <#macro intarray a>${a?javastring()}</#macro>
 <#macro type a b c d>${a?type(b,c,d)}</#macro>
 <#if code.fileheader?has_content>
@@ -44,22 +45,29 @@ ${code.classheader}
 	// an internal class for lazy initiation
 	private final static class cc_lexer
 	{
-		private static char[] accept = <@intarray lexer.accept/>;
+<@longintarray lexer.accept/>
+		private final static char[] accept = <@intarray lexer.accept/>;
 <#if lexer.table == "ecs" || lexer.table == "compressed">
-		private static char[] ecs = <@intarray lexer.ecs/>;
+<@longintarray lexer.ecs/>
+		private final static char[] ecs = <@intarray lexer.ecs/>;
 </#if>
 <#if lexer.table == "full" || lexer.table == "ecs">
-		private static char[][] next = {<#list lexer.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
+		private final static char[][] next = {<#list lexer.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
 </#if>
 <#if lexer.table == "compressed">
-		private static char[] base = <@intarray lexer.dfa.base/>;
-		private static char[] next = <@intarray lexer.dfa.next/>;
-		private static char[] check = <@intarray lexer.dfa.check/>;
+<@longintarray lexer.dfa.base/>
+<@longintarray lexer.dfa.next/>
+<@longintarray lexer.dfa.check/>
+		private final static char[] base = <@intarray lexer.dfa.base/>;
+		private final static char[] next = <@intarray lexer.dfa.next/>;
+		private final static char[] check = <@intarray lexer.dfa.check/>;
 	<#if lexer.dfa.default?has_content>
-		private static char[] defaults = <@intarray lexer.dfa.default/>;
+<@longintarray lexer.dfa.default/>
+		private final static char[] defaults = <@intarray lexer.dfa.default/>;
 	</#if>
 	<#if lexer.dfa.meta?has_content>
-		private static char[] meta = <@intarray lexer.dfa.meta/>;
+<@longintarray lexer.dfa.meta/>
+		private final static char[] meta = <@intarray lexer.dfa.meta/>;
 	</#if>
 </#if>
 	}
@@ -69,27 +77,27 @@ ${code.classheader}
 	// an internal class for lazy initiation
 	private final static class cc_parser
 	{
-		private static char[] rule = <@intarray parser.rules/>;
-		private static char[] ecs = <@intarray parser.ecs/>;
+		private final static char[] rule = <@intarray parser.rules/>;
+		private final static char[] ecs = <@intarray parser.ecs/>;
 <#if parser.table == "ecs">
-		private static char[][] next = {<#list parser.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
+		private final static char[][] next = {<#list parser.dfa.table as i><#if i_index &gt; 0>,</#if><@intarray i/></#list>};
 <#else>
-		private static char[] base = <@intarray parser.dfa.base/>;
-		private static char[] next = <@intarray parser.dfa.next/>;
-		private static char[] check = <@intarray parser.dfa.check/>;
+		private final static char[] base = <@intarray parser.dfa.base/>;
+		private final static char[] next = <@intarray parser.dfa.next/>;
+		private final static char[] check = <@intarray parser.dfa.check/>;
 		<#if parser.dfa.default?has_content>
-		private static char[] defaults = <@intarray parser.dfa.default/>;
+		private final static char[] defaults = <@intarray parser.dfa.default/>;
 		</#if>
 		<#if parser.dfa.meta?has_content>
-		private static char[] meta = <@intarray parser.dfa.meta/>;
+		private final static char[] meta = <@intarray parser.dfa.meta/>;
 		</#if>
 		<#if parser.dfa.gotoDefault?has_content>
-		private static char[] gotoDefault = <@intarray parser.dfa.gotoDefault/>;
+		private final static char[] gotoDefault = <@intarray parser.dfa.gotoDefault/>;
 		</#if>
 </#if>
-		private static char[] lhs = <@intarray parser.lhs/>;
+		private final static char[] lhs = <@intarray parser.lhs/>;
 <#if debug>
-		private static String[] symbols = {<#list parser.symbols as i><#if i_index &gt; 0>,</#if>"${i}"</#list>};
+		private final static String[] symbols = {<#list parser.symbols as i><#if i_index &gt; 0>,</#if>"${i}"</#list>};
 </#if>
 	}
 

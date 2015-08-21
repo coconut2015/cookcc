@@ -42,10 +42,7 @@ import org.yuanheng.cookcc.doc.ParserDoc;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 
 import freemarker.cache.TemplateLoader;
-import freemarker.core.ActionCodeBI;
-import freemarker.core.HexBI;
-import freemarker.core.JavaStringBI;
-import freemarker.core.TypeBI;
+import freemarker.core.*;
 import freemarker.template.Configuration;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
@@ -63,6 +60,7 @@ public abstract class TemplatedCodeGen implements CodeGen
 	static
 	{
 		HexBI.init ();
+		JavaStringResourceBI.init ();
 		JavaStringBI.init ();
 		ActionCodeBI.init ();
 		TypeBI.init ();

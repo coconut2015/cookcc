@@ -69,7 +69,7 @@
 			<fileset dir="${build}" includes="**/**.class"/>
 			<fileset dir="${src}" excludes="**/**.java"/>
 			<!-- freemarker jar files -->
-			<zipfileset src="${lib}/freemarker.jar"/>
+			<zipfileset src="${lib}/freemarker-2.3.15.jar"/>
 			<!-- cookxml jar files -->
 			<zipfileset src="${lib}/cookxml-3.0.1.jar" excludes="LICENSE"/>
 			<fileset dir="${basedir}">
@@ -104,7 +104,7 @@
 			<fileset dir="${basedir}/classes" includes="**/**.class"/>
 			<fileset dir="${src}" excludes="**/**.java"/>
 			<!-- freemarker jar files -->
-			<zipfileset src="${lib}/freemarker.jar"/>
+			<zipfileset src="${lib}/freemarker-2.3.15.jar"/>
 			<!-- cookxml jar files -->
 			<zipfileset src="${lib}/cookxml-3.0.1.jar" excludes="LICENSE"/>
 			<fileset dir="${basedir}">

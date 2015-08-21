@@ -59,6 +59,7 @@ public class LexerDFAInfo
 	private final LexerDoc m_lexerDoc;
 	private final Lexer m_lexer;
 	private Object m_dfa;
+	private int[] m_ecs;
 
 	private LexerDFAInfo (LexerDoc lexerDoc, Lexer lexer)
 	{
@@ -98,7 +99,9 @@ public class LexerDFAInfo
 
 	public int[] getEcs ()
 	{
-		return m_lexer.getECS ().getGroups ().clone ();
+		if (m_ecs == null)
+			m_ecs = m_lexer.getECS ().getGroups ().clone ();
+		return m_ecs;
 	}
 
 	public int getEcsGroupCount ()

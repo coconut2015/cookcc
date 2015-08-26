@@ -30,14 +30,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import org.apache.xerces.parsers.DOMParser;
+import org.apache.xerces.xni.*;
 import org.w3c.dom.Node;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.yuanheng.cookcc.doc.*;
-
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-import com.sun.org.apache.xerces.internal.xni.*;
 
 import cookxml.core.CookXml;
 import cookxml.core.adder.CallFunctionAdder;

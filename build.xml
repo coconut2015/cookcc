@@ -73,7 +73,6 @@
 			<!-- cookxml jar files -->
 			<zipfileset src="${lib}/cookxml-3.0.1.jar" excludes="LICENSE"/>
 			<zipfileset src="${lib}/xercesImpl-2.11.0.jar"/>
-			<zipfileset src="${lib}/xercesImpl-2.11.0.jar"/>
 			<zipfileset src="${lib}/xml-apis-2.11.0.jar"/>
 			<fileset dir="${basedir}">
 				<patternset>

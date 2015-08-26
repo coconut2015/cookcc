@@ -1,5 +1,5 @@
 <?xml version = "1.0" encoding="UTF-8"?>
-<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "http://code.google.com/p/cookcc/source/browse/trunk/src/resources/cookcc.dtd">
+<!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "https://raw.githubusercontent.com/coconut2015/cookcc/master/src/resources/cookcc.dtd">
 <cookcc>
 	<lexer>
 		<rule>

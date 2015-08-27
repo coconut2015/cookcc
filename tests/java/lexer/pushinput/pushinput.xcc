@@ -21,7 +21,7 @@
 			<rule>
 				<pattern>[^\r\n]+</pattern>
 				<action>
-					yyPushInput (new FileInputStream (yyText ()));
+					yyPushInput (open (yyText ()));
 					begin (INITIAL);
 				</action>
 			</rule>
@@ -32,9 +32,7 @@
 			</rule>
 		</state>
 	</lexer>
-	<code name="fileheader"><![CDATA[
-import java.io.FileInputStream;
-	]]></code>
+
 	<code name="default"><![CDATA[
 	protected boolean yyWrap () throws IOException
 	{

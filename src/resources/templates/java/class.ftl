@@ -17,6 +17,7 @@ import java.io.Reader;
 <#else>
 import java.io.InputStream;
 </#if>
+import java.io.FileInputStream;
 
 <#if parser?has_content>
 import java.util.LinkedList;
@@ -1274,6 +1275,21 @@ ${code.classheader}
 
 </#if>
 
+<#if code.default?has_content>
+${code.default}
+</#if>
+
+<#if unicode>
+	protected static Reader open (String file) throws IOException
+	{
+		return new InputStreamReader (new FileInputStream (file));
+	}
+<#else>
+	protected static InputStream open (String file) throws IOException
+	{
+		return new FileInputStream (file);
+	}
+</#if>
 
 <#if main?has_content && main?string == "true">
 	/**
@@ -1291,13 +1307,8 @@ ${code.classheader}
 <#if parser?has_content>
 		${ccclass} tmpParser = new ${ccclass} ();
 	<#if lexer?has_content>
-		<#if unicode>
 		if (args.length > 0)
-			tmpParser.setInput (new InputStreamReader (new java.io.FileInputStream (args[0])));
-		<#else>
-		if (args.length > 0)
-			tmpParser.setInput (new java.io.FileInputStream (args[0]));
-		</#if>
+			tmpParser.setInput (open (args[0]));
 	</#if>
 
 		if (tmpParser.yyParse () > 0)
@@ -1307,21 +1318,11 @@ ${code.classheader}
 		}
 <#else>
 		${ccclass} tmpLexer = new ${ccclass} ();
-	<#if unicode>
-		if (args.length > 0)
-			tmpLexer.setInput (new InputStreamReader (new java.io.FileInputStream (args[0])));
-	<#else>
-		if (args.length > 0)
-			tmpLexer.setInput (new java.io.FileInputStream (args[0]));
-	</#if>
+		tmpLexer.setInput (open (args[0]));
 
 		tmpLexer.yyLex ();
 </#if>
 	}
-</#if>
-
-<#if code.default?has_content>
-${code.default}
 </#if>
 
 /*

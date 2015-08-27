@@ -22,8 +22,13 @@ java="${JAVA_HOME}/bin/java"
 function cookcc ()
 {
 	v=$1
+	if [ -z "$UNICODE" ]; then
+		unicode=""
+	else
+		unicode="-unicode"
+	fi
 	CCOUTPUT=${v%.xcc}.ccoutput
-	"$java" -jar "${COOKCC}" $@ > ccoutput 2>&1
+	"$java" -jar "${COOKCC}" $unicode $@ > ccoutput 2>&1
 	if [ -f $CCOUTPUT ]; then
 		diff ccoutput $CCOUTPUT > /dev/null || testerror $v
 	elif [ `sizeof ccoutput` -ne 0 ]; then
@@ -35,7 +40,12 @@ function cookcc ()
 
 function apt ()
 {
-	"$javac" -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . $@
+	if [ -z "$UNICODE" ]; then
+		unicode=""
+	else
+		unicode="-Aunicode"
+	fi
+	"$javac" -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . $unicode $@
 }
 
 function compile ()

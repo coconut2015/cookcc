@@ -15,9 +15,6 @@
 			<action>System.out.println ("[[EOF]]"); return 0;</action>
 		</rule>
 	</lexer>
-	<code name="fileheader"><![CDATA[
-import java.io.FileInputStream;
-	]]></code>
 	<code name="default"><![CDATA[
 	private boolean m_first = true;
 	protected boolean yyWrap () throws IOException
@@ -25,7 +22,7 @@ import java.io.FileInputStream;
 		if (m_first)
 		{
 			m_first = false;
-			setInput (new FileInputStream ("test.input"));
+			setInput (open ("test.input"));
 			return false;
 		}
 		return true;

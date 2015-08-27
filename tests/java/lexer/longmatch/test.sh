@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# disable unicode testing for this one
+export UNICODE=
+
 source ../../../bin/settings.sh
 
 for v in *.xcc

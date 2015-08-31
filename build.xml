@@ -32,9 +32,9 @@
 			</classpath>
 		</javac>
 	</target>
-	<target name="cookcc_source_zip" depends="init">
-		<delete file="${dist}/cookcc_src-${version}.zip"/>
-		<zip compress="true" destfile="${dist}/cookcc_src-${version}.zip">
+	<target name="cookcc_sources_jar" depends="init">
+		<delete file="${dist}/cookcc-${version}-sources.jar"/>
+		<zip compress="true" destfile="${dist}/cookcc-${version}-sources.jar">
 			<fileset dir="${basedir}">
 				<patternset>
 					<include name="src/**/**.*"/>
@@ -42,9 +42,11 @@
 					<include name="javaannot_src/**/**.*"/>
 					<include name="javaap_src/**/**.*"/>
 					<include name="anttask_src/**/**.*"/>
+					<include name="mirrorapi_src/**/**.*"/>
 					<include name="junit/**/**.*"/>
 					<include name="tests/**/**.*"/>
 					<include name="tool/**/**.*"/>
+					<include name="doc/**/**.*"/>
 					<include name="${license}"/>
 				</patternset>
 			</fileset>
@@ -122,8 +124,17 @@
 		</jar>
 		<copy file="${dist}/cookcc-${version}.jar" tofile="${tool}/cookcc-latest.jar"/>
 	</target>
+	<target name="cookcc_javadoc_jar" depends="init" description="Build CookCC Annotation JavaDoc">
+		<delete file="${dist}/cookcc-${version}-javadoc.jar"/>
+		<mkdir dir="${dist}/javadoc"/>
+		<javadoc sourcepath="${basedir}/javaannot_src" destdir="${dist}/javadoc"/>
+		<jar compress="true" destfile="${dist}/cookcc-${version}-javadoc.jar">
+			<fileset dir="${dist}/javadoc"/>
+		</jar>
+		<delete dir="${dist}/javadoc"/>
+	</target>
 
-	<target name="all" depends="cookcc_jar,cookcc_source_zip"/>
+	<target name="all" depends="cookcc_jar,cookcc_javadoc_jar,cookcc_sources_jar"/>
 
 	<!-- lexer/parser generated from CookCC -->
 

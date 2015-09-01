@@ -43,11 +43,12 @@
 					<include name="javaap_src/**/**.*"/>
 					<include name="anttask_src/**/**.*"/>
 					<include name="mirrorapi_src/**/**.*"/>
-					<include name="junit/**/**.*"/>
-					<include name="tests/**/**.*"/>
-					<include name="tool/**/**.*"/>
-					<include name="doc/**/**.*"/>
+					<!-- <include name="junit/**/**.*"/> -->
+					<!-- <include name="tests/**/**.*"/> -->
+					<!-- <include name="tool/**/**.*"/> -->
+					<!-- <include name="doc/**/**.*"/> -->
 					<include name="${license}"/>
+					<include name="build.xml"/>
 				</patternset>
 			</fileset>
 		</zip>

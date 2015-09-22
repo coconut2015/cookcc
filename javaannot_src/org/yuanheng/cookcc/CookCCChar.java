@@ -61,6 +61,18 @@ public abstract class CookCCChar
 	}
 
 	/**
+	 * Return the current line number.
+	 * 
+	 * This function is only available in line mode.
+	 *
+	 * @return	the current line number.
+	 */
+	public int getLineNumber ()
+	{
+		return 0;
+	}
+
+	/**
 	 * Print the current string token to the standard output.
 	 */
 	public void echo ()

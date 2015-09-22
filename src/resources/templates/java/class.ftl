@@ -176,6 +176,9 @@ ${code.classheader}
 	private boolean _yyIsNextBOL = true;
 	private boolean _yyBOL = true;
 </#if>
+<#if lexer.lineMode>
+	private int _yyLineNumber = 1;
+</#if>
 </#if>
 
 <#if lexer?has_content>
@@ -395,6 +398,19 @@ ${code.classheader}
 		_yyIsNextBOL = bol;
 	}
 </#if>
+<#if lexer.lineMode>
+	/**
+	 * Return the current line number.
+	 * 
+	 * This function is only available in line mode.
+	 * 
+	 * @return	the current line number.
+	 */
+	public int getLineNumber ()
+	{
+		return _yyLineNumber;
+	}
+</#if>
 
 	/**
 	 * Get the current token text.
@@ -607,7 +623,9 @@ ${code.classheader}
 		_yyIsNextBOL = true;
 		_yyBOL = true;
 </#if>
-
+<#if lexer.lineMode>
+		_yyLineNumber = 1;
+</#if>
 </#if>
 	}
 
@@ -863,12 +881,19 @@ ${code.classheader}
 					throw new IOException ("Internal error in ${ccclass} lexer.");
 			}
 
-<#if lexer.bol>
+<#if lexer.bol || lexer.lineMode>
 			// check BOL here since '\n' may be unput back into the stream buffer
 
 			// specifically used _yyBuffer since it could be changed by user
 			if (_yyMatchStart > 0 && _yyBuffer[_yyMatchStart - 1] == '\n')
+			{
+	<#if lexer.bol>
 				_yyIsNextBOL = true;
+	</#if>
+	<#if lexer.lineMode>
+				++_yyLineNumber;
+	</#if>
+			}
 </#if>
 		}
 	}

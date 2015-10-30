@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2008-2013, Heng Yuan
+  ~ Copyright (c) 2008-2015, Heng Yuan
   ~ All rights reserved.
   ~
   ~ Redistribution and use in source and binary forms, with or without
@@ -25,47 +25,49 @@
   ~ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
 
-	<!ELEMENT cookcc ((code | tokens | lexer | parser)*)>
+	<!ELEMENT cookcc    ((code | tokens | lexer | parser)*)>
 	<!ELEMENT tokens    (#PCDATA)>
-	<!ELEMENT lexer        (shortcut*, (state | rule)+)>
-	<!ELEMENT parser    (type*, grammar+)>
-	<!ELEMENT code        (#PCDATA)>
+	<!ELEMENT lexer     (shortcut*, (state | rule)+)>
+	<!ELEMENT parser    (ignore, type*, grammar+)>
+	<!ELEMENT code      (#PCDATA)>
 
-	<!ELEMENT shortcut    (#PCDATA)>
-	<!ELEMENT state        (rule+)>
-	<!ELEMENT rule        (pattern+, action)>
-	<!ELEMENT pattern    (#PCDATA)>
+	<!ELEMENT shortcut  (#PCDATA)>
+	<!ELEMENT state     (rule+)>
+	<!ELEMENT rule      (pattern+, action)>
+	<!ELEMENT pattern   (#PCDATA)>
 	<!ELEMENT action    (#PCDATA)>
 
 	<!ATTLIST cookcc    unicode (true|false) #IMPLIED>
 	<!ATTLIST cookcc    main (true|false) #IMPLIED>
 
-	<!ATTLIST code        name CDATA #IMPLIED>
+	<!ATTLIST code      name CDATA #IMPLIED>
 
 	<!ATTLIST tokens    type (left|right|nonassoc) #IMPLIED>
 
-	<!ATTLIST state        name CDATA #IMPLIED>
+	<!ATTLIST state     name CDATA #IMPLIED>
 
-	<!ATTLIST lexer        table (full|ecs|compressed) #IMPLIED>
-	<!ATTLIST lexer        linemode (true|false) #IMPLIED>
-	<!ATTLIST lexer        bol (true|false) #IMPLIED>
-	<!ATTLIST lexer        warnbackup (true|false) #IMPLIED>
-	<!ATTLIST lexer        yywrap (true|false) #IMPLIED>
+	<!ATTLIST lexer     table (full|ecs|compressed) #IMPLIED>
+	<!ATTLIST lexer     linemode (true|false) #IMPLIED>
+	<!ATTLIST lexer     bol (true|false) #IMPLIED>
+	<!ATTLIST lexer     warnbackup (true|false) #IMPLIED>
+	<!ATTLIST lexer     yywrap (true|false) #IMPLIED>
 
-	<!ATTLIST shortcut    name CDATA #REQUIRED>
-	<!ATTLIST rule        state CDATA #IMPLIED>
-	<!ATTLIST pattern    bol (true|false) #IMPLIED>
-	<!ATTLIST pattern    nocase (true|false) #IMPLIED>
+	<!ATTLIST shortcut  name CDATA #REQUIRED>
+	<!ATTLIST rule      state CDATA #IMPLIED>
+	<!ATTLIST pattern   bol (true|false) #IMPLIED>
+	<!ATTLIST pattern   nocase (true|false) #IMPLIED>
 
-	<!ELEMENT type        (#PCDATA)>
-	<!ELEMENT grammar    ((rhs,action?)+)>
-	<!ELEMENT rhs        (#PCDATA)>
+	<!ELEMENT type      (#PCDATA)>
+	<!ELEMENT grammar   ((rhs,action?)+)>
+	<!ELEMENT rhs       (#PCDATA)>
 
 	<!ATTLIST parser    start CDATA #IMPLIED>
 	<!ATTLIST parser    table (ecs|compressed) #IMPLIED>
 	<!ATTLIST parser    defaultreduce (true|false) #IMPLIED>
 	<!ATTLIST parser    recovery (true|false) #IMPLIED>
 	<!ATTLIST parser    parseerror (true|false) #IMPLIED>
-	<!ATTLIST type        format CDATA #REQUIRED>
-	<!ATTLIST grammar    rule CDATA #REQUIRED>
-	<!ATTLIST rhs        precedence CDATA #IMPLIED>
+	<!ATTLIST ignore    list CDATA #REQUIRED>
+	<!ATTLIST ignore    capture CDATA #IMPLIED>
+	<!ATTLIST type      format CDATA #REQUIRED>
+	<!ATTLIST grammar   rule CDATA #REQUIRED>
+	<!ATTLIST rhs       precedence CDATA #IMPLIED>

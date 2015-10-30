@@ -20,8 +20,9 @@ import java.io.InputStream;
 import java.io.FileInputStream;
 
 <#if parser?has_content>
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Vector;
 </#if>
 <#if lexer?has_content>
 import java.util.Stack;
@@ -97,9 +98,14 @@ ${code.classheader}
 		</#if>
 </#if>
 		private final static char[] lhs = <@intarray parser.lhs/>;
-<#if debug>
-		private final static String[] symbols = {<#list parser.symbols as i><#if i_index &gt; 0>,</#if>"${i}"</#list>};
-</#if>
+	}
+
+	private final static class cc_parser_symbol
+	{
+		private final static String[] symbols =
+		{
+			<#list parser.symbols as s><#if s_index &gt; 0>,</#if>"${s}"</#list>
+		};
 	}
 
 	private final static class YYParserState	// internal tracking tool
@@ -107,6 +113,13 @@ ${code.classheader}
 		int token;			// the current token type
 		Object value;		// the current value associated with token
 		int state;			// the current scan state
+<#if parser.captureList>
+<#if generics?has_content && generics?string == "true">
+		ArrayList<Object[]>	captureList;	// for storing captured terminals
+<#else>
+		ArrayList captureList;	// for storing captured terminals
+</#if>
+</#if>
 
 		YYParserState ()	// EOF token construction
 		{
@@ -124,16 +137,18 @@ ${code.classheader}
 		}
 	}
 
+	// for storing integer objects (so we do not create too many objects)
+	private Integer[] _yySymbolArray;
 <#if generics?has_content && generics?string == "true">
 	// lookahead stack for the parser
-	private final LinkedList<YYParserState> _yyLookaheadStack = new LinkedList<YYParserState> ();
+	private final ArrayList<YYParserState> _yyLookaheadStack = new ArrayList<YYParserState> (512);
 	// state stack for the parser
-	private final Vector<YYParserState> _yyStateStack = new Vector<YYParserState> (512, 512);
+	private final ArrayList<YYParserState> _yyStateStack = new ArrayList<YYParserState> (512);
 <#else>
 	// lookahead stack for the parser
-	private final LinkedList _yyLookaheadStack = new LinkedList ();
+	private final ArrayList _yyLookaheadStack = new ArrayList (512);
 	// state stack for the parser
-	private final Vector _yyStateStack = new Vector (512, 512);
+	private final ArrayList _yyStateStack = new ArrayList (512);
 </#if>
 
 <#if parser.recovery>
@@ -914,15 +929,64 @@ ${code.classheader}
 </#if>
 
 <#if parser?has_content>
+	protected String getSymbolName (int symbol)
+	{
+		if (symbol < 0 || symbol > (255 + cc_parser_symbol.symbols.length))
+			return "Unknown symbol: " + symbol;
+		switch (symbol)
+		{
+			case 0:
+				return "$";
+			case 1:
+				return "error";
+			case '\\':
+				return "'\\\\'";
+			default:
+				if (symbol > 255)
+					return cc_parser_symbol.symbols[symbol - 256];
+				if (symbol < 32 || symbol >= 127)
+					return "'\\x" + Integer.toHexString (symbol) + "'";
+				return "'" + ((char)symbol) + "'";
+		}
+	}
+
+<#if generics?has_content && generics?string == "true">
+	protected String getStateString (Collection<YYParserState> states)
+<#else>
+	protected String getStateString (Collection states)
+</#if>
+	{
+		StringBuffer buffer = new StringBuffer ();
+		boolean first = true;
+<#if generics?has_content && generics?string == "true">
+		for (YYParserState state : states)
+		{
+<#else>
+		for (java.util.Iterator iter = states.iterator ();
+			 iter.hasNext ();)
+		{
+			YYParserState state = (YYParserState)iter.next ();
+</#if>
+			if (!first)
+				buffer.append (" ");
+			if (state.token < 0)
+				buffer.append (state.token);
+			else
+				buffer.append (getSymbolName (state.token));
+			first = false;
+		}
+		return buffer.toString ();
+	}
+
 	<#if debug>
-	protected boolean debugParser (int fromState, int toState, int reduceState, String reduceStateName, int ecsToken, String tokenName)
+	protected boolean debugParser (int fromState, int toState, int reduceState, String reduceStateName, int symbol)
 	{
 		if (toState == 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + tokenName + ", error");
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + getSymbolName (symbol) + ", error");
 		else if (toState < 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + tokenName + ", reduce " + reduceStateName);
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + getSymbolName (symbol) + ", reduce " + reduceStateName);
 		else
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + tokenName + ", shift");
+			System.err.println ("parser: " + fromState + ", " + toState + ", " + getSymbolName (symbol) + ", shift");
 		return true;
 	}
 	</#if>
@@ -964,17 +1028,24 @@ ${code.classheader}
 		char[] cc_lhs = cc_parser.lhs;
 
 <#if generics?has_content && generics?string == "true">
-		LinkedList<YYParserState> cc_lookaheadStack = _yyLookaheadStack;
-		Vector<YYParserState> cc_stateStack = _yyStateStack;
+		ArrayList<YYParserState> cc_lookaheadStack = _yyLookaheadStack;
+		ArrayList<YYParserState> cc_stateStack = _yyStateStack;
 <#else>
-		LinkedList cc_lookaheadStack = _yyLookaheadStack;
-		Vector cc_stateStack = _yyStateStack;
+		ArrayList cc_lookaheadStack = _yyLookaheadStack;
+		ArrayList cc_stateStack = _yyStateStack;
 </#if>
 		if (cc_stateStack.size () == 0)
 			cc_stateStack.add (new YYParserState ());
 
 		int cc_toState;
 
+<#if parser.captureList>
+	<#if generics?has_content && generics?string == "true">
+		ArrayList<Object[]> captureList = null;
+	<#else>
+		ArrayList captureList = null;
+	</#if>
+</#if>
 		for (;;)
 		{
 			YYParserState cc_lookahead;
@@ -990,17 +1061,45 @@ ${code.classheader}
 			{
 				_yyValue = null;
 				int val = yyLex ();
+				cc_ch = cc_ecs[val];
+<#if parser.ignoreList>
+				if (cc_ch == 3)	// Ignore List
+				{
+					continue;
+				}
+</#if>
+<#if parser.captureList>
+				else if (cc_ch == 4)	// Capture List
+				{
+					if (captureList == null)
+					{
+	<#if generics?has_content && generics?string == "true">
+						captureList = new ArrayList<Object[]> ();
+	<#else>
+						captureList = new ArrayList ();
+	</#if>
+					}
+					captureList.add (new Object[] { getInteger (val), _yyValue });
+					continue;
+				}
+</#if>
 				cc_lookahead = new YYParserState (val, _yyValue);
+<#if parser.captureList>
+				cc_lookahead.captureList = captureList;
+				captureList = null;
+</#if>
 				cc_lookaheadStack.add (cc_lookahead);
 			}
 			else
+			{
 <#if generics?has_content && generics?string == "true">
-				cc_lookahead = cc_lookaheadStack.getLast ();
+				cc_lookahead = cc_lookaheadStack.get (cc_lookaheadStack.size () - 1);
 <#else>
-				cc_lookahead = (YYParserState)cc_lookaheadStack.getLast ();
+				cc_lookahead = (YYParserState)cc_lookaheadStack.get (cc_lookaheadStack.size () - 1);
 </#if>
+				cc_ch = cc_ecs[cc_lookahead.token];
+			}
 
-			cc_ch = cc_ecs[cc_lookahead.token];
 <#if generics?has_content && generics?string == "true">
 			cc_fromState = cc_stateStack.get (cc_stateStack.size () - 1).state;
 <#else>
@@ -1043,7 +1142,7 @@ ${code.classheader}
 </#if>
 
 <#if debug>
-			debugParser (cc_fromState, cc_toState, cc_toState < 0 ? cc_parser.lhs[-cc_toState] : 0, cc_toState < 0 ? cc_parser.symbols[cc_parser.lhs[-cc_toState]] : "", cc_ch, cc_parser.symbols[cc_ch]);
+			debugParser (cc_fromState, cc_toState, cc_toState < 0 ? cc_parser.lhs[-cc_toState] : 0, cc_toState < 0 ? cc_parser.symbols[cc_parser.lhs[-cc_toState]] : "", cc_lookahead.token);
 </#if>
 
 			//
@@ -1055,7 +1154,7 @@ ${code.classheader}
 				// shift
 				cc_lookahead.state = cc_toState;
 				cc_stateStack.add (cc_lookahead);
-				cc_lookaheadStack.removeLast ();
+				cc_lookaheadStack.remove (cc_lookaheadStack.size () - 1);
 				continue;
 			}
 			else if (cc_toState == 0)
@@ -1070,7 +1169,7 @@ ${code.classheader}
 						// so we need to reduce the stack until a state with reduceable
 						// action is found
 						if (_yyStateStack.size () > 1)
-							_yyStateStack.setSize (_yyStateStack.size () - 1);
+							_yyStateStack.remove (_yyStateStack.size () - 1);
 						else
 							return 1;	// can't do much we exit the parser
 					}
@@ -1079,7 +1178,7 @@ ${code.classheader}
 						// this means that we need to dump the lookahead.
 						if (cc_ch == 0)		// can't do much with EOF;
 							return 1;
-						cc_lookaheadStack.removeLast ();
+						cc_lookaheadStack.remove (cc_lookaheadStack.size () - 1);
 					}
 					continue;
 				}
@@ -1205,7 +1304,7 @@ ${code.classheader}
 
 			YYParserState cc_reduced = new YYParserState (-cc_ruleState, _yyValue, cc_toState);
 			_yyValue = null;
-			cc_stateStack.setSize (_yyArgStart + 1);
+			cc_stateStack.subList (_yyArgStart + 1, cc_stateStack.size ()).clear ();
 			cc_stateStack.add (cc_reduced);
 		}
 	}
@@ -1220,9 +1319,9 @@ ${code.classheader}
 	protected YYParserState yyPeekLookahead ()
 	{
 <#if generics?has_content && generics?string == "true">
-		return _yyLookaheadStack.getLast ();
+		return _yyLookaheadStack.get (_yyLookaheadStack.size () - 1);
 <#else>
-		return (YYParserState)_yyLookaheadStack.getLast ();
+		return (YYParserState)_yyLookaheadStack.get (_yyLookaheadStack.size () - 1);
 </#if>
 	}
 
@@ -1232,7 +1331,7 @@ ${code.classheader}
 	 */
 	protected void yyPopLookahead ()
 	{
-		_yyLookaheadStack.removeLast ();
+		_yyLookaheadStack.remove (_yyLookaheadStack.size () - 1);
 	}
 
 	/**
@@ -1245,6 +1344,19 @@ ${code.classheader}
 	protected void yyClearError ()
 	{
 		_yyInError = false;
+	}
+
+	/**
+	 * Check if the terminal is not handled by the parser.
+	 *
+	 * @param	terminal
+	 *			terminal obtained from calling yyLex ()
+	 * @return	true if the terminal is not handled by the parser.
+	 * 			false otherwise.
+	 */
+	protected boolean isUnhandledTerminal (int terminal)
+	{
+		return cc_parser.ecs[terminal] == 2;
 	}
 
 <#if parser.parseError>
@@ -1266,6 +1378,8 @@ ${code.classheader}
 <#if debug>
 		System.err.println ("parser: fatal error");
 </#if>
+		if (isUnhandledTerminal (terminal))
+			return true;
 		return false;
 	}
 </#if>
@@ -1298,6 +1412,36 @@ ${code.classheader}
 		_yyValue = value;
 	}
 
+	/**
+	 * Obtain the current list of captured terminals.
+	 */
+<#if generics?has_content && generics?string == "true">
+	protected Collection<Object[]> getCapturedTerminals (int arg)
+<#else>
+	protected Collection getCapturedTerminals (int arg)
+</#if>
+	{
+<#if parser.captureList>
+<#if generics?has_content && generics?string == "true">
+		return _yyStateStack.get (_yyArgStart + arg).captureList;
+<#else>
+		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).captureList;
+</#if>
+<#else>
+		return null;
+</#if>
+	}
+
+	private Integer getInteger (int symbol)
+	{
+		if (_yySymbolArray == null)
+			_yySymbolArray = new Integer[${parser.maxTerminal} + ${parser.nonTerminalCount} + 1];
+		if (symbol < 0 || symbol >= _yySymbolArray.length)
+			return new Integer (symbol);
+		if (_yySymbolArray[symbol] == null)
+			_yySymbolArray[symbol] = new Integer (symbol);
+		return _yySymbolArray[symbol];
+	}
 </#if>
 
 <#if code.default?has_content>

@@ -26,9 +26,9 @@
  */
 package org.yuanheng.cookcc.dfa;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 /**
  * @author Heng Yuan
@@ -38,8 +38,8 @@ class GotoTableCompressor
 {
 	public final static short SHORT_MIN = Short.MIN_VALUE;
 
-	private final Vector<short[]> m_dfa;
-	private final Vector<short[]> m_dfaCopy;
+	private final ArrayList<short[]> m_dfa;
+	private final ArrayList<short[]> m_dfaCopy;
 
 	int m_baseAdd;
 	private boolean m_useStateDiff;
@@ -50,12 +50,12 @@ class GotoTableCompressor
 	private short[] m_check;
 	private short[] m_base;
 
-	private Map<Integer, Vector<Short>> m_fillMap = new HashMap<Integer, Vector<Short>> ();
+	private Map<Integer, ArrayList<Short>> m_fillMap = new HashMap<Integer, ArrayList<Short>> ();
 
-	public GotoTableCompressor (Vector<short[]> gotoTable)
+	public GotoTableCompressor (ArrayList<short[]> gotoTable)
 	{
 		m_dfa = gotoTable;
-		m_dfaCopy = new Vector<short[]> ();
+		m_dfaCopy = new ArrayList<short[]> ();
 		for (short[] column : m_dfa)
 			m_dfaCopy.add (column.clone ());
 	}
@@ -218,10 +218,10 @@ class GotoTableCompressor
 
 		int holeSize = getHoleSize (state, minMax[0], minMax[1]);
 
-		Vector<Short> list = m_fillMap.get (holeSize);
+		ArrayList<Short> list = m_fillMap.get (holeSize);
 		if (list == null)
 		{
-			list = new Vector<Short> ();
+			list = new ArrayList<Short> ();
 			m_fillMap.put (holeSize, list);
 		}
 		list.add (state);

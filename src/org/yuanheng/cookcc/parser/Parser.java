@@ -48,6 +48,9 @@ import org.yuanheng.cookcc.lexer.CCL;
  */
 public class Parser
 {
+	public static String WARN_UNUSED_TOKEN = "Following terminals are specified but not used:";
+
+	private final static int INIT_MAX_TERMINALS = 255;
 	private final static String PROP_PARSER = "Parser";
 	private final static String PROP_PRODUCTION = "Production";
 
@@ -57,6 +60,9 @@ public class Parser
 
 	public static int FINISH = 0;
 	public static int ERROR = 1;
+	public static int UNHANDLED = 2;
+	public static int IGNORE = 3;
+	public static int CAPTURE = 4;
 
 	//	private static Token s_epsilon = new Token ("{e}", 0, EPSILON, Token.NONASSOC);
 	private static Token s_finish = new Token ("$", 0, FINISH, Token.NONASSOC);
@@ -96,10 +102,14 @@ public class Parser
 	private int[] m_usedSymbols;
 	/** look up the index of a terminal in m_usedSymbols */
 	private int[] m_symbolGroups;
+
+	private int[] m_ignoreList;
+	private int[] m_captureList;
+
 	private final Map<String, Token> m_terminals = new HashMap<String, Token> ();
 	private final Map<Integer, Token> m_terminalMap = new HashMap<Integer, Token> ();
 	private final Map<String, Integer> m_nonTerminals = new HashMap<String, Integer> ();
-	private final Vector<Production> m_productions = new Vector<Production> ();
+	private final ArrayList<Production> m_productions = new ArrayList<Production> ();
 	private final Map<Integer, String> m_symbolMap = new TreeMap<Integer, String> ();
 	// for a given symbol, its productions
 	private final Map<Integer, Production[]> m_productionMap = new HashMap<Integer, Production[]> ();
@@ -108,7 +118,7 @@ public class Parser
 	private final HashMap<Integer, TokenSet> m_firstSetVal = new HashMap<Integer, TokenSet> ();
 
 	private final DFATable m_dfa = new DFATable ();
-	private final Vector<short[]> m_goto = new Vector<short[]> ();
+	private final ArrayList<short[]> m_goto = new ArrayList<short[]> ();
 
 	private final LinkedList<Token> m_tokens = new LinkedList<Token> ();
 
@@ -116,6 +126,7 @@ public class Parser
 
 	final Vector<ItemSet> _DFAStates = new Vector<ItemSet> ();
 	final Map<ItemSet, Short> _DFASet = new TreeMap<ItemSet, Short> ();
+	private final Set<Integer> m_mentionedSet = new HashSet<Integer> ();
 
 	private int m_reduceConflict;
 	private int m_shiftConflict;
@@ -156,6 +167,8 @@ public class Parser
 		m_symbolMap.put (s_error.value, s_error.name);
 
 		m_maxTerminal = parseTerminals ();
+		getIgnoreList ();
+		getCaptureList ();
 
 		// add start condition
 		Production startProduction = new Production (getNonterminal (START), m_productionIdCounter++);
@@ -223,7 +236,7 @@ public class Parser
 	{
 		int precedenceLevel = 0;
 		TokensDoc[] tokensDocs = m_doc.getTokens ();
-		int maxTerminalValue = 255;
+		int maxTerminalValue = INIT_MAX_TERMINALS;
 
 		int[] checkValue = new int[1];
 		for (TokensDoc tokensDoc : tokensDocs)
@@ -255,6 +268,20 @@ public class Parser
 		return maxTerminalValue;
 	}
 
+	private boolean isIgnored (int terminal)
+	{
+		if (m_ignoreList == null)
+			return false;
+		return Arrays.binarySearch (m_ignoreList, terminal) >= 0;
+	}
+
+	private boolean isCaptured (int terminal)
+	{
+		if (m_captureList == null)
+			return false;
+		return Arrays.binarySearch (m_captureList, terminal) >= 0;
+	}
+
 	private void parseProductions ()
 	{
 		int[] pos = new int[1];
@@ -277,10 +304,14 @@ public class Parser
 				{
 					pos[0] = 0;
 					int sym = parseTerm (lineNumber, terms, pos, type);
+					if (isIgnored (sym))
+						throw new ParserException (lineNumber, "An ignored terminal is used in the grammar");
 					if (type[0] == '\0')
 					{
 						if (sym <= m_maxTerminal)
+						{
 							production.setPrecedence (m_terminalMap.get (sym));
+						}
 					}
 					else
 					{
@@ -346,6 +377,8 @@ public class Parser
 							tok = m_terminalMap.get (value[0]);
 						if (tok == null)
 							throw new ParserException (lineNumber, "Invalid terminal '" + name + "' specified for %prec.");
+						if (tok.getValue () > INIT_MAX_TERMINALS)
+							m_mentionedSet.add (tok.getValue ());
 						production.setPrecedence (tok);
 					}
 				}
@@ -612,12 +645,17 @@ public class Parser
 
 		used[FINISH] = true;
 		used[ERROR] = true;
+		used[UNHANDLED] = true;
+		if (getIgnoreList () != null)
+			used[IGNORE] = true;
+		if (getCaptureList () != null)
+			used[CAPTURE] = true;
 
 		int[] vec = new int[m_maxTerminal + m_nonTerminalCount + 1];
 		int count = 0;
 		for (int i = 0; i <= m_maxTerminal; ++i)
 		{
-			if (used[i] == true)
+			if (used[i])
 				vec[count++] = i;
 		}
 
@@ -629,6 +667,46 @@ public class Parser
 		m_symbolGroups = new int[m_maxTerminal + 1 + m_nonTerminalCount];
 		for (int i = 0; i < count; ++i)
 			m_symbolGroups[vec[i]] = i;
+
+		// now we deal with unhandled list
+		ArrayList<Integer> unusedList = new ArrayList<Integer> ();
+		for (int i = 0; i <= m_maxTerminal; ++i)
+		{
+			if (!used[i])
+			{
+				if (isIgnored (i))
+				{
+					if (isCaptured (i))
+					{
+						m_symbolGroups[i] = CAPTURE;
+					}
+					else
+						m_symbolGroups[i] = IGNORE;
+				}
+				else
+				{
+					m_symbolGroups[i] = UNHANDLED;
+					if (i > INIT_MAX_TERMINALS && !m_mentionedSet.contains (i))
+						unusedList.add (i);
+				}
+			}
+		}
+		if (unusedList.size () > 0)
+		{
+			Main.warn (WARN_UNUSED_TOKEN);
+			StringBuffer list = new StringBuffer ("\t");
+			boolean first = true;
+			for (Integer terminal : unusedList)
+			{
+				if (!first)
+					list.append (" ");
+				String name = m_symbolMap.get (terminal);
+				if (name != null)
+					list.append (name);
+				first = false;
+			}
+			Main.warn (list.toString ());
+		}
 		return count;
 	}
 
@@ -1032,7 +1110,7 @@ public class Parser
 		verbose ("shift/reduce conflicts: " + m_shiftConflict + ", reduce/reduce conflicts: " + m_reduceConflict);
 	}
 
-	Vector<Production> getProductions ()
+	ArrayList<Production> getProductions ()
 	{
 		return m_productions;
 	}
@@ -1047,7 +1125,7 @@ public class Parser
 		return m_dfa;
 	}
 
-	public Vector<short[]> getGoto ()
+	public ArrayList<short[]> getGoto ()
 	{
 		return m_goto;
 	}
@@ -1159,7 +1237,7 @@ public class Parser
 		return token.name + "[" + token.level + "]";
 	}
 
-	public Vector<Production> getRules ()
+	public ArrayList<Production> getRules ()
 	{
 		return m_productions;
 	}
@@ -1191,9 +1269,13 @@ public class Parser
 
 	public String[] getSymbols ()
 	{
-		String[] symbols = new String[m_usedSymbolCount];
-		for (int i = 0; i < symbols.length; ++i)
-			symbols[i] = m_symbolMap.get (m_usedSymbols[i]);
+		String[] symbols = new String[m_maxTerminal + m_nonTerminalCount - INIT_MAX_TERMINALS];
+		for (int i = 0; i < (m_maxTerminal + m_nonTerminalCount - INIT_MAX_TERMINALS); ++i)
+		{
+			symbols[i] = m_symbolMap.get (i + INIT_MAX_TERMINALS + 1);
+			if (symbols[i] == null)
+				symbols[i] = ".";
+		}
 		return symbols;
 	}
 
@@ -1236,5 +1318,79 @@ public class Parser
 	public int getReduceConflict ()
 	{
 		return m_reduceConflict;
+	}
+
+	public int[] getIgnoreList ()
+	{
+		if (m_ignoreList != null)
+			return m_ignoreList;
+		IgnoreDoc ignoreDoc = m_doc.getParser ().getIgnore ();
+		if (ignoreDoc == null)
+			return null;
+		String[] ignores = ignoreDoc.getList ();
+
+		int[] checkValue = new int[1];
+
+		m_ignoreList = new int[ignores.length];
+		long lineNumber = ignoreDoc.getLineNumber ();
+		int i = 0;
+		for (String name : ignores)
+		{
+			checkValue[0] = 0;
+			name = checkTerminalName (lineNumber, name, checkValue);
+			if (checkValue[0] != 0)
+				m_ignoreList[i] = checkValue[0];
+			else
+			{
+				Token token = m_terminals.get (name);
+				if (token == null)
+					throw new ParserException (lineNumber, "Unknown terminal in ignore list: " + name);
+				m_ignoreList[i] = token.value;
+			}
+			++i;
+		}
+		Arrays.sort (m_ignoreList);
+		return m_ignoreList;
+	}
+
+	public int[] getCaptureList ()
+	{
+		if (m_captureList != null)
+			return m_captureList;
+		IgnoreDoc ignoreDoc = m_doc.getParser ().getIgnore ();
+		if (ignoreDoc == null)
+			return null;
+		String[] ignores = ignoreDoc.getList ();
+		String[] captures = ignoreDoc.getCapture ();
+		if (captures == null || captures.length == 0)
+			return null;
+
+		int[] checkValue = new int[1];
+
+		m_captureList = new int[captures.length];
+		long lineNumber = ignoreDoc.getLineNumber ();
+		int i = 0;
+		for (String name : captures)
+		{
+			// now we need to make sure all elements of captureList must
+			// be in the ignore list.
+			if (Arrays.binarySearch (ignores, name) < 0)
+				throw new ParserException (lineNumber, "Ignore list does not container the capture list terminal " + name);
+
+			checkValue[0] = 0;
+			name = checkTerminalName (lineNumber, name, checkValue);
+			if (checkValue[0] != 0)
+				m_captureList[i] = checkValue[0];
+			else
+			{
+				Token token = m_terminals.get (name);
+				if (token == null)
+					throw new ParserException (lineNumber, "Unknown terminal in capture list: " + name);
+				m_captureList[i] = token.value;
+			}
+		}
+		Arrays.sort (m_captureList);
+
+		return m_captureList;
 	}
 }

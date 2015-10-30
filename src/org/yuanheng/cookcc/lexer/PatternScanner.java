@@ -3,6 +3,7 @@ package org.yuanheng.cookcc.lexer;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.FileInputStream;
 
 import java.util.LinkedList;
 import java.util.Vector;
@@ -412,7 +413,6 @@ abstract class PatternScanner
 
 		_yyIsNextBOL = true;
 		_yyBOL = true;
-
 	}
 
 	/**
@@ -748,7 +748,9 @@ abstract class PatternScanner
 
 			// specifically used _yyBuffer since it could be changed by user
 			if (_yyMatchStart > 0 && _yyBuffer[_yyMatchStart - 1] == '\n')
+			{
 				_yyIsNextBOL = true;
+			}
 		}
 	}
 
@@ -1089,8 +1091,6 @@ abstract class PatternScanner
 	}
 
 
-
-
 	private final org.yuanheng.cookcc.lexer.PatternParser m_this = (org.yuanheng.cookcc.lexer.PatternParser)this;
 
 	/**
@@ -1172,6 +1172,12 @@ abstract class PatternScanner
 			return false;
 		}
 		return true;
+	}
+
+
+	protected static Reader open (String file) throws IOException
+	{
+		return new InputStreamReader (new FileInputStream (file));
 	}
 
 

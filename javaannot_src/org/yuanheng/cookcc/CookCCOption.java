@@ -97,4 +97,12 @@ public @interface CookCCOption
 	 * @return	whether or not warn the backup states in the lexer
 	 */
 	boolean warnBackup () default false;
+
+	/**
+	 * Whether or not {@link java.util.stream.Stream} interface should be generated.
+	 *
+	 * @return	whether stream interface for the lexer should be generated.
+	 * @since 0.4
+	 */
+	boolean stream () default false;
 }

@@ -28,6 +28,7 @@ package org.yuanheng.cookcc;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * This class is merely a place holder.
@@ -236,6 +237,19 @@ public abstract class CookCCByte
 	}
 
 	/**
+	 * Check if the terminal is not handled by the parser.
+	 *
+	 * @param	terminal
+	 *			terminal obtained from calling yyLex ()
+	 * @return	true if the terminal is not handled by the parser.
+	 * 			false otherwise.
+	 */
+	protected boolean isUnhandledTerminal (int terminal)
+	{
+		return false;
+	}
+
+	/**
 	 * This function reports error and return true if critical error occurred, or
 	 * false if the error has been successfully recovered.  IOException is an optional
 	 * choice of reporting error.
@@ -335,5 +349,20 @@ public abstract class CookCCByte
 	 */
 	public void yyPushInput (InputStream is)
 	{
+	}
+
+	/**
+	 * Clear the captured terminals.
+	 */
+	public void clearCapturedTerminals ()
+	{
+	}
+
+	/**
+	 * Obtain the current list of captured terminals.
+	 */
+	public Collection<Object[]> getCapturedTerminals ()
+	{
+		return null;
 	}
 }

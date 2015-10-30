@@ -24,57 +24,32 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.yuanheng.cookcc.dfa;
+package org.yuanheng.cookcc.input.xml;
 
-import java.util.ArrayList;
+import org.w3c.dom.Element;
+import org.yuanheng.cookcc.doc.IgnoreDoc;
 
-import org.yuanheng.cookcc.parser.Parser;
+import cookxml.core.DecodeEngine;
+import cookxml.core.interfaces.Creator;
 
 /**
- * Perform table compression
- *
  * @author Heng Yuan
- * @version $Id: ECSParserTable.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
+ * @version $Id: TokensCreator.java 750 2013-11-10 01:00:02Z superduperhengyuan@gmail.com $
+ * @since 0.4
  */
-public class ECSParserTable
+class IgnoreCreator implements Creator
 {
-	private final Parser m_parser;
-
-	public ECSParserTable (Parser lexer)
+	public Object create (String parentNS, String parentTag, Element elm, Object parentObj, DecodeEngine decodeEngine) throws Exception
 	{
-		m_parser = lexer;
+		IgnoreDoc ignoreDoc = new IgnoreDoc ();
+		Integer lineNum = (Integer)elm.getUserData ("line");
+		if (lineNum != null)
+			ignoreDoc.setLineNumber (lineNum.intValue ());
+		return ignoreDoc;
 	}
 
-	public int getSize ()
+	public Object editFinished (String parentNS, String parentTag, Element elm, Object parentObj, Object obj, DecodeEngine decodeEngine) throws Exception
 	{
-		return m_parser.getDFA ().size ();
-	}
-
-	public int getTotalSize ()
-	{
-		int rows = m_parser.getDFA ().size ();
-		return rows * (m_parser.getUsedTerminalCount () + m_parser.getNonTerminalCount ());
-	}
-
-	public int[][] getTable ()
-	{
-		DFATable dfa = m_parser.getDFA ();
-		ArrayList<short[]> gotoTable = m_parser.getGoto ();
-		int rows = dfa.size ();
-		int usedTerminalCount = m_parser.getUsedTerminalCount ();
-		int nonTerminalCount = m_parser.getNonTerminalCount ();
-		int cols = usedTerminalCount + nonTerminalCount;
-		int[][] table = new int[rows][cols];
-		for (int i = 0; i < rows; ++i)
-		{
-			short[] states = dfa.getRow (i).getStates ();
-			short[] gotos = gotoTable.get (i);
-			int[] array = table[i];
-			for (int j = 0; j < usedTerminalCount; ++j)
-				array[j] = states[j];
-			for (int j = 0; j < nonTerminalCount; ++j)
-				array[j + usedTerminalCount] = gotos[j];
-		}
-		return table;
+		return obj;
 	}
 }

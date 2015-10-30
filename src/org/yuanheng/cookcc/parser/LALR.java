@@ -26,6 +26,7 @@
  */
 package org.yuanheng.cookcc.parser;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import org.yuanheng.cookcc.dfa.DFATable;
@@ -46,7 +47,7 @@ class LALR
 	void propagateMove (ItemSet itemSet, int state)
 	{
 		DFATable dfa = m_parser.getDFA ();
-		Vector<short[]> gotoTable = m_parser.getGoto ();
+		ArrayList<short[]> gotoTable = m_parser.getGoto ();
 		short[] dfaColumn = dfa.getRow (state).getStates ();
 		short[] gotoColumn = gotoTable.get (state);
 

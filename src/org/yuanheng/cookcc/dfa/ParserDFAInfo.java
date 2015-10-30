@@ -28,9 +28,9 @@ package org.yuanheng.cookcc.dfa;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Vector;
 
 import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.doc.Document;
@@ -103,6 +103,16 @@ public class ParserDFAInfo
 		return m_ecs;
 	}
 
+	public boolean getIgnoreList ()
+	{
+		return m_parserDoc.hasIgnore ();
+	}
+
+	public boolean getCaptureList ()
+	{
+		return m_parser.getCaptureList () != null;
+	}
+
 	public int getMaxTerminal ()
 	{
 		return m_parser.getMaxTerminal ();
@@ -122,7 +132,7 @@ public class ParserDFAInfo
 	{
 		if (m_rules != null)
 			return m_rules;
-		Vector<Production> rules = m_parser.getRules ();
+		ArrayList<Production> rules = m_parser.getRules ();
 
 		// plus 1 since our reduce states cannot be 0 (0 indicates no shifts or reduces)
 		m_rules = new int[rules.size () + 1];
@@ -137,7 +147,7 @@ public class ParserDFAInfo
 		if (m_lhs != null)
 			return m_lhs;
 
-		Vector<Production> rules = m_parser.getRules ();
+		ArrayList<Production> rules = m_parser.getRules ();
 		int[] groups = m_parser.getSymbolGroups ();
 		// plus 1 since our reduce states cannot be 0 (0 indicates no shifts or reduces)
 		m_lhs = new int[rules.size () + 1];

@@ -1,0 +1,13 @@
+// comment 1
+// comment 2
+print 2 * 3 + 5 * 7;	// comment 3
+x = 1;
+while (x < 10) {
+	if (x < 5)
+		// comment 4
+		print x * x;
+	else
+		print x + x;
+
+	x = x + 1;
+}

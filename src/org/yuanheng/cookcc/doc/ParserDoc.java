@@ -49,6 +49,7 @@ public class ParserDoc extends TreeDoc
 	private boolean m_defaultReduce;
 	private boolean m_recovery = true;
 	private boolean m_parseError = true;
+	private IgnoreDoc m_ignore;
 
 	public ParserDoc ()
 	{
@@ -98,6 +99,32 @@ public class ParserDoc extends TreeDoc
 	public void setParseError (boolean parseerror)
 	{
 		m_parseError = parseerror;
+	}
+
+	public void add (IgnoreDoc ignore)
+	{
+		if (ignore.getList () == null)
+		{
+			throw new RuntimeException ("Ignore list cannot be empty.");
+		}
+		if (m_ignore == null)
+		{
+			m_ignore = ignore;
+		}
+		else
+		{
+			throw new RuntimeException ("Parser already has an ignore list.");
+		}
+	}
+
+	public boolean hasIgnore ()
+	{
+		return m_ignore != null;
+	}
+
+	public IgnoreDoc getIgnore ()
+	{
+		return m_ignore;
 	}
 
 	public boolean hasGrammar (String term)

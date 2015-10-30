@@ -26,7 +26,7 @@
  */
 package org.yuanheng.cookcc.dfa;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import org.yuanheng.cookcc.parser.Parser;
 
@@ -101,7 +101,7 @@ public class CompressedParserTable
 		return totalSize;
 	}
 
-	public Vector<short[]> getGoto ()
+	public ArrayList<short[]> getGoto ()
 	{
 		return m_parser.getGoto ();
 	}
@@ -172,7 +172,7 @@ public class CompressedParserTable
 		short[] gotoDefault = getGotoDefault ();
 
 		DFATable dfa = m_parser.getDFA ();
-		Vector<short[]> gotoTable = m_parser.getGoto ();
+		ArrayList<short[]> gotoTable = m_parser.getGoto ();
 		int numStates = dfa.size ();
 		int usedTerminalCount = m_parser.getUsedTerminalCount ();
 		int nonTerminalCount = m_parser.getNonTerminalCount ();

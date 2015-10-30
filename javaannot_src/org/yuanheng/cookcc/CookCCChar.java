@@ -1,5 +1,5 @@
 /*
- * CookCC Copyright (c) 2008-2009, Heng Yuan
+ * CookCC Copyright (c) 2008-2015, Heng Yuan
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,9 +33,9 @@ import java.util.Collection;
 /**
  * This class is merely a place holder.
  *
- * @author Heng Yuan
- * @version $Id: CookCCChar.java 764 2015-05-08 05:07:25Z superduperhengyuan@gmail.com $
- * @since 0.3
+ * @author	Heng Yuan
+ * @version	$Id: CookCCChar.java 764 2015-05-08 05:07:25Z superduperhengyuan@gmail.com $
+ * @since	0.3
  */
 public abstract class CookCCChar
 {
@@ -63,10 +63,11 @@ public abstract class CookCCChar
 
 	/**
 	 * Return the current line number.
-	 * 
+	 * <p>
 	 * This function is only available in line mode.
 	 *
 	 * @return	the current line number.
+	 * @since	0.4
 	 */
 	public int getLineNumber ()
 	{
@@ -90,7 +91,7 @@ public abstract class CookCCChar
 		return true;
 	}
 
-	protected boolean debugParser (int fromState, int toState, int reduceState, String reduceStateName, int ecsToken, String tokenName)
+	protected boolean debugParser (int fromState, int toState, int reduceState, String reduceStateName, int symbol)
 	{
 		return true;
 	}
@@ -150,9 +151,9 @@ public abstract class CookCCChar
 
 	/**
 	 * Reset the internal state to reuse the same parser.
-	 *
+	 * <p>
 	 * Note, it does not change the buffer size, the input buffer, and the input stream.
-	 *
+	 * <p>
 	 * Making this function protected so that it can be enabled only if the child class
 	 * decides to make it public.
 	 */
@@ -232,6 +233,13 @@ public abstract class CookCCChar
 		return 0;
 	}
 
+	/**
+	 * Clear the error flag.  If this flag is present and the parser again sees
+	 * another error transition, it would immediately calls yyParseError, which
+	 * would by default exit the parser.
+	 * <p>
+	 * This function is used in error recovery.
+	 */
 	protected void yyClearError ()
 	{
 	}
@@ -243,6 +251,7 @@ public abstract class CookCCChar
 	 *			terminal obtained from calling yyLex ()
 	 * @return	true if the terminal is not handled by the parser.
 	 * 			false otherwise.
+	 * @since	0.4
 	 */
 	protected boolean isUnhandledTerminal (int terminal)
 	{
@@ -287,6 +296,49 @@ public abstract class CookCCChar
 	 */
 	protected void yySetValue (Object value)
 	{
+	}
+
+	/**
+	 * Obtain the current list of captured terminals.
+	 * <p>
+	 * Each Object[] contains two values.  The first is the {@link Integer} value
+	 * of the terminal.  The second value is the value associated with the terminal.
+	 *
+	 * @param	arg
+	 *			the symbol position starting from 1.
+	 * @return	the captured terminals associated with the symbol
+	 * @since	0.4
+	 */
+	protected Collection<Object[]> getCapturedTerminals (int arg)
+	{
+		return null;
+	}
+
+	/**
+	 * Obtain the string representation for a symbol, which includes terminals
+	 * and non-terminals.
+	 *
+	 * @param	symbol
+	 *			The integer value of a symbol
+	 * @return	the string representation of the symbol
+	 * @since	0.4
+	 */
+	protected String getSymbolName (int symbol)
+	{
+		return "";
+	}
+
+	/**
+	 * Get the debugging string that represent the current parsing stack.
+	 *
+	 * @param	states
+	 *			the current stack
+	 * @return	a string representation of the parsing stack.
+	 * @since	0.4
+	 */
+	protected String getStateString (Collection<?> states)
+	{
+		return "";
 	}
 
 	/**
@@ -349,20 +401,5 @@ public abstract class CookCCChar
 	 */
 	public void yyPushInput (Reader reader)
 	{
-	}
-
-	/**
-	 * Clear the captured terminals.
-	 */
-	public void clearCapturedTerminals ()
-	{
-	}
-
-	/**
-	 * Obtain the current list of captured terminals.
-	 */
-	public Collection<Object[]> getCapturedTerminals ()
-	{
-		return null;
 	}
 }

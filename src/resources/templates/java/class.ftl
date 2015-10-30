@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 <#if parser?has_content>
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 </#if>
 <#if lexer?has_content>
 import java.util.Stack;
@@ -416,7 +415,7 @@ ${code.classheader}
 <#if lexer.lineMode>
 	/**
 	 * Return the current line number.
-	 * 
+	 * <p>
 	 * This function is only available in line mode.
 	 * 
 	 * @return	the current line number.
@@ -602,9 +601,9 @@ ${code.classheader}
 
 	/**
 	 * Reset the internal state to reuse the same parser.
-	 *
+	 * <p>
 	 * Note, it does not change the buffer size, the input buffer, and the input stream.
-	 *
+	 * <p>
 	 * Making this function protected so that it can be enabled only if the child class
 	 * decides to make it public.
 	 */
@@ -929,6 +928,14 @@ ${code.classheader}
 </#if>
 
 <#if parser?has_content>
+	/**
+	 * Obtain the string representation for a symbol, which includes terminals
+	 * and non-terminals.
+	 *
+	 * @param	symbol
+	 *			The integer value of a symbol
+	 * @return	the string representation of the symbol
+	 */
 	protected String getSymbolName (int symbol)
 	{
 		if (symbol < 0 || symbol > (255 + cc_parser_symbol.symbols.length))
@@ -950,6 +957,13 @@ ${code.classheader}
 		}
 	}
 
+	/**
+	 * Get the debugging string that represent the current parsing stack.
+	 *
+	 * @param	states
+	 *			the current stack
+	 * @return	a string representation of the parsing stack.
+	 */
 <#if generics?has_content && generics?string == "true">
 	protected String getStateString (Collection<YYParserState> states)
 <#else>
@@ -1414,6 +1428,13 @@ ${code.classheader}
 
 	/**
 	 * Obtain the current list of captured terminals.
+	 * <p>
+	 * Each Object[] contains two values.  The first is the {@link Integer} value
+	 * of the terminal.  The second value is the value associated with the terminal.
+	 *
+	 * @param	arg
+	 *			the symbol position starting from 1.
+	 * @return	the captured terminals associated with the symbol
 	 */
 <#if generics?has_content && generics?string == "true">
 	protected Collection<Object[]> getCapturedTerminals (int arg)
@@ -1432,6 +1453,13 @@ ${code.classheader}
 </#if>
 	}
 
+	/**
+	 * A small utility to avoid too many Integer object creations.
+	 *
+	 * @param	symbol
+	 *			an integer value.  Usually it is a symbol.
+	 * @return	an Integer value matching the symbol value passed in.
+	 */
 	private Integer getInteger (int symbol)
 	{
 		if (_yySymbolArray == null)

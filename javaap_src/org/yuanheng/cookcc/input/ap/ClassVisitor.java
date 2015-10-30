@@ -241,6 +241,22 @@ class ClassVisitor
 		rule.addStates (lex.state ());
 	}
 
+	private void parseIgnore (Ignore ignore)
+	{
+		if (ignore == null)
+			return;
+
+		IgnoreDoc ignoreDoc = new IgnoreDoc ();
+		ignoreDoc.setList (ignore.list ());
+		if (ignore.capture () != null)
+		{
+			String capture = ignore.capture ().trim ();
+			if (capture.length () > 0)
+				ignoreDoc.setCapture (capture);
+		}
+		getParser ().add (ignoreDoc);
+	}
+
 	private void parseRules (Rules rules, ExecutableElement method)
 	{
 		if (rules == null)
@@ -406,6 +422,7 @@ class ClassVisitor
 		parseLex (method.getAnnotation (Lex.class), method, -1);
 		parseShortcuts (method.getAnnotation (Shortcuts.class));
 		parseShortcut (method.getAnnotation (Shortcut.class));
+		parseIgnore (method.getAnnotation (Ignore.class));
 		parseRules (method.getAnnotation (Rules.class), method);
 		parseRule (method.getAnnotation (Rule.class), method, -1);
 	}

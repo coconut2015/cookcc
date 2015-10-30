@@ -40,12 +40,21 @@ function cookcc ()
 
 function apt ()
 {
+	v=$1
 	if [ -z "$UNICODE" ]; then
 		unicode=""
 	else
 		unicode="-Aunicode"
 	fi
-	"$javac" -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . $unicode $@
+	CCOUTPUT=${v%.java}.ccoutput
+	"$javac" -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . -Agenerics $unicode $@ > ccoutput 2>&1
+	if [ -f $CCOUTPUT ]; then
+		diff ccoutput $CCOUTPUT > /dev/null || testerror $v
+	elif [ `sizeof ccoutput` -ne 0 ]; then
+		cat ccoutput
+		testerror $v
+	fi
+	rm -f ccoutput
 }
 
 function compile ()

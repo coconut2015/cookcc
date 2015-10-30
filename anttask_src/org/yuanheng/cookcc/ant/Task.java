@@ -63,10 +63,10 @@ public class Task extends org.apache.tools.ant.Task
 	private File m_destDir = null;
 	private File m_srcDir = null;
 
-	private ArrayList<Option> m_options = new ArrayList<Option> ();
+	private final ArrayList<Option> m_options = new ArrayList<Option> ();
 
-	private ArrayList<String> m_aptFiles = new ArrayList<String> ();
-	private ArrayList<String> m_xccFiles = new ArrayList<String> ();
+	private final ArrayList<String> m_aptFiles = new ArrayList<String> ();
+	private final ArrayList<String> m_xccFiles = new ArrayList<String> ();
 
 	public void setSrcDir (File srcDir)
 	{
@@ -138,6 +138,7 @@ public class Task extends org.apache.tools.ant.Task
 		m_options.add (option);
 	}
 
+	@Override
 	public void execute ()
 	{
 		if (m_xccFiles.size () > 0)
@@ -244,9 +245,6 @@ public class Task extends org.apache.tools.ant.Task
 		cmd.createArgument ().setValue ("-s");
 		cmd.createArgument ().setValue (m_srcDir.getPath ());
 
-		// always turn on generics since we are using Java 1.5+ anyways
-		cmd.createArgument ().setValue ("-Agenerics");
-
 		if (m_analysis)
 			cmd.createArgument ().setValue ("-Aanalysis");
 		if (m_debug)
@@ -309,8 +307,6 @@ public class Task extends org.apache.tools.ant.Task
 
 		cmd.createArgument ().setValue ("-nocompile");
 
-		// always turn on generics since we are using Java 1.5+ anyways
-		cmd.createArgument ().setValue ("-Agenerics");
 		if (m_analysis)
 			cmd.createArgument ().setValue ("-Aanalysis");
 		if (m_debug)

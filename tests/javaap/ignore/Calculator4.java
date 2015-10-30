@@ -25,7 +25,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.util.Iterator;
 import java.util.HashMap;
 import java.io.IOException;
 import java.io.FileInputStream;
@@ -70,7 +69,7 @@ public class Calculator4 extends Parser
 		UMINUS
 	}
 
-	private final HashMap m_varMap = new HashMap ();
+	private final HashMap<String, Node> m_varMap = new HashMap<String, Node> ();
 
 	////////////////////////////////////////////////////////////////////////
 	//
@@ -259,10 +258,9 @@ public class Calculator4 extends Parser
 		if (getCapturedTerminals (1) != null)
 		{
 			String comment = null;
-			for (Iterator iter = getCapturedTerminals (1).iterator ();
-				 iter.hasNext ();)
+			for (Object[] token : getCapturedTerminals (1))
 			{
-				String str = (String)((Object[])iter.next ())[1];
+				String str = (String)token[1];
 				if (comment == null)
 					comment = str;
 				else

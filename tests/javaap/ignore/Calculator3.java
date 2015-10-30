@@ -69,7 +69,7 @@ public class Calculator3 extends Parser
 		UMINUS
 	}
 
-	private final HashMap m_varMap = new HashMap ();
+	private final HashMap<String, Node> m_varMap = new HashMap<String, Node> ();
 
 	////////////////////////////////////////////////////////////////////////
 	//

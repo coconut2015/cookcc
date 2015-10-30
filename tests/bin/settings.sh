@@ -47,7 +47,7 @@ function apt ()
 		unicode="-Aunicode"
 	fi
 	CCOUTPUT=${v%.java}.ccoutput
-	"$javac" -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . -Agenerics $unicode $@ > ccoutput 2>&1
+	"$javac" -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . $unicode $@ > ccoutput 2>&1
 	if [ -f $CCOUTPUT ]; then
 		diff ccoutput $CCOUTPUT > /dev/null || testerror $v
 	elif [ `sizeof ccoutput` -ne 0 ]; then

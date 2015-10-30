@@ -251,6 +251,7 @@ public class CookCCProcessor implements Processor
 	 *
 	 * @return	a set of string options CookCC supports
 	 */
+	@Override
 	public Set<String> getSupportedOptions ()
 	{
 		HashSet<String> set = new HashSet<String> ();
@@ -273,6 +274,7 @@ public class CookCCProcessor implements Processor
 		return set;
 	}
 
+	@Override
 	public Set<String> getSupportedAnnotationTypes ()
 	{
 		HashSet<String> set = new HashSet<String> ();
@@ -280,11 +282,13 @@ public class CookCCProcessor implements Processor
 		return set;
 	}
 
+	@Override
 	public SourceVersion getSupportedSourceVersion ()
 	{
 		return SourceVersion.latestSupported ();
 	}
 
+	@Override
 	public void init (ProcessingEnvironment env)
 	{
 		m_env = env;
@@ -345,6 +349,7 @@ public class CookCCProcessor implements Processor
 		}
 	}
 
+	@Override
 	public boolean process (Set<? extends TypeElement> annotations, RoundEnvironment roundEnv)
 	{
 		if (roundEnv.processingOver ())
@@ -356,16 +361,16 @@ public class CookCCProcessor implements Processor
 			{
 				visit (elem);
 			}
-	
+
 			// Scan CookCCOption classes
 			for (Element elem : roundEnv.getElementsAnnotatedWith (CookCCOption.class))
 			{
 				visit (elem);
 			}
-	
+
 			assignTokensDoc ();
 			addDefaultCode ();
-	
+
 			// Scan TokenDoc classes
 			CodeGen codeGen = Main.getCodeGen ();
 			OptionMap options = codeGen.getOptions ();
@@ -375,15 +380,15 @@ public class CookCCProcessor implements Processor
 				{
 					// setup the code generators with some options that are geared toward
 					// JavaCodeGen.  Other code generators would ignore them.
-	
+
 					options.addOption (ClassOption.OPTION_CLASS, ClassVisitor.getOutputClass (doc));
 					// very important, this option should be consulted from OptionMap
 					if (ClassVisitor.isPublic (doc))
 						options.addOption (JavaCodeGen.OPTION_PUBLIC);
 					else
 						options.removeOption (JavaCodeGen.OPTION_PUBLIC);
+					options.addOption (JavaCodeGen.OPTION_GENERICS);
 					options.addOption (AbstractOption.OPTION_ABSTRACT);
-	
 					codeGen.generateOutput (doc);
 				}
 				catch (Exception ex)
@@ -402,6 +407,7 @@ public class CookCCProcessor implements Processor
 		}
 	}
 
+	@Override
 	public Iterable<? extends Completion> getCompletions (Element element, AnnotationMirror annotation, ExecutableElement member, String userText)
 	{
 		return null;

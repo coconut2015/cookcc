@@ -1287,10 +1287,18 @@ ${code.classheader}
 				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
 				{
 				<#if p_index == 0>
-					_yyValue = new LinkedList ();
+<#if generics?has_content && generics?string == "true">
+					_yyValue = new ArrayList<Object> ();
+<#else>
+					_yyValue = new ArrayList ();
+</#if>
 				<#else>
 					_yyValue = yyGetValue (1);
-					((LinkedList)_yyValue).add (yyGetValue (2));
+<#if generics?has_content && generics?string == "true">
+					((ArrayList<Object>)_yyValue).add (yyGetValue (2));
+<#else>
+					((ArrayList)_yyValue).add (yyGetValue (2));
+</#if>
 				</#if>
 					break;
 				}
@@ -1301,11 +1309,20 @@ ${code.classheader}
 				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
 				{
 				<#if p_index == 0>
-					_yyValue = new LinkedList ();
-					((LinkedList)_yyValue).add (yyGetValue (1));
+<#if generics?has_content && generics?string == "true">
+					_yyValue = new ArrayList<Object> ();
+					((ArrayList<Object>)_yyValue).add (yyGetValue (1));
+<#else>
+					_yyValue = new ArrayList ();
+					((ArrayList)_yyValue).add (yyGetValue (1));
+</#if>
 				<#else>
 					_yyValue = yyGetValue (1);
-					((LinkedList)_yyValue).add (yyGetValue (2));
+<#if generics?has_content && generics?string == "true">
+					((ArrayList<Object>)_yyValue).add (yyGetValue (2));
+<#else>
+					((ArrayList)_yyValue).add (yyGetValue (2));
+</#if>
 				</#if>
 					break;
 				}

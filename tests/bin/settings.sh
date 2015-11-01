@@ -27,8 +27,13 @@ function cookcc ()
 	else
 		unicode="-unicode"
 	fi
+	if [ -z "$GENERICS" ]; then
+		generics=""
+	else
+		generics="-generics"
+	fi
 	CCOUTPUT=${v%.xcc}.ccoutput
-	"$java" -jar "${COOKCC}" $unicode $@ > ccoutput 2>&1
+	"$java" -jar "${COOKCC}" $unicode $generics $@ > ccoutput 2>&1
 	if [ -f $CCOUTPUT ]; then
 		diff ccoutput $CCOUTPUT > /dev/null || testerror $v
 	elif [ `sizeof ccoutput` -ne 0 ]; then
@@ -59,7 +64,9 @@ function apt ()
 
 function compile ()
 {
-	"$javac" -classpath "$COOKCC:." $1 > /dev/null 2> /dev/null || testerror $2
+	TEST=$1
+	shift
+	"$javac" -classpath "$COOKCC:." $@ > /dev/null 2> /dev/null || testerror $TEST
 }
 
 

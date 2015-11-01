@@ -1,2 +1,2 @@
-This calculator example is adapted from "A Compact Guide to Lex & Yacc"
-(http://epaperpress.com/lexandyacc/).
+This is a modification of the calculator example, by adding some ignoreable
+terminals but capturable stuff (like comments)

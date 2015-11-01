@@ -11,7 +11,7 @@ do
 
 	cookcc $v
 
-	compile Lexer.java $v
+	compile $v Lexer.java
 	run Lexer $v $INPUT $OUTPUT
 
 	rm -f Lexer.java

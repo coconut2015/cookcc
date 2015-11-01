@@ -28,7 +28,7 @@
 	<!ELEMENT cookcc    ((code | tokens | lexer | parser)*)>
 	<!ELEMENT tokens    (#PCDATA)>
 	<!ELEMENT lexer     (shortcut*, (state | rule)+)>
-	<!ELEMENT parser    (ignore, type*, grammar+)>
+	<!ELEMENT parser    (ignore?, type*, (grammar | treerule)+)>
 	<!ELEMENT code      (#PCDATA)>
 
 	<!ELEMENT shortcut  (#PCDATA)>
@@ -60,6 +60,7 @@
 	<!ELEMENT type      (#PCDATA)>
 	<!ELEMENT grammar   ((rhs,action?)+)>
 	<!ELEMENT rhs       (#PCDATA)>
+	<!ELEMENT treerule  (#PCDATA)>
 
 	<!ATTLIST parser    start CDATA #IMPLIED>
 	<!ATTLIST parser    table (ecs|compressed) #IMPLIED>

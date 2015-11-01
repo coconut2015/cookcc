@@ -13,6 +13,6 @@ apt CalcLexer.java Token.java
 compile CalcParser.java CalcParser.java CalcLexer.java Token.java
 run CalcParser $v test.input test.output
 
-rm -f Parser.java
+rm -f CalcParserGen.java CalcLexerGen.java
 rm -f *.class
 rm -f output

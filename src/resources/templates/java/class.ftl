@@ -965,7 +965,7 @@ ${code.classheader}
 	 * Return the object associate with the token.  This function is only generated
 	 * when the lexer is not specified.
 	 *
-	 * @return	the object assoicated with the token.
+	 * @return	the object associated with the token.
 	 */
 	protected Object yyValue ()
 	{

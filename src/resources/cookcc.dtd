@@ -61,6 +61,7 @@
 	<!ELEMENT grammar   ((rhs,action?)+)>
 	<!ELEMENT rhs       (#PCDATA)>
 	<!ELEMENT treerule  (#PCDATA)>
+	<!ELEMENT ignore    EMPTY>
 
 	<!ATTLIST parser    start CDATA #IMPLIED>
 	<!ATTLIST parser    table (ecs|compressed) #IMPLIED>

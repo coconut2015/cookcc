@@ -29,7 +29,7 @@ package org.yuanheng.cookcc.dfa;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.Map;
 
 import org.yuanheng.cookcc.OptionMap;
@@ -177,7 +177,7 @@ public class ParserDFAInfo
 		return m_symbols;
 	}
 
-	public LinkedList<Token> getTokens ()
+	public Collection<Token> getTokens ()
 	{
 		return m_parser.getTokens ();
 	}

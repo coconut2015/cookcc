@@ -156,9 +156,9 @@ ${code.classheader}
 </#if>
 	// internal track of the argument start
 	private int _yyArgStart;
+</#if>
 	// for passing value from lexer to parser
 	private Object _yyValue;
-</#if>
 
 <#if lexer?has_content>
 <#if unicode>
@@ -196,6 +196,18 @@ ${code.classheader}
 </#if>
 
 <#if lexer?has_content>
+<#if !parser?has_content>
+	/**
+	 * Return the object associate with the token.  This function is only generated
+	 * when the parser is not specified.
+	 *
+	 * @return	the object assoicated with the token.
+	 */
+	public Object yyValue ()
+	{
+		return _yyValue;
+	}
+</#if>
 <#if unicode>
 	/**
 	 * Set the current input.
@@ -924,6 +936,17 @@ ${code.classheader}
 	protected int yyLex () throws IOException
 	{
 		return 0;
+	}
+
+	/**
+	 * Return the object associate with the token.  This function is only generated
+	 * when the lexer is not specified.
+	 *
+	 * @return	the object assoicated with the token.
+	 */
+	protected Object yyValue ()
+	{
+		return null;
 	}
 </#if>
 

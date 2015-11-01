@@ -26,10 +26,7 @@
  */
 package org.yuanheng.cookcc.parser;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -120,7 +117,7 @@ public class Parser
 	private final DFATable m_dfa = new DFATable ();
 	private final ArrayList<short[]> m_goto = new ArrayList<short[]> ();
 
-	private final LinkedList<Token> m_tokens = new LinkedList<Token> ();
+	private final ArrayList<Token> m_tokens = new ArrayList<Token> ();
 
 	private final HashMap<Integer, MessageFormat> m_formats = new HashMap<Integer, MessageFormat> ();
 
@@ -293,11 +290,11 @@ public class Parser
 		{
 			GrammarDoc grammar = parserDoc.getGrammar (grammarId);
 			int lhs = getNonterminal (grammar.getRule ());
-			LinkedList<Production> prods = new LinkedList<Production> ();
+			ArrayList<Production> prods = new ArrayList<Production> ();
 			for (RhsDoc rhs : grammar.getRhs ())
 			{
 				Production production = new Production (lhs, m_productionIdCounter++);
-				LinkedList<Integer> symbolList = new LinkedList<Integer> ();
+				ArrayList<Integer> symbolList = new ArrayList<Integer> ();
 				String terms = rhs.getTerms ().trim ();
 				long lineNumber = rhs.getLineNumber ();
 				while (terms.length () > 0)
@@ -736,7 +733,7 @@ public class Parser
 	 *
 	 * @return user defined tokens that needs value definitions.
 	 */
-	public LinkedList<Token> getTokens ()
+	public Collection<Token> getTokens ()
 	{
 		return m_tokens;
 	}

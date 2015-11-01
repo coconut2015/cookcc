@@ -26,9 +26,9 @@
  */
 package org.yuanheng.cookcc.dfa;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.TreeMap;
-import java.util.Vector;
 
 import org.yuanheng.cookcc.lexer.ECS;
 
@@ -71,6 +71,7 @@ class TableCompressor
 			return m_defaultValue;
 		}
 
+		@Override
 		public int compareTo (ErrorVector other)
 		{
 			int size = m_error.length;
@@ -99,16 +100,16 @@ class TableCompressor
 	private final int GOODREPEAT;
 	private final int m_rowSize;
 
-	private Vector<ErrorVector> m_errors = new Vector<ErrorVector> ();
-	private TreeMap<ErrorVector, Short> m_errorMap = new TreeMap<ErrorVector, Short> ();
-	private TreeMap<Integer, Vector<Short>> m_fillMap = new TreeMap<Integer, Vector<Short>> ();
+	private final ArrayList<ErrorVector> m_errors = new ArrayList<ErrorVector> ();
+	private final TreeMap<ErrorVector, Short> m_errorMap = new TreeMap<ErrorVector, Short> ();
+	private final TreeMap<Integer, ArrayList<Short>> m_fillMap = new TreeMap<Integer, ArrayList<Short>> ();
 
 	private short[] m_next;
 	private short[] m_check;
 	private short[] m_base;
 	private short[] m_default;
 
-	private ECS m_ecsError;
+	private final ECS m_ecsError;
 
 	private boolean m_useDefault = true;
 	private boolean m_useMeta = true;
@@ -478,10 +479,10 @@ class TableCompressor
 		if (blockSize > 0)
 		{
 			Integer holes = new Integer (getHoleSize (thisState, min, max));
-			Vector<Short> v = m_fillMap.get (holes);
+			ArrayList<Short> v = m_fillMap.get (holes);
 			if (v == null)
 			{
-				v = new Vector<Short> ();
+				v = new ArrayList<Short> ();
 				m_fillMap.put (holes, v);
 			}
 			v.add (new Short (thisState));
@@ -562,10 +563,10 @@ class TableCompressor
 			{
 				Integer holes = new Integer (getErrorHoleSize (stateNum, minMax[0], minMax[1]));
 
-				Vector<Short> v = m_fillMap.get (holes);
+				ArrayList<Short> v = m_fillMap.get (holes);
 				if (v == null)
 				{
-					v = new Vector<Short> ();
+					v = new ArrayList<Short> ();
 					m_fillMap.put (holes, v);
 				}
 				v.add (new Short ((short)stateNum));

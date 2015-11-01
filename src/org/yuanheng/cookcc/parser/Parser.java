@@ -29,7 +29,6 @@ package org.yuanheng.cookcc.parser;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.OptionMap;
@@ -37,7 +36,7 @@ import org.yuanheng.cookcc.dfa.DFARow;
 import org.yuanheng.cookcc.dfa.DFATable;
 import org.yuanheng.cookcc.doc.*;
 import org.yuanheng.cookcc.exception.ParserException;
-import org.yuanheng.cookcc.lexer.CCL;
+import org.yuanheng.cookcc.util.TerminalUtils;
 
 /**
  * @author Heng Yuan
@@ -47,11 +46,8 @@ public class Parser
 {
 	public static String WARN_UNUSED_TOKEN = "Following terminals are specified but not used:";
 
-	private final static int INIT_MAX_TERMINALS = 255;
 	private final static String PROP_PARSER = "Parser";
 	private final static String PROP_PRODUCTION = "Production";
-
-	private static Pattern s_tokenNamePattern = Pattern.compile ("[a-zA-Z_][a-zA-Z_0-9]*");
 
 	public static String START = "@start";
 
@@ -121,7 +117,7 @@ public class Parser
 
 	private final HashMap<Integer, MessageFormat> m_formats = new HashMap<Integer, MessageFormat> ();
 
-	final Vector<ItemSet> _DFAStates = new Vector<ItemSet> ();
+	final ArrayList<ItemSet> _DFAStates = new ArrayList<ItemSet> ();
 	final Map<ItemSet, Short> _DFASet = new TreeMap<ItemSet, Short> ();
 	private final Set<Integer> m_mentionedSet = new HashSet<Integer> ();
 
@@ -163,7 +159,11 @@ public class Parser
 		m_symbolMap.put (s_finish.value, s_finish.name);
 		m_symbolMap.put (s_error.value, s_error.name);
 
-		m_maxTerminal = parseTerminals ();
+		m_maxTerminal = TerminalUtils.parseTerminals (m_terminals,
+													  m_terminalMap,
+													  m_symbolMap,
+													  m_tokens,
+													  m_doc.getTokens ());
 		getIgnoreList ();
 		getCaptureList ();
 
@@ -227,42 +227,6 @@ public class Parser
 			m_out.close ();
 			m_out = null;
 		}
-	}
-
-	private int parseTerminals ()
-	{
-		int precedenceLevel = 0;
-		TokensDoc[] tokensDocs = m_doc.getTokens ();
-		int maxTerminalValue = INIT_MAX_TERMINALS;
-
-		int[] checkValue = new int[1];
-		for (TokensDoc tokensDoc : tokensDocs)
-		{
-			int level = precedenceLevel++;
-			String[] names = tokensDoc.getTokens ();
-			if (names == null)
-				continue;
-			for (String name : names)
-			{
-				if (m_terminals.containsKey (name))
-					throw new ParserException (tokensDoc.getLineNumber (), "Duplicate token " + name + " specified.");
-
-				checkValue[0] = 0;
-				name = checkTerminalName (tokensDoc.getLineNumber (), name, checkValue, true);
-				int v = checkValue[0];
-				if (v == 0)
-					v = ++maxTerminalValue;
-				Token token = new Token (name, level, v, tokensDoc.getType ());
-				m_terminals.put (name, token);
-				m_terminalMap.put (v, token);
-
-				if (m_symbolMap.get (v) == null)
-					m_symbolMap.put (v, name);
-				if (checkValue[0] == 0)
-					m_tokens.add (token);
-			}
-		}
-		return maxTerminalValue;
 	}
 
 	private boolean isIgnored (int terminal)
@@ -374,7 +338,7 @@ public class Parser
 							tok = m_terminalMap.get (value[0]);
 						if (tok == null)
 							throw new ParserException (lineNumber, "Invalid terminal '" + name + "' specified for %prec.");
-						if (tok.getValue () > INIT_MAX_TERMINALS)
+						if (tok.getValue () > TerminalUtils.INIT_MAX_TERMINALS)
 							m_mentionedSet.add (tok.getValue ());
 						production.setPrecedence (tok);
 					}
@@ -456,43 +420,7 @@ public class Parser
 
 	private String checkTerminalName (long lineNumber, String name, int[] value)
 	{
-		return checkTerminalName (lineNumber, name, value, false);
-	}
-
-	private String checkTerminalName (long lineNumber, String name, int[] value, boolean noInternal)
-	{
-		try
-		{
-			if (name.startsWith ("'"))
-			{
-				int[] pos = new int[1];
-				pos[0] = 1;
-				char ch = CCL.esc (name, pos);
-				if (name.length () == (pos[0] + 1) && name.charAt (pos[0]) == '\'')
-				{
-					value[0] = ch;
-					++pos[0];
-
-					if (m_symbolMap.get ((int)ch) == null)
-						m_symbolMap.put ((int)ch, name);
-					return String.valueOf ((int)ch);
-				}
-			}
-			else if (s_tokenNamePattern.matcher (name).matches ())
-			{
-				if (noInternal && "error".equals (name))
-					throw new ParserException (0, "error token is built-in");
-				return name;
-			}
-		}
-		catch (ParserException ex)
-		{
-			throw ex;
-		}
-		catch (Exception ex)
-		{
-		}
-		throw new ParserException (lineNumber, "Invalid token name: " + name);
+		return TerminalUtils.checkTerminalName (lineNumber, name, value, false, m_symbolMap);
 	}
 
 	private int getNonterminal (String name)
@@ -683,7 +611,7 @@ public class Parser
 				else
 				{
 					m_symbolGroups[i] = UNHANDLED;
-					if (i > INIT_MAX_TERMINALS && !m_mentionedSet.contains (i))
+					if (i > TerminalUtils.INIT_MAX_TERMINALS && !m_mentionedSet.contains (i))
 						unusedList.add (i);
 				}
 			}
@@ -1266,10 +1194,10 @@ public class Parser
 
 	public String[] getSymbols ()
 	{
-		String[] symbols = new String[m_maxTerminal + m_nonTerminalCount - INIT_MAX_TERMINALS];
-		for (int i = 0; i < (m_maxTerminal + m_nonTerminalCount - INIT_MAX_TERMINALS); ++i)
+		String[] symbols = new String[m_maxTerminal + m_nonTerminalCount - TerminalUtils.INIT_MAX_TERMINALS];
+		for (int i = 0; i < (m_maxTerminal + m_nonTerminalCount - TerminalUtils.INIT_MAX_TERMINALS); ++i)
 		{
-			symbols[i] = m_symbolMap.get (i + INIT_MAX_TERMINALS + 1);
+			symbols[i] = m_symbolMap.get (i + TerminalUtils.INIT_MAX_TERMINALS + 1);
 			if (symbols[i] == null)
 				symbols[i] = ".";
 		}

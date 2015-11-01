@@ -27,7 +27,6 @@
 package org.yuanheng.cookcc.parser;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 import org.yuanheng.cookcc.dfa.DFATable;
 
@@ -91,7 +90,7 @@ class LALR
 	{
 		boolean changed = true;
 
-		Vector<ItemSet> dfaStates = m_parser._DFAStates;
+		ArrayList<ItemSet> dfaStates = m_parser._DFAStates;
 
 		while (changed)
 		{

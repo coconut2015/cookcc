@@ -33,15 +33,38 @@ ${code.classheader}
 <#if public?has_content && public?string == "true">public </#if><#if abstract?has_content && abstract?string == "true">abstract </#if>class ${ccclass}<#if extend?has_content> extends ${extend}</#if>
 {
 <#if parser?has_content && parser.tokens?has_content>
+	////////////////////////////////////////////////////////////////////////
+	//
+	// Terminal Definitions
+	//
+	////////////////////////////////////////////////////////////////////////
 <#list parser.tokens as i>
 	protected final static int ${i.name} = ${i.value};
 </#list>
 </#if>
 
 <#if lexer?has_content>
+<#if !parser?has_content && lexer.tokens?has_content>
+	////////////////////////////////////////////////////////////////////////
+	//
+	// Terminal Definitions
+	//
+	////////////////////////////////////////////////////////////////////////
+<#list lexer.tokens as i>
+	protected final static int ${i.name} = ${i.value};
+</#list>
+</#if>
+
+<#if lexer.states?size gt 0>
+	////////////////////////////////////////////////////////////////////////
+	//
+	// Lexer States
+	//
+	////////////////////////////////////////////////////////////////////////
 <#list lexer.states as i>
 	protected final static int ${i} = ${lexer.begins[i_index]};
 </#list>
+</#if>
 
 	// an internal class for lazy initiation
 	private final static class cc_lexer
@@ -1096,8 +1119,13 @@ ${code.classheader}
 			//
 			if (cc_lookaheadStack.size () == 0)
 			{
+<#if lexer?has_content>
 				_yyValue = null;
 				int val = yyLex ();
+<#else>
+				int val = yyLex ();
+				_yyValue = yyValue ();
+</#if>
 				cc_ch = cc_ecs[val];
 <#if parser.ignoreList>
 				if (cc_ch == 3)	// Ignore List

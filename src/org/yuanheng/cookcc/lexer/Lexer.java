@@ -26,32 +26,18 @@
  */
 package org.yuanheng.cookcc.lexer;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.Vector;
+import java.util.*;
 
 import org.yuanheng.cookcc.Main;
 import org.yuanheng.cookcc.OptionMap;
 import org.yuanheng.cookcc.dfa.DFARow;
 import org.yuanheng.cookcc.dfa.DFATable;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.LexerDoc;
-import org.yuanheng.cookcc.doc.LexerStateDoc;
-import org.yuanheng.cookcc.doc.PatternDoc;
-import org.yuanheng.cookcc.doc.RuleDoc;
+import org.yuanheng.cookcc.doc.*;
 import org.yuanheng.cookcc.exception.NoInitialStateException;
+import org.yuanheng.cookcc.parser.Token;
+import org.yuanheng.cookcc.util.TerminalUtils;
 
 /**
  * @author Heng Yuan
@@ -134,7 +120,7 @@ public class Lexer
 
 	private final Document m_doc;
 	private final OptionMap m_options;
-	private NFAFactory m_nfaFactory;
+	private final NFAFactory m_nfaFactory;
 	private int m_caseCount;
 
 	private boolean m_bolStates;
@@ -142,7 +128,7 @@ public class Lexer
 	private boolean[] m_backupCases;
 
 	private final DFATable m_dfa = new DFATable ();
-	private Vector<ESet> m_dfaStates = new Vector<ESet> ();
+	private final Vector<ESet> m_dfaStates = new Vector<ESet> ();
 	private LexerStateDoc[] m_lexerStates;
 	private int[] m_beginLocations;
 
@@ -157,6 +143,8 @@ public class Lexer
 	private final RuleDoc m_defaultRule;
 
 	private final PatternParser m_patternParser;
+
+	private Collection<Token> m_tokens;
 
 	private Lexer (Document doc, OptionMap options)
 	{
@@ -263,14 +251,14 @@ public class Lexer
 					m_out.println ("Lexer State:\t" + lexerState.getName ());
 				}
 				lexerState.addRule (m_defaultRule);
-	
+
 				RuleDoc[] rules = lexerState.getRules ();
 				if (rules.length == 0)
 					warn (WARN_NO_RULES.format (new Object[]{lexerState.getName ()}));
-	
+
 				ESet startSet = new ESet ();
 				ESet bolSet = new ESet ();
-	
+
 				for (RuleDoc rule : rules)
 				{
 					for (PatternDoc pattern : rule.getPatterns ())
@@ -280,7 +268,7 @@ public class Lexer
 						{
 							int caseValue = incCaseCounter ();
 							pattern.setCaseValue (caseValue);
-	
+
 							LexerPattern lp = m_patternParser.parse (pattern.getPrecedence (), pattern.getLineNumber (), pattern.getPattern ());
 							nfa = lp.constructNFA (m_nfaFactory, caseValue, pattern.getLineNumber ());
 							if (lp.isBol ())
@@ -303,7 +291,7 @@ public class Lexer
 							bolSet.add (nfa);
 							startSet.add (nfa);
 						}
-	
+
 						if (m_out != null)
 						{
 							m_out.println ("case " + pattern.getCaseValue () + ": " + pattern.getPattern ());
@@ -315,7 +303,7 @@ public class Lexer
 				lexerState.setProperty (PROP_START_SET, startSet);
 				lexerState.setProperty (PROP_BOL_SET, bolSet);
 			}
-	
+
 			// swap INITIAL state to the front if possible
 			LexerStateDoc lexerState = lexer.getLexerState (LexerDoc.INITIAL_STATE);
 			for (int i = 0; i < lexerStates.length; ++i)
@@ -328,27 +316,27 @@ public class Lexer
 					break;
 				}
 			}
-	
+
 			m_lexerStates = lexerStates;
 			m_beginLocations = new int[lexerStates.length];
-	
+
 			m_backupCases = new boolean[m_caseCount + 1];
 
 			if (m_out != null)
 			{
 				m_out.println ("==== DFA States ====");
 			}
-	
+
 			for (int i = 0; i < lexerStates.length; ++i)
 			{
 				lexerState = lexerStates[i];
 				ESet startSet = (ESet)lexerState.getProperty (PROP_START_SET);
 				ESet bolSet = (ESet)lexerState.getProperty (PROP_BOL_SET);
-	
+
 				m_beginLocations[i] = m_dfaStates.size ();
-	
+
 				buildDFA (startSet, bolSet, lineMode, lexerStates[i].getName ());
-	
+
 				// check shadowed patterns for each state
 				// we do it here because some rules may be used in multiple states
 				int[] accepts = m_dfa.getAccepts ();
@@ -357,7 +345,7 @@ public class Lexer
 					for (PatternDoc pattern : rule.getPatterns ())
 					{
 						int caseValue = pattern.getCaseValue ();
-	
+
 						// check multi-line patterns in line mode
 						if (lineMode &&
 							m_multiLineSet != null)
@@ -375,7 +363,7 @@ public class Lexer
 								patterns.add (pattern);
 							}
 						}
-	
+
 						// check if the pattern is shadowed
 						int a;
 						for (a = m_beginLocations[i]; a < accepts.length; ++a)
@@ -405,7 +393,7 @@ public class Lexer
 					}
 				}
 			}
-	
+
 			if (m_backup)
 			{
 				m_backupPatterns = new HashMap<LexerStateDoc, Collection<PatternDoc>> ();
@@ -719,5 +707,27 @@ public class Lexer
 	public Set<LexerStateDoc> getIncompleteStates ()
 	{
 		return m_incompleteStates;
+	}
+
+	public Collection<Token> getTokens ()
+	{
+		if (m_tokens == null)
+		{
+			TokensDoc[] tokensDocs = m_doc.getTokens ();
+			if (tokensDocs != null)
+			{
+				Map<String, Token> terminals = new HashMap<String, Token> ();
+				Map<Integer, Token> terminalMap = new HashMap<Integer, Token> ();
+				Map<Integer, String> symbolMap = new TreeMap<Integer, String> ();
+				ArrayList<Token> tokens = new ArrayList<Token> ();
+				TerminalUtils.parseTerminals (terminals,
+											  terminalMap,
+											  symbolMap,
+											  tokens,
+											  tokensDocs);
+				m_tokens = tokens;
+			}
+		}
+		return m_tokens;
 	}
 }

@@ -27,15 +27,14 @@
 package org.yuanheng.cookcc.dfa;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeSet;
 
 import org.yuanheng.cookcc.OptionMap;
-import org.yuanheng.cookcc.doc.Document;
-import org.yuanheng.cookcc.doc.LexerDoc;
-import org.yuanheng.cookcc.doc.LexerStateDoc;
-import org.yuanheng.cookcc.doc.RuleDoc;
+import org.yuanheng.cookcc.doc.*;
 import org.yuanheng.cookcc.lexer.Lexer;
+import org.yuanheng.cookcc.parser.Token;
 
 /**
  * @author Heng Yuan
@@ -45,6 +44,7 @@ public class LexerDFAInfo
 {
 	private final static Comparator<RuleDoc> s_ruleComparator = new Comparator<RuleDoc> ()
 	{
+		@Override
 		public int compare (RuleDoc o1, RuleDoc o2)
 		{
 			return o1.getId () - o2.getId ();
@@ -168,5 +168,10 @@ public class LexerDFAInfo
 		else if ("compressed".equals (table))
 			m_dfa = new CompressedTable (m_lexer);
 		return m_dfa;
+	}
+
+	public Collection<Token> getTokens ()
+	{
+		return m_lexer.getTokens ();
 	}
 }

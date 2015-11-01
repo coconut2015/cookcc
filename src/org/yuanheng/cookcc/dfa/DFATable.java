@@ -26,10 +26,10 @@
  */
 package org.yuanheng.cookcc.dfa;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
- * A simple wrapper for Vector&lt;DFARow> that provides some utility
+ * A simple wrapper for ArrayList&lt;DFARow> that provides some utility
  * functions.
  *
  * @author Heng Yuan
@@ -37,17 +37,17 @@ import java.util.Vector;
  */
 public class DFATable
 {
-	private final Vector<DFARow> m_table;
+	private final ArrayList<DFARow> m_table;
 
 	public DFATable ()
 	{
-		m_table = new Vector<DFARow> (512, 512);
+		m_table = new ArrayList<DFARow> (512);
 	}
 
 	// create a deep copy of the other table
 	private DFATable (DFATable other)
 	{
-		m_table = new Vector<DFARow> (other.m_table.size ());
+		m_table = new ArrayList<DFARow> (other.m_table.size ());
 		for (DFARow row : other.m_table)
 			m_table.add (row.clone ());
 	}
@@ -80,6 +80,7 @@ public class DFATable
 		return m_table.toArray (new DFARow[m_table.size ()]);
 	}
 
+	@Override
 	public DFATable clone ()
 	{
 		return new DFATable (this);

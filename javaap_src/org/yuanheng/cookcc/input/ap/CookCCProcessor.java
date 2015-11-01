@@ -297,6 +297,8 @@ public class CookCCProcessor implements Processor
 		// m_filer = env.getFiler ();
 		m_messager = env.getMessager ();
 
+		log ("Initiating COOKCC APT");
+
 		Map<String, String> ccOptions = convertOptions (env.getOptions ());
 		try
 		{

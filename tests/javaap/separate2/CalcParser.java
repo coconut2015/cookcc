@@ -51,7 +51,7 @@ public class CalcParser extends CalcParserGen
 		m_lexer.setInput (is);
 	}
 
-	public int yyLex () throws IOException
+	protected int yyLex () throws IOException
 	{
 		int token = m_lexer.yyLex ();
 		return token;

@@ -2,41 +2,42 @@
 ----------- used symbols ----------
 0	:	0	:	$
 1	:	1	:	error
-2	:	40	:	'('
-3	:	41	:	')'
-4	:	42	:	'*'
-5	:	43	:	'+'
-6	:	45	:	'-'
-7	:	47	:	'/'
-8	:	59	:	';'
-9	:	60	:	'<'
-10	:	61	:	'='
-11	:	62	:	'>'
-12	:	123	:	'{'
-13	:	125	:	'}'
-14	:	256	:	VARIABLE
-15	:	257	:	INTEGER
-16	:	258	:	WHILE
-17	:	259	:	IF
-18	:	260	:	PRINT
-19	:	262	:	ELSE
-20	:	263	:	GE
-21	:	264	:	LE
-22	:	265	:	EQ
-23	:	266	:	NE
-24	:	268	:	@start
-25	:	269	:	program
-26	:	270	:	function
-27	:	271	:	stmt
-28	:	272	:	expr
-29	:	273	:	stmt_list
+2	:	2	:	null
+3	:	40	:	'('
+4	:	41	:	')'
+5	:	42	:	'*'
+6	:	43	:	'+'
+7	:	45	:	'-'
+8	:	47	:	'/'
+9	:	59	:	';'
+10	:	60	:	'<'
+11	:	61	:	'='
+12	:	62	:	'>'
+13	:	123	:	'{'
+14	:	125	:	'}'
+15	:	256	:	VARIABLE
+16	:	257	:	INTEGER
+17	:	258	:	WHILE
+18	:	259	:	IF
+19	:	260	:	PRINT
+20	:	262	:	ELSE
+21	:	263	:	GE
+22	:	264	:	LE
+23	:	265	:	EQ
+24	:	266	:	NE
+25	:	268	:	@start
+26	:	269	:	program
+27	:	270	:	function
+28	:	271	:	stmt
+29	:	272	:	expr
+30	:	273	:	stmt_list
 
 ----------- statistics ----------
 max terminal = 267
 non terminal count = 6
-terminal count = 30
-used terminal count = 24
-used symbol count = 30
+terminal count = 31
+used terminal count = 25
+used symbol count = 31
 
 ----------- productions ----------
 1	@start	:	 program

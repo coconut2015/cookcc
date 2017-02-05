@@ -36,7 +36,6 @@ import org.yuanheng.cookcc.*;
  * (http://epaperpress.com/lexandyacc/).
  *
  * @author Heng Yuan
- * @version $Id$
  */
 @CookCCOption (lexerTable="compressed", parserTable="compressed")
 public class Calculator3 extends Parser

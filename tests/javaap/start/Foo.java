@@ -33,7 +33,6 @@ import org.yuanheng.cookcc.*;
 
 /**
  * @author Heng Yuan
- * @version $Id$
  */
 @CookCCOption (start = "B")
 public class Foo extends Parser

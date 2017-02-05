@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="cookcc" basedir="." default="initcookcc">
+	<property name="src" location="${basedir}/src/main/java"/>
+	<property name="lib" location="${basedir}/lib"/>
+	<property name="dist" value="${basedir}/dist"/>
+	<property name="tool" value="${basedir}/../tool"/>
+	<property name="build" value="${basedir}/cookcc_classes"/>
+
+	<target name="initcookcc">
+		<taskdef name="cookcc" classname="org.yuanheng.cookcc.ant.Task" classpath="${tool}/cookcc-latest.jar"/>
+	</target>
+
+	<!-- lexer/parser generated from CookCC -->
+
+	<target name="FileHeaderLexer.java" depends="initcookcc">
+		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/util/FileHeaderScanner.java"/>
+	</target>
+	<target name="YaccLexer.java" depends="initcookcc">
+		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/input/yacc/YaccParser.java"/>
+	</target>
+	<target name="TokenParser.java" depends="initcookcc">
+		<cookcc src="${src}/org/yuanheng/cookcc/util/TokenParser.xcc">
+			<option name="-class" value="org.yuanheng.cookcc.util.TokenParser"/>
+			<option name="-d" value="${src}"/>
+			<option name="-public"/>
+			<option name="-generics"/>
+		</cookcc>
+	</target>
+	<target name="CCLScanner.java" depends="initcookcc">
+		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/lexer/CCLParser.java"/>
+	</target>
+	<target name="PatternScanner.java" depends="initcookcc">
+		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/lexer/PatternParser.java">
+			<!-- <option name="-analysis"/> -->
+		</cookcc>
+	</target>
+
+	<target name="ProductionScanner.java" depends="initcookcc">
+		<cookcc srcdir="${src}" src="org/yuanheng/cookcc/parser/ast/ProductionParser.java"/>
+	</target>
+
+</project>

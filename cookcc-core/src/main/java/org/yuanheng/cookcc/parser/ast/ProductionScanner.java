@@ -1,9 +1,8 @@
 package org.yuanheng.cookcc.parser.ast;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.FileInputStream;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Stack;
@@ -87,8 +86,6 @@ abstract class ProductionScanner
 		}
 	}
 
-	// for storing integer objects (so we do not create too many objects)
-	private Integer[] _yySymbolArray;
 	// lookahead stack for the parser
 	private final ArrayList<YYParserState> _yyLookaheadStack = new ArrayList<YYParserState> (512);
 	// state stack for the parser
@@ -651,7 +648,7 @@ abstract class ProductionScanner
 	 * @throws	IOException
 	 *			in case of error
 	 */
-	@SuppressWarnings ("unchecked") 
+	@SuppressWarnings ("unchecked")
 	public int yyParse () throws IOException
 	{
 		char[] cc_ecs = cc_parser.ecs;
@@ -784,7 +781,7 @@ abstract class ProductionScanner
 			{
 				case 1:					// accept
 					return 0;
-				case 2:	// start : 
+				case 2:	// start :
 				{
 					m_this.parseStart ();
 				}
@@ -986,24 +983,6 @@ abstract class ProductionScanner
 	protected Collection<Object[]> getCapturedTerminals (int arg)
 	{
 		return null;
-	}
-
-	/**
-	 * A small utility to avoid too many Integer object creations.
-	 *
-	 * @param	symbol
-	 *			an integer value.  Usually it is a symbol.
-	 * @return	an Integer value matching the symbol value passed in.
-	 */
-	private Integer getInteger (int symbol)
-	{
-		if (_yySymbolArray == null)
-			_yySymbolArray = new Integer[262 + 6 + 1];
-		if (symbol < 0 || symbol >= _yySymbolArray.length)
-			return new Integer (symbol);
-		if (_yySymbolArray[symbol] == null)
-			_yySymbolArray[symbol] = new Integer (symbol);
-		return _yySymbolArray[symbol];
 	}
 
 	private final org.yuanheng.cookcc.parser.ast.ProductionParser m_this = (org.yuanheng.cookcc.parser.ast.ProductionParser)this;

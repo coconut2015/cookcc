@@ -66,7 +66,7 @@ function compile ()
 {
 	TEST=$1
 	shift
-	"$javac" -classpath "$COOKCC:." $@ > /dev/null 2> /dev/null || testerror $TEST
+	"$javac" -classpath "$COOKCC:.:$COOKCC_RT" $@ > /dev/null 2> /dev/null || testerror $TEST
 }
 
 
@@ -81,3 +81,10 @@ function run2 ()
 	"$java" -cp . $1 $3 > output 2>&1
 	diff output $4 > /dev/null || testerror $2
 }
+
+function run3 ()
+{
+	"$java" -cp ".:$COOKCC_RT" $1 $3 > output 2>&1
+	diff output $4 > /dev/null || testerror $2
+}
+

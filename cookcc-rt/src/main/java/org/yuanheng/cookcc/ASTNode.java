@@ -15,8 +15,10 @@ import java.util.Iterator;
  * @author	Heng Yuan
  * @since	0.4
  */
-public class ASTNode extends AST implements Collection<AST>
+public class ASTNode extends AST implements Collection<Object>
 {
+	private final static Collection<Object> s_emptyContainer = new ArrayList<Object> ();
+
 	/**
 	 * The grammar rule used to generate this AST node.
 	 */
@@ -25,7 +27,7 @@ public class ASTNode extends AST implements Collection<AST>
 	/**
 	 * Child AST nodes.
 	 */
-	private ArrayList<AST> m_children;
+	private ArrayList<Object> m_children;
 
 	/**
 	 * Set the integer value of the symbol.
@@ -45,8 +47,10 @@ public class ASTNode extends AST implements Collection<AST>
 		m_rule = rule;
 	}
 
-	public AST get (int index)
+	public Object get (int index)
 	{
+		if (m_children == null)
+			return null;
 		return m_children.get (index);
 	}
 
@@ -74,78 +78,115 @@ public class ASTNode extends AST implements Collection<AST>
 	@Override
 	public int size ()
 	{
+		if (m_children == null)
+			return 0;
 		return m_children.size ();
 	}
 
 	@Override
 	public boolean isEmpty ()
 	{
+		if (m_children == null)
+			return true;
 		return m_children.isEmpty ();
 	}
 
 	@Override
 	public boolean contains (Object o)
 	{
+		if (m_children == null)
+			return false;
 		return m_children.contains (o);
 	}
 
 	@Override
-	public Iterator<AST> iterator ()
+	public Iterator<Object> iterator ()
 	{
+		if (m_children == null)
+			return s_emptyContainer.iterator ();
 		return m_children.iterator ();
 	}
 
 	@Override
-	public AST[] toArray ()
+	public Object[] toArray ()
 	{
-		return m_children.toArray (new AST[m_children.size ()]);
+		if (m_children == null)
+			return new Object[0];
+		return m_children.toArray ();
 	}
 
 	@Override
 	public <T> T[] toArray (T[] a)
 	{
+		if (m_children == null)
+			return s_emptyContainer.toArray (a);
 		return m_children.toArray (a);
 	}
 
 	@Override
-	public boolean add (AST e)
+	public boolean add (Object e)
 	{
+		if (m_children == null)
+		{
+			m_children = new ArrayList<Object> ();
+		}
 		return m_children.add (e);
 	}
 
 	@Override
 	public boolean remove (Object o)
 	{
+		if (m_children == null)
+			return false;
 		return m_children.remove (o);
 	}
 
 	@Override
 	public boolean containsAll (Collection<?> c)
 	{
+		if (m_children == null)
+			return false;
 		return m_children.containsAll (c);
 	}
 
 	@Override
-	public boolean addAll (Collection<? extends AST> c)
+	public boolean addAll (Collection<? extends Object> c)
 	{
+		if (m_children == null)
+			return false;
 		return m_children.addAll (c);
 	}
 
 	@Override
 	public boolean removeAll (Collection<?> c)
 	{
+		if (m_children == null)
+			return false;
 		return m_children.removeAll (c);
 	}
 
 	@Override
 	public boolean retainAll (Collection<?> c)
 	{
+		if (m_children == null)
+			return false;
 		return m_children.retainAll (c);
 	}
 
 	@Override
 	public void clear ()
 	{
-		m_children.clear ();
+		if (m_children != null)
+			m_children.clear ();
+	}
+
+	@Override
+	public String toString ()
+	{
+		StringBuilder buffer = new StringBuilder ();
+		buffer.append (getSymbolName()).append (" : ");
+		if (m_children != null)
+			buffer.append (m_children);
+		return buffer.toString ();
 	}
 }

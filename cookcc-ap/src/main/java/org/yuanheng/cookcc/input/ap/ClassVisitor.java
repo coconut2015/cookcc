@@ -390,7 +390,7 @@ class ClassVisitor
 			m_doc.setProperty (PROP_PUBLIC, Boolean.TRUE);
 
 		m_doc.setUnicode (option.unicode ());
-		m_doc.setAST (option.ast ());
+		m_doc.setRT (option.rt ());
 		m_start = option.start ();
 
 		String tokenClass = option.tokenClass ();

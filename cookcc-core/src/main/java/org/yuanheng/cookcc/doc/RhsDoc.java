@@ -38,8 +38,22 @@ public class RhsDoc extends TreeDoc
 	private String m_action = "";
 	private String m_precedence;
 
+	private final int m_termCount;
+
 	public RhsDoc ()
 	{
+		m_termCount = 0;
+	}
+
+	/**
+	 * This constructor is used by internal rule generation.
+	 *
+	 * @param	termCount
+	 * 			the number of terms on the rhs.
+	 */
+	public RhsDoc (int termCount)
+	{
+		m_termCount = termCount;
 	}
 
 	public void setTerms (String terms)
@@ -110,5 +124,10 @@ public class RhsDoc extends TreeDoc
 	public void setPrecedence (String precedence)
 	{
 		m_precedence = precedence;
+	}
+
+	public int getTermCount ()
+	{
+		return m_termCount;
 	}
 }

@@ -171,10 +171,11 @@ public class ProductionParser extends ProductionScanner
 	}
 
 	@Rule (lhs = "rule", rhs = "rule parenRule")
-	ArrayList<Symbol> parseRule (ArrayList<Symbol> symbols, ArrayList<Symbol> symbols2)
+	ArrayList<Symbol> parseRule (ArrayList<Symbol> s1, ArrayList<Symbol> s2)
 	{
-		symbols.addAll (symbols2);
-		return symbols;
+		GroupSymbol symbol = new GroupSymbol (m_lib.createInternalSymbol (), s2.toArray (new Symbol[s2.size ()]));
+		s1.add (symbol);
+		return s1;
 	}
 
 	@Rule (lhs = "orRule", rhs = "rule OR rule", args = "1 3")

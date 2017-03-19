@@ -31,7 +31,7 @@ public class SingleRule
 		}
 		else
 		{
-			m_rhsDoc = createRhsDoc ();
+			m_rhsDoc = createRhsDoc (rhs);
 		}
 	}
 
@@ -58,9 +58,9 @@ public class SingleRule
 		return buffer.toString ();
 	}
 
-	private RhsDoc createRhsDoc ()
+	private RhsDoc createRhsDoc (Symbol[] rhs)
 	{
-		RhsDoc rhsDoc = new RhsDoc ();
+		RhsDoc rhsDoc = new RhsDoc (rhs.length);
 		rhsDoc.setTerms (getTerms ());
 		rhsDoc.setLineNumber (lineNumber);
 		rhsDoc.setCaseValue (caseValue);

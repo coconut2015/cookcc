@@ -28,7 +28,7 @@ public class QSymbol extends InternalSymbol
 		rules.add (r2);
 
 		GrammarDoc grammar = parserDoc.getGrammar (getSymbol ().getName ());
-		grammar.setType ('?');
+		grammar.internalSetType ('?');
 		grammar.addRhs (r1.getRhsDoc ());
 		grammar.addRhs (r2.getRhsDoc ());
 	}

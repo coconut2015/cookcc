@@ -261,7 +261,7 @@ public class Parser implements SymbolLibrary
 		ParserDoc parserDoc = m_doc.getParser ();
 		for (;;)
 		{
-			String term = "$$" + (++m_internalGrammarCount);
+			String term = "@" + (++m_internalGrammarCount);
 			if (!parserDoc.hasGrammar (term))
 				return term;
 		}
@@ -303,6 +303,7 @@ public class Parser implements SymbolLibrary
 		{
 			GrammarDoc grammar = parserDoc.getGrammar (grammarId);
 			Symbol lhs = getSymbol (grammar.getRule ());
+			grammar.internalSetSymbol (lhs.getValue (this, 0));
 			for (RhsDoc rhsDoc : grammar.getRhs ())
 			{
 				String rhs = rhsDoc.getTerms ();
@@ -428,6 +429,7 @@ public class Parser implements SymbolLibrary
 		*/
 	}
 
+/*
 	private void parseProductions ()
 	{
 		int[] pos = new int[1];
@@ -595,6 +597,7 @@ public class Parser implements SymbolLibrary
 		}
 		throw new ParserException (lineNumber, "Invalid symbol: " + terms);
 	}
+*/
 
 	private String checkTerminalName (long lineNumber, String name, int[] value)
 	{
@@ -616,7 +619,9 @@ public class Parser implements SymbolLibrary
 	@Override
 	public int getSymbolValue (String name, long lineNumber)
 	{
-		if (name.startsWith ("$$"))
+		if (name.startsWith ("@") &&
+			name.length () > 1 &&
+			Character.isDigit (name.charAt (1)))
 		{
 			Integer value = m_nonTerminals.get (name);
 			if (value != null)
@@ -758,9 +763,17 @@ public class Parser implements SymbolLibrary
 		used[ERROR] = true;
 		used[UNHANDLED] = true;
 		if (getIgnoreList () != null)
+		{
 			used[IGNORE] = true;
+			m_terminals.put (s_ignore.name, s_ignore);
+			m_symbolMap.put (s_ignore.value, s_ignore.name);
+		}
 		if (getCaptureList () != null)
+		{
 			used[CAPTURE] = true;
+			m_terminals.put (s_capture.name, s_capture);
+			m_symbolMap.put (s_capture.value, s_capture.name);
+		}
 
 		int[] vec = new int[m_maxTerminal + m_nonTerminalCount + 1];
 		int count = 0;
@@ -1552,14 +1565,14 @@ public class Parser implements SymbolLibrary
 
 		return getSymbol (newSymbol);
 	}
-
+/*
 	public Symbol createInternalRule (char type, Symbol rhs)
 	{
 		ParserDoc parserDoc = m_doc.getParser ();
 		// we need a new symbol to handle the new grammar.
 		String newSymbol = getNewInternalNonTerminal ();
 		GrammarDoc tmpGrammar = parserDoc.getGrammar (newSymbol);
-		tmpGrammar.setType (type);
+		tmpGrammar.internalSetType (type);
 
 		String sym = rhs.getName ();
 		switch (type)
@@ -1595,7 +1608,7 @@ public class Parser implements SymbolLibrary
 		}
 		return getSymbol (newSymbol);
 	}
-
+*/
 	@Override
 	public Symbol createInternalSymbol ()
 	{

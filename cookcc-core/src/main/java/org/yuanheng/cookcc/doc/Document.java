@@ -39,7 +39,7 @@ public class Document extends TreeDoc
 {
 	private Boolean m_main;
 	private boolean m_unicode;
-	private boolean m_ast;
+	private boolean m_rt;
 	private final Map<String, String> m_code = new HashMap<String, String> ();
 	private final Collection<TokensDoc> m_tokens = new LinkedList<TokensDoc> ();
 	private LexerDoc m_lexer;
@@ -121,20 +121,20 @@ public class Document extends TreeDoc
 	 * @return	if AST runtime should be used.
 	 * @since	0.4
 	 */
-	public boolean isAST ()
+	public boolean isRT ()
 	{
-		return m_ast;
+		return m_rt;
 	}
 
 	/**
 	 * Set if AST runtime should be used.
 	 *
-	 * @param	ast
+	 * @param	rt
 	 * 			true or false
 	 * @since	0.4
 	 */
-	public void setAST (boolean ast)
+	public void setRT (boolean rt)
 	{
-		m_ast = ast;
+		m_rt = rt;
 	}
 }

@@ -38,6 +38,7 @@ public class GrammarDoc extends TreeDoc
 	private final LinkedList<RhsDoc> m_rhs = new LinkedList<RhsDoc> ();
 
 	private char m_type = 'n';
+	private int m_symbol;
 
 	public GrammarDoc (String rule)
 	{
@@ -50,18 +51,39 @@ public class GrammarDoc extends TreeDoc
 	 * Internally called for internally generated grammar rules.
 	 *
 	 * @param	type
-	 * 			One of 'n', '?', '+', '*', '|'.
+	 * 			One of 'n', '?', '+', '*', '|', 'g'.
 	 */
-	public void setType (char type)
+	public void internalSetType (char type)
 	{
 		m_type = type;
+	}
+
+	/**
+	 * Internally called for setting the symbol for the rule.
+	 *
+	 * @param	symbol
+	 * 			integer value of the symbol
+	 */
+	public void internalSetSymbol (int symbol)
+	{
+		m_symbol = symbol;
+	}
+
+	/**
+	 * Gets the integer symbol value for the rule.
+	 *
+	 * @return	the integer symbol value for the rule.
+	 */
+	public int getSymbol ()
+	{
+		return m_symbol;
 	}
 
 	/**
 	 * The type of the rule.
 	 *
 	 * <ul>
-	 * 	<li>'n' - -internally generated rules</li>
+	 * 	<li>'n' - normal rules</li>
 	 * 	<li>'?' - optional</li>
 	 * 	<li>'*' - optional list</li>
 	 * 	<li>'+' - list</li>

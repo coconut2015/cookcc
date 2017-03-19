@@ -98,11 +98,11 @@ public @interface CookCCOption
 	boolean warnBackup () default false;
 
 	/**
-	 * Whether or not {@link org.yuanheng.cookcc.AST} nodes should be
-	 * generated for lexer + parser in cases such as |, *, +, operators.
+	 * Whether or not CookCC runtime should be used for parser grammar such as
+	 * |, *, +, , ? operators.
 	 *
-	 * @return	whether AST node should be generated.
+	 * @return	CookCC runtime should be used.
 	 * @since	0.4
 	 */
-	boolean ast () default false;
+	boolean rt () default false;
 }

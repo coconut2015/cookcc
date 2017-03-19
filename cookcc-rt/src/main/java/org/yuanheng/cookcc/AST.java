@@ -104,4 +104,10 @@ public abstract class AST
 	 * @return	if this node is an ASTValue
 	 */
 	public abstract boolean isValue ();
+
+	@Override
+	public String toString ()
+	{
+		return m_symbolName;
+	}
 }

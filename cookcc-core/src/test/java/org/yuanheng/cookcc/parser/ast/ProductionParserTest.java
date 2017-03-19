@@ -29,7 +29,7 @@ public class ProductionParserTest
 	{
 		ProductionParser parser = new ProductionParser ();
 		testCase (parser, "a b", "a b");
-		testCase (parser, "a (b) c (d)", "a b c d");
+		testCase (parser, "a (b) c (d)", "a (b) c (d)");
 		testCase (parser, "a b +", "a b+");
 		testCase (parser, "a ( b ) +", "a b+");
 		testCase (parser, "(a b)", "a b");
@@ -39,7 +39,7 @@ public class ProductionParserTest
 		testCase (parser, "a ( b c d ) +", "a (b c d)+");
 		testCase (parser, "a ( b c d ) *", "a (b c d)*");
 		testCase (parser, "a ( b c d ) ?", "a (b c d)?");
-		testCase (parser, "a ( b c d ) * (e f g)", "a (b c d)* e f g");
+		testCase (parser, "a ( b c d ) * (e f g)", "a (b c d)* (e f g)");
 	}
 
 	@Test

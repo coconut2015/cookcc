@@ -1,2 +1,2 @@
-This directory tests optional list and list terminal/nonterminal in
-the grammar.
+This directory tests extended grammar.  Basically ( ), +, |, *, ?
+operators.

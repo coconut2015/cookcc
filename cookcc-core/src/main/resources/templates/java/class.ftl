@@ -136,11 +136,7 @@ ${code.classheader}
 		Object value;		// the current value associated with token
 		int state;			// the current scan state
 <#if parser.captureList>
-<#if generics?has_content && generics?string == "true">
 		ArrayList<Object[]>	captureList;	// for storing captured terminals
-<#else>
-		ArrayList captureList;	// for storing captured terminals
-</#if>
 </#if>
 
 		YYParserState ()	// EOF token construction
@@ -159,19 +155,14 @@ ${code.classheader}
 		}
 	}
 
+<#if parser.captureList>
 	// for storing integer objects (so we do not create too many objects)
 	private Integer[] _yySymbolArray;
-<#if generics?has_content && generics?string == "true">
+</#if>
 	// lookahead stack for the parser
 	private final ArrayList<YYParserState> _yyLookaheadStack = new ArrayList<YYParserState> (512);
 	// state stack for the parser
 	private final ArrayList<YYParserState> _yyStateStack = new ArrayList<YYParserState> (512);
-<#else>
-	// lookahead stack for the parser
-	private final ArrayList _yyLookaheadStack = new ArrayList (512);
-	// state stack for the parser
-	private final ArrayList _yyStateStack = new ArrayList (512);
-</#if>
 
 <#if parser.recovery>
 	// flag that indicates error
@@ -200,13 +191,8 @@ ${code.classheader}
 	private int _yyTextStart;
 	private int _yyLength;
 
-<#if generics?has_content && generics?string == "true">
 	private Stack<Integer> _yyLexerStack;
 	private Stack<Object[]> _yyInputStack;
-<#else>
-	private Stack _yyLexerStack;
-	private Stack _yyInputStack;
-</#if>
 
 <#if lexer.bol>
 	// we need to track beginning of line (BOL) status
@@ -271,11 +257,7 @@ ${code.classheader}
 		states[1] = leftOver;
 
 		if (_yyInputStack == null)
-<#if generics?has_content && generics?string == "true">
 			_yyInputStack = new Stack<Object[]> ();
-<#else>
-			_yyInputStack = new Stack ();
-</#if>
 		_yyInputStack.push (states);
 
 		_yyIs = is;
@@ -289,11 +271,7 @@ ${code.classheader}
 	 */
 	public void yyPopInput ()
 	{
-<#if generics?has_content && generics?string == "true">
 		Object[] states = _yyInputStack.pop ();
-<#else>
-		Object[] states = (Object[])_yyInputStack.pop ();
-</#if>
 		_yyIs = (Reader)states[0];
 		char[] leftOver = (char[])states[1];
 
@@ -361,11 +339,7 @@ ${code.classheader}
 		states[1] = leftOver;
 
 		if (_yyInputStack == null)
-<#if generics?has_content && generics?string == "true">
 			_yyInputStack = new Stack<Object[]> ();
-<#else>
-			_yyInputStack = new Stack ();
-</#if>
 		_yyInputStack.push (states);
 
 		_yyIs = is;
@@ -379,11 +353,8 @@ ${code.classheader}
 	 */
 	public void yyPopInput ()
 	{
-<#if generics?has_content && generics?string == "true">
 		Object[] states = _yyInputStack.pop ();
-<#else>
-		Object[] states = (Object[])_yyInputStack.pop ();
-</#if>
+
 		_yyIs = (InputStream)states[0];
 		byte[] leftOver = (byte[])states[1];
 
@@ -534,11 +505,8 @@ ${code.classheader}
 	protected void yyPushLexerState (int newState)
 	{
 		if (_yyLexerStack == null)
-<#if generics?has_content && generics?string == "true">
 			_yyLexerStack = new Stack<Integer> ();
-<#else>
-			_yyLexerStack = new Stack ();
-</#if>
+
 		_yyLexerStack.push (new Integer (_yyBaseState));
 		begin (newState);
 	}
@@ -548,11 +516,7 @@ ${code.classheader}
 	 */
 	protected void yyPopLexerState ()
 	{
-<#if generics?has_content && generics?string == "true">
 		begin (_yyLexerStack.pop ());
-<#else>
-		begin (((Integer)_yyLexerStack.pop ()).intValue ());
-</#if>
 	}
 
 	<#if debug>
@@ -1010,23 +974,12 @@ ${code.classheader}
 	 *			the current stack
 	 * @return	a string representation of the parsing stack.
 	 */
-<#if generics?has_content && generics?string == "true">
 	protected String getStateString (Collection<YYParserState> states)
-<#else>
-	protected String getStateString (Collection states)
-</#if>
 	{
 		StringBuffer buffer = new StringBuffer ();
 		boolean first = true;
-<#if generics?has_content && generics?string == "true">
 		for (YYParserState state : states)
 		{
-<#else>
-		for (java.util.Iterator iter = states.iterator ();
-			 iter.hasNext ();)
-		{
-			YYParserState state = (YYParserState)iter.next ();
-</#if>
 			if (!first)
 				buffer.append (" ");
 			if (state.token < 0)
@@ -1087,24 +1040,16 @@ ${code.classheader}
 		char[] cc_rule = cc_parser.rule;
 		char[] cc_lhs = cc_parser.lhs;
 
-<#if generics?has_content && generics?string == "true">
 		ArrayList<YYParserState> cc_lookaheadStack = _yyLookaheadStack;
 		ArrayList<YYParserState> cc_stateStack = _yyStateStack;
-<#else>
-		ArrayList cc_lookaheadStack = _yyLookaheadStack;
-		ArrayList cc_stateStack = _yyStateStack;
-</#if>
+
 		if (cc_stateStack.size () == 0)
 			cc_stateStack.add (new YYParserState ());
 
 		int cc_toState;
 
 <#if parser.captureList>
-	<#if generics?has_content && generics?string == "true">
 		ArrayList<Object[]> captureList = null;
-	<#else>
-		ArrayList captureList = null;
-	</#if>
 </#if>
 		for (;;)
 		{
@@ -1138,11 +1083,7 @@ ${code.classheader}
 				{
 					if (captureList == null)
 					{
-	<#if generics?has_content && generics?string == "true">
 						captureList = new ArrayList<Object[]> ();
-	<#else>
-						captureList = new ArrayList ();
-	</#if>
 					}
 					captureList.add (new Object[] { getInteger (val), _yyValue });
 					continue;
@@ -1157,19 +1098,11 @@ ${code.classheader}
 			}
 			else
 			{
-<#if generics?has_content && generics?string == "true">
 				cc_lookahead = cc_lookaheadStack.get (cc_lookaheadStack.size () - 1);
-<#else>
-				cc_lookahead = (YYParserState)cc_lookaheadStack.get (cc_lookaheadStack.size () - 1);
-</#if>
 				cc_ch = cc_ecs[cc_lookahead.token];
 			}
 
-<#if generics?has_content && generics?string == "true">
 			cc_fromState = cc_stateStack.get (cc_stateStack.size () - 1).state;
-<#else>
-			cc_fromState = ((YYParserState)cc_stateStack.get (cc_stateStack.size () - 1)).state;
-</#if>
 <#if parser.table == "ecs">
 			cc_toState = (short)cc_next[cc_fromState][cc_ch];
 <#else>
@@ -1207,7 +1140,7 @@ ${code.classheader}
 </#if>
 
 <#if debug>
-			debugParser (cc_fromState, cc_toState, cc_toState < 0 ? cc_parser.lhs[-cc_toState] : 0, cc_toState < 0 ? cc_parser.symbols[cc_parser.lhs[-cc_toState]] : "", cc_lookahead.token);
+			debugParser (cc_fromState, cc_toState, cc_toState < 0 ? cc_parser.lhs[-cc_toState] : 0, cc_toState < 0 ? cc_parser_symbol.symbols[cc_parser.lhs[-cc_toState]] : "", cc_lookahead.token);
 </#if>
 
 			//
@@ -1272,11 +1205,7 @@ ${code.classheader}
 			//
 			// find the state that said need this non-terminal
 			//
-<#if generics?has_content && generics?string == "true">
 			cc_fromState = cc_stateStack.get (_yyArgStart).state;
-<#else>
-			cc_fromState = ((YYParserState)cc_stateStack.get (_yyArgStart)).state;
-</#if>
 
 			//
 			// find the state to goto after shifting the non-terminal
@@ -1319,6 +1248,24 @@ ${code.classheader}
 				}
 				case ${p.caseValue + parser.caseCount}: break;
 </#list>
+<#elseif i.type == 'g'>
+<#list i.rhs as p>
+				// internally generated group rule
+				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
+				{
+					org.yuanheng.cookcc.ASTNode ast = new org.yuanheng.cookcc.ASTNode (${i.symbol}, "${i.rule}", ${p.caseValue});
+					<#if p.termCount == 1>
+					ast.add (yyGetValue (1));
+					<#else>
+					for (int i = 0; i < ${p.termCount}; ++i)
+					{
+						ast.add (yyGetValue (i + 1));
+					}
+					</#if>
+					_yyValue = ast;
+					break;
+				}
+</#list>
 <#elseif i.type == '?'>
 <#list i.rhs as p>
 				// internally generated optional rule
@@ -1327,7 +1274,16 @@ ${code.classheader}
 				<#if p_index == 0>
 					_yyValue = null;
 				<#else>
+					<#if p.termCount == 1>
 					_yyValue = yyGetValue (1);
+					<#else>
+					org.yuanheng.cookcc.ASTNode ast = new org.yuanheng.cookcc.ASTNode (${i.symbol}, "${i.rule}", ${p.caseValue});
+					for (int i = 0; i < ${p.termCount}; ++i)
+					{
+						ast.add (yyGetValue (i + 1));
+					}
+					_yyValue = ast;
+					</#if>
 				</#if>
 					break;
 				}
@@ -1338,18 +1294,18 @@ ${code.classheader}
 				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
 				{
 				<#if p_index == 0>
-<#if generics?has_content && generics?string == "true">
-					_yyValue = new ArrayList<Object> ();
-<#else>
-					_yyValue = new ArrayList ();
-</#if>
+					_yyValue = new org.yuanheng.cookcc.ASTListNode (${i.symbol}, "${i.rule}", ${p.caseValue});
 				<#else>
-					_yyValue = yyGetValue (1);
-<#if generics?has_content && generics?string == "true">
-					((ArrayList<Object>)_yyValue).add (yyGetValue (2));
-<#else>
-					((ArrayList)_yyValue).add (yyGetValue (2));
-</#if>
+					org.yuanheng.cookcc.ASTListNode ast = (org.yuanheng.cookcc.ASTListNode)yyGetValue (1);
+					<#if p.termCount == 1>
+					ast.add (yyGetValue (2));
+					<#else>
+					for (int i = 1; i < ${p.termCount}; ++i)
+					{
+						ast.add (yyGetValue (i + 1));
+					}
+					</#if>
+					_yyValue = ast;
 				</#if>
 					break;
 				}
@@ -1360,21 +1316,27 @@ ${code.classheader}
 				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
 				{
 				<#if p_index == 0>
-<#if generics?has_content && generics?string == "true">
-					_yyValue = new ArrayList<Object> ();
-					((ArrayList<Object>)_yyValue).add (yyGetValue (1));
-<#else>
-					_yyValue = new ArrayList ();
-					((ArrayList)_yyValue).add (yyGetValue (1));
-</#if>
+					org.yuanheng.cookcc.ASTListNode ast = new org.yuanheng.cookcc.ASTListNode (${i.symbol}, "${i.rule}", ${p.caseValue});
+					<#if p.termCount == 1>
+					ast.add (yyGetValue (1));
+					<#else>
+					for (int i = 0; i < ${p.termCount}; ++i)
+					{
+						ast.add (yyGetValue (i + 1));
+					}
+					</#if>
 				<#else>
-					_yyValue = yyGetValue (1);
-<#if generics?has_content && generics?string == "true">
-					((ArrayList<Object>)_yyValue).add (yyGetValue (2));
-<#else>
-					((ArrayList)_yyValue).add (yyGetValue (2));
-</#if>
+					org.yuanheng.cookcc.ASTListNode ast = (org.yuanheng.cookcc.ASTListNode)yyGetValue (1);
+					<#if p.termCount == 1>
+					((org.yuanheng.cookcc.ASTListNode)_yyValue).add (yyGetValue (2));
+					<#else>
+					for (int i = 1; i < ${p.termCount}; ++i)
+					{
+						ast.add (yyGetValue (i + 1));
+					}
+					</#if>
 				</#if>
+					_yyValue = ast;
 					break;
 				}
 </#list>
@@ -1400,11 +1362,7 @@ ${code.classheader}
 	 */
 	protected YYParserState yyPeekLookahead ()
 	{
-<#if generics?has_content && generics?string == "true">
 		return _yyLookaheadStack.get (_yyLookaheadStack.size () - 1);
-<#else>
-		return (YYParserState)_yyLookaheadStack.get (_yyLookaheadStack.size () - 1);
-</#if>
 	}
 
 	/**
@@ -1476,11 +1434,7 @@ ${code.classheader}
 	 */
 	protected Object yyGetValue (int arg)
 	{
-<#if generics?has_content && generics?string == "true">
 		return _yyStateStack.get (_yyArgStart + arg).value;
-<#else>
-		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).value;
-</#if>
 	}
 
 	/**
@@ -1504,23 +1458,16 @@ ${code.classheader}
 	 *			the symbol position starting from 1.
 	 * @return	the captured terminals associated with the symbol
 	 */
-<#if generics?has_content && generics?string == "true">
 	protected Collection<Object[]> getCapturedTerminals (int arg)
-<#else>
-	protected Collection getCapturedTerminals (int arg)
-</#if>
 	{
 <#if parser.captureList>
-<#if generics?has_content && generics?string == "true">
 		return _yyStateStack.get (_yyArgStart + arg).captureList;
-<#else>
-		return ((YYParserState)_yyStateStack.get (_yyArgStart + arg)).captureList;
-</#if>
 <#else>
 		return null;
 </#if>
 	}
 
+<#if parser.captureList>
 	/**
 	 * A small utility to avoid too many Integer object creations.
 	 *
@@ -1538,6 +1485,7 @@ ${code.classheader}
 			_yySymbolArray[symbol] = new Integer (symbol);
 		return _yySymbolArray[symbol];
 	}
+</#if>
 </#if>
 
 <#if code.default?has_content>

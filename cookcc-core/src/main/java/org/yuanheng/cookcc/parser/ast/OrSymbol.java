@@ -27,6 +27,7 @@ public class OrSymbol extends InternalSymbol
 	public void addNewRules (ArrayList<SingleRule> rules, long lineNumber, ParserDoc parserDoc, ProductionCounter counter)
 	{
 		GrammarDoc grammar = parserDoc.getGrammar (getSymbol ().getName ());
+		grammar.internalSetType ('|');
 		for (Symbol[] rhs : m_rules)
 		{
 			SingleRule singleRule = new SingleRule (getSymbol (), rhs, "", lineNumber, counter, null);

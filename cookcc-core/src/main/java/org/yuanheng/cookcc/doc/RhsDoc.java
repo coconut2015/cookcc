@@ -39,6 +39,7 @@ public class RhsDoc extends TreeDoc
 	private String m_precedence;
 
 	private final int m_termCount;
+	private String m_transTerms;
 
 	public RhsDoc ()
 	{
@@ -66,6 +67,26 @@ public class RhsDoc extends TreeDoc
 	public String getTerms ()
 	{
 		return m_terms;
+	}
+
+	/**
+	 * Set the translated terms.  For example, for rule such as
+	 *     A := B C+
+	 * The translated term is
+	 *     A := B @1
+	 * where @1 is an internal symbol for handling C+.
+	 *
+	 * @param	terms
+	 * 			the translated terms.
+	 */
+	public void internalSetTranslatedTerms (String terms)
+	{
+		m_transTerms = terms;
+	}
+
+	public String getTranslatedTerms ()
+	{
+		return m_transTerms;
 	}
 
 	/** Obtain the case value in the lexer. */

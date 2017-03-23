@@ -64,17 +64,6 @@ public class ASTNode extends AST implements Collection<Object>
 		return m_rule;
 	}
 
-	/**
-	 * Indicate that this node is a non-terminal node.
-	 *
-	 * @return	false
-	 */
-	@Override
-	public final boolean isValue ()
-	{
-		return false;
-	}
-
 	@Override
 	public int size ()
 	{

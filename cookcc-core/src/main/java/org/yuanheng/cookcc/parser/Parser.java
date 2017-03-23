@@ -288,6 +288,16 @@ public class Parser implements SymbolLibrary
 		return null;
 	}
 
+	private boolean hasInternalSymbols (ArrayList<Symbol> symbols)
+	{
+		for (Symbol s : symbols)
+		{
+			if (s.isInternal ())
+				return true;
+		}
+		return false;
+	}
+
 	private ArrayList<SingleRule> parseGrammars () throws IOException
 	{
 		ParserDoc parserDoc = m_doc.getParser ();
@@ -313,6 +323,10 @@ public class Parser implements SymbolLibrary
 				String precedence = rhsDoc.getPrecedence ();
 				SingleRule singleRule = new SingleRule (lhs, symbols.toArray (new Symbol[symbols.size ()]), precedence, lineNumber, productionCounter, rhsDoc);
 				rules.add (singleRule);
+				if (hasInternalSymbols (symbols))
+				{
+					rhsDoc.internalSetTranslatedTerms (singleRule.getTerms ());
+				}
 
 				singleRule.addNewRules (internalRules, parserDoc, productionCounter);
 				rhsDoc.setCaseValue (singleRule.caseValue);

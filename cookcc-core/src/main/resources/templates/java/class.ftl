@@ -1243,6 +1243,7 @@ ${code.classheader}
 <#if i.type == 'n'>
 <#list i.rhs as p>
 				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
+<#if p.translatedTerms??>					// converted to ${i.rule} : ${p.translatedTerms} </#if>
 				{
 					<#list p.action?actioncode() as a><#if a_index % 2 == 0>${a}<#else><#if a == "$">_yyValue<#else><@type p a parser.formats "yyGetValue (" + a + ")"/></#if></#if></#list>
 				}

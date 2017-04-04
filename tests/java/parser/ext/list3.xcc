@@ -33,7 +33,7 @@
 			<rhs>stmt_list stmt C</rhs>
 		</grammar>
 		<grammar rule="stmt">
-			<rhs>A B*</rhs>
+			<rhs>A (B)+</rhs>
 			<action>System.out.println ("statement: " + $2);</action>
 		</grammar>
 	</parser>

@@ -39,7 +39,7 @@ public abstract class AbstractSymbol implements Symbol
 	}
 
 	@Override
-	public void addNewRules (ArrayList<SingleRule> rules, long lineNumber, ParserDoc parseDoc, ProductionCounter counter)
+	public void addNewRules (ArrayList<SingleRule> rules, SymbolLibrary library, long lineNumber, ParserDoc parseDoc, ProductionCounter counter)
 	{
 	}
 

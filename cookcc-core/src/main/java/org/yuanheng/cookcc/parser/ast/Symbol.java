@@ -35,5 +35,5 @@ public interface Symbol
 	 */
 	public boolean isInternal ();
 
-	public void addNewRules (ArrayList<SingleRule> rules, long lineNumber, ParserDoc parseDoc, ProductionCounter counter);
+	public void addNewRules (ArrayList<SingleRule> rules, SymbolLibrary library, long lineNumber, ParserDoc parseDoc, ProductionCounter counter);
 }

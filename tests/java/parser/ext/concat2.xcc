@@ -1,7 +1,7 @@
 <?xml version = "1.0" encoding="UTF-8"?>
 <!DOCTYPE cookcc PUBLIC "-//CookCC//1.0" "https://raw.githubusercontent.com/coconut2015/cookcc/master/src/resources/cookcc.dtd">
 <cookcc>
-	<tokens>A B C</tokens>
+	<tokens>A B</tokens>
 	<lexer>
 		<rule>
 			<pattern>a</pattern>
@@ -10,10 +10,6 @@
 		<rule>
 			<pattern>b</pattern>
 			<action>_yyValue = "B"; return B;</action>
-		</rule>
-		<rule>
-			<pattern>c</pattern>
-			<action>_yyValue = "C"; return C;</action>
 		</rule>
 		<rule>
 			<pattern>.|\n</pattern>
@@ -29,12 +25,16 @@
 			<rhs>stmt_list</rhs>
 		</grammar>
 		<grammar rule="stmt_list">
-			<rhs>stmt C</rhs>
-			<rhs>stmt_list stmt C</rhs>
+			<rhs>stmt</rhs>
+			<rhs>stmt_list stmt</rhs>
+			<action></action>
 		</grammar>
 		<grammar rule="stmt">
-			<rhs>A B*</rhs>
-			<action>System.out.println ("statement: " + $2);</action>
+			<rhs>A ( B ) A </rhs>
+			<action>
+				System.out.println ("@1 = " + $1);
+				System.out.println ("@2 = " + $2);
+			</action>
 		</grammar>
 	</parser>
 </cookcc>

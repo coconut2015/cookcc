@@ -20,7 +20,7 @@ public class StarSymbol extends InternalSymbol
 	}
 
 	@Override
-	public void addNewRules (ArrayList<SingleRule> rules, long lineNumber, ParserDoc parserDoc, ProductionCounter counter)
+	public void addNewRules (ArrayList<SingleRule> rules, SymbolLibrary library, long lineNumber, ParserDoc parserDoc, ProductionCounter counter)
 	{
 		SingleRule r1 = new SingleRule (getSymbol (), new Symbol[0], "", lineNumber, counter, null);
 		rules.add (r1);
@@ -32,6 +32,7 @@ public class StarSymbol extends InternalSymbol
 		rules.add (r2);
 
 		GrammarDoc grammar = parserDoc.getGrammar (getSymbol ().getName ());
+		grammar.internalSetSymbol (getSymbol ().getValue (library, lineNumber));
 		grammar.internalSetType ('*');
 		grammar.addRhs (r1.getRhsDoc ());
 		grammar.addRhs (r2.getRhsDoc ());

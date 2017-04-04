@@ -328,7 +328,7 @@ public class Parser implements SymbolLibrary
 					rhsDoc.internalSetTranslatedTerms (singleRule.getTerms ());
 				}
 
-				singleRule.addNewRules (internalRules, parserDoc, productionCounter);
+				singleRule.addNewRules (internalRules, this, parserDoc, productionCounter);
 				rhsDoc.setCaseValue (singleRule.caseValue);
 			}
 		}
@@ -337,7 +337,7 @@ public class Parser implements SymbolLibrary
 		for (int i = 0; i < internalRules.size (); ++i)
 		{
 			SingleRule singleRule = internalRules.get (i);
-			singleRule.addNewRules (internalRules, parserDoc, productionCounter);
+			singleRule.addNewRules (internalRules, this, parserDoc, productionCounter);
 		}
 
 		// now combine all the rules

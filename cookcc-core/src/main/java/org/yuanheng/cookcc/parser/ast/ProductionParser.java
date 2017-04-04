@@ -173,8 +173,16 @@ public class ProductionParser extends ProductionScanner
 	@Rule (lhs = "rule", rhs = "rule parenRule")
 	ArrayList<Symbol> parseRule (ArrayList<Symbol> s1, ArrayList<Symbol> s2)
 	{
-		GroupSymbol symbol = new GroupSymbol (m_lib.createInternalSymbol (), s2.toArray (new Symbol[s2.size ()]));
-		s1.add (symbol);
+		// Optimize a bit.  If s2 size is 1, then skip the casing with GroupSymbol
+		if (s2.size () == 1 && s2.get (0).isInternal ())
+		{
+			s1.add (s2.get (0));
+		}
+		else
+		{
+			GroupSymbol symbol = new GroupSymbol (m_lib.createInternalSymbol (), s2.toArray (new Symbol[s2.size ()]));
+			s1.add (symbol);
+		}
 		return s1;
 	}
 

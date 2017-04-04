@@ -35,11 +35,11 @@ public class SingleRule
 		}
 	}
 
-	public void addNewRules (ArrayList<SingleRule> rules, ParserDoc parserDoc, ProductionCounter counter)
+	public void addNewRules (ArrayList<SingleRule> rules, SymbolLibrary library, ParserDoc parserDoc, ProductionCounter counter)
 	{
 		for (Symbol s: rhs)
 		{
-			s.addNewRules (rules, lineNumber, parserDoc, counter);
+			s.addNewRules (rules, library, lineNumber, parserDoc, counter);
 		}
 	}
 

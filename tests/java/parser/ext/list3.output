@@ -1,0 +1,4 @@
+statement: @1 : [B]
+statement: @1 : [B, B]
+statement: @1 : [B, B, B, B, B]
+parser: fatal error!

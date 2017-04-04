@@ -22,12 +22,13 @@ public class GroupSymbol extends InternalSymbol
 	}
 
 	@Override
-	public void addNewRules (ArrayList<SingleRule> rules, long lineNumber, ParserDoc parserDoc, ProductionCounter counter)
+	public void addNewRules (ArrayList<SingleRule> rules, SymbolLibrary library, long lineNumber, ParserDoc parserDoc, ProductionCounter counter)
 	{
 		SingleRule r = new SingleRule (getSymbol (), m_rhs, "", lineNumber, counter, null);
 		rules.add (r);
 
 		GrammarDoc grammar = parserDoc.getGrammar (getSymbol ().getName ());
+		grammar.internalSetSymbol (getSymbol ().getValue (library, lineNumber));
 		grammar.internalSetType ('g');
 		grammar.addRhs (r.getRhsDoc ());
 	}

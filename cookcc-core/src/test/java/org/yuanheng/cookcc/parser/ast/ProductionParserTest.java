@@ -58,6 +58,10 @@ public class ProductionParserTest
 	{
 		ProductionParser parser = new ProductionParser ();
 		testCase (parser, "a | b", "(a | b)");
+		testCase (parser, "a (a | b)", "a (a | b)");
+		testCase (parser, "a (a | b) c", "a (a | b) c");
+		testCase (parser, "a (a|b c| d)c", "a (a | b c | d) c");
+		testCase (parser, "a (a|b c| d)?c", "a (a | b c | d)? c");
 		testCase (parser, "(a | b)", "(a | b)");
 		testCase (parser, "(a | b | c | d)", "(a | b | c | d)");
 		testCase (parser, "(a | b) +", "(a | b)+");

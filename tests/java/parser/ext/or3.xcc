@@ -29,12 +29,16 @@
 			<rhs>stmt_list</rhs>
 		</grammar>
 		<grammar rule="stmt_list">
-			<rhs>stmt C</rhs>
-			<rhs>stmt_list stmt C</rhs>
+			<rhs>stmt</rhs>
+			<rhs>stmt_list stmt</rhs>
+			<action></action>
 		</grammar>
 		<grammar rule="stmt">
-			<rhs>A B*</rhs>
-			<action>System.out.println ("statement: " + $2);</action>
+			<rhs>A ( B C | C )</rhs>
+			<action>
+				System.out.println ("@1 = " + $1);
+				System.out.println ("@2 = " + $2);
+			</action>
 		</grammar>
 	</parser>
 </cookcc>

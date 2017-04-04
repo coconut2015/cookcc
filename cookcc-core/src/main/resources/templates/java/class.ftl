@@ -1343,14 +1343,14 @@ ${code.classheader}
 </#list>
 <#elseif i.type == '|'>
 <#list i.rhs as p>
-				// internally generated list rule
+				// internally generated or rule
 				case ${p.caseValue}:	// ${i.rule} : ${p.terms}
 				{
 					<#if p.termCount == 1>
 					_yyValue = yyGetValue (1);
 					<#else>
 					org.yuanheng.cookcc.ASTNode ast = new org.yuanheng.cookcc.ASTNode (${i.symbol}, "${i.rule}", ${p.caseValue});
-					for (int i = 1; i < ${p.termCount}; ++i)
+					for (int i = 0; i < ${p.termCount}; ++i)
 					{
 						ast.add (yyGetValue (i + 1));
 					}

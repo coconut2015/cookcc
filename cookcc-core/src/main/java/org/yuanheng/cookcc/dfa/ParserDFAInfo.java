@@ -102,6 +102,11 @@ public class ParserDFAInfo
 		return m_ecs;
 	}
 
+	public int[] getReverse ()
+	{
+		return m_parser.getReverseECS ();
+	}
+
 	public boolean getIgnoreList ()
 	{
 		return m_parserDoc.hasIgnore ();

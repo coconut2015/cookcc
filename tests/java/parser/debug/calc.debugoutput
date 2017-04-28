@@ -1,0 +1,172 @@
+lexer: 0, 29, 10: print
+parser: 0 -> -4 on PRINT, reduce function
+parser: 2 -> 11 on PRINT, shift
+lexer: 0, 2, 12:  
+lexer: 0, 5, 1: 2
+parser: 11 -> 8 on INTEGER, shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: *
+parser: 8 -> -15 on '*', reduce expr
+parser: 22 -> 23 on '*', shift
+lexer: 0, 2, 12:  
+lexer: 0, 5, 1: 3
+parser: 23 -> 8 on INTEGER, shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: +
+parser: 8 -> -15 on '+', reduce expr
+parser: 41 -> -20 on '+', reduce expr
+parser: 22 -> 24 on '+', shift
+lexer: 0, 2, 12:  
+lexer: 0, 5, 1: 5
+parser: 24 -> 8 on INTEGER, shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: *
+parser: 8 -> -15 on '*', reduce expr
+parser: 42 -> 23 on '*', shift
+lexer: 0, 2, 12:  
+lexer: 0, 5, 1: 7
+parser: 23 -> 8 on INTEGER, shift
+lexer: 0, 4, 2: ;
+parser: 8 -> -15 on ';', reduce expr
+parser: 41 -> -20 on ';', reduce expr
+parser: 42 -> -18 on ';', reduce expr
+parser: 22 -> 40 on ';', shift
+lexer: 0, 2, 12: 
+
+lexer: 0, 9, 11: x
+parser: 40 -> -7 on VARIABLE, reduce stmt
+parser: 12 -> -3 on VARIABLE, reduce function
+parser: 2 -> 7 on VARIABLE, shift
+lexer: 0, 2, 12:  
+lexer: 0, 7, 2: =
+parser: 7 -> 19 on '=', shift
+lexer: 0, 2, 12:  
+lexer: 0, 5, 1: 1
+parser: 19 -> 8 on INTEGER, shift
+lexer: 0, 4, 2: ;
+parser: 8 -> -15 on ';', reduce expr
+parser: 37 -> 51 on ';', shift
+lexer: 0, 2, 12: 
+
+lexer: 0, 30, 7: while
+parser: 51 -> -8 on WHILE, reduce stmt
+parser: 12 -> -3 on WHILE, reduce function
+parser: 2 -> 9 on WHILE, shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: (
+parser: 9 -> 20 on '(', shift
+lexer: 0, 9, 11: x
+parser: 20 -> 14 on VARIABLE, shift
+lexer: 0, 2, 12:  
+lexer: 0, 6, 2: <
+parser: 14 -> -16 on '<', reduce expr
+parser: 38 -> 28 on '<', shift
+lexer: 0, 2, 12:  
+lexer: 0, 5, 1: 10
+parser: 28 -> 8 on INTEGER, shift
+lexer: 0, 4, 2: )
+parser: 8 -> -15 on ')', reduce expr
+parser: 45 -> -22 on ')', reduce expr
+parser: 38 -> 52 on ')', shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: {
+parser: 52 -> 6 on '{', shift
+lexer: 0, 2, 12: 
+	
+lexer: 0, 20, 8: if
+parser: 6 -> 10 on IF, shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: (
+parser: 10 -> 21 on '(', shift
+lexer: 0, 9, 11: x
+parser: 21 -> 14 on VARIABLE, shift
+lexer: 0, 2, 12:  
+lexer: 0, 6, 2: <
+parser: 14 -> -16 on '<', reduce expr
+parser: 39 -> 28 on '<', shift
+lexer: 0, 2, 12:  
+lexer: 0, 5, 1: 5
+parser: 28 -> 8 on INTEGER, shift
+lexer: 0, 4, 2: )
+parser: 8 -> -15 on ')', reduce expr
+parser: 45 -> -22 on ')', reduce expr
+parser: 39 -> 53 on ')', shift
+lexer: 0, 2, 12: 
+		
+lexer: 0, 29, 10: print
+parser: 53 -> 11 on PRINT, shift
+lexer: 0, 2, 12:  
+lexer: 0, 9, 11: x
+parser: 11 -> 14 on VARIABLE, shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: *
+parser: 14 -> -16 on '*', reduce expr
+parser: 22 -> 23 on '*', shift
+lexer: 0, 2, 12:  
+lexer: 0, 9, 11: x
+parser: 23 -> 14 on VARIABLE, shift
+lexer: 0, 4, 2: ;
+parser: 14 -> -16 on ';', reduce expr
+parser: 41 -> -20 on ';', reduce expr
+parser: 22 -> 40 on ';', shift
+lexer: 0, 2, 12: 
+	
+lexer: 0, 26, 9: else
+parser: 40 -> -7 on ELSE, reduce stmt
+parser: 55 -> 56 on ELSE, shift
+lexer: 0, 2, 12: 
+		
+lexer: 0, 29, 10: print
+parser: 56 -> 11 on PRINT, shift
+lexer: 0, 2, 12:  
+lexer: 0, 9, 11: x
+parser: 11 -> 14 on VARIABLE, shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: +
+parser: 14 -> -16 on '+', reduce expr
+parser: 22 -> 24 on '+', shift
+lexer: 0, 2, 12:  
+lexer: 0, 9, 11: x
+parser: 24 -> 14 on VARIABLE, shift
+lexer: 0, 4, 2: ;
+parser: 14 -> -16 on ';', reduce expr
+parser: 42 -> -18 on ';', reduce expr
+parser: 22 -> 40 on ';', shift
+lexer: 0, 2, 12: 
+
+	
+lexer: 0, 9, 11: x
+parser: 40 -> -7 on VARIABLE, reduce stmt
+parser: 57 -> -11 on VARIABLE, reduce stmt
+parser: 17 -> -13 on VARIABLE, reduce stmt_list
+parser: 18 -> 7 on VARIABLE, shift
+lexer: 0, 2, 12:  
+lexer: 0, 7, 2: =
+parser: 7 -> 19 on '=', shift
+lexer: 0, 2, 12:  
+lexer: 0, 9, 11: x
+parser: 19 -> 14 on VARIABLE, shift
+lexer: 0, 2, 12:  
+lexer: 0, 4, 2: +
+parser: 14 -> -16 on '+', reduce expr
+parser: 37 -> 24 on '+', shift
+lexer: 0, 2, 12:  
+lexer: 0, 5, 1: 1
+parser: 24 -> 8 on INTEGER, shift
+lexer: 0, 4, 2: ;
+parser: 8 -> -15 on ';', reduce expr
+parser: 42 -> -18 on ';', reduce expr
+parser: 37 -> 51 on ';', shift
+lexer: 0, 2, 12: 
+
+lexer: 0, 4, 2: }
+parser: 51 -> -8 on '}', reduce stmt
+parser: 36 -> -14 on '}', reduce stmt_list
+parser: 18 -> 35 on '}', shift
+lexer: 0, 2, 12: 
+
+lexer: 0, 14, 14: null
+parser: 35 -> -12 on $, reduce stmt
+parser: 54 -> -9 on $, reduce stmt
+parser: 12 -> -3 on $, reduce function
+parser: 2 -> -2 on $, reduce program

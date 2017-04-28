@@ -21,16 +21,11 @@ java="${JAVA_HOME}/bin/java"
 
 function cookcc ()
 {
-	v=$1
+	v=${@: -1}
 	if [ -z "$UNICODE" ]; then
 		unicode=""
 	else
 		unicode="-unicode"
-	fi
-	if [ -z "$GENERICS" ]; then
-		generics=""
-	else
-		generics="-generics"
 	fi
 	CCOUTPUT=${v%.xcc}.ccoutput
 	"$java" -jar "${COOKCC}" $unicode $generics $@ > ccoutput 2>&1

@@ -98,6 +98,7 @@ public class Parser implements SymbolLibrary
 	private int[] m_usedSymbols;
 	/** look up the index of a terminal in m_usedSymbols */
 	private int[] m_symbolGroups;
+	private int[] m_reverseECS;
 
 	private int[] m_ignoreList;
 	private int[] m_captureList;
@@ -806,6 +807,16 @@ public class Parser implements SymbolLibrary
 		for (int i = 0; i < count; ++i)
 			m_symbolGroups[vec[i]] = i;
 
+		// now compute the reverse look up
+		int[] reverse = new int[count];
+		for (int i = 0; i < m_symbolGroups.length; ++i)
+		{
+			int ecs = m_symbolGroups[i];
+			reverse[ecs] = i;
+		}
+		reverse[UNHANDLED] = UNHANDLED;
+		m_reverseECS = reverse;
+
 		// now we deal with unhandled list
 		ArrayList<Integer> unusedList = new ArrayList<Integer> ();
 		for (int i = 0; i <= m_maxTerminal; ++i)
@@ -1303,6 +1314,11 @@ public class Parser implements SymbolLibrary
 	int getUsedSymbolCount ()
 	{
 		return m_usedSymbolCount;
+	}
+
+	public int[] getReverseECS ()
+	{
+		return m_reverseECS;
 	}
 
 	// debugging function

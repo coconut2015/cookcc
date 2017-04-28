@@ -128,6 +128,7 @@ ${code.classheader}
 		{
 			<#list parser.symbols as s><#if s_index &gt; 0>,</#if>"${s}"</#list>
 		};
+		private final static char[] reverseECS = <@intarray parser.reverse/>;
 	}
 
 	private final static class YYParserState	// internal tracking tool
@@ -522,13 +523,13 @@ ${code.classheader}
 	<#if debug>
 	protected boolean debugLexer (int baseState, int matchedState, int accept)
 	{
-		System.err.println ("lexer: " + baseState + ", " + matchedState + ", " + accept + ", " + yyText ());
+		System.err.println ("lexer: " + baseState + ", " + matchedState + ", " + accept + ": " + yyText ());
 		return true;
 	}
 
 	protected boolean debugLexerBackup (int baseState, int backupState, String backupString)
 	{
-		System.err.println ("lexer backup: " + baseState + ", " + backupState + ", " + backupString);
+		System.err.println ("lexer backup: " + baseState + ", " + backupState + ": " + backupString);
 		return true;
 	}
 	</#if>
@@ -992,14 +993,14 @@ ${code.classheader}
 	}
 
 	<#if debug>
-	protected boolean debugParser (int fromState, int toState, int reduceState, String reduceStateName, int symbol)
+	protected boolean debugParser (int fromState, int toState, int reduceState, int symbol)
 	{
 		if (toState == 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + getSymbolName (symbol) + ", error");
+			System.err.println ("parser: " + fromState + " -> " + toState + " on " + getSymbolName (symbol) + ", error");
 		else if (toState < 0)
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + getSymbolName (symbol) + ", reduce " + reduceStateName);
+			System.err.println ("parser: " + fromState + " -> " + toState + " on " + getSymbolName (symbol) + ", reduce " + getSymbolName (cc_parser_symbol.reverseECS[reduceState]));
 		else
-			System.err.println ("parser: " + fromState + ", " + toState + ", " + getSymbolName (symbol) + ", shift");
+			System.err.println ("parser: " + fromState + " -> " + toState + " on " + getSymbolName (symbol) + ", shift");
 		return true;
 	}
 	</#if>
@@ -1140,7 +1141,7 @@ ${code.classheader}
 </#if>
 
 <#if debug>
-			debugParser (cc_fromState, cc_toState, cc_toState < 0 ? cc_parser.lhs[-cc_toState] : 0, cc_toState < 0 ? cc_parser_symbol.symbols[cc_parser.lhs[-cc_toState]] : "", cc_lookahead.token);
+			debugParser (cc_fromState, cc_toState, cc_toState < 0 ? cc_parser.lhs[-cc_toState] : 0, cc_lookahead.token);
 </#if>
 
 			//

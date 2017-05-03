@@ -1,4 +1,4 @@
-CookCC is a lexer and parser (LALR (1)) generator project, combined.  It is written in Java, but the [target languages](../../wiki/Target-Languages) can vary.
+CookCC is a lexer and parser (LALR (1)) generator project, combined.  It is written in Java, but the [target languages](http://coconut2015.github.io/cookcc/Target-Languages) can vary.
 
 CookCC comes with two unique features, which were the original motivations for this work.
 
@@ -15,4 +15,4 @@ The current release is 0.3.3.
 
 I am currently working on 0.4.  Hopefully, I will find time between gaming and working to get it done.
 
-Note: the BSD license only applies to CookCC itself.  The code generated belongs to you.
+This software is licensed under [APL 2.0](https://www.apache.org/licenses/LICENSE-2.0).  This license only applies to CookCC itself.  The code generated belongs to you.

@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class InvalidRegExException extends ParserException
 {
+	private static final long serialVersionUID = 1824015010890844313L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("invalid regular expression: {0}");
 
 	private final String m_regex;

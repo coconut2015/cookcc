@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class UnknownNameException extends InvalidRegExException
 {
+	private static final long serialVersionUID = -7042785039737773275L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("unknown name: {0}");
 
 	public UnknownNameException (long lineNumber, String name, String input)

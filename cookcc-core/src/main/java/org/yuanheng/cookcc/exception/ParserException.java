@@ -31,6 +31,8 @@ package org.yuanheng.cookcc.exception;
  */
 public class ParserException extends CookCCException
 {
+	private static final long serialVersionUID = -679575848531235898L;
+
 	public ParserException (long lineNumber, String msg)
 	{
 		super (lineNumber, msg);

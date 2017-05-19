@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class InvalidPOSIXCharacterClassException extends InvalidRegExException
 {
+	private static final long serialVersionUID = 6805630592560029311L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("Invalid POSIX Character Class: {0}");
 
 	public InvalidPOSIXCharacterClassException (long lineNumber, String name, String input)

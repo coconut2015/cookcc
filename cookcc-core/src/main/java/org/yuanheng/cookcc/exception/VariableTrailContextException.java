@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class VariableTrailContextException extends InvalidRegExException
 {
+	private static final long serialVersionUID = -6637599174606828619L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("variable head and tail trail context used: {0}");
 
 	public VariableTrailContextException (long lineNumber, String input)

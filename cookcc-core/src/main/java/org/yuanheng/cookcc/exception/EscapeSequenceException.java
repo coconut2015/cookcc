@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class EscapeSequenceException extends RuntimeException
 {
+	private static final long serialVersionUID = -8522981046480956423L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("invalid escape sequence {0}");
 
 	private String m_esc;

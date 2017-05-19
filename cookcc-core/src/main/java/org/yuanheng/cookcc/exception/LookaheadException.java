@@ -35,6 +35,8 @@ import org.yuanheng.cookcc.lexer.CCL;
  */
 public class LookaheadException extends ParserException
 {
+	private static final long serialVersionUID = -3965848588475205612L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("expected token {0}, but found {1} for input {2}");
 
 	private final int m_expected;

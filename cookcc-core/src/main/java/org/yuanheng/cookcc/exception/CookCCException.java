@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class CookCCException extends RuntimeException
 {
+	private static final long serialVersionUID = -1202462319594574689L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("Error on line {0}: {1}.");
 
 	private final long m_lineNumber;

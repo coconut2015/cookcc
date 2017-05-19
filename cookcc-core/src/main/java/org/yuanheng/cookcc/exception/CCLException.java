@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class CCLException extends RuntimeException
 {
+	private static final long serialVersionUID = 4783770461588874348L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("invalid character class {0}");
 
 	private String m_input;

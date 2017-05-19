@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class NestedSubExpressionException extends CookCCException
 {
+	private static final long serialVersionUID = -4336458045012222054L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("Nested subexpression is not supported: {0}");
 
 	private final String m_pattern;

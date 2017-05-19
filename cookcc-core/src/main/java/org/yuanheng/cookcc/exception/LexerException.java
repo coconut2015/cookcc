@@ -31,6 +31,8 @@ package org.yuanheng.cookcc.exception;
  */
 public class LexerException extends CookCCException
 {
+	private static final long serialVersionUID = -5993243728891985748L;
+
 	public LexerException (long lineNumber, String text, String msg)
 	{
 		super (lineNumber, "pattern: " + text + ", " + msg);

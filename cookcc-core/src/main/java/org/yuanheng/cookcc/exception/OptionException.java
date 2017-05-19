@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class OptionException extends Exception
 {
+	private static final long serialVersionUID = -1342603236616454226L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("Error in handling option: {0} = {1}");
 
 	private final String m_option;

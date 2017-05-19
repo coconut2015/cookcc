@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class UnknownOptionException extends Exception
 {
+	private static final long serialVersionUID = -5412415325123544920L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("Unknown option: {0}");
 
 	private final String m_option;

@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class MultipleTrailContextException extends InvalidRegExException
 {
+	private static final long serialVersionUID = -4371722020296353961L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("multiple trail context used: {0}");
 
 	public MultipleTrailContextException (int lineNumber, String input)

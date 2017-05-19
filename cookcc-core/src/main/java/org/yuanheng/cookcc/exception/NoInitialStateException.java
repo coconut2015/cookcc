@@ -31,6 +31,8 @@ package org.yuanheng.cookcc.exception;
  */
 public class NoInitialStateException extends ParserException
 {
+	private static final long serialVersionUID = 8364963732642695950L;
+
 	public static String ERROR_MSG = "no initial states specified.";
 
 	public NoInitialStateException ()

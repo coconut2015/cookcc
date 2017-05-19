@@ -33,6 +33,8 @@ import java.text.MessageFormat;
  */
 public class BadIterationException extends CookCCException
 {
+	private static final long serialVersionUID = -6207200608678530097L;
+
 	public static MessageFormat ERROR_MSG = new MessageFormat ("bad iteration value: {0}");
 
 	public BadIterationException (int lineNumber, Object value)

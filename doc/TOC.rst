@@ -6,6 +6,7 @@ Table of Contents
 	index
 	Tutorial (pdf) <https://github.com/coconut2015/cookcc/blob/master/doc/CookCC.pdf>
 	Command-Line
+	Maven
 	Ant-Task
 
 	Lexer

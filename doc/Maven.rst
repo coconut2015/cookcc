@@ -25,7 +25,7 @@ the following.
 			<plugin>
 				<groupId>org.yuanheng.cookcc</groupId>
 				<artifactId>cookcc-maven-plugin</artifactId>
-				<version>1.0</version>
+				<version>1.0.1</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>

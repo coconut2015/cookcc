@@ -109,11 +109,18 @@ You can run the following command to run all the CookCC tasks.
 
 .. code:: bash
 
-	mvn cookcc:run
+	mvn clean cookcc:run
 	
 In the execution above, by specifying generate-sources phase, when you run
 the following command, CookCC is also run.
 
 .. code:: bash
 
-	mvn package
+	mvn clean package
+
+.. note::
+
+	It is necessary to put ``clean`` in the command because it can prevent
+	CookCC from getting the necessary file header and class header comments
+	for the Java files to be re-generated.  The reason is that Java Compiler
+	would skip parsing the information if their class files exist.

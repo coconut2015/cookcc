@@ -5,7 +5,7 @@
 
 	<groupId>org.yuanheng.cookcc</groupId>
 	<artifactId>cookcc</artifactId>
-	<version>0.4.0</version>
+	<version>0.4.1</version>
 
 	<name>CookCC</name>
 	<description>CookCC - a Lexer / Parser (LALR(1)) Project</description>

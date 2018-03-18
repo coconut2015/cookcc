@@ -11,6 +11,6 @@ Other Features
 
 CookCC requires JRE 1.7+ to run, but the generated Java code can be compiled and run with earlier versions of Java.  There are *zero dependencies* for the generated Java code.  So it is light and fast.
 
-The current release is 0.4.
+The current release is 0.4.1.
 
 This software is licensed under [APL 2.0](https://www.apache.org/licenses/LICENSE-2.0).  This license only applies to CookCC itself.  The code generated belongs to you.

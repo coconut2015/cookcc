@@ -56,7 +56,8 @@ If the input file specified in the ``src`` attribute has the ``.java``
 extension, APT mode is assumed.
 
 The annotation processing API changed from 1.5 to 1.6+.  As the result CookCC
-0.3.3 only supports JDK1.5 and 1.6, while CookCC 0.4.0 supports JDK1.6+.
+0.3.3 only supports JDK1.5 and 1.6, while CookCC 0.4.0 and later supports
+JDK1.6+.
 
 The typical setup is the following.
 

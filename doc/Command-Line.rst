@@ -9,7 +9,7 @@ CookCC jar can be directly executed. The general usage is the following.
 
 .. code:: bash
 
-    java -jar cookcc-0.4.0.jar [options] [files]
+    java -jar cookcc-0.4.1.jar [options] [files]
 
 Command Line Options
 --------------------
@@ -73,7 +73,7 @@ is in JDK 1.6+.
 
 .. code:: bash
 
-    javac -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp cookcc-0.4.0.jar:src -s src org.example/Code.java
+    javac -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp cookcc-0.4.1.jar:src -s src org.example/Code.java
 
 
 APT

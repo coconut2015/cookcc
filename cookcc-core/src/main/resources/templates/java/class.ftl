@@ -128,7 +128,9 @@ ${code.classheader}
 		{
 			<#list parser.symbols as s><#if s_index &gt; 0>,</#if>"${s}"</#list>
 		};
+	<#if debug>
 		private final static char[] reverseECS = <@intarray parser.reverse/>;
+	</#if>
 	}
 
 	private final static class YYParserState	// internal tracking tool

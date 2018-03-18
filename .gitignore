@@ -7,3 +7,5 @@ target
 /dist/
 /classes/
 /cookcc.pom.asc
+pom.xml.versionsBackup
+

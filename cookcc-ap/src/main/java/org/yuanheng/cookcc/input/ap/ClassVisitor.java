@@ -231,6 +231,7 @@ class ClassVisitor
 
 		PatternDoc pattern = new PatternDoc (false);
 		pattern.setPattern (lex.pattern ());
+		pattern.setNocase (lex.nocase ());
 		if (lineNumber < 0)
 			pattern.setLineNumber (m_parent.getLineNumber (method));
 		else

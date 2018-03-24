@@ -124,13 +124,14 @@ class LexerPattern
 		return m_pattern.hasSubExpression ();
 	}
 
-	public NFA constructNFA (NFAFactory factory, int caseValue, long lineNumber)
+	public NFA constructNFA (NFAFactory factory, int caseValue, long lineNumber, boolean nocase)
 	{
 		NFA start = factory.createNFA ();
 		start.caseValue = caseValue;
 		start.lineNumber = lineNumber;
 		start.precedence = m_precedence;
 		start.trailContext = getTrailContext ();
+		start.nocase = nocase;
 
 		NFA end = m_pattern.constructNFA (factory, start);
 		if (m_trailPattern != null)

@@ -89,12 +89,14 @@ class NFAFactory
 
 	public void setNFA (NFA nfa, int ch, boolean[] ccl)
 	{
+		if (nfa.nocase && ch > 0)
+			ch = Character.toLowerCase (ch);
 		nfa.thisChar = ch;
 		nfa.charSet = ccl;
 		if (ch >= 0)
-			m_ecs.add (ch);
+			m_ecs.add (ch, nfa.nocase);
 		else if (ch == NFA.ISCCL)
-			m_ecs.add (ccl);
+			m_ecs.add (ccl, nfa.nocase);
 	}
 
 	public ECS getECS ()

@@ -12,7 +12,7 @@ alnum:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@alnum@
 ^xdigit:ghijklmnopqrstuvwxyzGHIJKLMNOPQRSTUVWXYZ 	~!@#$%^&*(){}[]':;"<>,./?\+=_-`@xdigit@
 a-d:abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@a-d@
 l-xyz:abcdefghijklmnopqrstuvw@l-xyz@
-abcd-bc:aaaaddddaaaa@abcd-bc@
+aBCd-bc:AAaadDddaaaa@abcd-bc@
 abcde-b-c:aaaaddddeeee@abcde-b-c@
 ^XY-^XYZ:ZZZZZZZZZZZ@^XY-^XYZ@
 a+d:abc0123xyz789@a+d@

@@ -140,7 +140,7 @@ public class Calculator extends Parser
 		@Lex (pattern = "while", token = "WHILE"),
 		@Lex (pattern = "if", token = "IF"),
 		@Lex (pattern = "else", token = "ELSE"),
-		@Lex (pattern = "print", token = "PRINT")
+		@Lex (pattern = "print", token = "PRINT", nocase = "true")
 	})
 	protected Object parseKeyword ()
 	{

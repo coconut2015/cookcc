@@ -57,6 +57,7 @@ class NFA implements Comparable<NFA>
 	boolean mark;
 	int precedence = Integer.MAX_VALUE;
 	long lineNumber = Long.MAX_VALUE;
+	boolean nocase;
 
 	final int id;
 
@@ -76,6 +77,7 @@ class NFA implements Comparable<NFA>
 		next = null;
 		next2 = null;
 		mark = false;
+		nocase = false;
 		precedence = Integer.MAX_VALUE;
 		lineNumber = Long.MAX_VALUE;
 	}
@@ -86,6 +88,7 @@ class NFA implements Comparable<NFA>
 		lineNumber = nfa.lineNumber;
 		caseValue = nfa.caseValue;
 		trailContext = nfa.trailContext;
+		nocase = nfa.nocase;
 	}
 
 	public void setState (int caseValue, int precedence, long lineNumber, int trail)
@@ -126,6 +129,7 @@ class NFA implements Comparable<NFA>
 		mark = other.mark;
 		precedence = other.precedence;
 		lineNumber = other.lineNumber;
+		nocase = other.nocase;
 	}
 
 	public NFA last ()

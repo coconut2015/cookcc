@@ -4,7 +4,7 @@ while (x < 10) {
 	if (x < 5)
 		print x * x;
 	else
-		print x + x;
+		prInt x + x;
 
 	x = x + 1;
 }

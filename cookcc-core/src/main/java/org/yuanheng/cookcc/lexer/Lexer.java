@@ -269,7 +269,7 @@ public class Lexer
 							pattern.setCaseValue (caseValue);
 
 							LexerPattern lp = m_patternParser.parse (pattern.getPrecedence (), pattern.getLineNumber (), pattern.getPattern ());
-							nfa = lp.constructNFA (m_nfaFactory, caseValue, pattern.getLineNumber ());
+							nfa = lp.constructNFA (m_nfaFactory, caseValue, pattern.getLineNumber (), pattern.isNocase ());
 							if (lp.isBol ())
 								pattern.setBOL (true);
 							if (nfa.trailContext != 0)
@@ -528,6 +528,7 @@ public class Lexer
 		for (NFA n : T.getSet ())
 		{
 			if (n.thisChar == a ||
+				(n.thisChar > 0 && n.nocase && Character.toUpperCase (n.thisChar) == a) ||
 				(n.thisChar == NFA.ISCCL && n.charSet[a]))
 			{
 				if (n.next != null)

@@ -81,14 +81,42 @@ public class ECS
 		return m_lookup;
 	}
 
-	public void add (int ch)
+	/**
+	 * @param	ch
+	 * 			single character
+	 * @param	nocase
+	 * 			if nocase, ch passed in must be in lower case
+	 */
+	public void add (int ch, boolean nocase)
 	{
-		m_groups[ch] = ++m_groupCount;
+		if (nocase)
+		{
+			int newGroup = ++m_groupCount;
+			m_groups[ch] += newGroup;
+			int upperCase = Character.toUpperCase (ch);
+			if (upperCase != ch)
+				m_groups[upperCase] += newGroup;
+		}
+		else
+		{
+			m_groups[ch] = ++m_groupCount;
+		}
 		compute ();
 	}
 
-	public void add (boolean[] ccl)
+	public void add (boolean[] ccl, boolean nocase)
 	{
+		if (nocase)
+		{
+			for (int i = 'a'; i <= 'z'; ++i)
+			{
+				int upper = 'A' + (i - 'a');
+				if (ccl[i])
+					ccl[upper] = true;
+				else if (ccl[upper])
+					ccl[i] = true;
+			}
+		}
 		int newGroup = ++m_groupCount;
 		for (int i = 0; i < ccl.length; ++i)
 			if (ccl[i])

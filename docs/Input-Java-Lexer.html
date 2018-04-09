@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lexer Section &mdash; CookCC 0.4.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="CookCC 0.4.3 documentation" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="TOC.html" class="icon icon-home"> CookCC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">CookCC documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/blob/master/doc/CookCC.pdf">Tutorial (pdf)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Command-Line.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maven.html">Maven</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ant-Task.html">Ant Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer.html">Lexer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer-Patterns.html">Regular Expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parser.html">Parser</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Input</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Output</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Output-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Plain.html">Plain Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://www.javadoc.io/doc/org.yuanheng.cookcc/cookcc/0.4.0">JavaDoc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests">Test cases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/cookcc">Discussion group</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Encoding-Detection.html">Input Encoding Detection</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.manpagez.com/man/7/ascii/">ASCII map</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.unicodemap.org/">Unicode map</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="TOC.html">CookCC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="TOC.html">Docs</a> &raquo;</li>
+        
+      <li>Lexer Section</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lexer-section">
+<h1>Lexer Section<a class="headerlink" href="#lexer-section" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="specifying-shortcuts">
+<h2>Specifying Shortcuts<a class="headerlink" href="#specifying-shortcuts" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">&#64;Shortcut</span></code> is used to specify a single frequently used pattern can be
+re-used in actual lexical patterns. Multiple <code class="docutils literal notranslate"><span class="pre">&#64;Shortcut</span></code> can be
+defined using <code class="docutils literal notranslate"><span class="pre">&#64;Shortcuts</span></code> annotation. Just specify it on any
+functions. The order of shortcut is not important and it is possible to
+contain references to other shortcuts. Just be careful not to create
+cyclic references.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Shortcuts</span> <span class="p">(</span> <span class="n">shortcuts</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nd">@Shortcut</span> <span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;nonws&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;[^ </span><span class="se">\\</span><span class="s2">t</span><span class="se">\\</span><span class="s2">n]&quot;</span><span class="p">),</span>
+    <span class="nd">@Shortcut</span> <span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;ws&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;[ </span><span class="se">\\</span><span class="s2">t]&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{nonws}</span><span class="s2">+&quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;INITIAL&quot;</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">matchWord</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">m_cc</span> <span class="o">+=</span> <span class="n">yyLength</span> <span class="p">();</span>
+    <span class="o">++</span><span class="n">m_wc</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="specifying-lexical-patterns">
+<h2>Specifying Lexical Patterns<a class="headerlink" href="#specifying-lexical-patterns" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">&#64;Lex</span></code> is use to specify a single lexical pattern. <code class="docutils literal notranslate"><span class="pre">&#64;Lexs</span></code> is used
+to specify multiple lexical patterns that share a common action.</p>
+<p>There are three types functions that can be marked with these two
+annotations. They each has different meanings.</p>
+<p>None of the functions can be <code class="docutils literal notranslate"><span class="pre">private</span></code>, since they are called from the
+generated class. They can be <code class="docutils literal notranslate"><span class="pre">protected</span></code>, <code class="docutils literal notranslate"><span class="pre">public</span></code> or in the package
+scope (if the generated class is in the same package as this class).</p>
+<div class="section" id="case-1-function-returns-void">
+<h3>Case 1: Function returns void<a class="headerlink" href="#case-1-function-returns-void" title="Permalink to this headline">¶</a></h3>
+<p>This is the most simple case. The lexer would call this function and
+then move on to matching the next potential pattern. For example:</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;[ </span><span class="se">\\</span><span class="s2">t</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n]+&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">void</span> <span class="n">ignoreWhiteSpace</span> <span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that it is necessary to use double backslashes here for escape
+sequences because Java itself also interpret escape sequences. This is
+perhaps one of the main drawback using Java annotation to specify the
+lexer. Fortunately usually the lexer is fairly easy to get it working
+correctly. IntelliJ IDEA also has a nice feature which pasting code with
+escape sequence such as <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">\t\r\n]+</span></code> inside a pair of double quotes
+would automatically adds the extra backslashes.</p>
+</div>
+<div class="section" id="case-2-function-returns-a-non-int-value">
+<h3>Case 2: Function returns a non-int value<a class="headerlink" href="#case-2-function-returns-a-non-int-value" title="Permalink to this headline">¶</a></h3>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">&#64;Lex</span></code> needs to contain the terminal token that would be
+returned. The return value from the function is going to be the value
+associated with this terminal.</p>
+<p>We have to specify the terminal in String due to the technical
+limitation.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;[0-9]+&quot;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">&quot;INTEGER&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">Integer</span> <span class="n">parseInt</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">Integer</span><span class="o">.</span><span class="n">parseInt</span> <span class="p">(</span><span class="n">yyText</span> <span class="p">());</span>
+<span class="p">}</span>
+
+<span class="nd">@Lexs</span> <span class="p">(</span><span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;while&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;WHILE&quot;</span><span class="p">),</span>
+    <span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;if&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;IF&quot;</span><span class="p">),</span>
+    <span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;else&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;ELSE&quot;</span><span class="p">),</span>
+    <span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;print&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;PRINT&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="n">protected</span> <span class="n">Object</span> <span class="n">parseKeyword</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="case-3-function-returns-an-int-value">
+<h3>Case 3: Function returns an int value<a class="headerlink" href="#case-3-function-returns-an-int-value" title="Permalink to this headline">¶</a></h3>
+<p>In this case, the lexer would return the value. For example:</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;[()</span><span class="si">{}</span><span class="s2">.]&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="nb">int</span> <span class="n">parseSymbol</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">yyText</span> <span class="p">()</span><span class="o">.</span><span class="n">charAt</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Be extra careful if the return value is used as terminals in the parser.
+Values not in the valid used terminals can result in the early
+termination of the parser.</p>
+<p>Note that when <code class="docutils literal notranslate"><span class="pre">&lt;&lt;EOF&gt;&gt;</span></code> is encountered, it is necessary to return a
+value or the lexer would get into an infinite loop. There are a number
+of ways of doing so:</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;&lt;&lt;EOF&gt;&gt;&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;$&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">void</span> <span class="n">parseEOF</span> <span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Or you can simply do</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;&lt;&lt;EOF&gt;&gt;&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="nb">int</span> <span class="n">parseEOF</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This is because <code class="docutils literal notranslate"><span class="pre">$</span></code> terminal corresponds to 0.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017-2018, Heng Yuan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

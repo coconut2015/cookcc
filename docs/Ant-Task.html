@@ -1,0 +1,409 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Ant Task &mdash; CookCC 0.4.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="CookCC 0.4.3 documentation" href="index.html"/>
+        <link rel="next" title="Lexer" href="Lexer.html"/>
+        <link rel="prev" title="Maven" href="Maven.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="TOC.html" class="icon icon-home"> CookCC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">CookCC documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/blob/master/doc/CookCC.pdf">Tutorial (pdf)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Command-Line.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maven.html">Maven</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Ant Task</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#initiate-cookcc-ant-task">Initiate CookCC Ant Task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generic-cookcc-input">Generic CookCC Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annotation-processing-tool-apt">Annotation Processing Tool (APT)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nested-option-tag">Nested Option Tag</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer.html">Lexer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer-Patterns.html">Regular Expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parser.html">Parser</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Input</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Output</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Output-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Plain.html">Plain Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://www.javadoc.io/doc/org.yuanheng.cookcc/cookcc/0.4.0">JavaDoc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests">Test cases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/cookcc">Discussion group</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Encoding-Detection.html">Input Encoding Detection</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.manpagez.com/man/7/ascii/">ASCII map</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.unicodemap.org/">Unicode map</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="TOC.html">CookCC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="TOC.html">Docs</a> &raquo;</li>
+        
+      <li>Ant Task</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="ant-task">
+<h1>Ant Task<a class="headerlink" href="#ant-task" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="initiate-cookcc-ant-task">
+<h2>Initiate CookCC Ant Task<a class="headerlink" href="#initiate-cookcc-ant-task" title="Permalink to this headline">¶</a></h2>
+<p>To use CookCC Ant Task, first add the following line (and modify the
+class path) to your <code class="docutils literal notranslate"><span class="pre">build.xml</span></code> so that Ant recognizes <code class="docutils literal notranslate"><span class="pre">&lt;cookcc&gt;</span></code>.</p>
+<div class="code xml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">target</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;initcookcc&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">taskdef</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;cookcc&quot;</span> <span class="n">classname</span><span class="o">=</span><span class="s2">&quot;org.yuanheng.cookcc.ant.Task&quot;</span> <span class="n">classpath</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{basedir}</span><span class="s2">/tool/cookcc-0.3.jar&quot;</span><span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="n">target</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generic-cookcc-input">
+<h2>Generic CookCC Input<a class="headerlink" href="#generic-cookcc-input" title="Permalink to this headline">¶</a></h2>
+<p>For input files such as <code class="docutils literal notranslate"><span class="pre">*.xcc</span></code>, the typical setup is.</p>
+<div class="code xml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">target</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;TokenParser.java&quot;</span> <span class="n">depends</span><span class="o">=</span><span class="s2">&quot;initcookcc&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">cookcc</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{basedir}</span><span class="s2">/src/org/yuanheng/cookcc/util/TokenParser.xcc&quot;</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="n">option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;-class&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;org.yuanheng.cookcc.util.TokenParser&quot;</span><span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="n">option</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;-d&quot;</span> <span class="n">value</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{basedir}</span><span class="s2">/src&quot;</span><span class="o">/&gt;</span>
+    <span class="o">&lt;/</span><span class="n">cookcc</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">target</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The attributes of <code class="docutils literal notranslate"><span class="pre">&lt;cookcc&gt;</span></code> are the following:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>src</strong></td>
+<td>the input file.</td>
+</tr>
+<tr class="row-odd"><td><strong>lang</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-lang</span></code> command line option. Select the
+output language. The default is <code class="docutils literal notranslate"><span class="pre">java</span></code></td>
+</tr>
+<tr class="row-even"><td><strong>analysis</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-analysis</span></code> command line option.</td>
+</tr>
+<tr class="row-odd"><td><strong>lexertable</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-lexertable</span></code> command line option.</td>
+</tr>
+<tr class="row-even"><td><strong>parsertable</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-parsertable</span></code> command line option.</td>
+</tr>
+<tr class="row-odd"><td><strong>defaultreduce</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-defaultreduce</span></code> command line option.</td>
+</tr>
+</tbody>
+</table>
+<p>Additional language specific options can be specified using the nested
+<code class="docutils literal notranslate"><span class="pre">&lt;option&gt;</span></code> tag.</p>
+</div>
+<div class="section" id="annotation-processing-tool-apt">
+<h2>Annotation Processing Tool (APT)<a class="headerlink" href="#annotation-processing-tool-apt" title="Permalink to this headline">¶</a></h2>
+<p>If the input file specified in the <code class="docutils literal notranslate"><span class="pre">src</span></code> attribute has the <code class="docutils literal notranslate"><span class="pre">.java</span></code>
+extension, APT mode is assumed.</p>
+<p>The annotation processing API changed from 1.5 to 1.6+.  As the result CookCC
+0.3.3 only supports JDK1.5 and 1.6, while CookCC 0.4.0 and later supports
+JDK1.6+.</p>
+<p>The typical setup is the following.</p>
+<div class="code xml highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">target</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FileHeaderLexer.java&quot;</span> <span class="n">depends</span><span class="o">=</span><span class="s2">&quot;initcookcc&quot;</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="n">cookcc</span> <span class="n">srcdir</span><span class="o">=</span><span class="s2">&quot;$</span><span class="si">{basedir}</span><span class="s2">/javaap_src&quot;</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;org/yuanheng/cookcc/input/javaap/FileHeaderScanner.java&quot;</span><span class="o">/&gt;</span>
+<span class="o">&lt;/</span><span class="n">target</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>srcdir</strong></td>
+<td>the source directory. It is <strong>required</strong>.</td>
+</tr>
+<tr class="row-odd"><td><strong>destdir</strong></td>
+<td>the output directory. If not specified, it would be
+the same as <code class="docutils literal notranslate"><span class="pre">srcdir</span></code>.</td>
+</tr>
+<tr class="row-even"><td><strong>src</strong></td>
+<td>a list of java files separated by space. Note that
+the path is relative to the directory specified by
+<code class="docutils literal notranslate"><span class="pre">srcdir</span></code> attribute.</td>
+</tr>
+<tr class="row-odd"><td><strong>lang</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-lang</span></code> command line option. Select the
+output language. The default is <code class="docutils literal notranslate"><span class="pre">java</span></code></td>
+</tr>
+<tr class="row-even"><td><strong>analysis</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-analysis</span></code> command line option.</td>
+</tr>
+<tr class="row-odd"><td><strong>lexertable</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-lexertable</span></code> command line option.</td>
+</tr>
+<tr class="row-even"><td><strong>parsertable</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-parsertable</span></code> command line option.</td>
+</tr>
+<tr class="row-odd"><td><strong>defaultreduce</strong></td>
+<td>Same as <code class="docutils literal notranslate"><span class="pre">-defaultreduce</span></code> command line option.</td>
+</tr>
+</tbody>
+</table>
+<p>Additional language specific options can be specified using the nested
+<code class="docutils literal notranslate"><span class="pre">&lt;option&gt;</span></code> tag.</p>
+</div>
+<div class="section" id="nested-option-tag">
+<h2>Nested Option Tag<a class="headerlink" href="#nested-option-tag" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;option&gt;</span></code> is used to specify additional language specific command
+line options. It has two attributes.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Attribute</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>name</strong></td>
+<td>the option name, such as <code class="docutils literal notranslate"><span class="pre">-class</span></code>, <code class="docutils literal notranslate"><span class="pre">-d</span></code> etc</td>
+</tr>
+<tr class="row-odd"><td><strong>value</strong></td>
+<td>the option value. It is optional.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Lexer.html" class="btn btn-neutral float-right" title="Lexer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Maven.html" class="btn btn-neutral" title="Maven" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017-2018, Heng Yuan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

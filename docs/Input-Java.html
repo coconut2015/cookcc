@@ -1,0 +1,652 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Java &mdash; CookCC 0.4.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="CookCC 0.4.3 documentation" href="index.html"/>
+        <link rel="next" title="XML" href="Input-XML.html"/>
+        <link rel="prev" title="Parser" href="Parser.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="TOC.html" class="icon icon-home"> CookCC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">CookCC documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/blob/master/doc/CookCC.pdf">Tutorial (pdf)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Command-Line.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maven.html">Maven</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ant-Task.html">Ant Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer.html">Lexer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer-Patterns.html">Regular Expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parser.html">Parser</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Input</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Java</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#why-java-annotation">Why Java Annotation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#java-annotation-vs-lex-yacc">Java Annotation vs Lex/Yacc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#java-annotation-vs-javadoc">Java Annotation vs JavaDoc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#annotation-processing-api-changes">Annotation Processing API Changes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#setup">Setup</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#first-step-annotate-a-class">First Step: Annotate a Class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#second-step-mark-a-token-enum">Second Step: Mark a Token Enum</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#lexer-section">Lexer Section</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#specifying-shortcuts">Specifying Shortcuts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#specifying-lexical-patterns">Specifying Lexical Patterns</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#parser-section">Parser Section</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#specifying-parser-rules">Specifying Parser Rules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#passing-arguments">Passing Arguments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-work">Related Work</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Input-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Output</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Output-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Plain.html">Plain Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://www.javadoc.io/doc/org.yuanheng.cookcc/cookcc/0.4.0">JavaDoc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests">Test cases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/cookcc">Discussion group</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Encoding-Detection.html">Input Encoding Detection</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.manpagez.com/man/7/ascii/">ASCII map</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.unicodemap.org/">Unicode map</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="TOC.html">CookCC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="TOC.html">Docs</a> &raquo;</li>
+        
+      <li>Java</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="java">
+<h1>Java<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h1>
+<p>One of the cool feature of CookCC is being able to directly specify the
+lexer/parser right in the Java code using
+<a class="reference external" href="http://java.sun.com/j2se/1.5.0/docs/guide/language/annotations.html">annotation</a>,
+without going into an obscure / proprietary input file.</p>
+<div class="section" id="why-java-annotation">
+<h2>Why Java Annotation<a class="headerlink" href="#why-java-annotation" title="Permalink to this headline">¶</a></h2>
+<p>You can look at <a class="reference external" href="https://github.com/coconut2015/cookcc/blob/master/doc/CookCC.pdf">CookCC presentation
+slides</a>
+for more detailed comparisons and a quick tutorial.</p>
+<div class="section" id="java-annotation-vs-lex-yacc">
+<h3>Java Annotation vs Lex/Yacc<a class="headerlink" href="#java-annotation-vs-lex-yacc" title="Permalink to this headline">¶</a></h3>
+<p>The main benefit of using Java annotation is that you can take full
+advantages of modern IDEs without having to deal with proprietary text
+files.</p>
+<ul class="simple">
+<li>syntax highlighting</li>
+<li>context sensitive hints</li>
+<li>code usage analysis</li>
+<li>refactoring</li>
+<li>auto-completion</li>
+<li>instant error checking</li>
+<li>etc</li>
+</ul>
+<p>So it takes a lot of pain away from writing lexer / parsers.</p>
+<p>This approach can be extended to other languages, such as Python or C#,
+even C / C++.</p>
+</div>
+<div class="section" id="java-annotation-vs-javadoc">
+<h3>Java Annotation vs JavaDoc<a class="headerlink" href="#java-annotation-vs-javadoc" title="Permalink to this headline">¶</a></h3>
+<p>Although it is possible to use
+<a class="reference external" href="http://java.sun.com/j2se/javadoc/">JavaDoc</a> doclet to extract
+annotations, the
+<a class="reference external" href="http://java.sun.com/j2se/1.5.0/docs/guide/language/annotations.html">annotation</a>
+capabilities of Java 1.5 is simply a lot easier to use and deal with.
+For this reason, I settled to use Java 1.5. This however, does not mean
+the code generated has to be run under JVM 1.5+. One can always target
+the output class files for earlier versions of JVM.</p>
+</div>
+<div class="section" id="annotation-processing-api-changes">
+<h3>Annotation Processing API Changes<a class="headerlink" href="#annotation-processing-api-changes" title="Permalink to this headline">¶</a></h3>
+<p>It should be note that Annotation Processing Tool (APT) was deprecated
+in Java 7. The newer java compiler based processing API was available
+since Java 6.</p>
+<p>CookCC 0.3.3 only supports the older APT. CookCC 0.4+ supports the newer
+API (although I kept the old API code, but it was not used for any newer
+features introduced in 0.4+). If you cannot use Java 6 and later JDK,
+then you will have to use CookCC 0.3.3.</p>
+</div>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The following example is a simple <a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/javaap/calc">calculator script
+interpreter</a>
+adapted from <a class="reference external" href="http://epaperpress.com/lexandyacc/">A Compact Guide to Lex &amp;
+Yacc</a>.</p>
+<div class="section" id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this headline">¶</a></h3>
+<p>First, add CookCC jar file to your project path. This jar file is only
+required for building the parser, and setting up the ant task. It is not
+required at runtime.</p>
+<div class="section" id="first-step-annotate-a-class">
+<h4>First Step: Annotate a Class<a class="headerlink" href="#first-step-annotate-a-class" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">&#64;CookCCOption</span></code> is used to mark a class that uses the generated
+lexer/parser. In the following example, we mark the <code class="docutils literal notranslate"><span class="pre">Calculator</span></code>
+class.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">org.yuanheng.cookcc.</span><span class="o">*</span><span class="p">;</span>
+
+<span class="nd">@CookCCOption</span> <span class="p">(</span><span class="n">lexerTable</span> <span class="o">=</span> <span class="s2">&quot;compressed&quot;</span><span class="p">,</span> <span class="n">parserTable</span> <span class="o">=</span> <span class="s2">&quot;compressed&quot;</span><span class="p">)</span>
+<span class="n">public</span> <span class="k">class</span> <span class="nc">Calculator</span> <span class="n">extends</span> <span class="n">Parser</span>
+<span class="p">{</span>
+    <span class="o">//</span> <span class="n">code</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The generated class is actually the parent class of <code class="docutils literal notranslate"><span class="pre">Calculator</span></code>, in
+this case, <code class="docutils literal notranslate"><span class="pre">Parser</span></code> class (which needs to be in the same package as
+<code class="docutils literal notranslate"><span class="pre">Calculator</span></code>). Since we haven’t really generated this class yet, so
+what we needed to do to work on the <code class="docutils literal notranslate"><span class="pre">Calculator</span></code> class without the
+error in editor (assuming that you are using a decent Java IDE such as
+Eclipse or IntelliJ IDEA) is to create an empty <code class="docutils literal notranslate"><span class="pre">Parser.java</span></code> like the
+following code.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span>/* Copyright (c) 2008 by Heng Yuan */
+import org.yuanheng.cookcc.CookCCByte;
+
+/**
+ * @author Heng Yuan
+ * @version $Id$
+ */
+public class Parser extends CookCCByte
+{
+}
+</pre></div>
+</div>
+<p>Notice that we have the file header (copyright notice) and the class
+header. CookCC Java input will keep these in the generated class. It
+also keep the scope of the class, <code class="docutils literal notranslate"><span class="pre">public</span></code> in this case.  In general
+as a good practice though, the generated class should be in the same
+package of <code class="docutils literal notranslate"><span class="pre">Calculator</span></code>, and in the package scope.</p>
+<p><code class="docutils literal notranslate"><span class="pre">CookCCByte</span></code> is class that contains all the possible generated
+functions (not all of them will be available depending on the options
+and the patterns/rules), so that code in <code class="docutils literal notranslate"><span class="pre">Calculator</span></code> can use them in
+advance. Since we are not dealing with Unicode, so we extend
+<code class="docutils literal notranslate"><span class="pre">CookCCByte</span></code> class. For lexers that deal with Unicode, extend
+<code class="docutils literal notranslate"><span class="pre">CookCCChar</span></code> class.</p>
+<p>Note that all the CookCC annotations and <code class="docutils literal notranslate"><span class="pre">CookCCByte</span></code> are merely
+required for compile time, they are not required for runtime. The
+generated class no longer extends <code class="docutils literal notranslate"><span class="pre">CookCCByte</span></code>.</p>
+</div>
+<div class="section" id="second-step-mark-a-token-enum">
+<h4>Second Step: Mark a Token Enum<a class="headerlink" href="#second-step-mark-a-token-enum" title="Permalink to this headline">¶</a></h4>
+<p>If you are only going to use a <a class="reference external" href="Input-Java-Lexer.html">lexer</a>, you
+can skip this section.</p>
+<p>Within <code class="docutils literal notranslate"><span class="pre">Calculator</span></code> class, you can specify the token
+<a class="reference external" href="http://java.sun.com/j2se/1.5.0/docs/guide/language/enums.html">Enum</a>
+class. It is not required to have this Enum as a nested class of
+<code class="docutils literal notranslate"><span class="pre">Calculator</span></code> since <code class="docutils literal notranslate"><span class="pre">&#64;CookCCOption</span></code> can be used to specify the Enum
+class defined elsewhere. However, I personally find that having such
+nested declaration makes it more visual.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">&#64;CookCCToken</span></code> to mark a Enum declaration. All the names defined
+here are all treated as terminals by CookCC.</p>
+<p>To specify the precedence and the type, mark a token with
+<code class="docutils literal notranslate"><span class="pre">&#64;TokenGroup</span></code> and set its type to LEFT, RIGHT or NONASSOC. If the type
+is not specified, it is assumed to be NONASSOC. All unmarked tokens
+would inherit the precedence and type of the previous token.</p>
+<p>You can use <a class="reference external" href="http://java.sun.com/j2se/1.5.0/docs/guide/language/static-import.html">static
+import</a>
+to avoid typing <code class="docutils literal notranslate"><span class="pre">TokenType.LEFT</span></code> and only need to type <code class="docutils literal notranslate"><span class="pre">LEFT</span></code>. I
+dislike static import, and I copy/paste code anyways. So it doesn’t
+really matter.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@CookCCToken</span>
+<span class="n">static</span> <span class="n">enum</span> <span class="n">Token</span>
+<span class="p">{</span>
+    <span class="nd">@TokenGroup</span>
+    <span class="n">VARIABLE</span><span class="p">,</span> <span class="n">INTEGER</span><span class="p">,</span> <span class="n">WHILE</span><span class="p">,</span> <span class="n">IF</span><span class="p">,</span> <span class="n">PRINT</span><span class="p">,</span> <span class="n">ASSIGN</span><span class="p">,</span> <span class="n">SEMICOLON</span><span class="p">,</span>
+    <span class="nd">@TokenGroup</span>
+    <span class="n">IFX</span><span class="p">,</span>
+    <span class="nd">@TokenGroup</span>
+    <span class="n">ELSE</span><span class="p">,</span>
+
+    <span class="nd">@TokenGroup</span> <span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">LEFT</span><span class="p">)</span>
+    <span class="n">GE</span><span class="p">,</span> <span class="n">LE</span><span class="p">,</span> <span class="n">EQ</span><span class="p">,</span> <span class="n">NE</span><span class="p">,</span> <span class="n">LT</span><span class="p">,</span> <span class="n">GT</span><span class="p">,</span>
+    <span class="nd">@TokenGroup</span> <span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">LEFT</span><span class="p">)</span>
+    <span class="n">ADD</span><span class="p">,</span> <span class="n">SUB</span><span class="p">,</span>
+    <span class="nd">@TokenGroup</span> <span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">LEFT</span><span class="p">)</span>
+    <span class="n">MUL</span><span class="p">,</span> <span class="n">DIV</span><span class="p">,</span>
+    <span class="nd">@TokenGroup</span> <span class="p">(</span><span class="nb">type</span> <span class="o">=</span> <span class="n">TokenType</span><span class="o">.</span><span class="n">LEFT</span><span class="p">)</span>
+    <span class="n">UMINUS</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>One of the unfortunate drawback of using Enum token is that it is
+necessary to give a name to terminals such as <code class="docutils literal notranslate"><span class="pre">'='</span></code> <code class="docutils literal notranslate"><span class="pre">'&lt;'</span></code>, etc. On
+the other hand, it is good to have them defined since it is easier to
+use them in abstract syntax trees (ASTs).</p>
+<p>(Currently, CookCC does not have a tree generator yet. Hopefully it can
+be added in the near future.)</p>
+</div>
+</div>
+<div class="section" id="lexer-section">
+<h3>Lexer Section<a class="headerlink" href="#lexer-section" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="specifying-shortcuts">
+<h4>Specifying Shortcuts<a class="headerlink" href="#specifying-shortcuts" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">&#64;Shortcut</span></code> is used to specify a single frequently used pattern can be
+re-used in actual lexical patterns. Multiple <code class="docutils literal notranslate"><span class="pre">&#64;Shortcut</span></code> can be
+defined using <code class="docutils literal notranslate"><span class="pre">&#64;Shortcuts</span></code> annotation. Just specify it on any
+functions. The order of shortcut is not important and it is possible to
+contain references to other shortcuts. Just be careful not to create
+cyclic references.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Shortcuts</span> <span class="p">(</span> <span class="n">shortcuts</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nd">@Shortcut</span> <span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;nonws&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;[^ </span><span class="se">\\</span><span class="s2">t</span><span class="se">\\</span><span class="s2">n]&quot;</span><span class="p">),</span>
+    <span class="nd">@Shortcut</span> <span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;ws&quot;</span><span class="p">,</span> <span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;[ </span><span class="se">\\</span><span class="s2">t]&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{nonws}</span><span class="s2">+&quot;</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">&quot;INITIAL&quot;</span><span class="p">)</span>
+<span class="n">void</span> <span class="n">matchWord</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">m_cc</span> <span class="o">+=</span> <span class="n">yyLength</span> <span class="p">();</span>
+    <span class="o">++</span><span class="n">m_wc</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="specifying-lexical-patterns">
+<h4>Specifying Lexical Patterns<a class="headerlink" href="#specifying-lexical-patterns" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">&#64;Lex</span></code> is use to specify a single lexical pattern. <code class="docutils literal notranslate"><span class="pre">&#64;Lexs</span></code> is used
+to specify multiple lexical patterns that share a common action.</p>
+<p>There are three types functions that can be marked with these two
+annotations. They each has different meanings.</p>
+<p>None of the functions can be <code class="docutils literal notranslate"><span class="pre">private</span></code>, since they are called from the
+generated class. They can be <code class="docutils literal notranslate"><span class="pre">protected</span></code>, <code class="docutils literal notranslate"><span class="pre">public</span></code> or in the package
+scope (if the generated class is in the same package as this class).</p>
+<div class="section" id="case-1-function-returns-void">
+<h5>Case 1: Function returns void<a class="headerlink" href="#case-1-function-returns-void" title="Permalink to this headline">¶</a></h5>
+<p>This is the most simple case. The lexer would call this function and
+then move on to matching the next potential pattern. For example:</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;[ </span><span class="se">\\</span><span class="s2">t</span><span class="se">\\</span><span class="s2">r</span><span class="se">\\</span><span class="s2">n]+&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">void</span> <span class="n">ignoreWhiteSpace</span> <span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note that it is necessary to use double backslashes here for escape
+sequences because Java itself also interpret escape sequences. This is
+perhaps one of the main drawback using Java annotation to specify the
+lexer. Fortunately usually the lexer is fairly easy to get it working
+correctly. IntelliJ IDEA also has a nice feature which pasting code with
+escape sequence such as <code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">\t\r\n]+</span></code> inside a pair of double quotes
+would automatically adds the extra backslashes.</p>
+</div>
+<div class="section" id="case-2-function-returns-a-non-int-value">
+<h5>Case 2: Function returns a non-int value<a class="headerlink" href="#case-2-function-returns-a-non-int-value" title="Permalink to this headline">¶</a></h5>
+<p>In this case, <code class="docutils literal notranslate"><span class="pre">&#64;Lex</span></code> needs to contain the terminal token that would be
+returned. The return value from the function is going to be the value
+associated with this terminal.</p>
+<p>We have to specify the terminal in String due to the technical
+limitation.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;[0-9]+&quot;</span><span class="p">,</span> <span class="n">token</span><span class="o">=</span><span class="s2">&quot;INTEGER&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">Integer</span> <span class="n">parseInt</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">Integer</span><span class="o">.</span><span class="n">parseInt</span> <span class="p">(</span><span class="n">yyText</span> <span class="p">());</span>
+<span class="p">}</span>
+
+<span class="nd">@Lexs</span> <span class="p">(</span><span class="n">patterns</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;while&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;WHILE&quot;</span><span class="p">),</span>
+    <span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;if&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;IF&quot;</span><span class="p">),</span>
+    <span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;else&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;ELSE&quot;</span><span class="p">),</span>
+    <span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;print&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;PRINT&quot;</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="n">protected</span> <span class="n">Object</span> <span class="n">parseKeyword</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="case-3-function-returns-an-int-value">
+<h5>Case 3: Function returns an int value<a class="headerlink" href="#case-3-function-returns-an-int-value" title="Permalink to this headline">¶</a></h5>
+<p>In this case, the lexer would return the value. For example:</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span><span class="o">=</span><span class="s2">&quot;[()</span><span class="si">{}</span><span class="s2">.]&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="nb">int</span> <span class="n">parseSymbol</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">yyText</span> <span class="p">()</span><span class="o">.</span><span class="n">charAt</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Be extra careful if the return value is used as terminals in the parser.
+Values not in the valid used terminals can result in the early
+termination of the parser.</p>
+<p>Note that when <code class="docutils literal notranslate"><span class="pre">&lt;&lt;EOF&gt;&gt;</span></code> is encountered, it is necessary to return a
+value or the lexer would get into an infinite loop. There are a number
+of ways of doing so:</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;&lt;&lt;EOF&gt;&gt;&quot;</span><span class="p">,</span> <span class="n">token</span> <span class="o">=</span> <span class="s2">&quot;$&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">void</span> <span class="n">parseEOF</span> <span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Or you can simply do</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Lex</span> <span class="p">(</span><span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;&lt;&lt;EOF&gt;&gt;&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="nb">int</span> <span class="n">parseEOF</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This is because <code class="docutils literal notranslate"><span class="pre">$</span></code> terminal corresponds to 0.</p>
+</div>
+</div>
+</div>
+<div class="section" id="parser-section">
+<h3>Parser Section<a class="headerlink" href="#parser-section" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="specifying-parser-rules">
+<h4>Specifying Parser Rules<a class="headerlink" href="#specifying-parser-rules" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">&#64;Rule</span></code> specifies a single grammar rule. <code class="docutils literal notranslate"><span class="pre">&#64;Rules</span></code> can be used to
+specify multiple rules that share the same function action.</p>
+<p>There are also three cases of functions marked using <code class="docutils literal notranslate"><span class="pre">&#64;Rule</span></code></p>
+<div class="section" id="id1">
+<h5>Case 1: Function returns void<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h5>
+<p>In this case, the value associated with the non-terminal of the LHS is
+null.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Rule</span> <span class="p">(</span><span class="n">lhs</span> <span class="o">=</span> <span class="s2">&quot;function&quot;</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="s2">&quot;function stmt&quot;</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;2&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">void</span> <span class="n">parseFunction</span> <span class="p">(</span><span class="n">Node</span> <span class="n">node</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">interpret</span> <span class="p">(</span><span class="n">node</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h5>Case 2: Function returns a non-int value<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h5>
+<p>In this case, the return value is automatically associated with the
+non-terminal on the LHS.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Rule</span> <span class="p">(</span><span class="n">lhs</span> <span class="o">=</span> <span class="s2">&quot;stmt&quot;</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="s2">&quot;SEMICOLON&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">Node</span> <span class="n">parseStmt</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">new</span> <span class="n">SemiColonNode</span> <span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h5>Case 3: Function returns an int value<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h5>
+<p>This function is used by the grammar start non-terminal to signal the
+exit of the parser with the particular value. It can be used by error
+processing functions as well.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Rule</span> <span class="p">(</span><span class="n">lhs</span> <span class="o">=</span> <span class="s2">&quot;program&quot;</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="s2">&quot;function&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="nb">int</span> <span class="n">parseProgram</span> <span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="passing-arguments">
+<h4>Passing Arguments<a class="headerlink" href="#passing-arguments" title="Permalink to this headline">¶</a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">args</span></code> of the <code class="docutils literal notranslate"><span class="pre">&#64;Rule</span></code> annotation is a list of indexes (separated by
+comma or space) of the symbols which the method expects as arguments.
+The indexing value starts from 1 for the production on the RHS.</p>
+<p>For example:</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Rule</span> <span class="p">(</span><span class="n">lhs</span> <span class="o">=</span> <span class="s2">&quot;stmt&quot;</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="s2">&quot;VARIABLE ASSIGN expr SEMICOLON&quot;</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;1 3&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">Node</span> <span class="n">parseAssign</span> <span class="p">(</span><span class="n">String</span> <span class="n">var</span><span class="p">,</span> <span class="n">Node</span> <span class="n">expr</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">new</span> <span class="n">AssignNode</span> <span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">expr</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This will assign the value of symbol <code class="docutils literal notranslate"><span class="pre">VARIABLE</span></code> to the method
+parameter <code class="docutils literal notranslate"><span class="pre">String</span> <span class="pre">var</span></code> and the value of symbol <code class="docutils literal notranslate"><span class="pre">expr</span></code> to the method
+parameter <code class="docutils literal notranslate"><span class="pre">Node</span> <span class="pre">expr</span></code>.</p>
+<p>Note that the indexes need not be in any specific order. This would be
+equivalent (indexes and method parameters swapped):</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@Rule</span> <span class="p">(</span><span class="n">lhs</span> <span class="o">=</span> <span class="s2">&quot;stmt&quot;</span><span class="p">,</span> <span class="n">rhs</span> <span class="o">=</span> <span class="s2">&quot;VARIABLE ASSIGN expr SEMICOLON&quot;</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="s2">&quot;3 1&quot;</span><span class="p">)</span>
+<span class="n">protected</span> <span class="n">Node</span> <span class="n">parseAssign</span> <span class="p">(</span><span class="n">Node</span> <span class="n">expr</span><span class="p">,</span> <span class="n">String</span> <span class="n">var</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">new</span> <span class="n">AssignNode</span> <span class="p">(</span><span class="n">var</span><span class="p">,</span> <span class="n">expr</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>As you can see, one does not have to mess with <code class="docutils literal notranslate"><span class="pre">$$</span></code>, <code class="docutils literal notranslate"><span class="pre">$1</span></code> etc, and
+does not have to deal with type information specified elsewhere. This
+approach is much more intuitive.</p>
+</div>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>There are a number of examples in <a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/javaap">test
+cases</a>.</p>
+</div>
+<div class="section" id="related-work">
+<h2>Related Work<a class="headerlink" href="#related-work" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="http://pages.cpsc.ucalgary.ca/~aycock/spark/">SPARK</a> which is for
+Python. It uses doc string to specify the lexer/parser. The paper
+reference: Aycock, J. “Compiling Little Languages in Python”,
+Proceedings of the Seventh International Python Conference, p100,
+1998.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Input-XML.html" class="btn btn-neutral float-right" title="XML" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Parser.html" class="btn btn-neutral" title="Parser" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017-2018, Heng Yuan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

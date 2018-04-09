@@ -9,7 +9,7 @@ CookCC jar can be directly executed. The general usage is the following.
 
 .. code:: bash
 
-    java -jar cookcc-0.4.1.jar [options] [files]
+    java -jar cookcc-0.4.3.jar [options] [files]
 
 Command Line Options
 --------------------

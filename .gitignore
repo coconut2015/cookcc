@@ -3,7 +3,7 @@ target
 .settings/
 .swp
 .project
-/doc/_build/
+/docs_src/_build/
 /dist/
 /classes/
 /cookcc.pom.asc

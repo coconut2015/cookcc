@@ -1,0 +1,585 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Regular Expression &mdash; CookCC 0.4.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="CookCC 0.4.3 documentation" href="index.html"/>
+        <link rel="next" title="Parser" href="Parser.html"/>
+        <link rel="prev" title="Lexer" href="Lexer.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="TOC.html" class="icon icon-home"> CookCC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">CookCC documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/blob/master/doc/CookCC.pdf">Tutorial (pdf)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Command-Line.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maven.html">Maven</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ant-Task.html">Ant Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer.html">Lexer</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Regular Expression</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#escape-characters">Escape Characters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#posix-character-classes">POSIX Character Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#character-class-manipulations">Character Class Manipulations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tips">Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Parser.html">Parser</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Input</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Output</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Output-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Plain.html">Plain Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://www.javadoc.io/doc/org.yuanheng.cookcc/cookcc/0.4.0">JavaDoc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests">Test cases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/cookcc">Discussion group</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Encoding-Detection.html">Input Encoding Detection</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.manpagez.com/man/7/ascii/">ASCII map</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.unicodemap.org/">Unicode map</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="TOC.html">CookCC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="TOC.html">Docs</a> &raquo;</li>
+        
+      <li>Regular Expression</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="regular-expression">
+<h1>Regular Expression<a class="headerlink" href="#regular-expression" title="Permalink to this headline">¶</a></h1>
+<p>CookCC follows closely to the <a class="reference external" href="http://dinosaur.compilertools.net/flex/flex_7.html">Flex
+patterns</a>, so
+this page is contains a number of text copied/pasted from the referenced
+article. There are some minor differences though since CookCC allows
+both double quoted strings as well as single quoted strings (since
+version 0.3.1).</p>
+<p>Some examples can be found in test cases for
+<a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/nfa">NFA</a>
+and
+<a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/ccl">CCL</a>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="73%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Format</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">x</span></code></td>
+<td>matches the character <code class="docutils literal notranslate"><span class="pre">x</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">.</span></code></td>
+<td>matches anything except <code class="docutils literal notranslate"><span class="pre">\n</span></code> character</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[xyz]</span></code></td>
+<td>a character class which includes <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">z</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[abj-oZ]</span></code></td>
+<td>a “character class” with a range in it; matches an
+<code class="docutils literal notranslate"><span class="pre">a</span></code>, a <code class="docutils literal notranslate"><span class="pre">b</span></code>, any letter from <code class="docutils literal notranslate"><span class="pre">j</span></code> through <code class="docutils literal notranslate"><span class="pre">o</span></code>,
+or a <code class="docutils literal notranslate"><span class="pre">Z</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[^A-Z]</span></code></td>
+<td>a “negated character class”, i.e., any character but
+those in the class. In this case, any character
+EXCEPT an uppercase letter.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[^A-Z\n]</span></code></td>
+<td>any character EXCEPT an uppercase letter or a newline</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">r*</span></code></td>
+<td>zero or more r’s, where a is any regular expression</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">r+</span></code></td>
+<td>one or more r’s</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">r?</span></code></td>
+<td>zero or one r’s (that is, “an optional r”)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">r{2,5}</span></code></td>
+<td>anywhere from two to five r’s</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">r{2,}</span></code></td>
+<td>two or more r’s</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">r{4}</span></code></td>
+<td>exactly 4 <code class="docutils literal notranslate"><span class="pre">r</span></code>’s</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{name}</span></code></td>
+<td>Replace with the <code class="docutils literal notranslate"><span class="pre">&lt;shortcut&gt;</span></code> pattern of the same
+name.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">&quot;[xyz]&quot;</span></code></td>
+<td>the literal string: <code class="docutils literal notranslate"><span class="pre">[xyz]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">'[xyz]'</span></code></td>
+<td>the literal string: <code class="docutils literal notranslate"><span class="pre">[xyz]</span></code>, since version 0.3.1.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">\x</span></code></td>
+<td>Escape character, see the section below.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">\0</span></code></td>
+<td>the character with 0 (ASCII code 0)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">(r)</span></code></td>
+<td>match an r</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">rs</span></code></td>
+<td>the concatenation of the regular expression <code class="docutils literal notranslate"><span class="pre">r</span></code>
+followed by the regular expression <code class="docutils literal notranslate"><span class="pre">s</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">r|s</span></code></td>
+<td>either an <code class="docutils literal notranslate"><span class="pre">r</span></code> or an <code class="docutils literal notranslate"><span class="pre">s</span></code>.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">r/s</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">r</span></code> followed by <code class="docutils literal notranslate"><span class="pre">s</span></code>, but only obtains the <code class="docutils literal notranslate"><span class="pre">r</span></code>
+part. At present, CookCC can only handle cases where
+either <code class="docutils literal notranslate"><span class="pre">r</span></code> or <code class="docutils literal notranslate"><span class="pre">s</span></code> is fixed in length.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">^r</span></code></td>
+<td>an <code class="docutils literal notranslate"><span class="pre">r</span></code> at beginning of line, or the start of scan.
+It will increase the DFA size slightly and slightly
+decrease the lexer performance.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">r$</span></code></td>
+<td>an <code class="docutils literal notranslate"><span class="pre">r</span></code> at the end of the line (<code class="docutils literal notranslate"><span class="pre">\n</span></code>), but not
+including the <code class="docutils literal notranslate"><span class="pre">\n</span></code> character. Note that this
+pattern does not work well on files in dos format
+because it does not consider <code class="docutils literal notranslate"><span class="pre">\r</span></code> character.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">&lt;&lt;EOF&gt;&gt;</span></code></td>
+<td>an end of file character. This character is
+artificial and will not be actually seen in the
+input. If this character is the entire pattern,
+return value from yyText () is null.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="escape-characters">
+<h2>Escape Characters<a class="headerlink" href="#escape-characters" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="17%" />
+<col width="83%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Code</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">\b</span></code></td>
+<td>backspace</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">\e</span></code></td>
+<td>escape <code class="docutils literal notranslate"><span class="pre">\033</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">\f</span></code></td>
+<td>form feed</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">\n</span></code></td>
+<td>line feed</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">\r</span></code></td>
+<td>carriage return</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">\t</span></code></td>
+<td>tab</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">\s</span></code></td>
+<td>space <code class="docutils literal notranslate"><span class="pre">'</span> <span class="pre">'</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">\\</span></code></td>
+<td>back slash ()</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">\&quot;</span></code></td>
+<td>double quote (“)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">\'</span></code></td>
+<td>single quote (‘)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">\123</span></code></td>
+<td>the character with octal value 123 (maximum 3 digits)</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">\x2a</span></code></td>
+<td>the character with hexadecimal value 2a (maximum 2 digits)</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">\u002a</span></code></td>
+<td>the unicode character with hexadecimal value 2a (exactly 4 digits)</td>
+</tr>
+</tbody>
+</table>
+<p>Escape sequences with <code class="docutils literal notranslate"><span class="pre">\</span></code> proceeding any character that is not listed
+above would treat treat that character as the literal character, rather
+than special characters.</p>
+</div>
+<div class="section" id="posix-character-classes">
+<h2>POSIX Character Classes<a class="headerlink" href="#posix-character-classes" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="21%" />
+<col width="79%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Class</th>
+<th class="head">Equivalent</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[:alnum:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[a-zA-Z0-9]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[:alpha:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[a-zA-Z]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[:blank:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">\t]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[:cntrl:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[\x00-\x1f\x7f]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[:digit:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[0-9]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[:graph:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[[:alnum:][:punct:]]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[:lower:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[a-z]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[:print:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[[:graph:]</span> <span class="pre">]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[:punct:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?&#64;[\\\]^_`{|}~]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[:space:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[</span> <span class="pre">\t\n\x0b\f\r]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[:upper:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[A-Z]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">[:xdigit:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[a-fA-F0-9]</span></code></td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">[:word:]</span></code></td>
+<td><code class="docutils literal notranslate"><span class="pre">[a-zA-Z0-9_]</span></code>. Technically, it is not part of POSIX.
+Added in 0.4.</td>
+</tr>
+</tbody>
+</table>
+<p>For example, the following character classes are all equivalent:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="32%" />
+<col width="25%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><code class="docutils literal notranslate"><span class="pre">[[:alnum:]]</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">[[:alpha:][:digit:]]</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">[[:alpha:]0-9]</span></code></th>
+<th class="head"><code class="docutils literal notranslate"><span class="pre">[a-zA-Z0-9]</span></code></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+<td>&#160;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="character-class-manipulations">
+<h2>Character Class Manipulations<a class="headerlink" href="#character-class-manipulations" title="Permalink to this headline">¶</a></h2>
+<p>A character class can be manipulated in several ways:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="36%" />
+<col width="48%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Operation</th>
+<th class="head">Description</th>
+<th class="head">Examples</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">{+}</span></code></td>
+<td>Merging two character
+classes.</td>
+<td><code class="docutils literal notranslate"><span class="pre">[A-Z]{+}[a-z]</span></code> is the same as
+<code class="docutils literal notranslate"><span class="pre">[A-Za-z]</span></code></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">{-}</span></code></td>
+<td>Remove all characters in
+the second character class
+from the first character
+class</td>
+<td><code class="docutils literal notranslate"><span class="pre">[A-Za-z]{-}[a-z]</span></code> is the same as
+<code class="docutils literal notranslate"><span class="pre">[A-Z]</span></code>. <code class="docutils literal notranslate"><span class="pre">[a-z]{-}[aeiou]</span></code>
+represents all lower case consonant
+letters.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">^</span></code></td>
+<td>Not operation</td>
+<td><code class="docutils literal notranslate"><span class="pre">[[:^alpha:]]</span></code> is the same as
+<code class="docutils literal notranslate"><span class="pre">[^[:alpha:]]</span></code> and
+<code class="docutils literal notranslate"><span class="pre">[\0-\xff]{-}[a-zA-Z]</span></code>.
+<code class="docutils literal notranslate"><span class="pre">[^</span> <span class="pre">\t\r\n]</span></code> represents all
+non-space characters.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Unless one is generating a full DFA table, it is usually a good idea
+not to generate new character classes. For example, <code class="docutils literal notranslate"><span class="pre">(a|b)</span></code> can be
+better written as <code class="docutils literal notranslate"><span class="pre">[ab]</span></code> which would reduce the DFA table size for
+<code class="docutils literal notranslate"><span class="pre">ecs</span></code> and <code class="docutils literal notranslate"><span class="pre">compressed</span></code> format quite a bit. This approach is
+particularly necessary when there are lots of DFA states.<ul>
+<li>In 0.4, a special handling is added to handle <code class="docutils literal notranslate"><span class="pre">(a|b)</span></code> like
+expression so that it is treated as <code class="docutils literal notranslate"><span class="pre">[ab]</span></code>.</li>
+</ul>
+</li>
+<li>Long strings of keyword matches such as <code class="docutils literal notranslate"><span class="pre">&quot;while&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;continue&quot;</span></code>
+can increase the DFA table size quite a bit. Consider using hash
+tables or <a class="reference external" href="http://en.wikipedia.org/wiki/Perfect_hash_function">perfect
+hash</a> instead
+if the tools are available in the target language.</li>
+<li>On the other hand, specifying long patterns without causing backups
+can increase the lexer performances at the expense of more DFA
+states.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Parser.html" class="btn btn-neutral float-right" title="Parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Lexer.html" class="btn btn-neutral" title="Lexer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017-2018, Heng Yuan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

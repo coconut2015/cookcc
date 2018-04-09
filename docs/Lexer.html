@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Lexer &mdash; CookCC 0.4.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="CookCC 0.4.3 documentation" href="index.html"/>
+        <link rel="next" title="Regular Expression" href="Lexer-Patterns.html"/>
+        <link rel="prev" title="Ant Task" href="Ant-Task.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="TOC.html" class="icon icon-home"> CookCC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">CookCC documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/blob/master/doc/CookCC.pdf">Tutorial (pdf)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Command-Line.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maven.html">Maven</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ant-Task.html">Ant Task</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Lexer</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#lexer-table-format">Lexer Table Format</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#line-mode">Line Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trail-context">Trail Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cookcc-warnings">CookCC Warnings</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#backup">Backup</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#incomplete-states">Incomplete States</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#some-patterns-can-never-be-matched">Some Patterns Can Never Be Matched</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#multi-line-patterns-in-line-mode">Multi-Line Patterns in Line Mode</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#todo-list">TODO List</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer-Patterns.html">Regular Expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parser.html">Parser</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Input</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Output</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Output-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Plain.html">Plain Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://www.javadoc.io/doc/org.yuanheng.cookcc/cookcc/0.4.0">JavaDoc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests">Test cases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/cookcc">Discussion group</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Encoding-Detection.html">Input Encoding Detection</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.manpagez.com/man/7/ascii/">ASCII map</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.unicodemap.org/">Unicode map</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="TOC.html">CookCC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="TOC.html">Docs</a> &raquo;</li>
+        
+      <li>Lexer</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="lexer">
+<h1>Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h1>
+<p>CookCC Lexer has the following features.</p>
+<div class="section" id="lexer-table-format">
+<h2>Lexer Table Format<a class="headerlink" href="#lexer-table-format" title="Permalink to this headline">¶</a></h2>
+<p>CookCC supports DFA tables for 8-bit and 16-bit characters. 16-bit
+character tables are intended for unicode support. Currently, the
+following table formats are supported.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="22%" />
+<col width="78%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Format</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">full</span></code></td>
+<td>A full table. Very memory intensive.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">ecs</span></code></td>
+<td>A much smaller table using equivalent classes.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">compressed</span></code></td>
+<td>An even smaller table in most cases at some performance cost.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="line-mode">
+<h2>Line Mode<a class="headerlink" href="#line-mode" title="Permalink to this headline">¶</a></h2>
+<p>Added in 0.4+.</p>
+<p>This mode is mostly for interactive mode scanning where <code class="docutils literal notranslate"><span class="pre">\n</span></code>
+immediately triggers the current longest pattern to be matched. It is
+very similar to matching <code class="docutils literal notranslate"><span class="pre">&lt;&lt;EOF&gt;&gt;</span></code> character where <code class="docutils literal notranslate"><span class="pre">\n</span></code> must be
+consumed in the current line.</p>
+<p>Multi-line patterns will not work in this mode.</p>
+<p>In this mode, the lexer will not block and read the character on the
+next line before fully processing the patterns on the existing line.
+Thus, it is perfectly suitable for interactive procesing.</p>
+<p>There is a slight performance hit due to one extra comparison per
+character, but usually it is not an issue in interactive mode.</p>
+</div>
+<div class="section" id="trail-context">
+<h2>Trail Context<a class="headerlink" href="#trail-context" title="Permalink to this headline">¶</a></h2>
+<p>CookCC at present only handles either fixed head (e.g., <code class="docutils literal notranslate"><span class="pre">abc/xyz</span></code> or
+<code class="docutils literal notranslate"><span class="pre">abc/x*z</span></code>) or tail (e.g., <code class="docutils literal notranslate"><span class="pre">a.*b/xyz</span></code>) trail contexts.</p>
+</div>
+<div class="section" id="cookcc-warnings">
+<h2>CookCC Warnings<a class="headerlink" href="#cookcc-warnings" title="Permalink to this headline">¶</a></h2>
+<p>CookCC generates warnings in the following cases.</p>
+<ul class="simple">
+<li>patterns that cause
+<a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/backup">backup</a>,</li>
+<li>patterns that were <a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/unreachable">never
+reached</a>,</li>
+<li>states that have <a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/incomplete">incomplete
+patterns</a>,
+or</li>
+<li>having <a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/linemode">multi-line
+patterns</a>
+in line mode.</li>
+</ul>
+<div class="section" id="backup">
+<h3>Backup<a class="headerlink" href="#backup" title="Permalink to this headline">¶</a></h3>
+<p>This situation happens when a pattern proceeds to match a relatively
+long string without intermediate states that are acceptable.</p>
+<p>You can take a look at a simple
+<a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/backup">example</a>
+that cause such a problem.</p>
+<p>Backups can cause slight performance degradations, depending the target
+language. For Java, the difference is not so noticeable.</p>
+</div>
+<div class="section" id="incomplete-states">
+<h3>Incomplete States<a class="headerlink" href="#incomplete-states" title="Permalink to this headline">¶</a></h3>
+<p>This situation happens when patterns concerning part of the character
+sets have been specified. By default, CookCC internally add states that
+simply dumps the characters not matched by the user patterns to the
+standard output.</p>
+<p>One way to avoid such warning is by adding a pattern <code class="docutils literal notranslate"><span class="pre">.|\n</span></code> as the
+last pattern for the state. This is in fact the way internally CookCC
+does. However, it then runs into the potential problem of having
+patterns that can never be matched.</p>
+<p>CookCC also requires user to specify <code class="docutils literal notranslate"><span class="pre">&lt;&lt;EOF&gt;&gt;</span></code> conditions for all
+states, just in case of an unexpected end of file. For example, you are
+probably not expecting an EOF when parsing a block comment. If not
+specified, the default action is to exit from lexer with a value of 0.</p>
+<p>Here are some
+<a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/incomplete">examples</a>
+that cause such a problem.</p>
+</div>
+<div class="section" id="some-patterns-can-never-be-matched">
+<h3>Some Patterns Can Never Be Matched<a class="headerlink" href="#some-patterns-can-never-be-matched" title="Permalink to this headline">¶</a></h3>
+<p>By default, patterns specified earlier have precedence patterns
+specified later. Thus, for some patterns, the matchable strings could
+always be matched by other patterns first.</p>
+<p>Here are some
+<a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/unreachable">examples</a>
+that cause such a problem.</p>
+</div>
+<div class="section" id="multi-line-patterns-in-line-mode">
+<h3>Multi-Line Patterns in Line Mode<a class="headerlink" href="#multi-line-patterns-in-line-mode" title="Permalink to this headline">¶</a></h3>
+<p>When line mode is used in lexer. Multi-line patterns simply cannot
+matched.</p>
+<p>When this warning is given, <strong>other warnings may not be accurate until
+this warning is fixed</strong>.</p>
+<p>Here are some
+<a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests/java/lexer/linemode">examples</a>
+that cause such a problem.</p>
+</div>
+</div>
+<div class="section" id="todo-list">
+<h2>TODO List<a class="headerlink" href="#todo-list" title="Permalink to this headline">¶</a></h2>
+<p>The following features are yet to be implemented. These features are
+difficult to implement and I do not have any experiences using them, so
+they are quite low in the priority list.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="72%" />
+<col width="28%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Feature</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>yyMore</td>
+<td>Make the current
+string available
+for the next time.</td>
+</tr>
+<tr class="row-odd"><td>REJECT</td>
+<td>Reject a token and
+go to the next
+available accept
+case.</td>
+</tr>
+<tr class="row-even"><td>Variable trail context</td>
+<td>Both the head and
+tail are variable
+length.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference external" href="http://www.boost.org/doc/libs/1_54_0/libs/regex/doc/html/boost_regex/captures.html">Marked
+sub-expression</a></td>
+<td>Perl-like matching
+that automatically
+extract
+sub-expressions as
+well.</td>
+</tr>
+</tbody>
+</table>
+<p>Some of them can be worked around by utilizing Java’s
+<a class="reference external" href="https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html">Pattern</a>
+class to perform the secondary match.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Lexer-Patterns.html" class="btn btn-neutral float-right" title="Regular Expression" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Ant-Task.html" class="btn btn-neutral" title="Ant Task" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017-2018, Heng Yuan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

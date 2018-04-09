@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Java &mdash; CookCC 0.4.3 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+    <link rel="stylesheet" href="_static/theme_overrides.css" type="text/css" />
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="CookCC 0.4.3 documentation" href="index.html"/>
+        <link rel="next" title="Plain Text" href="Output-Plain.html"/>
+        <link rel="prev" title="Yacc" href="Input-Yacc.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="TOC.html" class="icon icon-home"> CookCC
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.4.3
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">CookCC documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/blob/master/doc/CookCC.pdf">Tutorial (pdf)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Command-Line.html">Command Line Options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Maven.html">Maven</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Ant-Task.html">Ant Task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer.html">Lexer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Lexer-Patterns.html">Regular Expression</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Parser.html">Parser</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Input</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Input-Java.html">Java</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Output</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Java</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-options">Command Line Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#code-locations">Code Locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lexer">Lexer</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#buffer-size">Buffer Size</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#yywrap">yywrap</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#input-stack">Input Stack</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#unicode-support">Unicode Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#performance">Performance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Plain.html">Plain Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-XML.html">XML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Output-Yacc.html">Yacc</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="http://www.javadoc.io/doc/org.yuanheng.cookcc/cookcc/0.4.0">JavaDoc</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/coconut2015/cookcc/tree/master/tests">Test cases</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://groups.google.com/forum/#!forum/cookcc">Discussion group</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://www.apache.org/licenses/LICENSE-2.0">LICENSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Input-Encoding-Detection.html">Input Encoding Detection</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.manpagez.com/man/7/ascii/">ASCII map</a></li>
+<li class="toctree-l1"><a class="reference external" href="http://www.unicodemap.org/">Unicode map</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="TOC.html">CookCC</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="TOC.html">Docs</a> &raquo;</li>
+        
+      <li>Java</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="java">
+<h1>Java<a class="headerlink" href="#java" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Java is the default output language of CookCC. It can also be selected
+using the <code class="docutils literal notranslate"><span class="pre">-lang</span> <span class="pre">java</span></code> command line option. The generated class is
+self-contained and does not require additional libraries.</p>
+</div>
+<div class="section" id="command-line-options">
+<h2>Command Line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="32%" />
+<col width="14%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Option</th>
+<th class="head">Version</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-d</span> <span class="pre">&lt;directory&gt;</span></code></td>
+<td>0.1+</td>
+<td>Select the output directory. By
+default, it is the current directory.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-class</span> <span class="pre">&lt;className&gt;</span></code></td>
+<td>0.1+</td>
+<td>Set the class name. By default, the
+class name is <code class="docutils literal notranslate"><span class="pre">Lexer</span></code>. The output
+Java file would be generated under the
+appropriate package subdirectories of
+the output directory. The
+subdirectories would be created if they
+do not exist.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal notranslate"><span class="pre">-public</span></code></td>
+<td>0.1+</td>
+<td>Set class scope to <code class="docutils literal notranslate"><span class="pre">public</span></code>. By
+default, the class generated is in the
+package scope.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal notranslate"><span class="pre">-abstract</span></code></td>
+<td>0.3+</td>
+<td>Make the output class abstract. It also
+disables the generation of <code class="docutils literal notranslate"><span class="pre">main</span></code>
+function.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="code-locations">
+<h2>Code Locations<a class="headerlink" href="#code-locations" title="Permalink to this headline">¶</a></h2>
+<p>For codes in <code class="docutils literal notranslate"><span class="pre">&lt;code</span> <span class="pre">name=&quot;name&quot;&gt;&lt;/code&gt;</span></code>, their locations in the
+generated file can be seen in the following example. If the name is not
+given, the name is assumed to be “default”.</p>
+<div class="code java highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">/*</span> <span class="n">code</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;fileheader&quot;</span> <span class="o">*/</span>
+<span class="n">package</span> <span class="n">foo</span><span class="p">;</span>
+
+<span class="o">/**</span>
+ <span class="o">*</span> <span class="n">code</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;classheader&quot;</span>
+ <span class="o">*/</span>
+<span class="n">public</span> <span class="k">class</span> <span class="nc">Bar</span>
+<span class="p">{</span>
+    <span class="n">public</span> <span class="nb">int</span> <span class="n">yyLex</span> <span class="p">()</span>
+    <span class="p">{</span>
+        <span class="o">//</span> <span class="n">code</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;lexerprolog&quot;</span>
+
+        <span class="o">//</span> <span class="n">case</span> <span class="n">switch</span> <span class="n">codes</span>
+    <span class="p">}</span>
+
+    <span class="n">public</span> <span class="nb">int</span> <span class="n">yyParse</span> <span class="p">()</span>
+    <span class="p">{</span>
+        <span class="o">//</span> <span class="n">code</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;parserprolog&quot;</span>
+
+        <span class="o">//</span> <span class="n">case</span> <span class="n">switch</span> <span class="n">codes</span>
+    <span class="p">}</span>
+
+    <span class="o">//</span> <span class="n">code</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="lexer">
+<h2>Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://code.google.com/p/cookcc/source/browse/trunk/tests/#tests/fastwc">Word count
+tests</a>
+on large files (5 MB - 22 MB) have shown that <code class="docutils literal notranslate"><span class="pre">ecs</span></code> table has about
+the same performance as the <code class="docutils literal notranslate"><span class="pre">full</span></code> table for Java.</p>
+<div class="section" id="buffer-size">
+<h3>Buffer Size<a class="headerlink" href="#buffer-size" title="Permalink to this headline">¶</a></h3>
+<p>When a particular match exceeds the buffer size (default 4096), CookCC
+would increase the buffer length by 50%. For very long matches (such as
+code dumping near the end), for the best performance, set the initial
+buffer size to the size of the input.</p>
+</div>
+<div class="section" id="yywrap">
+<h3>yywrap<a class="headerlink" href="#yywrap" title="Permalink to this headline">¶</a></h3>
+<p>By default, when the end of file of the current input is reached, a
+special <code class="docutils literal notranslate"><span class="pre">&lt;&lt;EOF&gt;&gt;</span></code> character is generated. However, if one wishes to
+hook this event, set the <code class="docutils literal notranslate"><span class="pre">yywrap=&quot;true&quot;</span></code> option for the lexer and
+define the <code class="docutils literal notranslate"><span class="pre">protected</span> <span class="pre">boolean</span> <span class="pre">yywrap</span> <span class="pre">()</span></code> function, which would be
+called.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">yywrap</span></code> function should return <code class="docutils literal notranslate"><span class="pre">true</span></code> if no further action
+should be done, and <code class="docutils literal notranslate"><span class="pre">false</span></code> if the lexer should attempt to read from
+the input again.</p>
+</div>
+<div class="section" id="input-stack">
+<h3>Input Stack<a class="headerlink" href="#input-stack" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes, it maybe useful to halt the current input and switch to
+another input temporarily. For instance, <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&quot;file&quot;</span></code>. In these
+cases, <code class="docutils literal notranslate"><span class="pre">yyPushInput</span></code>, <code class="docutils literal notranslate"><span class="pre">yyPopInput</span></code>, <code class="docutils literal notranslate"><span class="pre">yyInputStackSize</span></code> functions
+are provided.</p>
+<p>A <a class="reference external" href="https://github.com/coconut2015/cookcc/blob/master/tests/java/lexer/pushinput/pushinput.xcc">test
+example</a>
+is provided.</p>
+</div>
+<div class="section" id="unicode-support">
+<h3>Unicode Support<a class="headerlink" href="#unicode-support" title="Permalink to this headline">¶</a></h3>
+<p>CookCC can generate tables for 16-bit characters. The default input
+handling though is not clever enough to detect the encoding of the
+input.</p>
+<p>See <a class="reference external" href="Input-Encoding-Detection.html">Input Encoding Detection</a> for
+more details.</p>
+<p>CookCC 0.3.3 generates a string that is too long for Oracle’s Java
+compiler. A work around is to use <a class="reference external" href="http://www.eclipse.org/jdt/core/index.php">ECJ (Eclipse Core Java
+compiler)</a> to compile the
+generated code.</p>
+<p>CookCC 0.4 fixes this issue.</p>
+</div>
+<div class="section" id="performance">
+<h3>Performance<a class="headerlink" href="#performance" title="Permalink to this headline">¶</a></h3>
+<p>Here is a Lexer performance chart using Flex’s fastwc examples (lower
+bar indicates better performance) on a simple 5 MB text file. The
+following was tested using MinGW WC program, 5 version of word count
+under Flex (full table), CookCC (ecs table), and JFlex (ecs table). Both
+MinGW WC and Flex generated code were in C, while CookCC and JFlex
+generated codes were in Java.</p>
+<div class="figure" id="id1">
+<img alt="Word Count Performance Chart" src="http://chart.apis.google.com/chart?chtt=Word%20Count%20Performance&amp;cht=bvg&amp;chs=670x300&amp;chf=bg,s,ffffff%7Cc,s,ffffcc&amp;chdl=MinGW%20WC%7CFlex%7CCookCC%7CJFlex&amp;chco=ff0000,00ff00,0000ff,ff00ff&amp;chxt=x,y&amp;chxr=0,1,5%7C1,0,1&amp;chxp=0,1,2,3,4,5%7C1,0,0.2,0.4,0.6000000000000001,0.8,1&amp;chg=100,100,1,0&amp;chd=t:12.9,12.9,12.9,12.9,12.9%7C15.7,15.5,15,15,15.1%7C51.2,46.2,42.9,41.7,46.3%7C74,75.9,74.1,77.3,74.9&amp;nonsense=something_that_ends_with.png" />
+<p class="caption"><span class="caption-text">Word Count Performance Chart</span></p>
+</div>
+<p>The file is too small to really show the differences among Flex’s five
+different versions of word count for Flex, but the pattern shows quite
+noticeably for CookCC and the performance is expected (#1 to #4 has
+gradual improvements while #5 introduced backups and is actually
+slower).</p>
+<p>There were several reasons why JFlex was so much slower than CookCC.
+JFlex has a very slow startup time due to its inefficient table packing
+method. As the result, the DFA table size has a major impact to the
+performance. JFlex also does not have local variable declaration section
+and thus all variables need to be instance variables. It also does not
+have a yyLength variable and must call yylength () function instead.</p>
+<p>As a side note, ecs table and full table didn’t make much of the
+difference for CookCC.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Output-Plain.html" class="btn btn-neutral float-right" title="Plain Text" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="Input-Yacc.html" class="btn btn-neutral" title="Yacc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017-2018, Heng Yuan.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.4.3',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

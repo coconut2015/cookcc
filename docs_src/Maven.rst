@@ -13,7 +13,7 @@ Maven plugin searches for this dependency to determine the jar file to use.
 			<!-- CookCC is only needed at compile time -->
 			<groupId>org.yuanheng.cookcc</groupId>
 			<artifactId>cookcc</artifactId>
-			<version>0.4.1</version>
+			<version>0.4.3</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -25,7 +25,7 @@ the following.
 			<plugin>
 				<groupId>org.yuanheng.cookcc</groupId>
 				<artifactId>cookcc-maven-plugin</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>

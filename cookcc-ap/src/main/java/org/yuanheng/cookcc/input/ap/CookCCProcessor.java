@@ -36,8 +36,7 @@ import javax.lang.model.element.*;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import javax.tools.Diagnostic.Kind;
-import javax.tools.JavaFileObject;
+import javax.tools.*;
 
 import org.yuanheng.cookcc.*;
 import org.yuanheng.cookcc.codegen.TemplatedCodeGen;
@@ -112,6 +111,11 @@ public class CookCCProcessor implements Processor
 	{
 	}
 
+	public Messager getMessager ()
+	{
+		return m_messager;
+	}
+
 	public void log (String message)
 	{
 		// m_messager.printMessage (Kind.NOTE, message);
@@ -119,12 +123,12 @@ public class CookCCProcessor implements Processor
 
 	public void warn (String message)
 	{
-		m_messager.printMessage (Kind.WARNING, message);
+		System.err.println ("warning: " + message);
 	}
 
 	public void error (String message)
 	{
-		m_messager.printMessage (Kind.ERROR, message);
+		System.err.println ("error: " + message);
 	}
 
 	public Element getElement (TypeMirror t)
@@ -403,7 +407,7 @@ public class CookCCProcessor implements Processor
 		catch (Exception ex)
 		{
 			error (ex.getMessage ());
-			//ex.printStackTrace ();
+			ex.printStackTrace ();
 			return false;
 		}
 	}

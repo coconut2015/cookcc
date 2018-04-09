@@ -1,2 +1,2 @@
-Following states have do not have patterns that cover all character sets:
-	[INITIAL]
+warning: Following states have do not have patterns that cover all character sets:
+warning: 	[INITIAL]

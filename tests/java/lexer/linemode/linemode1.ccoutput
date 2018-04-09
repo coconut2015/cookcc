@@ -1,2 +1,2 @@
-Following patterns span multiple lines and the lexer is in line mode:
-	<INITIAL>a(.|\n)*b
+warning: Following patterns span multiple lines and the lexer is in line mode:
+warning: 	<INITIAL>a(.|\n)*b

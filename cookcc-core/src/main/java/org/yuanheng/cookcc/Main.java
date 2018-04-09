@@ -481,7 +481,7 @@ public class Main
 			File file = new File (args[fileIndex]);
 			Class<?> parserClass = getParser (getExtension (file.getName ()));
 			if (parserClass == null)
-				error ("Unknown file type: " + args[fileIndex]);
+				error ("unknown file type: " + args[fileIndex]);
 			Document doc = (Document)parserClass.getMethod ("parse", File.class).invoke (null, file);
 
 			s_codeGen.generateOutput (doc);
@@ -518,14 +518,21 @@ public class Main
 	public static void error (Exception ex)
 	{
 		if (!s_quiet)
+		{
+			System.err.println ("error: " + ex.getMessage ());
 			ex.printStackTrace (System.err);
+			System.err.flush ();
+		}
 		System.exit (1);
 	}
 
 	public static void error (String msg)
 	{
 		if (!s_quiet)
-			System.err.println (msg);
+		{
+			System.err.println ("error: " + msg);
+			System.err.flush ();
+		}
 		System.exit (1);
 	}
 
@@ -533,7 +540,7 @@ public class Main
 	{
 		if (s_quiet)
 			return;
-		System.err.println (msg);
+		System.err.println ("warning: " + msg);
 	}
 
 	public static boolean isDebug (OptionMap options)

@@ -1,3 +1,3 @@
-Following patterns require backup:
-	<INITIAL>abc
-	<INITIAL>abcde
+warning: Following patterns require backup:
+warning: 	<INITIAL>abc
+warning: 	<INITIAL>abcde

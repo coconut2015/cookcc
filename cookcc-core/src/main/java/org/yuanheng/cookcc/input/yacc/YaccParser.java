@@ -514,12 +514,12 @@ public class YaccParser extends YaccLexer
 
 	void warn (String msg)
 	{
-		Main.warn ("Warning [" + m_lineNum + "]: " + msg);
+		Main.warn ("[" + m_lineNum + "]: " + msg);
 	}
 
 	void error (String msg)
 	{
-		Main.error ("Error [" + m_lineNum + "]: " + msg);
+		Main.error ("[" + m_lineNum + "]: " + msg);
 	}
 
 	public static Document parse (File file) throws IOException

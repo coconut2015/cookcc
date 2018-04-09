@@ -1,10 +1,10 @@
 #!/bin/bash
 
 if [ -z "$COOKCC" ]; then
-	export COOKCC=`realpath ../dist/cookcc-0.4.0.jar`
+	export COOKCC=`realpath ../dist/cookcc-0.4.3.jar`
 fi
 if [ -z "$COOKCC_RT" ]; then
-	export COOKCC_RT=`realpath ../dist/cookcc-rt-0.4.0.jar`
+	export COOKCC_RT=`realpath ../dist/cookcc-rt-0.4.3.jar`
 fi
 
 source bin/settings.sh

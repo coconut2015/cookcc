@@ -1,2 +1,2 @@
-Following terminals are specified but not used:
-	SPACE COMMENT
+warning: Following terminals are specified but not used:
+warning: 	SPACE COMMENT

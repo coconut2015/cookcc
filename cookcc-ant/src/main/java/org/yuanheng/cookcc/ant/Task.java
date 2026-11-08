@@ -222,6 +222,7 @@ public class Task extends org.apache.tools.ant.Task
 	 * Execute newer 1.6+ Java APT
 	 *
 	 * @param	classes
+	 *			the names of the classes to be processed.
 	 */
 	protected void executeApt (String[] classes)
 	{
@@ -289,6 +290,7 @@ public class Task extends org.apache.tools.ant.Task
 	 * Execute legacy 1.5 Java APT.
 	 *
 	 * @param	classes
+	 *			the names of the classes to be processed.
 	 */
 	protected void executeAptOld (String[] classes)
 	{

@@ -79,16 +79,16 @@ public class ActionCodeBI extends BuiltIn
 	 * A very simple utility function that splits user action code based on
 	 * $$ and $[0-9]+ deliminators.  This is useful for substitution purposes
 	 * in the generated code.
-	 * <p/>
+	 * <p>
 	 * The reason why the parser didn't do this step automatically is to allow
 	 * customizable deliminator patterns.
-	 * <p/>
+	 * <p>
 	 * An example:
-	 * <p/>
+	 * <p>
 	 * parseAction ("abc$$def$1hij")
-	 * <p/>
+	 * <p>
 	 * would return {"abc", "$", "def", "1", "hij"}.
-	 * <p/>
+	 * <p>
 	 * This piece code was written by gloomyturkey on mitbbs.
 	 *
 	 * @param    input the user action code.

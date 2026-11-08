@@ -21,7 +21,7 @@ public interface ParserInterface
 	 * @throws	IOException
 	 *			in case of I/O error.
 	 */
-	int yyLex ();
+	int yyLex () throws IOException;
 
 	/**
 	 * Return the object associated with the token.

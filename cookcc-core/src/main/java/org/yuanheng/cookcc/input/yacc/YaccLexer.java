@@ -240,7 +240,7 @@ abstract class YaccLexer
 
 	/**
 	 * Get the current token text.
-	 * <p/>
+	 * <p>
 	 * Avoid calling this function unless it is absolutely necessary since it creates
 	 * a copy of the token string.  The string length can be found by reading _yyLength
 	 * or calling yyLength () function.
@@ -379,9 +379,9 @@ abstract class YaccLexer
 
 	/**
 	 * Reset the internal state to reuse the same parser.
-	 * <p/>
+	 * <p>
 	 * Note, it does not change the buffer size, the input buffer, and the input stream.
-	 * <p/>
+	 * <p>
 	 * Making this function protected so that it can be enabled only if the child class
 	 * decides to make it public.
 	 */
@@ -1085,7 +1085,7 @@ abstract class YaccLexer
 	 * Clear the error flag.  If this flag is present and the parser again sees
 	 * another error transition, it would immediately calls yyParseError, which
 	 * would by default exit the parser.
-	 * <p/>
+	 * <p>
 	 * This function is used in error recovery.
 	 */
 	protected void yyClearError ()

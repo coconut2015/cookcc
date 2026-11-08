@@ -38,6 +38,7 @@ interface Pattern
 	/**
 	 * Construct NFAs for the existing pattern.
 	 *
+	 * @param    factory The factory used to create new NFA nodes
 	 * @param    start The start NFA to work with
 	 * @return The end NFA of the generated pattern.
 	 */

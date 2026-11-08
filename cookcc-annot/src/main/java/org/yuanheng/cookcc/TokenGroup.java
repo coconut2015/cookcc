@@ -42,6 +42,10 @@ import java.lang.annotation.RetentionPolicy;
 @Retention (value = RetentionPolicy.SOURCE)
 public @interface TokenGroup
 {
-	/** The association of the token. */
+	/**
+	 * The association of the token.
+	 *
+	 * @return	the association of the token.
+	 */
 	TokenType type () default TokenType.NONASSOC;
 }

@@ -187,7 +187,7 @@ public class YaccParser extends YaccLexer
 	 * This is a slightly complicated situation.  Since CookCC only allows
 	 * a single type (either turn a value or do not return a value) for a
 	 * lexer function, we will just have to use a hack.
-	 * <p/>
+	 * <p>
 	 * We will just directly return the value (since our code does not need
 	 * to be compiled to pass through APT correctly).
 	 *

@@ -89,7 +89,11 @@ public class RhsDoc extends TreeDoc
 		return m_transTerms;
 	}
 
-	/** Obtain the case value in the lexer. */
+	/**
+	 * Obtain the case value in the lexer.
+	 *
+	 * @return	the case value.
+	 */
 	public int getCaseValue ()
 	{
 		return m_caseValue;

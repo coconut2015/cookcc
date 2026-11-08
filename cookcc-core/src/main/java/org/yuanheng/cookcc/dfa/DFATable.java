@@ -29,7 +29,7 @@ package org.yuanheng.cookcc.dfa;
 import java.util.ArrayList;
 
 /**
- * A simple wrapper for ArrayList&lt;DFARow> that provides some utility
+ * A simple wrapper for {@code ArrayList<DFARow>} that provides some utility
  * functions.
  *
  * @author Heng Yuan

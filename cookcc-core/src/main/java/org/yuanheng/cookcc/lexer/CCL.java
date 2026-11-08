@@ -467,7 +467,13 @@ public class CCL
 		return s;
 	}
 
-	/** Convert a CCL map to a string representation for debugging purpose. */
+	/**
+	 * Convert a CCL map to a string representation for debugging purpose.
+	 *
+	 * @param	ccl
+	 *			the character class map to be converted.
+	 * @return	the string representation of the character class.
+	 */
 	public String toString (boolean[] ccl)
 	{
 		if (ccl == ANY)

@@ -180,7 +180,7 @@ abstract class CCLScanner
 
 	/**
 	 * Get the current token text.
-	 * <p/>
+	 * <p>
 	 * Avoid calling this function unless it is absolutely necessary since it creates
 	 * a copy of the token string.  The string length can be found by reading _yyLength
 	 * or calling yyLength () function.
@@ -319,9 +319,9 @@ abstract class CCLScanner
 
 	/**
 	 * Reset the internal state to reuse the same parser.
-	 * <p/>
+	 * <p>
 	 * Note, it does not change the buffer size, the input buffer, and the input stream.
-	 * <p/>
+	 * <p>
 	 * Making this function protected so that it can be enabled only if the child class
 	 * decides to make it public.
 	 */

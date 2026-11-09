@@ -45,15 +45,15 @@ public class ActionCodeBI extends BuiltIn
 	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
-		BuiltIn.builtins.put ("actioncode", new ActionCodeBI ());
+		BuiltIn.BUILT_INS_BY_NAME.put ("actioncode", new ActionCodeBI ());
 	}
 
 	@Override
-	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
+	TemplateModel _eval (Environment env) throws TemplateException
 	{
-		TemplateModel model = target.getAsTemplateModel (env);
+		TemplateModel model = target.eval (env);
 		if (!(model instanceof StringModel))
-			throw invalidTypeException (model, target, env, "string");
+			throw new UnexpectedTypeException (target, model, "string", new Class[] { StringModel.class }, env);
 		StringModel seq = (StringModel)model;
 		return new ActionCodeBuilder (seq);
 	}

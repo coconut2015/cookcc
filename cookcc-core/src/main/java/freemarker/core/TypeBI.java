@@ -48,15 +48,15 @@ public class TypeBI extends BuiltIn
 	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
-		BuiltIn.builtins.put ("type", new TypeBI ());
+		BuiltIn.BUILT_INS_BY_NAME.put ("type", new TypeBI ());
 	}
 
 	@Override
-	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
+	TemplateModel _eval (Environment env) throws TemplateException
 	{
-		TemplateModel model = target.getAsTemplateModel (env);
+		TemplateModel model = target.eval (env);
 		if (!(model instanceof BeanModel))
-			throw invalidTypeException (model, target, env, "bean");
+			throw new UnexpectedTypeException (target, model, "bean", new Class[] { BeanModel.class }, env);
 		BeanModel seq = (BeanModel)model;
 		return new TypeBuilder (seq);
 	}

@@ -52,7 +52,7 @@ public class JavaStringResourceBI extends BuiltIn
 	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
-		BuiltIn.builtins.put ("stringresource", new JavaStringResourceBI ());
+		BuiltIn.BUILT_INS_BY_NAME.put ("stringresource", new JavaStringResourceBI ());
 	}
 
 	private static int getUTF8Length (int value)
@@ -65,11 +65,11 @@ public class JavaStringResourceBI extends BuiltIn
 	}
 
 	@Override
-	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
+	TemplateModel _eval (Environment env) throws TemplateException
 	{
-		TemplateModel model = target.getAsTemplateModel (env);
+		TemplateModel model = target.eval (env);
 		if (!(model instanceof ArrayModel))
-			throw invalidTypeException (model, target, env, "array");
+			throw new UnexpectedTypeException (target, model, "array", new Class[] { ArrayModel.class }, env);
 		ArrayModel seq = (ArrayModel)model;
 		return new JavaStringBuilder (seq);
 	}

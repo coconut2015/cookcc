@@ -1,0 +1,120 @@
+
+----------- used symbols ----------
+0	:	0	:	$
+1	:	1	:	error
+2	:	2	:	@unhandled
+3	:	256	:	A
+4	:	257	:	B
+5	:	258	:	C
+6	:	259	:	@start
+7	:	260	:	program
+8	:	261	:	stmt_list
+9	:	262	:	stmt
+10	:	263	:	@1
+
+----------- statistics ----------
+max terminal = 258
+non terminal count = 5
+terminal count = 11
+used terminal count = 6
+used symbol count = 11
+
+----------- productions ----------
+1	@start	:	 program
+2	program	:	 stmt_list
+3	stmt_list	:	 stmt
+4	stmt_list	:	 stmt_list stmt
+5	stmt	:	 A @1
+6	@1	:	 B C
+7	@1	:	 C
+
+----------- First Sets ----------
+FIRST(@start) = [A]
+FIRST(program) = [A]
+FIRST(stmt_list) = [A]
+FIRST(stmt) = [A]
+FIRST(@1) = [B C]
+
+----------- DFA states: 10 ----------
+default reduce = false
+
+State 0:
+ *	@start	: . program , [$]
+ -	program	: . stmt_list , [$]
+ -	stmt_list	: . stmt , [$ A]
+ -	stmt_list	: . stmt_list stmt , [$ A]
+ -	stmt	: . A @1 , [$ A]
+
+	A	shift, goto to state 1
+	program	shift, goto to state 2
+	stmt_list	shift, goto to state 3
+	stmt	shift, goto to state 4
+
+
+State 1:
+ *	stmt	: A . @1 , [$ A]
+ -	@1	: . B C , [$ A]
+ -	@1	: . C , [$ A]
+
+	B	shift, goto to state 5
+	C	shift, goto to state 6
+	@1	shift, goto to state 7
+
+
+State 2:
+ *	@start	: program . , [$]
+
+	$	Accept
+
+
+State 3:
+ *	program	: stmt_list . , [$]
+ *	stmt_list	: stmt_list . stmt , [$ A]
+ -	stmt	: . A @1 , [$ A]
+
+	$	reduce to rule 2
+	A	shift, goto to state 1
+	stmt	shift, goto to state 8
+
+
+State 4:
+ *	stmt_list	: stmt . , [$ A]
+
+	$	reduce to rule 3
+	A	reduce to rule 3
+
+
+State 5:
+ *	@1	: B . C , [$ A]
+
+	C	shift, goto to state 9
+
+
+State 6:
+ *	@1	: C . , [$ A]
+
+	$	reduce to rule 7
+	A	reduce to rule 7
+
+
+State 7:
+ *	stmt	: A @1 . , [$ A]
+
+	$	reduce to rule 5
+	A	reduce to rule 5
+
+
+State 8:
+ *	stmt_list	: stmt_list stmt . , [$ A]
+
+	$	reduce to rule 4
+	A	reduce to rule 4
+
+
+State 9:
+ *	@1	: B C . , [$ A]
+
+	$	reduce to rule 6
+	A	reduce to rule 6
+
+shift/reduce conflicts: 0, reduce/reduce conflicts: 0

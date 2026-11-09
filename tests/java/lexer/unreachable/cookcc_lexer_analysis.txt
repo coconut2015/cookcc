@@ -1,0 +1,215 @@
+Lexer State:	INITIAL
+case 1: abc+
+NFA:
+[0]: 'a' next = 1		
+[1]: 'b' next = 2		
+[2]: --- next = 3		
+[3]: 'c' next = 4		
+[4]: --- next = 5	next2 = 3
+[5]: --- accept state true		
+
+case 2: abc
+NFA:
+[6]: 'a' next = 7		
+[7]: 'b' next = 8		
+[8]: 'c' next = 9		
+[9]: --- accept state true		
+
+case 3: a*bc
+NFA:
+[10]: --- next = 11	next2 = 13
+[11]: 'a' next = 12		
+[12]: --- next = 13	next2 = 11
+[13]: 'b' next = 14		
+[14]: 'c' next = 15		
+[15]: --- accept state true		
+
+case 4: a*b*c
+NFA:
+[16]: --- next = 17	next2 = 19
+[17]: 'a' next = 18		
+[18]: --- next = 19	next2 = 17
+[19]: --- next = 20	next2 = 22
+[20]: 'b' next = 21		
+[21]: --- next = 22	next2 = 20
+[22]: 'c' next = 23		
+[23]: --- accept state true		
+
+case 5: a*b*c*
+NFA:
+[24]: --- next = 25	next2 = 27
+[25]: 'a' next = 26		
+[26]: --- next = 27	next2 = 25
+[27]: --- next = 28	next2 = 30
+[28]: 'b' next = 29		
+[29]: --- next = 30	next2 = 28
+[30]: --- next = 31	next2 = 33
+[31]: 'c' next = 32		
+[32]: --- next = 33	next2 = 31
+[33]: --- accept state true		
+
+case 6: a+b+c+
+NFA:
+[34]: --- next = 35		
+[35]: 'a' next = 36		
+[36]: --- next = 37	next2 = 35
+[37]: --- next = 38		
+[38]: 'b' next = 39		
+[39]: --- next = 40	next2 = 38
+[40]: --- next = 41		
+[41]: 'c' next = 42		
+[42]: --- next = 43	next2 = 41
+[43]: --- accept state true		
+
+case 7: .|\n
+NFA:
+[44]: CCL next = 45			CCL = (.|\n)
+[45]: --- accept state true		
+
+case 8: <<EOF>>
+NFA:
+[46]: EOF next = 47		
+[47]: --- accept state true		
+
+case 9: .|\n
+NFA:
+[48]: CCL next = 49			CCL = (.|\n)
+[49]: --- accept state true		
+
+case 10: <<EOF>>
+NFA:
+[50]: EOF next = 51		
+[51]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[0]: 'a' next = 1		
+[6]: 'a' next = 7		
+[11]: 'a' next = 12		
+[13]: 'b' next = 14		
+[17]: 'a' next = 18		
+[20]: 'b' next = 21		
+[22]: 'c' next = 23		
+[25]: 'a' next = 26		
+[28]: 'b' next = 29		
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+[35]: 'a' next = 36		
+[44]: CCL next = 45			CCL = (.|\n)
+[46]: EOF next = 47		
+[48]: CCL next = 49			CCL = (.|\n)
+[50]: EOF next = 51		
+
+State ID: 1
+[45]: --- accept state true		
+
+State ID: 2
+[1]: 'b' next = 2		
+[7]: 'b' next = 8		
+[11]: 'a' next = 12		
+[13]: 'b' next = 14		
+[17]: 'a' next = 18		
+[20]: 'b' next = 21		
+[22]: 'c' next = 23		
+[25]: 'a' next = 26		
+[28]: 'b' next = 29		
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+[35]: 'a' next = 36		
+[38]: 'b' next = 39		
+
+State ID: 3
+[14]: 'c' next = 15		
+[20]: 'b' next = 21		
+[22]: 'c' next = 23		
+[28]: 'b' next = 29		
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+
+State ID: 4
+[23]: --- accept state true		
+[31]: 'c' next = 32		
+
+State ID: 5
+[47]: --- accept state true		
+
+State ID: 6
+[11]: 'a' next = 12		
+[13]: 'b' next = 14		
+[17]: 'a' next = 18		
+[20]: 'b' next = 21		
+[22]: 'c' next = 23		
+[25]: 'a' next = 26		
+[28]: 'b' next = 29		
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+[35]: 'a' next = 36		
+[38]: 'b' next = 39		
+
+State ID: 7
+[3]: 'c' next = 4		
+[8]: 'c' next = 9		
+[14]: 'c' next = 15		
+[20]: 'b' next = 21		
+[22]: 'c' next = 23		
+[28]: 'b' next = 29		
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+[38]: 'b' next = 39		
+[41]: 'c' next = 42		
+
+State ID: 8
+[20]: 'b' next = 21		
+[22]: 'c' next = 23		
+[28]: 'b' next = 29		
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+
+State ID: 9
+[15]: --- accept state true		
+[31]: 'c' next = 32		
+
+State ID: 10
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+
+State ID: 11
+[14]: 'c' next = 15		
+[20]: 'b' next = 21		
+[22]: 'c' next = 23		
+[28]: 'b' next = 29		
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+[38]: 'b' next = 39		
+[41]: 'c' next = 42		
+
+State ID: 12
+[20]: 'b' next = 21		
+[22]: 'c' next = 23		
+[28]: 'b' next = 29		
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+[38]: 'b' next = 39		
+[41]: 'c' next = 42		
+
+State ID: 13
+[3]: 'c' next = 4		
+[5]: --- accept state true		
+[31]: 'c' next = 32		
+[41]: 'c' next = 42		
+
+State ID: 14
+[15]: --- accept state true		
+[31]: 'c' next = 32		
+[41]: 'c' next = 42		
+
+State ID: 15
+[23]: --- accept state true		
+[31]: 'c' next = 32		
+[41]: 'c' next = 42		
+
+State ID: 16
+[31]: 'c' next = 32		
+[33]: --- accept state true		
+[41]: 'c' next = 42		
+

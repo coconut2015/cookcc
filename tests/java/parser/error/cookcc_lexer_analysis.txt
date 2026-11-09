@@ -1,0 +1,92 @@
+Lexer State:	INITIAL
+case 1: "//"[^\n]*
+NFA:
+[0]: '/' next = 1		
+[1]: '/' next = 2		
+[2]: --- next = 3	next2 = 5
+[3]: .   next = 4		
+[4]: --- next = 5	next2 = 3
+[5]: --- accept state true		
+
+case 2: [a-zA-Z_][a-zA-Z_0-9]*
+NFA:
+[6]: CCL next = 7			CCL = [A-Z_a-z]
+[7]: --- next = 8	next2 = 10
+[8]: CCL next = 9			CCL = [0-9A-Z_a-z]
+[9]: --- next = 10	next2 = 8
+[10]: --- accept state true		
+
+case 3: [ \t\r]
+NFA:
+[11]: CCL next = 12			CCL = [\t\r\s]
+[12]: --- accept state true		
+
+case 4: [();]
+NFA:
+[13]: CCL next = 14			CCL = [();]
+[14]: --- accept state true		
+
+case 5: \n
+NFA:
+[15]: \n  next = 16		
+[16]: --- accept state true		
+
+case 6: .
+NFA:
+[17]: .   next = 18		
+[18]: --- accept state true		
+
+case 7: <<EOF>>
+NFA:
+[19]: EOF next = 20		
+[20]: --- accept state true		
+
+case 8: .|\n
+NFA:
+[21]: CCL next = 22			CCL = (.|\n)
+[22]: --- accept state true		
+
+case 9: <<EOF>>
+NFA:
+[23]: EOF next = 24		
+[24]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[0]: '/' next = 1		
+[6]: CCL next = 7			CCL = [A-Z_a-z]
+[11]: CCL next = 12			CCL = [\t\r\s]
+[13]: CCL next = 14			CCL = [();]
+[15]: \n  next = 16		
+[17]: .   next = 18		
+[19]: EOF next = 20		
+[21]: CCL next = 22			CCL = (.|\n)
+[23]: EOF next = 24		
+
+State ID: 1
+[18]: --- accept state true		
+
+State ID: 2
+[12]: --- accept state true		
+
+State ID: 3
+[16]: --- accept state true		
+
+State ID: 4
+[14]: --- accept state true		
+
+State ID: 5
+[1]: '/' next = 2		
+[18]: --- accept state true		
+
+State ID: 6
+[8]: CCL next = 9			CCL = [0-9A-Z_a-z]
+[10]: --- accept state true		
+
+State ID: 7
+[20]: --- accept state true		
+
+State ID: 8
+[3]: .   next = 4		
+[5]: --- accept state true		
+

@@ -2,7 +2,7 @@
 ----------- used symbols ----------
 0	:	0	:	$
 1	:	1	:	error
-2	:	2	:	null
+2	:	2	:	@unhandled
 3	:	40	:	'('
 4	:	41	:	')'
 5	:	42	:	'*'
@@ -29,8 +29,8 @@
 26	:	269	:	program
 27	:	270	:	function
 28	:	271	:	stmt
-29	:	272	:	expr
-30	:	273	:	stmt_list
+29	:	272	:	stmt_list
+30	:	273	:	expr
 
 ----------- statistics ----------
 max terminal = 267
@@ -74,8 +74,8 @@ FIRST(@start) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
 FIRST(program) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
 FIRST(function) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT], epsilon
 FIRST(stmt) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
-FIRST(expr) = ['(' '-' VARIABLE INTEGER]
 FIRST(stmt_list) = ['(' '-' ';' '{' VARIABLE INTEGER WHILE IF PRINT]
+FIRST(expr) = ['(' '-' VARIABLE INTEGER]
 
 ----------- DFA states: 58 ----------
 default reduce = false
@@ -248,8 +248,8 @@ State 6:
 	IF	shift, goto to state 10
 	PRINT	shift, goto to state 11
 	stmt	shift, goto to state 17
-	expr	shift, goto to state 13
 	stmt_list	shift, goto to state 18
+	expr	shift, goto to state 13
 
 
 State 7:

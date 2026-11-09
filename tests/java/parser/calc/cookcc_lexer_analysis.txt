@@ -1,0 +1,247 @@
+Lexer State:	INITIAL
+case 1: [0-9]+
+NFA:
+[0]: --- next = 1		
+[1]: CCL next = 2			CCL = [0-9]
+[2]: --- next = 3	next2 = 1
+[3]: --- accept state true		
+
+case 2: [\-()<>=+*/;{}.]
+NFA:
+[4]: CCL next = 5			CCL = [(-+\--/;->{}]
+[5]: --- accept state true		
+
+case 3: ">="
+NFA:
+[6]: '>' next = 7		
+[7]: '=' next = 8		
+[8]: --- accept state true		
+
+case 4: "<="
+NFA:
+[9]: '<' next = 10		
+[10]: '=' next = 11		
+[11]: --- accept state true		
+
+case 5: "=="
+NFA:
+[12]: '=' next = 13		
+[13]: '=' next = 14		
+[14]: --- accept state true		
+
+case 6: "!="
+NFA:
+[15]: '!' next = 16		
+[16]: '=' next = 17		
+[17]: --- accept state true		
+
+case 7: "while"
+NFA:
+[18]: 'w' next = 19		
+[19]: 'h' next = 20		
+[20]: 'i' next = 21		
+[21]: 'l' next = 22		
+[22]: 'e' next = 23		
+[23]: --- accept state true		
+
+case 8: "if"
+NFA:
+[24]: 'i' next = 25		
+[25]: 'f' next = 26		
+[26]: --- accept state true		
+
+case 9: "else"
+NFA:
+[27]: 'e' next = 28		
+[28]: 'l' next = 29		
+[29]: 's' next = 30		
+[30]: 'e' next = 31		
+[31]: --- accept state true		
+
+case 10: "print"
+NFA:
+[32]: 'p' next = 33		
+[33]: 'r' next = 34		
+[34]: 'i' next = 35		
+[35]: 'n' next = 36		
+[36]: 't' next = 37		
+[37]: --- accept state true		
+
+case 11: [a-z]+
+NFA:
+[38]: --- next = 39		
+[39]: CCL next = 40			CCL = [a-z]
+[40]: --- next = 41	next2 = 39
+[41]: --- accept state true		
+
+case 12: [ \t\r\n]+
+NFA:
+[42]: --- next = 43		
+[43]: CCL next = 44			CCL = [\t\n\r\s]
+[44]: --- next = 45	next2 = 43
+[45]: --- accept state true		
+
+case 13: .
+NFA:
+[46]: .   next = 47		
+[47]: --- accept state true		
+
+case 14: <<EOF>>
+NFA:
+[48]: EOF next = 49		
+[49]: --- accept state true		
+
+case 15: .|\n
+NFA:
+[50]: CCL next = 51			CCL = (.|\n)
+[51]: --- accept state true		
+
+case 16: <<EOF>>
+NFA:
+[52]: EOF next = 53		
+[53]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[1]: CCL next = 2			CCL = [0-9]
+[4]: CCL next = 5			CCL = [(-+\--/;->{}]
+[6]: '>' next = 7		
+[9]: '<' next = 10		
+[12]: '=' next = 13		
+[15]: '!' next = 16		
+[18]: 'w' next = 19		
+[24]: 'i' next = 25		
+[27]: 'e' next = 28		
+[32]: 'p' next = 33		
+[39]: CCL next = 40			CCL = [a-z]
+[43]: CCL next = 44			CCL = [\t\n\r\s]
+[46]: .   next = 47		
+[48]: EOF next = 49		
+[50]: CCL next = 51			CCL = (.|\n)
+[52]: EOF next = 53		
+
+State ID: 1
+[47]: --- accept state true		
+
+State ID: 2
+[43]: CCL next = 44			CCL = [\t\n\r\s]
+[45]: --- accept state true		
+
+State ID: 3
+[16]: '=' next = 17		
+[47]: --- accept state true		
+
+State ID: 4
+[5]: --- accept state true		
+
+State ID: 5
+[1]: CCL next = 2			CCL = [0-9]
+[3]: --- accept state true		
+
+State ID: 6
+[5]: --- accept state true		
+[10]: '=' next = 11		
+
+State ID: 7
+[5]: --- accept state true		
+[13]: '=' next = 14		
+
+State ID: 8
+[5]: --- accept state true		
+[7]: '=' next = 8		
+
+State ID: 9
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 10
+[28]: 'l' next = 29		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 11
+[25]: 'f' next = 26		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 12
+[33]: 'r' next = 34		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 13
+[19]: 'h' next = 20		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 14
+[49]: --- accept state true		
+
+State ID: 15
+[17]: --- accept state true		
+
+State ID: 16
+[11]: --- accept state true		
+
+State ID: 17
+[14]: --- accept state true		
+
+State ID: 18
+[8]: --- accept state true		
+
+State ID: 19
+[29]: 's' next = 30		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 20
+[26]: --- accept state true		
+[39]: CCL next = 40			CCL = [a-z]
+
+State ID: 21
+[34]: 'i' next = 35		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 22
+[20]: 'i' next = 21		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 23
+[30]: 'e' next = 31		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 24
+[35]: 'n' next = 36		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 25
+[21]: 'l' next = 22		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 26
+[31]: --- accept state true		
+[39]: CCL next = 40			CCL = [a-z]
+
+State ID: 27
+[36]: 't' next = 37		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 28
+[22]: 'e' next = 23		
+[39]: CCL next = 40			CCL = [a-z]
+[41]: --- accept state true		
+
+State ID: 29
+[37]: --- accept state true		
+[39]: CCL next = 40			CCL = [a-z]
+
+State ID: 30
+[23]: --- accept state true		
+[39]: CCL next = 40			CCL = [a-z]
+

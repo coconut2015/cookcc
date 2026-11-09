@@ -41,15 +41,15 @@ public class HexBI extends BuiltIn
 	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
-		BuiltIn.builtins.put ("hex", new HexBI ());
+		BuiltIn.BUILT_INS_BY_NAME.put ("hex", new HexBI ());
 	}
 
 	@Override
-	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
+	TemplateModel _eval (Environment env) throws TemplateException
 	{
-		TemplateModel model = target.getAsTemplateModel (env);
+		TemplateModel model = target.eval (env);
 		if (!(model instanceof TemplateNumberModel))
-			throw invalidTypeException (model, target, env, "number");
+			throw new UnexpectedTypeException (target, model, "number", new Class[] { TemplateNumberModel.class }, env);
 		TemplateNumberModel nModel = (TemplateNumberModel)model;
 		return new Hexanizer (nModel.getAsNumber ().intValue ());
 	}

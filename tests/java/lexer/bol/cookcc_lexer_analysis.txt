@@ -1,0 +1,52 @@
+Lexer State:	INITIAL
+case 1: abc
+NFA:
+[0]: 'a' next = 1		
+[1]: 'b' next = 2		
+[2]: 'c' next = 3		
+[3]: --- accept state true		
+
+case 2: .|\n
+NFA:
+[4]: CCL next = 5			CCL = (.|\n)
+[5]: --- accept state true		
+
+case 3: <<EOF>>
+NFA:
+[6]: EOF next = 7		
+[7]: --- accept state true		
+
+case 4: .|\n
+NFA:
+[8]: CCL next = 9			CCL = (.|\n)
+[9]: --- accept state true		
+
+case 5: <<EOF>>
+NFA:
+[10]: EOF next = 11		
+[11]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[0]: 'a' next = 1		
+[4]: CCL next = 5			CCL = (.|\n)
+[6]: EOF next = 7		
+[8]: CCL next = 9			CCL = (.|\n)
+[10]: EOF next = 11		
+
+State ID: 1
+[5]: --- accept state true		
+
+State ID: 2
+[1]: 'b' next = 2		
+[5]: --- accept state true		
+
+State ID: 3
+[7]: --- accept state true		
+
+State ID: 4
+[2]: 'c' next = 3		
+
+State ID: 5
+[3]: --- accept state true		
+

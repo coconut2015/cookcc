@@ -1,0 +1,1475 @@
+Lexer State:	INITIAL
+case 1: ^"alpha:"[[:alpha:]]+@alpha@\n
+NFA:
+[0]: 'a' next = 1		
+[1]: 'l' next = 2		
+[2]: 'p' next = 3		
+[3]: 'h' next = 4		
+[4]: 'a' next = 5		
+[5]: ':' next = 6		
+[6]: --- next = 7		
+[7]: CCL next = 8			CCL = [A-Za-z]
+[8]: --- next = 9	next2 = 7
+[9]: '@' next = 10		
+[10]: 'a' next = 11		
+[11]: 'l' next = 12		
+[12]: 'p' next = 13		
+[13]: 'h' next = 14		
+[14]: 'a' next = 15		
+[15]: '@' next = 16		
+[16]: \n  next = 17		
+[17]: --- accept state true		
+
+case 2: ^"alnum:"[[:alnum:]]+@alnum@\n
+NFA:
+[18]: 'a' next = 19		
+[19]: 'l' next = 20		
+[20]: 'n' next = 21		
+[21]: 'u' next = 22		
+[22]: 'm' next = 23		
+[23]: ':' next = 24		
+[24]: --- next = 25		
+[25]: CCL next = 26			CCL = [0-9A-Za-z]
+[26]: --- next = 27	next2 = 25
+[27]: '@' next = 28		
+[28]: 'a' next = 29		
+[29]: 'l' next = 30		
+[30]: 'n' next = 31		
+[31]: 'u' next = 32		
+[32]: 'm' next = 33		
+[33]: '@' next = 34		
+[34]: \n  next = 35		
+[35]: --- accept state true		
+
+case 3: ^"^alpha:"[[:^alpha:]]+@alpha@\n
+NFA:
+[36]: '^' next = 37		
+[37]: 'a' next = 38		
+[38]: 'l' next = 39		
+[39]: 'p' next = 40		
+[40]: 'h' next = 41		
+[41]: 'a' next = 42		
+[42]: ':' next = 43		
+[43]: --- next = 44		
+[44]: CCL next = 45			CCL = [^\nA-Za-z]
+[45]: --- next = 46	next2 = 44
+[46]: '@' next = 47		
+[47]: 'a' next = 48		
+[48]: 'l' next = 49		
+[49]: 'p' next = 50		
+[50]: 'h' next = 51		
+[51]: 'a' next = 52		
+[52]: '@' next = 53		
+[53]: \n  next = 54		
+[54]: --- accept state true		
+
+case 4: ^"^digit:"[[:^digit:]]+@digit@\n
+NFA:
+[55]: '^' next = 56		
+[56]: 'd' next = 57		
+[57]: 'i' next = 58		
+[58]: 'g' next = 59		
+[59]: 'i' next = 60		
+[60]: 't' next = 61		
+[61]: ':' next = 62		
+[62]: --- next = 63		
+[63]: CCL next = 64			CCL = [^\n0-9]
+[64]: --- next = 65	next2 = 63
+[65]: '@' next = 66		
+[66]: 'd' next = 67		
+[67]: 'i' next = 68		
+[68]: 'g' next = 69		
+[69]: 'i' next = 70		
+[70]: 't' next = 71		
+[71]: '@' next = 72		
+[72]: \n  next = 73		
+[73]: --- accept state true		
+
+case 5: ^"^alnum:"[[:^alnum:]]+@alnum@\n
+NFA:
+[74]: '^' next = 75		
+[75]: 'a' next = 76		
+[76]: 'l' next = 77		
+[77]: 'n' next = 78		
+[78]: 'u' next = 79		
+[79]: 'm' next = 80		
+[80]: ':' next = 81		
+[81]: --- next = 82		
+[82]: CCL next = 83			CCL = [^\n0-9A-Za-z]
+[83]: --- next = 84	next2 = 82
+[84]: '@' next = 85		
+[85]: 'a' next = 86		
+[86]: 'l' next = 87		
+[87]: 'n' next = 88		
+[88]: 'u' next = 89		
+[89]: 'm' next = 90		
+[90]: '@' next = 91		
+[91]: \n  next = 92		
+[92]: --- accept state true		
+
+case 6: ^"^upper:"[[:^upper:]]+@upper@\n
+NFA:
+[93]: '^' next = 94		
+[94]: 'u' next = 95		
+[95]: 'p' next = 96		
+[96]: 'p' next = 97		
+[97]: 'e' next = 98		
+[98]: 'r' next = 99		
+[99]: ':' next = 100		
+[100]: --- next = 101		
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[102]: --- next = 103	next2 = 101
+[103]: '@' next = 104		
+[104]: 'u' next = 105		
+[105]: 'p' next = 106		
+[106]: 'p' next = 107		
+[107]: 'e' next = 108		
+[108]: 'r' next = 109		
+[109]: '@' next = 110		
+[110]: \n  next = 111		
+[111]: --- accept state true		
+
+case 7: ^"^lower:"[[:^lower:]]+@lower@\n
+NFA:
+[112]: '^' next = 113		
+[113]: 'l' next = 114		
+[114]: 'o' next = 115		
+[115]: 'w' next = 116		
+[116]: 'e' next = 117		
+[117]: 'r' next = 118		
+[118]: ':' next = 119		
+[119]: --- next = 120		
+[120]: CCL next = 121			CCL = [^\na-z]
+[121]: --- next = 122	next2 = 120
+[122]: '@' next = 123		
+[123]: 'l' next = 124		
+[124]: 'o' next = 125		
+[125]: 'w' next = 126		
+[126]: 'e' next = 127		
+[127]: 'r' next = 128		
+[128]: '@' next = 129		
+[129]: \n  next = 130		
+[130]: --- accept state true		
+
+case 8: ^"^space:"[[:^space:]]+@space@\n
+NFA:
+[131]: '^' next = 132		
+[132]: 's' next = 133		
+[133]: 'p' next = 134		
+[134]: 'a' next = 135		
+[135]: 'c' next = 136		
+[136]: 'e' next = 137		
+[137]: ':' next = 138		
+[138]: --- next = 139		
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[140]: --- next = 141	next2 = 139
+[141]: '@' next = 142		
+[142]: 's' next = 143		
+[143]: 'p' next = 144		
+[144]: 'a' next = 145		
+[145]: 'c' next = 146		
+[146]: 'e' next = 147		
+[147]: '@' next = 148		
+[148]: \n  next = 149		
+[149]: --- accept state true		
+
+case 9: ^"^blank:"[[:^blank:]]+@blank@\n
+NFA:
+[150]: '^' next = 151		
+[151]: 'b' next = 152		
+[152]: 'l' next = 153		
+[153]: 'a' next = 154		
+[154]: 'n' next = 155		
+[155]: 'k' next = 156		
+[156]: ':' next = 157		
+[157]: --- next = 158		
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[159]: --- next = 160	next2 = 158
+[160]: '@' next = 161		
+[161]: 'b' next = 162		
+[162]: 'l' next = 163		
+[163]: 'a' next = 164		
+[164]: 'n' next = 165		
+[165]: 'k' next = 166		
+[166]: '@' next = 167		
+[167]: \n  next = 168		
+[168]: --- accept state true		
+
+case 10: ^"^punct:"[[:^punct:]]+@punct@\n
+NFA:
+[169]: '^' next = 170		
+[170]: 'p' next = 171		
+[171]: 'u' next = 172		
+[172]: 'n' next = 173		
+[173]: 'c' next = 174		
+[174]: 't' next = 175		
+[175]: ':' next = 176		
+[176]: --- next = 177		
+[177]: CCL next = 178			CCL = [^\n!-/:-@\[-`{-~]
+[178]: --- next = 179	next2 = 177
+[179]: '@' next = 180		
+[180]: 'p' next = 181		
+[181]: 'u' next = 182		
+[182]: 'n' next = 183		
+[183]: 'c' next = 184		
+[184]: 't' next = 185		
+[185]: '@' next = 186		
+[186]: \n  next = 187		
+[187]: --- accept state true		
+
+case 11: ^"^cntrl:"[[:^cntrl:]]+@cntrl@\n
+NFA:
+[188]: '^' next = 189		
+[189]: 'c' next = 190		
+[190]: 'n' next = 191		
+[191]: 't' next = 192		
+[192]: 'r' next = 193		
+[193]: 'l' next = 194		
+[194]: ':' next = 195		
+[195]: --- next = 196		
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[197]: --- next = 198	next2 = 196
+[198]: '@' next = 199		
+[199]: 'c' next = 200		
+[200]: 'n' next = 201		
+[201]: 't' next = 202		
+[202]: 'r' next = 203		
+[203]: 'l' next = 204		
+[204]: '@' next = 205		
+[205]: \n  next = 206		
+[206]: --- accept state true		
+
+case 12: ^"^xdigit:"[[:^xdigit:]]+@xdigit@\n
+NFA:
+[207]: '^' next = 208		
+[208]: 'x' next = 209		
+[209]: 'd' next = 210		
+[210]: 'i' next = 211		
+[211]: 'g' next = 212		
+[212]: 'i' next = 213		
+[213]: 't' next = 214		
+[214]: ':' next = 215		
+[215]: --- next = 216		
+[216]: CCL next = 217			CCL = [^\n0-9A-Fa-f]
+[217]: --- next = 218	next2 = 216
+[218]: '@' next = 219		
+[219]: 'x' next = 220		
+[220]: 'd' next = 221		
+[221]: 'i' next = 222		
+[222]: 'g' next = 223		
+[223]: 'i' next = 224		
+[224]: 't' next = 225		
+[225]: '@' next = 226		
+[226]: \n  next = 227		
+[227]: --- accept state true		
+
+case 13: ^"a-d:"[[:alpha:]]{-}[[:digit:]]+@a-d@\n
+NFA:
+[228]: 'a' next = 229		
+[229]: \-  next = 230		
+[230]: 'd' next = 231		
+[231]: ':' next = 232		
+[232]: --- next = 233		
+[233]: CCL next = 234			CCL = [A-Za-z]
+[234]: --- next = 235	next2 = 233
+[235]: '@' next = 236		
+[236]: 'a' next = 237		
+[237]: \-  next = 238		
+[238]: 'd' next = 239		
+[239]: '@' next = 240		
+[240]: \n  next = 241		
+[241]: --- accept state true		
+
+case 14: ^"l-xyz:"([[:lower:]]{-}[xyz])+@l-xyz@\n
+NFA:
+[242]: 'l' next = 243		
+[243]: \-  next = 244		
+[244]: 'x' next = 245		
+[245]: 'y' next = 246		
+[246]: 'z' next = 247		
+[247]: ':' next = 248		
+[248]: --- next = 249		
+[249]: CCL next = 250			CCL = [a-w]
+[250]: --- next = 251	next2 = 249
+[251]: '@' next = 252		
+[252]: 'l' next = 253		
+[253]: \-  next = 254		
+[254]: 'x' next = 255		
+[255]: 'y' next = 256		
+[256]: 'z' next = 257		
+[257]: '@' next = 258		
+[258]: \n  next = 259		
+[259]: --- accept state true		
+
+case 15: ^"ABCd-bc:"([abcd]{-}[bc])+@abcd-bc@\n
+NFA:
+[260]: 'a' next = 261		
+[261]: 'b' next = 262		
+[262]: 'c' next = 263		
+[263]: 'd' next = 264		
+[264]: \-  next = 265		
+[265]: 'b' next = 266		
+[266]: 'c' next = 267		
+[267]: ':' next = 268		
+[268]: --- next = 269		
+[269]: CCL next = 270			CCL = [ADad]
+[270]: --- next = 271	next2 = 269
+[271]: '@' next = 272		
+[272]: 'a' next = 273		
+[273]: 'b' next = 274		
+[274]: 'c' next = 275		
+[275]: 'd' next = 276		
+[276]: \-  next = 277		
+[277]: 'b' next = 278		
+[278]: 'c' next = 279		
+[279]: '@' next = 280		
+[280]: \n  next = 281		
+[281]: --- accept state true		
+
+case 16: ^"abcde-b-c:"([abcde]{-}[b]{-}[c])+@abcde-b-c@\n
+NFA:
+[282]: 'a' next = 283		
+[283]: 'b' next = 284		
+[284]: 'c' next = 285		
+[285]: 'd' next = 286		
+[286]: 'e' next = 287		
+[287]: \-  next = 288		
+[288]: 'b' next = 289		
+[289]: \-  next = 290		
+[290]: 'c' next = 291		
+[291]: ':' next = 292		
+[292]: --- next = 293		
+[293]: CCL next = 294			CCL = [ade]
+[294]: --- next = 295	next2 = 293
+[295]: '@' next = 296		
+[296]: 'a' next = 297		
+[297]: 'b' next = 298		
+[298]: 'c' next = 299		
+[299]: 'd' next = 300		
+[300]: 'e' next = 301		
+[301]: \-  next = 302		
+[302]: 'b' next = 303		
+[303]: \-  next = 304		
+[304]: 'c' next = 305		
+[305]: '@' next = 306		
+[306]: \n  next = 307		
+[307]: --- accept state true		
+
+case 17: ^"^XY-^XYZ:"([^XY]{-}[^XYZ])+@^XY-^XYZ@\n
+NFA:
+[308]: '^' next = 309		
+[309]: 'X' next = 310		
+[310]: 'Y' next = 311		
+[311]: \-  next = 312		
+[312]: '^' next = 313		
+[313]: 'X' next = 314		
+[314]: 'Y' next = 315		
+[315]: 'Z' next = 316		
+[316]: ':' next = 317		
+[317]: --- next = 318		
+[318]: [Z] next = 319		
+[319]: --- next = 320	next2 = 318
+[320]: '@' next = 321		
+[321]: '^' next = 322		
+[322]: 'X' next = 323		
+[323]: 'Y' next = 324		
+[324]: \-  next = 325		
+[325]: '^' next = 326		
+[326]: 'X' next = 327		
+[327]: 'Y' next = 328		
+[328]: 'Z' next = 329		
+[329]: '@' next = 330		
+[330]: \n  next = 331		
+[331]: --- accept state true		
+
+case 18: ^"a+d:"([[:alpha:]]{+}[[:digit:]])+"@a+d@"\n
+NFA:
+[332]: 'a' next = 333		
+[333]: '+' next = 334		
+[334]: 'd' next = 335		
+[335]: ':' next = 336		
+[336]: --- next = 337		
+[337]: CCL next = 338			CCL = [0-9A-Za-z]
+[338]: --- next = 339	next2 = 337
+[339]: '@' next = 340		
+[340]: 'a' next = 341		
+[341]: '+' next = 342		
+[342]: 'd' next = 343		
+[343]: '@' next = 344		
+[344]: \n  next = 345		
+[345]: --- accept state true		
+
+case 19: ^"a-u+Q:"([[:alpha:]]{-}[[:upper:]]{+}[Q])+"@a-u+Q@"\n
+NFA:
+[346]: 'a' next = 347		
+[347]: \-  next = 348		
+[348]: 'u' next = 349		
+[349]: '+' next = 350		
+[350]: 'Q' next = 351		
+[351]: ':' next = 352		
+[352]: --- next = 353		
+[353]: CCL next = 354			CCL = [Qa-z]
+[354]: --- next = 355	next2 = 353
+[355]: '@' next = 356		
+[356]: 'a' next = 357		
+[357]: \-  next = 358		
+[358]: 'u' next = 359		
+[359]: '+' next = 360		
+[360]: 'Q' next = 361		
+[361]: '@' next = 362		
+[362]: \n  next = 363		
+[363]: --- accept state true		
+
+case 20: .|\n
+NFA:
+[364]: CCL next = 365			CCL = (.|\n)
+[365]: --- accept state true		
+
+case 21: <<EOF>>
+NFA:
+[366]: EOF next = 367		
+[367]: --- accept state true		
+
+case 22: .|\n
+NFA:
+[368]: CCL next = 369			CCL = (.|\n)
+[369]: --- accept state true		
+
+case 23: <<EOF>>
+NFA:
+[370]: EOF next = 371		
+[371]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[364]: CCL next = 365			CCL = (.|\n)
+[366]: EOF next = 367		
+[368]: CCL next = 369			CCL = (.|\n)
+[370]: EOF next = 371		
+
+State ID: 1	BOL
+[0]: 'a' next = 1		
+[18]: 'a' next = 19		
+[36]: '^' next = 37		
+[55]: '^' next = 56		
+[74]: '^' next = 75		
+[93]: '^' next = 94		
+[112]: '^' next = 113		
+[131]: '^' next = 132		
+[150]: '^' next = 151		
+[169]: '^' next = 170		
+[188]: '^' next = 189		
+[207]: '^' next = 208		
+[228]: 'a' next = 229		
+[242]: 'l' next = 243		
+[260]: 'a' next = 261		
+[282]: 'a' next = 283		
+[308]: '^' next = 309		
+[332]: 'a' next = 333		
+[346]: 'a' next = 347		
+[364]: CCL next = 365			CCL = (.|\n)
+[366]: EOF next = 367		
+[368]: CCL next = 369			CCL = (.|\n)
+[370]: EOF next = 371		
+
+State ID: 2
+[365]: --- accept state true		
+
+State ID: 3
+[367]: --- accept state true		
+
+State ID: 4
+[261]: 'b' next = 262		
+[365]: --- accept state true		
+
+State ID: 5
+[37]: 'a' next = 38		
+[56]: 'd' next = 57		
+[75]: 'a' next = 76		
+[94]: 'u' next = 95		
+[113]: 'l' next = 114		
+[132]: 's' next = 133		
+[151]: 'b' next = 152		
+[170]: 'p' next = 171		
+[189]: 'c' next = 190		
+[208]: 'x' next = 209		
+[309]: 'X' next = 310		
+[365]: --- accept state true		
+
+State ID: 6
+[1]: 'l' next = 2		
+[19]: 'l' next = 20		
+[229]: \-  next = 230		
+[261]: 'b' next = 262		
+[283]: 'b' next = 284		
+[333]: '+' next = 334		
+[347]: \-  next = 348		
+[365]: --- accept state true		
+
+State ID: 7
+[243]: \-  next = 244		
+[365]: --- accept state true		
+
+State ID: 8
+[262]: 'c' next = 263		
+
+State ID: 9
+[310]: 'Y' next = 311		
+
+State ID: 10
+[38]: 'l' next = 39		
+[76]: 'l' next = 77		
+
+State ID: 11
+[152]: 'l' next = 153		
+
+State ID: 12
+[190]: 'n' next = 191		
+
+State ID: 13
+[57]: 'i' next = 58		
+
+State ID: 14
+[114]: 'o' next = 115		
+
+State ID: 15
+[171]: 'u' next = 172		
+
+State ID: 16
+[133]: 'p' next = 134		
+
+State ID: 17
+[95]: 'p' next = 96		
+
+State ID: 18
+[209]: 'd' next = 210		
+
+State ID: 19
+[334]: 'd' next = 335		
+
+State ID: 20
+[230]: 'd' next = 231		
+[348]: 'u' next = 349		
+
+State ID: 21
+[262]: 'c' next = 263		
+[284]: 'c' next = 285		
+
+State ID: 22
+[2]: 'p' next = 3		
+[20]: 'n' next = 21		
+
+State ID: 23
+[244]: 'x' next = 245		
+
+State ID: 24
+[263]: 'd' next = 264		
+
+State ID: 25
+[311]: \-  next = 312		
+
+State ID: 26
+[39]: 'p' next = 40		
+[77]: 'n' next = 78		
+
+State ID: 27
+[153]: 'a' next = 154		
+
+State ID: 28
+[191]: 't' next = 192		
+
+State ID: 29
+[58]: 'g' next = 59		
+
+State ID: 30
+[115]: 'w' next = 116		
+
+State ID: 31
+[172]: 'n' next = 173		
+
+State ID: 32
+[134]: 'a' next = 135		
+
+State ID: 33
+[96]: 'p' next = 97		
+
+State ID: 34
+[210]: 'i' next = 211		
+
+State ID: 35
+[335]: ':' next = 336		
+
+State ID: 36
+[231]: ':' next = 232		
+
+State ID: 37
+[349]: '+' next = 350		
+
+State ID: 38
+[263]: 'd' next = 264		
+[285]: 'd' next = 286		
+
+State ID: 39
+[21]: 'u' next = 22		
+
+State ID: 40
+[3]: 'h' next = 4		
+
+State ID: 41
+[245]: 'y' next = 246		
+
+State ID: 42
+[264]: \-  next = 265		
+
+State ID: 43
+[312]: '^' next = 313		
+
+State ID: 44
+[78]: 'u' next = 79		
+
+State ID: 45
+[40]: 'h' next = 41		
+
+State ID: 46
+[154]: 'n' next = 155		
+
+State ID: 47
+[192]: 'r' next = 193		
+
+State ID: 48
+[59]: 'i' next = 60		
+
+State ID: 49
+[116]: 'e' next = 117		
+
+State ID: 50
+[173]: 'c' next = 174		
+
+State ID: 51
+[135]: 'c' next = 136		
+
+State ID: 52
+[97]: 'e' next = 98		
+
+State ID: 53
+[211]: 'g' next = 212		
+
+State ID: 54
+[337]: CCL next = 338			CCL = [0-9A-Za-z]
+
+State ID: 55
+[233]: CCL next = 234			CCL = [A-Za-z]
+
+State ID: 56
+[350]: 'Q' next = 351		
+
+State ID: 57
+[264]: \-  next = 265		
+[286]: 'e' next = 287		
+
+State ID: 58
+[22]: 'm' next = 23		
+
+State ID: 59
+[4]: 'a' next = 5		
+
+State ID: 60
+[246]: 'z' next = 247		
+
+State ID: 61
+[265]: 'b' next = 266		
+
+State ID: 62
+[313]: 'X' next = 314		
+
+State ID: 63
+[79]: 'm' next = 80		
+
+State ID: 64
+[41]: 'a' next = 42		
+
+State ID: 65
+[155]: 'k' next = 156		
+
+State ID: 66
+[193]: 'l' next = 194		
+
+State ID: 67
+[60]: 't' next = 61		
+
+State ID: 68
+[117]: 'r' next = 118		
+
+State ID: 69
+[174]: 't' next = 175		
+
+State ID: 70
+[136]: 'e' next = 137		
+
+State ID: 71
+[98]: 'r' next = 99		
+
+State ID: 72
+[212]: 'i' next = 213		
+
+State ID: 73
+[337]: CCL next = 338			CCL = [0-9A-Za-z]
+[339]: '@' next = 340		
+
+State ID: 74
+[233]: CCL next = 234			CCL = [A-Za-z]
+[235]: '@' next = 236		
+
+State ID: 75
+[351]: ':' next = 352		
+
+State ID: 76
+[287]: \-  next = 288		
+
+State ID: 77
+[23]: ':' next = 24		
+
+State ID: 78
+[5]: ':' next = 6		
+
+State ID: 79
+[247]: ':' next = 248		
+
+State ID: 80
+[266]: 'c' next = 267		
+
+State ID: 81
+[314]: 'Y' next = 315		
+
+State ID: 82
+[80]: ':' next = 81		
+
+State ID: 83
+[42]: ':' next = 43		
+
+State ID: 84
+[156]: ':' next = 157		
+
+State ID: 85
+[194]: ':' next = 195		
+
+State ID: 86
+[61]: ':' next = 62		
+
+State ID: 87
+[118]: ':' next = 119		
+
+State ID: 88
+[175]: ':' next = 176		
+
+State ID: 89
+[137]: ':' next = 138		
+
+State ID: 90
+[99]: ':' next = 100		
+
+State ID: 91
+[213]: 't' next = 214		
+
+State ID: 92
+[340]: 'a' next = 341		
+
+State ID: 93
+[236]: 'a' next = 237		
+
+State ID: 94
+[353]: CCL next = 354			CCL = [Qa-z]
+
+State ID: 95
+[288]: 'b' next = 289		
+
+State ID: 96
+[25]: CCL next = 26			CCL = [0-9A-Za-z]
+
+State ID: 97
+[7]: CCL next = 8			CCL = [A-Za-z]
+
+State ID: 98
+[249]: CCL next = 250			CCL = [a-w]
+
+State ID: 99
+[267]: ':' next = 268		
+
+State ID: 100
+[315]: 'Z' next = 316		
+
+State ID: 101
+[82]: CCL next = 83			CCL = [^\n0-9A-Za-z]
+
+State ID: 102
+[44]: CCL next = 45			CCL = [^\nA-Za-z]
+
+State ID: 103
+[158]: CCL next = 159			CCL = [^\t\n\s]
+
+State ID: 104
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+
+State ID: 105
+[63]: CCL next = 64			CCL = [^\n0-9]
+
+State ID: 106
+[120]: CCL next = 121			CCL = [^\na-z]
+
+State ID: 107
+[177]: CCL next = 178			CCL = [^\n!-/:-@\[-`{-~]
+
+State ID: 108
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+
+State ID: 109
+[101]: CCL next = 102			CCL = [^\nA-Z]
+
+State ID: 110
+[214]: ':' next = 215		
+
+State ID: 111
+[341]: '+' next = 342		
+
+State ID: 112
+[237]: \-  next = 238		
+
+State ID: 113
+[353]: CCL next = 354			CCL = [Qa-z]
+[355]: '@' next = 356		
+
+State ID: 114
+[289]: \-  next = 290		
+
+State ID: 115
+[25]: CCL next = 26			CCL = [0-9A-Za-z]
+[27]: '@' next = 28		
+
+State ID: 116
+[7]: CCL next = 8			CCL = [A-Za-z]
+[9]: '@' next = 10		
+
+State ID: 117
+[249]: CCL next = 250			CCL = [a-w]
+[251]: '@' next = 252		
+
+State ID: 118
+[269]: CCL next = 270			CCL = [ADad]
+
+State ID: 119
+[316]: ':' next = 317		
+
+State ID: 120
+[82]: CCL next = 83			CCL = [^\n0-9A-Za-z]
+[84]: '@' next = 85		
+
+State ID: 121
+[44]: CCL next = 45			CCL = [^\nA-Za-z]
+[46]: '@' next = 47		
+
+State ID: 122
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[160]: '@' next = 161		
+
+State ID: 123
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[198]: '@' next = 199		
+
+State ID: 124
+[63]: CCL next = 64			CCL = [^\n0-9]
+[65]: '@' next = 66		
+
+State ID: 125
+[120]: CCL next = 121			CCL = [^\na-z]
+[122]: '@' next = 123		
+
+State ID: 126
+[177]: CCL next = 178			CCL = [^\n!-/:-@\[-`{-~]
+[179]: '@' next = 180		
+
+State ID: 127
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[141]: '@' next = 142		
+
+State ID: 128
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[103]: '@' next = 104		
+
+State ID: 129
+[216]: CCL next = 217			CCL = [^\n0-9A-Fa-f]
+
+State ID: 130
+[342]: 'd' next = 343		
+
+State ID: 131
+[238]: 'd' next = 239		
+
+State ID: 132
+[356]: 'a' next = 357		
+
+State ID: 133
+[290]: 'c' next = 291		
+
+State ID: 134
+[28]: 'a' next = 29		
+
+State ID: 135
+[10]: 'a' next = 11		
+
+State ID: 136
+[252]: 'l' next = 253		
+
+State ID: 137
+[269]: CCL next = 270			CCL = [ADad]
+[271]: '@' next = 272		
+
+State ID: 138
+[318]: [Z] next = 319		
+
+State ID: 139
+[82]: CCL next = 83			CCL = [^\n0-9A-Za-z]
+[84]: '@' next = 85		
+[85]: 'a' next = 86		
+
+State ID: 140
+[44]: CCL next = 45			CCL = [^\nA-Za-z]
+[46]: '@' next = 47		
+[47]: 'a' next = 48		
+
+State ID: 141
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[160]: '@' next = 161		
+[161]: 'b' next = 162		
+
+State ID: 142
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[198]: '@' next = 199		
+[199]: 'c' next = 200		
+
+State ID: 143
+[63]: CCL next = 64			CCL = [^\n0-9]
+[65]: '@' next = 66		
+[66]: 'd' next = 67		
+
+State ID: 144
+[120]: CCL next = 121			CCL = [^\na-z]
+[122]: '@' next = 123		
+[123]: 'l' next = 124		
+
+State ID: 145
+[180]: 'p' next = 181		
+
+State ID: 146
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[141]: '@' next = 142		
+[142]: 's' next = 143		
+
+State ID: 147
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[103]: '@' next = 104		
+[104]: 'u' next = 105		
+
+State ID: 148
+[216]: CCL next = 217			CCL = [^\n0-9A-Fa-f]
+[218]: '@' next = 219		
+
+State ID: 149
+[343]: '@' next = 344		
+
+State ID: 150
+[239]: '@' next = 240		
+
+State ID: 151
+[357]: \-  next = 358		
+
+State ID: 152
+[291]: ':' next = 292		
+
+State ID: 153
+[29]: 'l' next = 30		
+
+State ID: 154
+[11]: 'l' next = 12		
+
+State ID: 155
+[253]: \-  next = 254		
+
+State ID: 156
+[272]: 'a' next = 273		
+
+State ID: 157
+[318]: [Z] next = 319		
+[320]: '@' next = 321		
+
+State ID: 158
+[86]: 'l' next = 87		
+
+State ID: 159
+[48]: 'l' next = 49		
+
+State ID: 160
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[160]: '@' next = 161		
+[162]: 'l' next = 163		
+
+State ID: 161
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[198]: '@' next = 199		
+[200]: 'n' next = 201		
+
+State ID: 162
+[63]: CCL next = 64			CCL = [^\n0-9]
+[65]: '@' next = 66		
+[67]: 'i' next = 68		
+
+State ID: 163
+[124]: 'o' next = 125		
+
+State ID: 164
+[181]: 'u' next = 182		
+
+State ID: 165
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[141]: '@' next = 142		
+[143]: 'p' next = 144		
+
+State ID: 166
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[103]: '@' next = 104		
+[105]: 'p' next = 106		
+
+State ID: 167
+[216]: CCL next = 217			CCL = [^\n0-9A-Fa-f]
+[218]: '@' next = 219		
+[219]: 'x' next = 220		
+
+State ID: 168
+[344]: \n  next = 345		
+
+State ID: 169
+[240]: \n  next = 241		
+
+State ID: 170
+[358]: 'u' next = 359		
+
+State ID: 171
+[293]: CCL next = 294			CCL = [ade]
+
+State ID: 172
+[30]: 'n' next = 31		
+
+State ID: 173
+[12]: 'p' next = 13		
+
+State ID: 174
+[254]: 'x' next = 255		
+
+State ID: 175
+[273]: 'b' next = 274		
+
+State ID: 176
+[321]: '^' next = 322		
+
+State ID: 177
+[87]: 'n' next = 88		
+
+State ID: 178
+[49]: 'p' next = 50		
+
+State ID: 179
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[160]: '@' next = 161		
+[163]: 'a' next = 164		
+
+State ID: 180
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[198]: '@' next = 199		
+[201]: 't' next = 202		
+
+State ID: 181
+[63]: CCL next = 64			CCL = [^\n0-9]
+[65]: '@' next = 66		
+[68]: 'g' next = 69		
+
+State ID: 182
+[125]: 'w' next = 126		
+
+State ID: 183
+[182]: 'n' next = 183		
+
+State ID: 184
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[141]: '@' next = 142		
+[144]: 'a' next = 145		
+
+State ID: 185
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[103]: '@' next = 104		
+[106]: 'p' next = 107		
+
+State ID: 186
+[216]: CCL next = 217			CCL = [^\n0-9A-Fa-f]
+[218]: '@' next = 219		
+[220]: 'd' next = 221		
+
+State ID: 187
+[345]: --- accept state true		
+
+State ID: 188
+[241]: --- accept state true		
+
+State ID: 189
+[359]: '+' next = 360		
+
+State ID: 190
+[293]: CCL next = 294			CCL = [ade]
+[295]: '@' next = 296		
+
+State ID: 191
+[31]: 'u' next = 32		
+
+State ID: 192
+[13]: 'h' next = 14		
+
+State ID: 193
+[255]: 'y' next = 256		
+
+State ID: 194
+[274]: 'c' next = 275		
+
+State ID: 195
+[322]: 'X' next = 323		
+
+State ID: 196
+[88]: 'u' next = 89		
+
+State ID: 197
+[50]: 'h' next = 51		
+
+State ID: 198
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[160]: '@' next = 161		
+[164]: 'n' next = 165		
+
+State ID: 199
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[198]: '@' next = 199		
+[202]: 'r' next = 203		
+
+State ID: 200
+[63]: CCL next = 64			CCL = [^\n0-9]
+[65]: '@' next = 66		
+[69]: 'i' next = 70		
+
+State ID: 201
+[126]: 'e' next = 127		
+
+State ID: 202
+[183]: 'c' next = 184		
+
+State ID: 203
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[141]: '@' next = 142		
+[145]: 'c' next = 146		
+
+State ID: 204
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[103]: '@' next = 104		
+[107]: 'e' next = 108		
+
+State ID: 205
+[221]: 'i' next = 222		
+
+State ID: 206
+[360]: 'Q' next = 361		
+
+State ID: 207
+[296]: 'a' next = 297		
+
+State ID: 208
+[32]: 'm' next = 33		
+
+State ID: 209
+[14]: 'a' next = 15		
+
+State ID: 210
+[256]: 'z' next = 257		
+
+State ID: 211
+[275]: 'd' next = 276		
+
+State ID: 212
+[323]: 'Y' next = 324		
+
+State ID: 213
+[89]: 'm' next = 90		
+
+State ID: 214
+[51]: 'a' next = 52		
+
+State ID: 215
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[160]: '@' next = 161		
+[165]: 'k' next = 166		
+
+State ID: 216
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[198]: '@' next = 199		
+[203]: 'l' next = 204		
+
+State ID: 217
+[63]: CCL next = 64			CCL = [^\n0-9]
+[65]: '@' next = 66		
+[70]: 't' next = 71		
+
+State ID: 218
+[127]: 'r' next = 128		
+
+State ID: 219
+[184]: 't' next = 185		
+
+State ID: 220
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[141]: '@' next = 142		
+[146]: 'e' next = 147		
+
+State ID: 221
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[103]: '@' next = 104		
+[108]: 'r' next = 109		
+
+State ID: 222
+[222]: 'g' next = 223		
+
+State ID: 223
+[361]: '@' next = 362		
+
+State ID: 224
+[297]: 'b' next = 298		
+
+State ID: 225
+[33]: '@' next = 34		
+
+State ID: 226
+[15]: '@' next = 16		
+
+State ID: 227
+[257]: '@' next = 258		
+
+State ID: 228
+[276]: \-  next = 277		
+
+State ID: 229
+[324]: \-  next = 325		
+
+State ID: 230
+[90]: '@' next = 91		
+
+State ID: 231
+[52]: '@' next = 53		
+
+State ID: 232
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[160]: '@' next = 161		
+[166]: '@' next = 167		
+
+State ID: 233
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[198]: '@' next = 199		
+[204]: '@' next = 205		
+
+State ID: 234
+[63]: CCL next = 64			CCL = [^\n0-9]
+[65]: '@' next = 66		
+[71]: '@' next = 72		
+
+State ID: 235
+[128]: '@' next = 129		
+
+State ID: 236
+[185]: '@' next = 186		
+
+State ID: 237
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[141]: '@' next = 142		
+[147]: '@' next = 148		
+
+State ID: 238
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[103]: '@' next = 104		
+[109]: '@' next = 110		
+
+State ID: 239
+[223]: 'i' next = 224		
+
+State ID: 240
+[362]: \n  next = 363		
+
+State ID: 241
+[298]: 'c' next = 299		
+
+State ID: 242
+[34]: \n  next = 35		
+
+State ID: 243
+[16]: \n  next = 17		
+
+State ID: 244
+[258]: \n  next = 259		
+
+State ID: 245
+[277]: 'b' next = 278		
+
+State ID: 246
+[325]: '^' next = 326		
+
+State ID: 247
+[91]: \n  next = 92		
+
+State ID: 248
+[53]: \n  next = 54		
+
+State ID: 249
+[158]: CCL next = 159			CCL = [^\t\n\s]
+[160]: '@' next = 161		
+[161]: 'b' next = 162		
+[167]: \n  next = 168		
+
+State ID: 250
+[196]: CCL next = 197			CCL = [^\0\n\u1f\u7f]
+[198]: '@' next = 199		
+[199]: 'c' next = 200		
+[205]: \n  next = 206		
+
+State ID: 251
+[63]: CCL next = 64			CCL = [^\n0-9]
+[65]: '@' next = 66		
+[66]: 'd' next = 67		
+[72]: \n  next = 73		
+
+State ID: 252
+[129]: \n  next = 130		
+
+State ID: 253
+[186]: \n  next = 187		
+
+State ID: 254
+[139]: CCL next = 140			CCL = [^\t-\r\s]
+[141]: '@' next = 142		
+[142]: 's' next = 143		
+[148]: \n  next = 149		
+
+State ID: 255
+[101]: CCL next = 102			CCL = [^\nA-Z]
+[103]: '@' next = 104		
+[104]: 'u' next = 105		
+[110]: \n  next = 111		
+
+State ID: 256
+[224]: 't' next = 225		
+
+State ID: 257
+[363]: --- accept state true		
+
+State ID: 258
+[299]: 'd' next = 300		
+
+State ID: 259
+[35]: --- accept state true		
+
+State ID: 260
+[17]: --- accept state true		
+
+State ID: 261
+[259]: --- accept state true		
+
+State ID: 262
+[278]: 'c' next = 279		
+
+State ID: 263
+[326]: 'X' next = 327		
+
+State ID: 264
+[92]: --- accept state true		
+
+State ID: 265
+[54]: --- accept state true		
+
+State ID: 266
+[168]: --- accept state true		
+
+State ID: 267
+[206]: --- accept state true		
+
+State ID: 268
+[73]: --- accept state true		
+
+State ID: 269
+[130]: --- accept state true		
+
+State ID: 270
+[187]: --- accept state true		
+
+State ID: 271
+[149]: --- accept state true		
+
+State ID: 272
+[111]: --- accept state true		
+
+State ID: 273
+[225]: '@' next = 226		
+
+State ID: 274
+[300]: 'e' next = 301		
+
+State ID: 275
+[279]: '@' next = 280		
+
+State ID: 276
+[327]: 'Y' next = 328		
+
+State ID: 277
+[226]: \n  next = 227		
+
+State ID: 278
+[301]: \-  next = 302		
+
+State ID: 279
+[280]: \n  next = 281		
+
+State ID: 280
+[328]: 'Z' next = 329		
+
+State ID: 281
+[227]: --- accept state true		
+
+State ID: 282
+[302]: 'b' next = 303		
+
+State ID: 283
+[281]: --- accept state true		
+
+State ID: 284
+[329]: '@' next = 330		
+
+State ID: 285
+[303]: \-  next = 304		
+
+State ID: 286
+[330]: \n  next = 331		
+
+State ID: 287
+[304]: 'c' next = 305		
+
+State ID: 288
+[331]: --- accept state true		
+
+State ID: 289
+[305]: '@' next = 306		
+
+State ID: 290
+[306]: \n  next = 307		
+
+State ID: 291
+[307]: --- accept state true		
+

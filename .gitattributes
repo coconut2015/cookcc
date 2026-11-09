@@ -1,0 +1,4 @@
+# Shell scripts must keep LF line endings to run on Linux;
+# Windows batch files must keep CRLF line endings.
+*.sh  text eol=lf
+*.cmd text eol=crlf

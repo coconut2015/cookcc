@@ -1,0 +1,75 @@
+# Builds the Sphinx documentation in docs_src/ and publishes it to GitHub Pages.
+#
+# Pull requests only check that the documentation builds without warnings;
+# changes merged to master are deployed.
+#
+# Setup: in Settings > Pages, set "Source" to "GitHub Actions".
+name: Documentation
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'docs_src/**'
+      - '.github/workflows/gh-pages.yml'
+  pull_request:
+    branches: [master]
+    paths:
+      - 'docs_src/**'
+      - '.github/workflows/gh-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Allow one deployment at a time, and let an in-progress deployment finish.
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: docs_src/requirements.txt
+
+      - name: Install Sphinx
+        run: pip install -r docs_src/requirements.txt
+
+      # -W turns warnings into errors, so that broken references are caught.
+      - name: Build HTML
+        run: sphinx-build -W --keep-going -b html docs_src docs_src/_build/html
+
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: docs_src/_build/html
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v6
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v5

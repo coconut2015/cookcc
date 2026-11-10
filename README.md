@@ -19,17 +19,28 @@ Requirements
  * JDK 8 or later, with `JAVA_HOME` pointing to it.  The code stays at the Java 8 level regardless of the JDK used to build it.
  * Maven 3.6.3 or later on the `PATH`.
  * Internet access to Maven Central for the first build.
+ * For the documentation only: Python 3 with the packages in `docs_src/requirements.txt` (`pip install -r docs_src/requirements.txt`).
 
-To build everything, run the script for your platform from the project root:
+Build with the script for your platform, run from any directory: `make.cmd` on Windows, `./make.sh` on Linux / macOS.  Run it without arguments, or with `help`, to list the commands.
+
+| Command | What it does |
+|---|---|
+| `package` | Compiles all modules, runs the unit tests, generates the javadoc, and collects the jars in `dist/`. |
+| `package --skip-tests` | The same, without running the unit tests. |
+| `docs` | Builds the HTML documentation in `docs_src/_build/html`.  Open `TOC.html` there. |
+| `full` | Builds everything: `package`, then `docs`.  Also accepts `--skip-tests`. |
+
+For example:
 
 ```
-make.cmd        (Windows)
-./make.sh       (Linux / macOS)
+./make.sh package
+make.cmd package --skip-tests
+./make.sh full
 ```
 
-The script runs `mvn clean package javadoc:aggregate-jar`, which compiles all modules, runs the unit tests, and generates the javadoc.  Any extra arguments are passed to Maven, for example `./make.sh -DskipTests` to skip the tests or `./make.sh -o` to build offline.
+Any other arguments after `package` or `full` are passed to Maven, for example `./make.sh package -o` to build offline.  With `make.cmd`, quote Maven arguments that contain `=`.
 
-The results are placed in `dist/`:
+The `package` results are placed in `dist/`:
 
 | File | Contents |
 |---|---|

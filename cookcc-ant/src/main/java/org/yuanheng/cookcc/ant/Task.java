@@ -30,6 +30,8 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.JavaEnvUtils;
@@ -137,27 +139,26 @@ public class Task extends org.apache.tools.ant.Task
 		m_options.add (option);
 	}
 
+	/**
+	 * Check if Ant is running on Java 8 or later, which CookCC requires.
+	 *
+	 * @return	true if the current Java version is 8 or later.
+	 */
+	protected boolean isJava8OrLater ()
+	{
+		return JavaEnvUtils.isAtLeastJavaVersion (JavaEnvUtils.JAVA_1_8);
+	}
+
 	@Override
 	public void execute ()
 	{
+		if (!isJava8OrLater ())
+			throw new BuildException ("CookCC requires Java 8 or later, but Ant is running on Java " +
+									  JavaEnvUtils.getJavaVersion () + ".");
 		if (m_xccFiles.size () > 0)
 			executeCookCC (m_xccFiles.toArray (new String[m_xccFiles.size ()]));
 		if (m_aptFiles.size () > 0)
-		{
-			int version = JavaEnvUtils.getJavaVersionNumber ();
-			if (version < JavaEnvUtils.VERSION_1_5)
-			{
-				throw new RuntimeException ("CookCC APT must be executed by Java 1.5+.");
-			}
-			if (version == JavaEnvUtils.VERSION_1_5)
-			{
-				executeAptOld (m_aptFiles.toArray (new String[m_aptFiles.size ()]));
-			}
-			else
-			{
-				executeApt (m_aptFiles.toArray (new String[m_aptFiles.size ()]));
-			}
-		}
+			executeApt (m_aptFiles.toArray (new String[m_aptFiles.size ()]));
 	}
 
 	protected void executeCookCC (String[] files)
@@ -219,18 +220,18 @@ public class Task extends org.apache.tools.ant.Task
 	}
 
 	/**
-	 * Execute newer 1.6+ Java APT
+	 * Run javac with the CookCC annotation processor.
 	 *
 	 * @param	classes
 	 *			the names of the classes to be processed.
 	 */
 	protected void executeApt (String[] classes)
 	{
-		Commandline cmd = new Commandline ();
-		cmd.setExecutable (JavaEnvUtils.getJdkExecutable ("javac"));
-
 		if (m_srcDir == null)
 			throw new IllegalArgumentException ("Source directory is not specified.");
+
+		Commandline cmd = new Commandline ();
+		cmd.setExecutable (getJavacExecutable ());
 
 		// do not compile the source code
 		cmd.createArgument ().setValue ("-proc:only");
@@ -287,82 +288,53 @@ public class Task extends org.apache.tools.ant.Task
 	}
 
 	/**
-	 * Execute legacy 1.5 Java APT.
+	 * Locate javac, which is needed to process .java files.
+	 * <p>
+	 * javac is only part of a JDK.  If it is not found in the Java installation
+	 * running Ant, a warning is logged and javac is looked up on the PATH.
 	 *
-	 * @param	classes
-	 *			the names of the classes to be processed.
+	 * @return	the path of javac, or just "javac" if it is to be found on the PATH.
 	 */
-	protected void executeAptOld (String[] classes)
+	protected String getJavacExecutable ()
 	{
-		Commandline cmd = new Commandline ();
-		cmd.setExecutable (JavaEnvUtils.getJdkExecutable ("apt"));
-
-		if (m_srcDir == null)
-			throw new IllegalArgumentException ("Source directory is not specified.");
-
-		cmd.createArgument ().setValue ("-cp");
-		cmd.createArgument ().setValue (getCookCCPath () + File.pathSeparatorChar + m_srcDir.getPath ());
-
-		cmd.createArgument ().setValue ("-s");
-		cmd.createArgument ().setValue (m_srcDir.getPath ());
-
-		cmd.createArgument ().setValue ("-nocompile");
-
-		if (m_analysis)
-			cmd.createArgument ().setValue ("-Aanalysis");
-		if (m_debug)
-			cmd.createArgument ().setValue ("-Adebug");
-		if (m_defaultReduce)
-			cmd.createArgument ().setValue ("-Adefaultreduce");
-		if (m_lexerTable != null)
-			cmd.createArgument ().setValue ("-Alexertable=" + m_lexerTable);
-		if (m_parserTable != null)
-			cmd.createArgument ().setValue ("-Aparsertable=" + m_parserTable);
-		if (m_lang != null)
-			cmd.createArgument ().setValue ("-Alang=" + m_lang);
-		if (m_lang == null || "java".equals (m_lang))
+		String javac = JavaEnvUtils.getJdkExecutable ("javac");
+		if (!new File (javac).isFile ())
 		{
-			if (m_destDir == null)
-				m_destDir = m_srcDir;
-			cmd.createArgument ().setValue ("-Ad=" + m_destDir.getPath ());
+			log ("javac was not found in " + System.getProperty ("java.home") +
+				 ".  Processing .java files requires a JDK, not a JRE.  Trying javac from the PATH.",
+				 Project.MSG_WARN);
 		}
-		for (Option option : m_options)
-		{
-			if (option.m_name == null || option.m_name.length () == 0)
-				continue;
-			String arg = option.m_name;
-			if (arg.startsWith ("-"))
-				arg = arg.substring (1);
-			arg = "-A" + arg;
-			if (option.m_value != null)
-				arg = arg + '=' + option.m_value;
-			cmd.createArgument ().setValue (arg);
-		}
-
-		for (String className : classes)
-		{
-			File file = new File (m_srcDir, className);
-			cmd.createArgument ().setValue (file.getPath ());
-		}
-
-		if (executeCmd (cmd))
-			throw new RuntimeException ("Error executing CookCC using APT");
+		return javac;
 	}
 
+	/**
+	 * Execute a command.
+	 *
+	 * @param	cmd
+	 *			the command to be executed.
+	 * @return	true if the command could not be started or exited with a
+	 *			non-zero code; false if it succeeded.
+	 */
 	protected boolean executeCmd (Commandline cmd)
 	{
+		System.out.println (cmd.toString ());
+		int exitValue;
 		try
 		{
-			System.out.println (cmd.toString ());
 			Execute exe = new Execute ();
 			exe.setCommandline (cmd.getCommandline ());
-			exe.execute ();
-			if (exe.getExitValue () == 0)
-				return false;
+			exitValue = exe.execute ();
 		}
 		catch (Exception ex)
 		{
+			log ("Unable to run " + cmd.getExecutable () + ": " + ex.getMessage (), Project.MSG_ERR);
+			return true;
 		}
-		return true;
+		if (exitValue != 0)
+		{
+			log (cmd.getExecutable () + " exited with code " + exitValue + ".", Project.MSG_ERR);
+			return true;
+		}
+		return false;
 	}
 }

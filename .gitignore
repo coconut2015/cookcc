@@ -8,4 +8,4 @@ target
 /classes/
 /cookcc.pom.asc
 pom.xml.versionsBackup
-
+/.vscode/

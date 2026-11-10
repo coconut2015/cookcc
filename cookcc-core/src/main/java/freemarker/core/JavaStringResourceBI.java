@@ -130,6 +130,10 @@ public class JavaStringResourceBI extends BuiltIn
 				// no need to generate the string resource;
 				return new SimpleScalar ("");
 			}
+			else
+			{
+				s_stringCounter = counter;
+			}
 
 			buffer.append ("\";\n");
 
@@ -138,6 +142,18 @@ public class JavaStringResourceBI extends BuiltIn
 
 			return new SimpleScalar (buffer.toString ());
 		}
+	}
+
+	/**
+	 * Forgets the string resources declared so far and restarts the field
+	 * numbering at s_s1.  Call this before generating each class, so that
+	 * the output does not depend on what was generated earlier in the same
+	 * JVM (for example, several classes in one annotation processing run).
+	 */
+	public static void reset ()
+	{
+		s_stringResources.clear ();
+		s_stringCounter = 0;
 	}
 
 	public static String getStringResource (Object key)

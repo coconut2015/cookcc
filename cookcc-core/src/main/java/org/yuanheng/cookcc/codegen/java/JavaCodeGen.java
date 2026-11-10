@@ -42,6 +42,7 @@ import org.yuanheng.cookcc.doc.Document;
 import org.yuanheng.cookcc.interfaces.CodeGen;
 import org.yuanheng.cookcc.interfaces.OptionHandler;
 
+import freemarker.core.JavaStringResourceBI;
 import freemarker.template.Template;
 
 /**
@@ -210,6 +211,8 @@ public class JavaCodeGen extends TemplatedCodeGen implements CodeGen
 		}
 		setup (map, doc);
 		StringWriter sw = new StringWriter ();
+		// String resource field names (s_s1, s_s2, ...) are numbered per class.
+		JavaStringResourceBI.reset ();
 		Resources.template.process (map, sw);
 		FileWriter fw = new FileWriter (file);
 		fw.write (sw.toString ());

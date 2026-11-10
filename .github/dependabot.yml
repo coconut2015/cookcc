@@ -1,0 +1,44 @@
+# Dependabot keeps the Maven dependencies, Maven plugins, and GitHub Actions
+# versions up to date.  Each update arrives as a pull request, which the CI
+# workflow builds and tests on JDK 8.
+#
+# Also enable "Dependabot alerts" and "Dependabot security updates" under
+# Settings > Code security, so vulnerability fixes are proposed right away
+# instead of waiting for the weekly run.
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      # Maven plugins change together and rarely affect behavior; one PR for all.
+      maven-plugins:
+        patterns:
+          - "org.apache.maven.plugins:*"
+          - "org.jacoco:*"
+    commit-message:
+      prefix: "deps"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "ci"
+
+  - package-ecosystem: pip
+    directory: /docs_src
+    schedule:
+      interval: monthly
+    groups:
+      docs:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "docs"

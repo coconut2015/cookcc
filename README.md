@@ -1,3 +1,6 @@
+[![CI](https://github.com/coconut2015/cookcc/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/coconut2015/cookcc/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE-2.0.txt)
+
 CookCC is a lexer and parser (LALR (1)) generator project, combined.  It is written in Java, but the [target languages](http://coconut2015.github.io/cookcc/Target-Languages) can vary.
 
 CookCC comes with two unique features, which were the original motivations for this work.

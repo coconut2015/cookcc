@@ -22,7 +22,7 @@ Requirements
  * JDK 8 or later, with `JAVA_HOME` pointing to it.  The code stays at the Java 8 level regardless of the JDK used to build it.
  * Maven 3.6.3 or later on the `PATH`.
  * Internet access to Maven Central for the first build.
- * For the documentation only: Python 3 with the packages in `docs_src/requirements.txt` (`pip install -r docs_src/requirements.txt`).
+ * For the documentation only: Python 3.13 or later with the packages in `docs_src/requirements.txt` (`pip install -r docs_src/requirements.txt`).
 
 Build with the script for your platform, run from any directory: `make.cmd` on Windows, `./make.sh` on Linux / macOS.  Run it without arguments, or with `help`, to list the commands.
 

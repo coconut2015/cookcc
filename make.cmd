@@ -86,7 +86,7 @@ echo   make.cmd package
 echo   make.cmd package --skip-tests
 echo   make.cmd full -o
 echo.
-echo Requirements: JDK 8+ and Maven 3.6.3+ for package; Python 3 with the
+echo Requirements: JDK 8+ and Maven 3.6.3+ for package; Python 3.13+ with the
 echo packages in docs_src\requirements.txt for docs.
 exit /b 0
 

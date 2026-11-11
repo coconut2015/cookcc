@@ -36,7 +36,7 @@ Examples:
   ./make.sh package && ./make.sh test
   ./make.sh full -o
 
-Requirements: JDK 8+ and Maven 3.6.3+ for package; Python 3 with the
+Requirements: JDK 8+ and Maven 3.6.3+ for package; Python 3.13+ with the
 packages in docs_src/requirements.txt for docs.
 EOF
 }

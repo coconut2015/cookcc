@@ -26,11 +26,22 @@ import freemarker.template.*;
  * correctly.  Namely \r \n \" and their corresponding values.  Thus it is
  * necessary to use octal representation (which Java does handle correctly)
  * for numbers smaller than 128, and the rest using \\u notation.
+ * <p>
+ * This is the <code>?javastring</code> FreeMarker built-in.  The target must be
+ * a beans-wrapped array of numbers, and the result is a Java expression that
+ * creates the equivalent <code>char[]</code>, such as
+ * <code>("\001ሴ").toCharArray ()</code>.  Long arrays are split into
+ * several string literals joined with <code>+</code>, so that each stays within
+ * the class file limit on constant length.
+ * <p>
+ * If {@link JavaStringResourceBI} already declared string fields for the same
+ * array, the expression uses those fields instead of repeating the data.
  *
  * @author Heng Yuan
  */
 public class JavaStringBI extends BuiltIn
 {
+	/** The maximum UTF-8 length, in bytes, of each string literal generated. */
 	private final static int MAX_ARRAY_LEN = 16383;
 
 	@SuppressWarnings ("unchecked")
@@ -58,8 +69,13 @@ public class JavaStringBI extends BuiltIn
 		return new JavaStringBuilder (seq);
 	}
 
+	/**
+	 * The method returned by <code>?javastring</code>.  Calling it, with no
+	 * arguments, returns the Java expression for the array.
+	 */
 	private class JavaStringBuilder implements TemplateMethodModelEx
 	{
+		/** The array of numbers to convert. */
 		private final ArrayModel m_seq;
 
 		private JavaStringBuilder (ArrayModel seq)

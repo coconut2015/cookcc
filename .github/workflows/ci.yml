@@ -1,0 +1,66 @@
+# Builds CookCC, runs the unit tests and the tests/ integration suite with
+# JaCoCo code coverage, and uploads both coverage reports to Codecov, with the
+# flags "unit" and "integration".  Codecov merges them into one total.
+#
+# Setup: add the repository upload token from codecov.io as the
+# CODECOV_TOKEN secret (Settings > Secrets and variables > Actions).
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test (JDK 8)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v7
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '8'
+          cache: maven
+
+      # Compiles all modules, runs the unit tests, writes the JaCoCo reports to
+      # <module>/target/site/jacoco/jacoco.xml, and collects the jars in dist/.
+      - name: Build
+        run: bash make.sh package -B
+
+      - name: Upload unit test coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./**/target/site/jacoco/jacoco.xml
+          flags: unit
+          fail_ci_if_error: false
+
+      - name: Upload distribution jars
+        uses: actions/upload-artifact@v7
+        with:
+          name: cookcc-dist
+          path: dist/*.jar
+          if-no-files-found: error
+
+      # Runs the tests/ suite against the jars in dist/, with the JaCoCo agent
+      # attached to each JVM that runs CookCC.  Writes
+      # target/site/jacoco-it/jacoco.xml for cookcc-core and cookcc-ap.
+      - name: Integration tests
+        run: bash make.sh test --coverage
+
+      - name: Upload integration test coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./target/site/jacoco-it/jacoco.xml
+          flags: integration
+          fail_ci_if_error: false

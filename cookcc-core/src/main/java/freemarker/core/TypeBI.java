@@ -30,6 +30,24 @@ import freemarker.ext.beans.MapModel;
 import freemarker.template.*;
 
 /**
+ * The <code>?type</code> FreeMarker built-in, which casts a value reference
+ * in a parser action to the type declared for its grammar symbol.  For
+ * example, in a template:
+ * <pre>
+ * ${rhs?type(a, parser.formats, "yyGetValue (" + a + ")")}
+ * </pre>
+ * The target is the {@link RhsDoc} of the rule, whose <code>Production</code>
+ * property holds the {@link Production}.  The arguments are:
+ * <ol>
+ * <li>the value reference from {@link ActionCodeBI}: <code>"$"</code> for the
+ * left-hand side symbol, or a 1-based position in the right-hand side;</li>
+ * <li>the map from each symbol to the {@link MessageFormat} for its type;</li>
+ * <li>the expression that gets the value.</li>
+ * </ol>
+ * The result is the expression formatted with the symbol's format, such as
+ * <code>((Integer)yyGetValue (1))</code>, or the expression unchanged if the
+ * symbol has no type.
+ *
  * @author Heng Yuan
  */
 public class TypeBI extends BuiltIn
@@ -50,9 +68,14 @@ public class TypeBI extends BuiltIn
 		return new TypeBuilder (seq);
 	}
 
+	/**
+	 * The method returned by <code>?type</code>.  See the class description
+	 * for its arguments.
+	 */
 	@SuppressWarnings ("rawtypes")
 	private class TypeBuilder implements TemplateMethodModelEx
 	{
+		/** The production of the rule whose action is being generated. */
 		private final Production m_production;
 
 		private TypeBuilder (BeanModel str)

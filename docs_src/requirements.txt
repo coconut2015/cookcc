@@ -1,0 +1,5 @@
+# Python packages needed to build the documentation:
+#   pip install -r docs_src/requirements.txt
+#   Sphinx 9.2 requires Python 3.13 or later.
+sphinx==9.2.0
+sphinx-rtd-theme==3.1.0

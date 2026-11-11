@@ -1,3 +1,6 @@
+[![CI](https://github.com/coconut2015/cookcc/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/coconut2015/cookcc/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE-2.0.txt)
+
 CookCC is a lexer and parser (LALR (1)) generator project, combined.  It is written in Java, but the [target languages](http://coconut2015.github.io/cookcc/Target-Languages) can vary.
 
 CookCC comes with two unique features, which were the original motivations for this work.
@@ -19,17 +22,29 @@ Requirements
  * JDK 8 or later, with `JAVA_HOME` pointing to it.  The code stays at the Java 8 level regardless of the JDK used to build it.
  * Maven 3.6.3 or later on the `PATH`.
  * Internet access to Maven Central for the first build.
+ * For the documentation only: Python 3.13 or later with the packages in `docs_src/requirements.txt` (`pip install -r docs_src/requirements.txt`).
 
-To build everything, run the script for your platform from the project root:
+Build with the script for your platform, run from any directory: `make.cmd` on Windows, `./make.sh` on Linux / macOS.  Run it without arguments, or with `help`, to list the commands.
+
+| Command | What it does |
+|---|---|
+| `package` | Compiles all modules, runs the unit tests, generates the javadoc, and collects the jars in `dist/`. |
+| `package --skip-tests` | The same, without running the unit tests. |
+| `test` | Runs the integration tests in `tests/` against the jars in `dist/`, so run `package` first.  Add `--coverage` for a JaCoCo report in `target/site/jacoco-it`.  `make.sh` only: the tests are bash scripts for Linux / macOS. |
+| `docs` | Builds the HTML documentation in `docs_src/_build/html`.  Open `TOC.html` there. |
+| `full` | Builds everything: `package`, then `docs`.  Also accepts `--skip-tests`. |
+
+For example:
 
 ```
-make.cmd        (Windows)
-./make.sh       (Linux / macOS)
+./make.sh package
+make.cmd package --skip-tests
+./make.sh full
 ```
 
-The script runs `mvn clean package javadoc:aggregate-jar`, which compiles all modules, runs the unit tests, and generates the javadoc.  Any extra arguments are passed to Maven, for example `./make.sh -DskipTests` to skip the tests or `./make.sh -o` to build offline.
+Any other arguments after `package` or `full` are passed to Maven, for example `./make.sh package -o` to build offline.  With `make.cmd`, quote Maven arguments that contain `=`.
 
-The results are placed in `dist/`:
+The `package` results are placed in `dist/`:
 
 | File | Contents |
 |---|---|

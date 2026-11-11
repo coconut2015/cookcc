@@ -37,6 +37,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
+		<!-- Also used by make.sh for the integration test coverage. -->
+		<jacoco.version>0.8.16</jacoco.version>
 	</properties>
 
 	<modules>
@@ -102,6 +104,11 @@
 					<artifactId>maven-source-plugin</artifactId>
 					<version>3.4.0</version>
 				</plugin>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -144,6 +151,35 @@
 						<phase>verify</phase>
 						<goals>
 							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- code coverage: instrument the unit tests and write target/site/jacoco/jacoco.xml -->
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<!-- Placeholder base classes: generated code replaces their
+							 stub methods, so they never run.  Also listed in codecov.yml. -->
+						<exclude>org/yuanheng/cookcc/CookCCByte*</exclude>
+						<exclude>org/yuanheng/cookcc/CookCCChar*</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<id>prepare-agent</id>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<!-- before package, so that it runs without the gpg signing in verify -->
+						<id>report</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>report</goal>
 						</goals>
 					</execution>
 				</executions>

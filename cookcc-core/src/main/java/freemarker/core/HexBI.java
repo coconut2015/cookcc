@@ -20,6 +20,12 @@ import java.util.List;
 import freemarker.template.*;
 
 /**
+ * The <code>?hex</code> FreeMarker built-in, which formats a number in
+ * lowercase hexadecimal, padded with leading zeros to a minimum length.
+ * For example, <code>${255?hex(4)}</code> produces <code>00ff</code>.
+ * Negative numbers are shown in two's complement, as
+ * {@link Integer#toHexString} does.
+ * <p>
  * This piece of code is from http://osdir.com/ml/web.freemarker.devel/2004-04/msg00010.html
  * by Mark van de Veerdonk.
  *
@@ -43,9 +49,14 @@ public class HexBI extends BuiltIn
 		return new Hexanizer (nModel.getAsNumber ().intValue ());
 	}
 
+	/**
+	 * The method returned by <code>?hex</code>.  It takes one argument, the
+	 * minimum number of digits, and returns the formatted string.
+	 */
 	@SuppressWarnings ("rawtypes")
 	private class Hexanizer implements TemplateMethodModelEx
 	{
+		/** The number to format. */
 		int value;
 
 		Hexanizer (int value)

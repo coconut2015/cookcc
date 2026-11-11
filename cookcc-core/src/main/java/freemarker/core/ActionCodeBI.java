@@ -27,6 +27,19 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
+ * The <code>?actioncode</code> FreeMarker built-in, which splits a parser
+ * action into code and value references so that the template can substitute
+ * them.  For example, in a template:
+ * <pre>
+ * &lt;#list p.action?actioncode() as a&gt;&lt;#if a_index % 2 == 0&gt;${a}&lt;#else&gt;...&lt;/#if&gt;&lt;/#list&gt;
+ * </pre>
+ * Elements at even indexes are code; elements at odd indexes are the value
+ * references with the <code>$</code> removed: <code>"$"</code> for
+ * <code>$$</code>, or the position (<code>"1"</code>, <code>"2"</code>, ...)
+ * for <code>$1</code>, <code>$2</code>, ....  See {@link #parseActionCode}.
+ * <p>
+ * The target must be a beans-wrapped string.
+ *
  * @author Heng Yuan
  */
 public class ActionCodeBI extends BuiltIn
@@ -47,8 +60,13 @@ public class ActionCodeBI extends BuiltIn
 		return new ActionCodeBuilder (seq);
 	}
 
+	/**
+	 * The method returned by <code>?actioncode</code>.  Calling it, with no
+	 * arguments, returns the split action code as a sequence of strings.
+	 */
 	private class ActionCodeBuilder implements TemplateMethodModelEx
 	{
+		/** The action code to split. */
 		private final StringModel m_str;
 
 		private ActionCodeBuilder (StringModel str)

@@ -159,6 +159,14 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<!-- Placeholder base classes: generated code replaces their
+							 stub methods, so they never run.  Also listed in codecov.yml. -->
+						<exclude>org/yuanheng/cookcc/CookCCByte*</exclude>
+						<exclude>org/yuanheng/cookcc/CookCCChar*</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<id>prepare-agent</id>

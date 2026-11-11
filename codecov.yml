@@ -27,6 +27,13 @@ comment:
   require_changes: false
   after_n_builds: 2
 
+# Files left out of coverage.  Keep in sync with the JaCoCo excludes in pom.xml.
+ignore:
+  # Placeholder base classes: generated code replaces their stub methods, so
+  # they never run.
+  - "cookcc-annot/src/main/java/org/yuanheng/cookcc/CookCCByte.java"
+  - "cookcc-annot/src/main/java/org/yuanheng/cookcc/CookCCChar.java"
+
 flags:
   unit:
     carryforward: true

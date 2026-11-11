@@ -1,0 +1,41 @@
+# Codecov settings: pull request comments and status checks.
+# The coverage reports are uploaded by .github/workflows/ci.yml.
+codecov:
+  # Wait for both uploads (unit and integration) before reporting.
+  notify:
+    after_n_builds: 2
+
+coverage:
+  precision: 1
+  status:
+    # Fails the check if the total coverage drops by more than 1%.
+    project:
+      default:
+        target: auto
+        threshold: 1%
+    # Coverage of the lines changed in the pull request.  Informational: it
+    # shows in the pull request, but does not fail the check.
+    patch:
+      default:
+        target: auto
+        informational: true
+
+# One comment per pull request, updated on each push.
+comment:
+  layout: "condensed_header, diff, flags, files"
+  behavior: default
+  require_changes: false
+  after_n_builds: 2
+
+# Files left out of coverage.  Keep in sync with the JaCoCo excludes in pom.xml.
+ignore:
+  # Placeholder base classes: generated code replaces their stub methods, so
+  # they never run.
+  - "cookcc-annot/src/main/java/org/yuanheng/cookcc/CookCCByte.java"
+  - "cookcc-annot/src/main/java/org/yuanheng/cookcc/CookCCChar.java"
+
+flags:
+  unit:
+    carryforward: true
+  integration:
+    carryforward: true

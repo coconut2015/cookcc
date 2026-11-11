@@ -19,6 +19,16 @@ export COOKCC=`/usr/bin/realpath "$COOKCC"`
 javac="${JAVA_HOME}/bin/javac"
 java="${JAVA_HOME}/bin/java"
 
+# Extra JVM options for the JVMs that run CookCC itself, such as the JaCoCo
+# agent for coverage ("./make.sh test --coverage" sets this).  Empty by
+# default.  The options must not contain spaces.  For javac, where CookCC
+# runs as the annotation processor, each option is passed with -J.
+COOKCC_JVM_OPTS="${COOKCC_JVM_OPTS:-}"
+COOKCC_JAVAC_OPTS=""
+for opt in $COOKCC_JVM_OPTS; do
+	COOKCC_JAVAC_OPTS="$COOKCC_JAVAC_OPTS -J$opt"
+done
+
 function cookcc ()
 {
 	v=${@: -1}
@@ -28,7 +38,7 @@ function cookcc ()
 		unicode="-unicode"
 	fi
 	CCOUTPUT=${v%.xcc}.ccoutput
-	"$java" -jar "${COOKCC}" $unicode $generics $@ > ccoutput 2>&1
+	"$java" $COOKCC_JVM_OPTS -jar "${COOKCC}" $unicode $generics $@ > ccoutput 2>&1
 	if [ -f $CCOUTPUT ]; then
 		diff ccoutput $CCOUTPUT > /dev/null || testerror $v
 	elif [ `sizeof ccoutput` -ne 0 ]; then
@@ -47,7 +57,7 @@ function apt ()
 		unicode="-Aunicode"
 	fi
 	CCOUTPUT=${v%.java}.ccoutput
-	"$javac" -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . $unicode $@ > ccoutput 2>&1
+	"$javac" $COOKCC_JAVAC_OPTS -proc:only -processor org.yuanheng.cookcc.input.ap.CookCCProcessor -cp "${COOKCC}:." -s . $unicode $@ > ccoutput 2>&1
 	if [ -f $CCOUTPUT ]; then
 		diff ccoutput $CCOUTPUT > /dev/null || testerror $v
 	elif [ `sizeof ccoutput` -ne 0 ]; then

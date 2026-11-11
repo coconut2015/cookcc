@@ -1,0 +1,131 @@
+Lexer State:	BLOCKCOMMENT
+case 1: \n
+NFA:
+[0]: \n  next = 1		
+[1]: --- accept state true		
+
+case 2: {ws}
+NFA:
+[2]: CCL next = 3			CCL = [\t\s]
+[3]: --- accept state true		
+
+case 3: "*/"
+NFA:
+[4]: '*' next = 5		
+[5]: '/' next = 6		
+[6]: --- accept state true		
+
+case 4: <<EOF>>
+NFA:
+[7]: EOF next = 8		
+[8]: --- accept state true		
+
+case 5: .
+NFA:
+[9]: .   next = 10		
+[10]: --- accept state true		
+
+case 6: .|\n
+NFA:
+[11]: CCL next = 12			CCL = (.|\n)
+[12]: --- accept state true		
+
+case 7: <<EOF>>
+NFA:
+[13]: EOF next = 14		
+[14]: --- accept state true		
+
+Lexer State:	INITIAL
+case 1: \n
+NFA:
+[0]: \n  next = 1		
+[1]: --- accept state true		
+
+case 2: {ws}
+NFA:
+[2]: CCL next = 3			CCL = [\t\s]
+[3]: --- accept state true		
+
+case 8: "/*"
+NFA:
+[15]: '/' next = 16		
+[16]: '*' next = 17		
+[17]: --- accept state true		
+
+case 9: <<EOF>>
+NFA:
+[18]: EOF next = 19		
+[19]: --- accept state true		
+
+case 5: .
+NFA:
+[9]: .   next = 10		
+[10]: --- accept state true		
+
+case 6: .|\n
+NFA:
+[11]: CCL next = 12			CCL = (.|\n)
+[12]: --- accept state true		
+
+case 7: <<EOF>>
+NFA:
+[13]: EOF next = 14		
+[14]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[0]: \n  next = 1		
+[2]: CCL next = 3			CCL = [\t\s]
+[9]: .   next = 10		
+[11]: CCL next = 12			CCL = (.|\n)
+[13]: EOF next = 14		
+[15]: '/' next = 16		
+[18]: EOF next = 19		
+
+State ID: 1
+[10]: --- accept state true		
+
+State ID: 2
+[3]: --- accept state true		
+
+State ID: 3
+[1]: --- accept state true		
+
+State ID: 4
+[10]: --- accept state true		
+[16]: '*' next = 17		
+
+State ID: 5
+[19]: --- accept state true		
+
+State ID: 6
+[17]: --- accept state true		
+
+State ID: 7	BLOCKCOMMENT Start
+[0]: \n  next = 1		
+[2]: CCL next = 3			CCL = [\t\s]
+[4]: '*' next = 5		
+[7]: EOF next = 8		
+[9]: .   next = 10		
+[11]: CCL next = 12			CCL = (.|\n)
+[13]: EOF next = 14		
+
+State ID: 8
+[10]: --- accept state true		
+
+State ID: 9
+[3]: --- accept state true		
+
+State ID: 10
+[1]: --- accept state true		
+
+State ID: 11
+[5]: '/' next = 6		
+[10]: --- accept state true		
+
+State ID: 12
+[8]: --- accept state true		
+
+State ID: 13
+[6]: --- accept state true		
+

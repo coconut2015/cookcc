@@ -1,28 +1,17 @@
 /*
  * Copyright (c) 2008-2013, Heng Yuan
- * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *    Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *    Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *    Neither the name of the Heng Yuan nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * THIS SOFTWARE IS PROVIDED BY Heng Yuan ''AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL Heng Yuan BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package freemarker.core;
 
@@ -41,6 +30,24 @@ import freemarker.ext.beans.MapModel;
 import freemarker.template.*;
 
 /**
+ * The <code>?type</code> FreeMarker built-in, which casts a value reference
+ * in a parser action to the type declared for its grammar symbol.  For
+ * example, in a template:
+ * <pre>
+ * ${rhs?type(a, parser.formats, "yyGetValue (" + a + ")")}
+ * </pre>
+ * The target is the {@link RhsDoc} of the rule, whose <code>Production</code>
+ * property holds the {@link Production}.  The arguments are:
+ * <ol>
+ * <li>the value reference from {@link ActionCodeBI}: <code>"$"</code> for the
+ * left-hand side symbol, or a 1-based position in the right-hand side;</li>
+ * <li>the map from each symbol to the {@link MessageFormat} for its type;</li>
+ * <li>the expression that gets the value.</li>
+ * </ol>
+ * The result is the expression formatted with the symbol's format, such as
+ * <code>((Integer)yyGetValue (1))</code>, or the expression unchanged if the
+ * symbol has no type.
+ *
  * @author Heng Yuan
  */
 public class TypeBI extends BuiltIn
@@ -48,22 +55,27 @@ public class TypeBI extends BuiltIn
 	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
-		BuiltIn.builtins.put ("type", new TypeBI ());
+		BuiltIn.BUILT_INS_BY_NAME.put ("type", new TypeBI ());
 	}
 
 	@Override
-	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
+	TemplateModel _eval (Environment env) throws TemplateException
 	{
-		TemplateModel model = target.getAsTemplateModel (env);
+		TemplateModel model = target.eval (env);
 		if (!(model instanceof BeanModel))
-			throw invalidTypeException (model, target, env, "bean");
+			throw new UnexpectedTypeException (target, model, "bean", new Class[] { BeanModel.class }, env);
 		BeanModel seq = (BeanModel)model;
 		return new TypeBuilder (seq);
 	}
 
+	/**
+	 * The method returned by <code>?type</code>.  See the class description
+	 * for its arguments.
+	 */
 	@SuppressWarnings ("rawtypes")
 	private class TypeBuilder implements TemplateMethodModelEx
 	{
+		/** The production of the rule whose action is being generated. */
 		private final Production m_production;
 
 		private TypeBuilder (BeanModel str)
@@ -97,16 +109,16 @@ public class TypeBI extends BuiltIn
 	 * A very simple utility function that splits user action code based on
 	 * $$ and $[0-9]+ deliminators.  This is useful for substitution purposes
 	 * in the generated code.
-	 * <p/>
+	 * <p>
 	 * The reason why the parser didn't do this step automatically is to allow
 	 * customizable deliminator patterns.
-	 * <p/>
+	 * <p>
 	 * An example:
-	 * <p/>
+	 * <p>
 	 * parseAction ("abc$$def$1hij")
-	 * <p/>
+	 * <p>
 	 * would return {"abc", "$", "def", "1", "hij"}.
-	 * <p/>
+	 * <p>
 	 * This piece code was written by gloomyturkey on mitbbs.
 	 *
 	 * @param    input the user action code.

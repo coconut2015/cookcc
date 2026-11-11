@@ -1,0 +1,84 @@
+Lexer State:	INITIAL
+case 1: a.*c/d
+NFA:
+[0]: 'a' next = 1		
+[1]: --- next = 2	next2 = 4
+[2]: .   next = 3		
+[3]: --- next = 4	next2 = 2
+[4]: 'c' next = 5		
+[5]: 'd' next = 6		
+[6]: --- accept state true		
+
+case 2: abc
+NFA:
+[7]: 'a' next = 8		
+[8]: 'b' next = 9		
+[9]: 'c' next = 10		
+[10]: --- accept state true		
+
+case 3: .|\n
+NFA:
+[11]: CCL next = 12			CCL = (.|\n)
+[12]: --- accept state true		
+
+case 4: <<EOF>>
+NFA:
+[13]: EOF next = 14		
+[14]: --- accept state true		
+
+case 5: .|\n
+NFA:
+[15]: CCL next = 16			CCL = (.|\n)
+[16]: --- accept state true		
+
+case 6: <<EOF>>
+NFA:
+[17]: EOF next = 18		
+[18]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[0]: 'a' next = 1		
+[7]: 'a' next = 8		
+[11]: CCL next = 12			CCL = (.|\n)
+[13]: EOF next = 14		
+[15]: CCL next = 16			CCL = (.|\n)
+[17]: EOF next = 18		
+
+State ID: 1
+[12]: --- accept state true		
+
+State ID: 2
+[2]: .   next = 3		
+[4]: 'c' next = 5		
+[8]: 'b' next = 9		
+[12]: --- accept state true		
+
+State ID: 3
+[14]: --- accept state true		
+
+State ID: 4
+[2]: .   next = 3		
+[4]: 'c' next = 5		
+
+State ID: 5
+[2]: .   next = 3		
+[4]: 'c' next = 5		
+[9]: 'c' next = 10		
+
+State ID: 6
+[2]: .   next = 3		
+[4]: 'c' next = 5		
+[5]: 'd' next = 6		
+
+State ID: 7
+[2]: .   next = 3		
+[4]: 'c' next = 5		
+[5]: 'd' next = 6		
+[10]: --- accept state true		
+
+State ID: 8
+[2]: .   next = 3		
+[4]: 'c' next = 5		
+[6]: --- accept state true		
+

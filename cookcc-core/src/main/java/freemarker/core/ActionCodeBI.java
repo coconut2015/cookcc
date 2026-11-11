@@ -1,28 +1,17 @@
 /*
  * Copyright (c) 2008-2013, Heng Yuan
- * All rights reserved.
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *    Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *    Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *    Neither the name of the Heng Yuan nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * THIS SOFTWARE IS PROVIDED BY Heng Yuan ''AS IS'' AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL Heng Yuan BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package freemarker.core;
 
@@ -38,6 +27,19 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
+ * The <code>?actioncode</code> FreeMarker built-in, which splits a parser
+ * action into code and value references so that the template can substitute
+ * them.  For example, in a template:
+ * <pre>
+ * &lt;#list p.action?actioncode() as a&gt;&lt;#if a_index % 2 == 0&gt;${a}&lt;#else&gt;...&lt;/#if&gt;&lt;/#list&gt;
+ * </pre>
+ * Elements at even indexes are code; elements at odd indexes are the value
+ * references with the <code>$</code> removed: <code>"$"</code> for
+ * <code>$$</code>, or the position (<code>"1"</code>, <code>"2"</code>, ...)
+ * for <code>$1</code>, <code>$2</code>, ....  See {@link #parseActionCode}.
+ * <p>
+ * The target must be a beans-wrapped string.
+ *
  * @author Heng Yuan
  */
 public class ActionCodeBI extends BuiltIn
@@ -45,21 +47,26 @@ public class ActionCodeBI extends BuiltIn
 	@SuppressWarnings ("unchecked")
 	public static void init ()
 	{
-		BuiltIn.builtins.put ("actioncode", new ActionCodeBI ());
+		BuiltIn.BUILT_INS_BY_NAME.put ("actioncode", new ActionCodeBI ());
 	}
 
 	@Override
-	TemplateModel _getAsTemplateModel (Environment env) throws TemplateException
+	TemplateModel _eval (Environment env) throws TemplateException
 	{
-		TemplateModel model = target.getAsTemplateModel (env);
+		TemplateModel model = target.eval (env);
 		if (!(model instanceof StringModel))
-			throw invalidTypeException (model, target, env, "string");
+			throw new UnexpectedTypeException (target, model, "string", new Class[] { StringModel.class }, env);
 		StringModel seq = (StringModel)model;
 		return new ActionCodeBuilder (seq);
 	}
 
+	/**
+	 * The method returned by <code>?actioncode</code>.  Calling it, with no
+	 * arguments, returns the split action code as a sequence of strings.
+	 */
 	private class ActionCodeBuilder implements TemplateMethodModelEx
 	{
+		/** The action code to split. */
 		private final StringModel m_str;
 
 		private ActionCodeBuilder (StringModel str)
@@ -79,16 +86,16 @@ public class ActionCodeBI extends BuiltIn
 	 * A very simple utility function that splits user action code based on
 	 * $$ and $[0-9]+ deliminators.  This is useful for substitution purposes
 	 * in the generated code.
-	 * <p/>
+	 * <p>
 	 * The reason why the parser didn't do this step automatically is to allow
 	 * customizable deliminator patterns.
-	 * <p/>
+	 * <p>
 	 * An example:
-	 * <p/>
+	 * <p>
 	 * parseAction ("abc$$def$1hij")
-	 * <p/>
+	 * <p>
 	 * would return {"abc", "$", "def", "1", "hij"}.
-	 * <p/>
+	 * <p>
 	 * This piece code was written by gloomyturkey on mitbbs.
 	 *
 	 * @param    input the user action code.

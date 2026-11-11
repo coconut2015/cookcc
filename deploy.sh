@@ -5,7 +5,7 @@
 
 mvn clean package javadoc:aggregate-jar
 
-mv target/cookcc-parent-0.4.3-javadoc.jar dist/cookcc-0.4.2-javadoc.jar
+mv target/cookcc-parent-0.4.3-javadoc.jar dist/cookcc-0.4.3-javadoc.jar
 
 # deploying cookcc-rt
 (cd cookcc-rt; mvn deploy)

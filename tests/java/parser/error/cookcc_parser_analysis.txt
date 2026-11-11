@@ -1,0 +1,191 @@
+
+----------- used symbols ----------
+0	:	0	:	$
+1	:	1	:	error
+2	:	2	:	@unhandled
+3	:	40	:	'('
+4	:	41	:	')'
+5	:	59	:	';'
+6	:	256	:	IDENTIFIER
+7	:	257	:	@start
+8	:	258	:	program
+9	:	259	:	stmt_list
+10	:	260	:	stmt
+11	:	261	:	function
+12	:	262	:	expr
+
+----------- statistics ----------
+max terminal = 256
+non terminal count = 6
+terminal count = 13
+used terminal count = 7
+used symbol count = 13
+
+----------- productions ----------
+1	@start	:	 program
+2	program	:	 stmt_list
+3	stmt_list	:	 stmt_list stmt
+4	stmt_list	:	
+5	stmt	:	 function ';'
+6	stmt	:	 error ';'
+7	stmt	:	 ';'
+8	function	:	 IDENTIFIER '(' ')'
+9	function	:	 IDENTIFIER '(' expr ')'
+10	expr	:	 IDENTIFIER
+11	expr	:	 function
+
+----------- First Sets ----------
+FIRST(@start) = [error ';' IDENTIFIER]
+FIRST(program) = [error ';' IDENTIFIER]
+FIRST(stmt_list) = [error ';' IDENTIFIER], epsilon
+FIRST(stmt) = [error ';' IDENTIFIER]
+FIRST(function) = [IDENTIFIER]
+FIRST(expr) = [IDENTIFIER]
+
+----------- DFA states: 16 ----------
+default reduce = false
+
+State 0:
+ *	@start	: . program , [$]
+ -	program	: . stmt_list , [$]
+ -	stmt_list	: . stmt_list stmt , [$ error ';' IDENTIFIER]
+ -	stmt_list	: . , [$ error ';' IDENTIFIER]
+
+	$	reduce to rule 4
+	error	reduce to rule 4
+	';'	reduce to rule 4
+	IDENTIFIER	reduce to rule 4
+	program	shift, goto to state 1
+	stmt_list	shift, goto to state 2
+
+
+State 1:
+ *	@start	: program . , [$]
+
+	$	Accept
+
+
+State 2:
+ *	program	: stmt_list . , [$]
+ *	stmt_list	: stmt_list . stmt , [$ error ';' IDENTIFIER]
+ -	stmt	: . function ';' , [$ error ';' IDENTIFIER]
+ -	stmt	: . error ';' , [$ error ';' IDENTIFIER]
+ -	stmt	: . ';' , [$ error ';' IDENTIFIER]
+ -	function	: . IDENTIFIER '(' ')' , [';']
+ -	function	: . IDENTIFIER '(' expr ')' , [';']
+
+	$	reduce to rule 2
+	error	shift, goto to state 3
+	';'	shift, goto to state 4
+	IDENTIFIER	shift, goto to state 5
+	stmt	shift, goto to state 6
+	function	shift, goto to state 7
+
+
+State 3:
+ *	stmt	: error . ';' , [$ error ';' IDENTIFIER]
+
+	';'	shift, goto to state 8
+
+
+State 4:
+ *	stmt	: ';' . , [$ error ';' IDENTIFIER]
+
+	$	reduce to rule 7
+	error	reduce to rule 7
+	';'	reduce to rule 7
+	IDENTIFIER	reduce to rule 7
+
+
+State 5:
+ *	function	: IDENTIFIER . '(' ')' , [';']
+ *	function	: IDENTIFIER . '(' expr ')' , [';']
+
+	'('	shift, goto to state 9
+
+
+State 6:
+ *	stmt_list	: stmt_list stmt . , [$ error ';' IDENTIFIER]
+
+	$	reduce to rule 3
+	error	reduce to rule 3
+	';'	reduce to rule 3
+	IDENTIFIER	reduce to rule 3
+
+
+State 7:
+ *	stmt	: function . ';' , [$ error ';' IDENTIFIER]
+
+	';'	shift, goto to state 10
+
+
+State 8:
+ *	stmt	: error ';' . , [$ error ';' IDENTIFIER]
+
+	$	reduce to rule 6
+	error	reduce to rule 6
+	@unhandled	reduce to rule 6
+	'('	reduce to rule 6
+	')'	reduce to rule 6
+	';'	reduce to rule 6
+	IDENTIFIER	reduce to rule 6
+
+
+State 9:
+ *	function	: IDENTIFIER '(' . ')' , [')' ';']
+ *	function	: IDENTIFIER '(' . expr ')' , [')' ';']
+ -	expr	: . IDENTIFIER , [')']
+ -	expr	: . function , [')']
+ -	function	: . IDENTIFIER '(' ')' , [')']
+ -	function	: . IDENTIFIER '(' expr ')' , [')']
+
+	')'	shift, goto to state 11
+	IDENTIFIER	shift, goto to state 12
+	function	shift, goto to state 13
+	expr	shift, goto to state 14
+
+
+State 10:
+ *	stmt	: function ';' . , [$ error ';' IDENTIFIER]
+
+	$	reduce to rule 5
+	error	reduce to rule 5
+	';'	reduce to rule 5
+	IDENTIFIER	reduce to rule 5
+
+
+State 11:
+ *	function	: IDENTIFIER '(' ')' . , [')' ';']
+
+	')'	reduce to rule 8
+	';'	reduce to rule 8
+
+
+State 12:
+ *	expr	: IDENTIFIER . , [')']
+ *	function	: IDENTIFIER . '(' ')' , [')']
+ *	function	: IDENTIFIER . '(' expr ')' , [')']
+
+	'('	shift, goto to state 9
+	')'	reduce to rule 10
+
+
+State 13:
+ *	expr	: function . , [')']
+
+	')'	reduce to rule 11
+
+
+State 14:
+ *	function	: IDENTIFIER '(' expr . ')' , [')' ';']
+
+	')'	shift, goto to state 15
+
+
+State 15:
+ *	function	: IDENTIFIER '(' expr ')' . , [')' ';']
+
+	')'	reduce to rule 9
+	';'	reduce to rule 9
+
+shift/reduce conflicts: 0, reduce/reduce conflicts: 0

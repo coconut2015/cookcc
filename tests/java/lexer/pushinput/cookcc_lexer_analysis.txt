@@ -1,0 +1,155 @@
+Lexer State:	INITIAL
+case 1: ^{optws}#{optws}include{optws}
+NFA:
+[0]: --- next = 1	next2 = 3
+[1]: CCL next = 2			CCL = [\t\s]
+[2]: --- next = 3	next2 = 1
+[3]: '#' next = 4		
+[4]: --- next = 5	next2 = 7
+[5]: CCL next = 6			CCL = [\t\s]
+[6]: --- next = 7	next2 = 5
+[7]: 'i' next = 8		
+[8]: 'n' next = 9		
+[9]: 'c' next = 10		
+[10]: 'l' next = 11		
+[11]: 'u' next = 12		
+[12]: 'd' next = 13		
+[13]: 'e' next = 14		
+[14]: --- next = 15	next2 = 17
+[15]: CCL next = 16			CCL = [\t\s]
+[16]: --- next = 17	next2 = 15
+[17]: --- accept state true		
+
+case 2: .|\n
+NFA:
+[18]: CCL next = 19			CCL = (.|\n)
+[19]: --- accept state true		
+
+case 3: <<EOF>>
+NFA:
+[20]: EOF next = 21		
+[21]: --- accept state true		
+
+case 4: .|\n
+NFA:
+[22]: CCL next = 23			CCL = (.|\n)
+[23]: --- accept state true		
+
+case 5: <<EOF>>
+NFA:
+[24]: EOF next = 25		
+[25]: --- accept state true		
+
+Lexer State:	INCLUDE
+case 6: [^\r\n]+
+NFA:
+[26]: --- next = 27		
+[27]: CCL next = 28			CCL = [^\n\r]
+[28]: --- next = 29	next2 = 27
+[29]: --- accept state true		
+
+case 7: .|\n
+NFA:
+[30]: CCL next = 31			CCL = (.|\n)
+[31]: --- accept state true		
+
+case 8: <<EOF>>
+NFA:
+[32]: EOF next = 33		
+[33]: --- accept state true		
+
+case 4: .|\n
+NFA:
+[22]: CCL next = 23			CCL = (.|\n)
+[23]: --- accept state true		
+
+case 5: <<EOF>>
+NFA:
+[24]: EOF next = 25		
+[25]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[18]: CCL next = 19			CCL = (.|\n)
+[20]: EOF next = 21		
+[22]: CCL next = 23			CCL = (.|\n)
+[24]: EOF next = 25		
+
+State ID: 1	BOL
+[1]: CCL next = 2			CCL = [\t\s]
+[3]: '#' next = 4		
+[18]: CCL next = 19			CCL = (.|\n)
+[20]: EOF next = 21		
+[22]: CCL next = 23			CCL = (.|\n)
+[24]: EOF next = 25		
+
+State ID: 2
+[19]: --- accept state true		
+
+State ID: 3
+[21]: --- accept state true		
+
+State ID: 4
+[1]: CCL next = 2			CCL = [\t\s]
+[3]: '#' next = 4		
+[19]: --- accept state true		
+
+State ID: 5
+[5]: CCL next = 6			CCL = [\t\s]
+[7]: 'i' next = 8		
+[19]: --- accept state true		
+
+State ID: 6
+[1]: CCL next = 2			CCL = [\t\s]
+[3]: '#' next = 4		
+
+State ID: 7
+[5]: CCL next = 6			CCL = [\t\s]
+[7]: 'i' next = 8		
+
+State ID: 8
+[8]: 'n' next = 9		
+
+State ID: 9
+[9]: 'c' next = 10		
+
+State ID: 10
+[10]: 'l' next = 11		
+
+State ID: 11
+[11]: 'u' next = 12		
+
+State ID: 12
+[12]: 'd' next = 13		
+
+State ID: 13
+[13]: 'e' next = 14		
+
+State ID: 14
+[15]: CCL next = 16			CCL = [\t\s]
+[17]: --- accept state true		
+
+State ID: 15	INCLUDE Start
+[22]: CCL next = 23			CCL = (.|\n)
+[24]: EOF next = 25		
+[27]: CCL next = 28			CCL = [^\n\r]
+[30]: CCL next = 31			CCL = (.|\n)
+[32]: EOF next = 33		
+
+State ID: 16	BOL
+[22]: CCL next = 23			CCL = (.|\n)
+[24]: EOF next = 25		
+[27]: CCL next = 28			CCL = [^\n\r]
+[30]: CCL next = 31			CCL = (.|\n)
+[32]: EOF next = 33		
+
+State ID: 17
+[27]: CCL next = 28			CCL = [^\n\r]
+[29]: --- accept state true		
+
+State ID: 18
+[31]: --- accept state true		
+
+State ID: 19
+[33]: --- accept state true		
+

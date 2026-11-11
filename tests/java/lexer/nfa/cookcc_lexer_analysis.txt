@@ -1,0 +1,107 @@
+Lexer State:	INITIAL
+case 1: abc|d(ef)
+NFA:
+[0]: --- next = 1	next2 = 2
+[1]: 'a' next = 3		
+[2]: 'd' next = 6		
+[3]: 'b' next = 4		
+[4]: 'c' next = 5		
+[5]: --- next = 9		
+[6]: 'e' next = 7		
+[7]: 'f' next = 8		
+[8]: --- next = 9		
+[9]: --- accept state true		
+
+case 2: a(aa|bb|cc)|bb
+NFA:
+[10]: --- next = 11	next2 = 12
+[11]: 'a' next = 13		
+[12]: 'b' next = 26		
+[13]: --- next = 14	next2 = 15
+[14]: --- next = 16	next2 = 17
+[15]: 'c' next = 23		
+[16]: 'a' next = 18		
+[17]: 'b' next = 20		
+[18]: 'a' next = 19		
+[19]: --- next = 22		
+[20]: 'b' next = 21		
+[21]: --- next = 22		
+[22]: --- next = 25		
+[23]: 'c' next = 24		
+[24]: --- next = 25		
+[25]: --- next = 28		
+[26]: 'b' next = 27		
+[27]: --- next = 28		
+[28]: --- accept state true		
+
+case 3: .|\n
+NFA:
+[29]: CCL next = 30			CCL = (.|\n)
+[30]: --- accept state true		
+
+case 4: <<EOF>>
+NFA:
+[31]: EOF next = 32		
+[32]: --- accept state true		
+
+case 5: .|\n
+NFA:
+[33]: CCL next = 34			CCL = (.|\n)
+[34]: --- accept state true		
+
+case 6: <<EOF>>
+NFA:
+[35]: EOF next = 36		
+[36]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[1]: 'a' next = 3		
+[2]: 'd' next = 6		
+[11]: 'a' next = 13		
+[12]: 'b' next = 26		
+[29]: CCL next = 30			CCL = (.|\n)
+[31]: EOF next = 32		
+[33]: CCL next = 34			CCL = (.|\n)
+[35]: EOF next = 36		
+
+State ID: 1
+[30]: --- accept state true		
+
+State ID: 2
+[3]: 'b' next = 4		
+[15]: 'c' next = 23		
+[16]: 'a' next = 18		
+[17]: 'b' next = 20		
+[30]: --- accept state true		
+
+State ID: 3
+[26]: 'b' next = 27		
+[30]: --- accept state true		
+
+State ID: 4
+[6]: 'e' next = 7		
+[30]: --- accept state true		
+
+State ID: 5
+[32]: --- accept state true		
+
+State ID: 6
+[18]: 'a' next = 19		
+
+State ID: 7
+[4]: 'c' next = 5		
+[20]: 'b' next = 21		
+
+State ID: 8
+[23]: 'c' next = 24		
+
+State ID: 9
+[28]: --- accept state true		
+
+State ID: 10
+[7]: 'f' next = 8		
+
+State ID: 11
+[9]: --- accept state true		
+

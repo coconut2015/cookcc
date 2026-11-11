@@ -1,0 +1,16 @@
+/*
+ * Overrides for the Read the Docs theme.
+ *
+ * By default the theme keeps table cells on a single line and adds a
+ * horizontal scroll bar to wide tables.  On screens wide enough to show the
+ * content, wrap the cell text instead.
+ */
+@media screen and (min-width: 767px) {
+	.wy-table-responsive table td {
+		white-space: normal !important;
+	}
+
+	.wy-table-responsive {
+		overflow: visible !important;
+	}
+}

@@ -1,0 +1,257 @@
+Lexer State:	INITIAL
+case 1: {word}{ws}*
+NFA:
+[0]: --- next = 1	next2 = 3
+[1]: CCL next = 2			CCL = [\t\s]
+[2]: --- next = 3	next2 = 1
+[3]: --- next = 4		
+[4]: CCL next = 5			CCL = [^\t\n\s]
+[5]: --- next = 6	next2 = 4
+[6]: --- next = 7	next2 = 9
+[7]: CCL next = 8			CCL = [\t\s]
+[8]: --- next = 9	next2 = 7
+[9]: --- accept state true		
+
+case 2: {word}{ws}*\n
+NFA:
+[10]: --- next = 11	next2 = 13
+[11]: CCL next = 12			CCL = [\t\s]
+[12]: --- next = 13	next2 = 11
+[13]: --- next = 14		
+[14]: CCL next = 15			CCL = [^\t\n\s]
+[15]: --- next = 16	next2 = 14
+[16]: --- next = 17	next2 = 19
+[17]: CCL next = 18			CCL = [\t\s]
+[18]: --- next = 19	next2 = 17
+[19]: \n  next = 20		
+[20]: --- accept state true		
+
+case 3: {words}{word}
+NFA:
+[21]: --- next = 22	next2 = 24
+[22]: CCL next = 23			CCL = [\t\s]
+[23]: --- next = 24	next2 = 22
+[24]: --- next = 25		
+[25]: CCL next = 26			CCL = [^\t\n\s]
+[26]: --- next = 27	next2 = 25
+[27]: --- next = 28		
+[28]: CCL next = 29			CCL = [\t\s]
+[29]: --- next = 30	next2 = 28
+[30]: --- next = 31	next2 = 33
+[31]: CCL next = 32			CCL = [\t\s]
+[32]: --- next = 33	next2 = 31
+[33]: --- next = 34		
+[34]: CCL next = 35			CCL = [^\t\n\s]
+[35]: --- next = 36	next2 = 34
+[36]: --- accept state true		
+
+case 4: {words}{2}{word}{ws}*
+NFA:
+[37]: --- next = 38	next2 = 40
+[38]: CCL next = 39			CCL = [\t\s]
+[39]: --- next = 40	next2 = 38
+[40]: --- next = 41		
+[41]: CCL next = 42			CCL = [^\t\n\s]
+[42]: --- next = 43	next2 = 41
+[43]: --- next = 44		
+[44]: CCL next = 45			CCL = [\t\s]
+[45]: --- next = 46	next2 = 44
+[46]: --- next = 47	next2 = 49
+[47]: CCL next = 48			CCL = [\t\s]
+[48]: --- next = 49	next2 = 47
+[49]: --- next = 50		
+[50]: CCL next = 51			CCL = [^\t\n\s]
+[51]: --- next = 52	next2 = 50
+[52]: --- next = 53		
+[53]: CCL next = 54			CCL = [\t\s]
+[54]: --- next = 55	next2 = 53
+[55]: --- next = 56	next2 = 58
+[56]: CCL next = 57			CCL = [\t\s]
+[57]: --- next = 58	next2 = 56
+[58]: --- next = 59		
+[59]: CCL next = 60			CCL = [^\t\n\s]
+[60]: --- next = 61	next2 = 59
+[61]: --- next = 62	next2 = 64
+[62]: CCL next = 63			CCL = [\t\s]
+[63]: --- next = 64	next2 = 62
+[64]: --- accept state true		
+
+case 5: {words}{3}{word}{ws}*
+NFA:
+[65]: --- next = 66	next2 = 68
+[66]: CCL next = 67			CCL = [\t\s]
+[67]: --- next = 68	next2 = 66
+[68]: --- next = 69		
+[69]: CCL next = 70			CCL = [^\t\n\s]
+[70]: --- next = 71	next2 = 69
+[71]: --- next = 72		
+[72]: CCL next = 73			CCL = [\t\s]
+[73]: --- next = 74	next2 = 72
+[74]: --- next = 75	next2 = 77
+[75]: CCL next = 76			CCL = [\t\s]
+[76]: --- next = 77	next2 = 75
+[77]: --- next = 78		
+[78]: CCL next = 79			CCL = [^\t\n\s]
+[79]: --- next = 80	next2 = 78
+[80]: --- next = 81		
+[81]: CCL next = 82			CCL = [\t\s]
+[82]: --- next = 83	next2 = 81
+[83]: --- next = 84	next2 = 86
+[84]: CCL next = 85			CCL = [\t\s]
+[85]: --- next = 86	next2 = 84
+[86]: --- next = 87		
+[87]: CCL next = 88			CCL = [^\t\n\s]
+[88]: --- next = 89	next2 = 87
+[89]: --- next = 90		
+[90]: CCL next = 91			CCL = [\t\s]
+[91]: --- next = 92	next2 = 90
+[92]: --- next = 93	next2 = 95
+[93]: CCL next = 94			CCL = [\t\s]
+[94]: --- next = 95	next2 = 93
+[95]: --- next = 96		
+[96]: CCL next = 97			CCL = [^\t\n\s]
+[97]: --- next = 98	next2 = 96
+[98]: --- next = 99	next2 = 101
+[99]: CCL next = 100			CCL = [\t\s]
+[100]: --- next = 101	next2 = 99
+[101]: --- accept state true		
+
+case 6: {ws}+
+NFA:
+[102]: --- next = 103		
+[103]: CCL next = 104			CCL = [\t\s]
+[104]: --- next = 105	next2 = 103
+[105]: --- accept state true		
+
+case 7: \n+
+NFA:
+[106]: --- next = 107		
+[107]: \n  next = 108		
+[108]: --- next = 109	next2 = 107
+[109]: --- accept state true		
+
+case 8: <<EOF>>
+NFA:
+[110]: EOF next = 111		
+[111]: --- accept state true		
+
+case 9: .|\n
+NFA:
+[112]: CCL next = 113			CCL = (.|\n)
+[113]: --- accept state true		
+
+case 10: <<EOF>>
+NFA:
+[114]: EOF next = 115		
+[115]: --- accept state true		
+
+==== DFA States ====
+State ID: 0	INITIAL Start
+[1]: CCL next = 2			CCL = [\t\s]
+[4]: CCL next = 5			CCL = [^\t\n\s]
+[11]: CCL next = 12			CCL = [\t\s]
+[14]: CCL next = 15			CCL = [^\t\n\s]
+[22]: CCL next = 23			CCL = [\t\s]
+[25]: CCL next = 26			CCL = [^\t\n\s]
+[38]: CCL next = 39			CCL = [\t\s]
+[41]: CCL next = 42			CCL = [^\t\n\s]
+[66]: CCL next = 67			CCL = [\t\s]
+[69]: CCL next = 70			CCL = [^\t\n\s]
+[103]: CCL next = 104			CCL = [\t\s]
+[107]: \n  next = 108		
+[110]: EOF next = 111		
+[112]: CCL next = 113			CCL = (.|\n)
+[114]: EOF next = 115		
+
+State ID: 1
+[4]: CCL next = 5			CCL = [^\t\n\s]
+[7]: CCL next = 8			CCL = [\t\s]
+[9]: --- accept state true		
+[14]: CCL next = 15			CCL = [^\t\n\s]
+[17]: CCL next = 18			CCL = [\t\s]
+[19]: \n  next = 20		
+[25]: CCL next = 26			CCL = [^\t\n\s]
+[28]: CCL next = 29			CCL = [\t\s]
+[41]: CCL next = 42			CCL = [^\t\n\s]
+[44]: CCL next = 45			CCL = [\t\s]
+[69]: CCL next = 70			CCL = [^\t\n\s]
+[72]: CCL next = 73			CCL = [\t\s]
+
+State ID: 2
+[1]: CCL next = 2			CCL = [\t\s]
+[4]: CCL next = 5			CCL = [^\t\n\s]
+[11]: CCL next = 12			CCL = [\t\s]
+[14]: CCL next = 15			CCL = [^\t\n\s]
+[22]: CCL next = 23			CCL = [\t\s]
+[25]: CCL next = 26			CCL = [^\t\n\s]
+[38]: CCL next = 39			CCL = [\t\s]
+[41]: CCL next = 42			CCL = [^\t\n\s]
+[66]: CCL next = 67			CCL = [\t\s]
+[69]: CCL next = 70			CCL = [^\t\n\s]
+[103]: CCL next = 104			CCL = [\t\s]
+[105]: --- accept state true		
+
+State ID: 3
+[107]: \n  next = 108		
+[109]: --- accept state true		
+
+State ID: 4
+[111]: --- accept state true		
+
+State ID: 5
+[7]: CCL next = 8			CCL = [\t\s]
+[9]: --- accept state true		
+[17]: CCL next = 18			CCL = [\t\s]
+[19]: \n  next = 20		
+[28]: CCL next = 29			CCL = [\t\s]
+[31]: CCL next = 32			CCL = [\t\s]
+[34]: CCL next = 35			CCL = [^\t\n\s]
+[44]: CCL next = 45			CCL = [\t\s]
+[47]: CCL next = 48			CCL = [\t\s]
+[50]: CCL next = 51			CCL = [^\t\n\s]
+[72]: CCL next = 73			CCL = [\t\s]
+[75]: CCL next = 76			CCL = [\t\s]
+[78]: CCL next = 79			CCL = [^\t\n\s]
+
+State ID: 6
+[20]: --- accept state true		
+
+State ID: 7
+[34]: CCL next = 35			CCL = [^\t\n\s]
+[36]: --- accept state true		
+[50]: CCL next = 51			CCL = [^\t\n\s]
+[53]: CCL next = 54			CCL = [\t\s]
+[78]: CCL next = 79			CCL = [^\t\n\s]
+[81]: CCL next = 82			CCL = [\t\s]
+
+State ID: 8
+[53]: CCL next = 54			CCL = [\t\s]
+[56]: CCL next = 57			CCL = [\t\s]
+[59]: CCL next = 60			CCL = [^\t\n\s]
+[81]: CCL next = 82			CCL = [\t\s]
+[84]: CCL next = 85			CCL = [\t\s]
+[87]: CCL next = 88			CCL = [^\t\n\s]
+
+State ID: 9
+[59]: CCL next = 60			CCL = [^\t\n\s]
+[62]: CCL next = 63			CCL = [\t\s]
+[64]: --- accept state true		
+[87]: CCL next = 88			CCL = [^\t\n\s]
+[90]: CCL next = 91			CCL = [\t\s]
+
+State ID: 10
+[62]: CCL next = 63			CCL = [\t\s]
+[64]: --- accept state true		
+[90]: CCL next = 91			CCL = [\t\s]
+[93]: CCL next = 94			CCL = [\t\s]
+[96]: CCL next = 97			CCL = [^\t\n\s]
+
+State ID: 11
+[96]: CCL next = 97			CCL = [^\t\n\s]
+[99]: CCL next = 100			CCL = [\t\s]
+[101]: --- accept state true		
+
+State ID: 12
+[99]: CCL next = 100			CCL = [\t\s]
+[101]: --- accept state true		
+

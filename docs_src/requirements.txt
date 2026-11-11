@@ -1,0 +1,4 @@
+# Python packages needed to build the documentation:
+#   pip install -r docs_src/requirements.txt
+sphinx==7.4.7
+sphinx-rtd-theme==3.1.0

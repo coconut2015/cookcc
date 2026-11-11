@@ -27,6 +27,7 @@ Build with the script for your platform, run from any directory: `make.cmd` on W
 |---|---|
 | `package` | Compiles all modules, runs the unit tests, generates the javadoc, and collects the jars in `dist/`. |
 | `package --skip-tests` | The same, without running the unit tests. |
+| `test` | Runs the integration tests in `tests/` against the jars in `dist/`, so run `package` first.  Add `--coverage` for a JaCoCo report in `target/site/jacoco-it`.  `make.sh` only: the tests are bash scripts for Linux / macOS. |
 | `docs` | Builds the HTML documentation in `docs_src/_build/html`.  Open `TOC.html` there. |
 | `full` | Builds everything: `package`, then `docs`.  Also accepts `--skip-tests`. |
 

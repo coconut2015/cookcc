@@ -33,20 +33,41 @@ import freemarker.ext.beans.ArrayModel;
 import freemarker.template.*;
 
 /**
- * This code dumps a number array to Java character string.  This is function is
- * necessary because of the fact that Java cannot handle certain \\u00XX values
- * correctly.  Namely \r \n \" and their corresponding values.  Thus it is
- * necessary to use octal representation (which Java does handle correctly)
- * for numbers smaller than 128, and the rest using \\u notation.
+ * The <code>?stringresource</code> FreeMarker built-in, which declares string
+ * fields holding the data of a large number array.  It works with
+ * {@link JavaStringBI} (<code>?javastring</code>) for arrays too long to fit in
+ * a single string literal.
+ * <p>
+ * If the array fits in one literal (at most 16383 bytes in UTF-8), the result
+ * is empty and <code>?javastring</code> later generates an inline string.
+ * Otherwise the array is split into pieces, and the result declares one field
+ * per piece:
+ * <pre>
+ *		private final static String s_s1 = "...";
+ *		private final static String s_s2 = "...";
+ * </pre>
+ * The expression that joins them (<code>s_s1.toString () + s_s2.toString ()</code>)
+ * is remembered for the array, by identity, so that a later
+ * <code>?javastring</code> on the same array refers to the fields.  Field
+ * numbers continue across arrays, so each field name is unique within the
+ * generated class; call {@link #reset} before generating the next class.
+ * <p>
+ * Characters are escaped the same way as in <code>?javastring</code>: octal for
+ * values smaller than 128, since Java cannot handle certain \\u00XX values such
+ * as \r \n \" correctly, and \\u notation for the rest.
  *
  * @author Heng Yuan
  */
 public class JavaStringResourceBI extends BuiltIn
 {
+	/** Maps each array, by identity, to the expression that joins its string fields. */
 	private final static IdentityHashMap<Object, String> s_stringResources = new IdentityHashMap<Object, String> ();
+	/** The number of the last string field declared in the current class. */
 	private static int s_stringCounter = 0;
 
+	/** The start of each field declaration; the field number follows. */
 	private final static String s_header = "\t\tprivate final static String s_s";
+	/** The maximum UTF-8 length, in bytes, of each string field. */
 	private final static int MAX_ARRAY_LEN = 16383;
 
 	@SuppressWarnings ("unchecked")
@@ -74,8 +95,14 @@ public class JavaStringResourceBI extends BuiltIn
 		return new JavaStringBuilder (seq);
 	}
 
+	/**
+	 * The method returned by <code>?stringresource</code>.  Calling it, with no
+	 * arguments, returns the field declarations, or an empty string if none
+	 * are needed.
+	 */
 	private class JavaStringBuilder implements TemplateMethodModelEx
 	{
+		/** The array of numbers to convert. */
 		private final ArrayModel m_seq;
 
 		private JavaStringBuilder (ArrayModel seq)
@@ -156,6 +183,14 @@ public class JavaStringResourceBI extends BuiltIn
 		s_stringCounter = 0;
 	}
 
+	/**
+	 * Gets the expression that joins the string fields declared for an array.
+	 *
+	 * @param	key	the array, which must be the same instance passed to
+	 *			<code>?stringresource</code>.
+	 * @return	the expression, such as <code>s_s1.toString () + s_s2.toString ()</code>,
+	 *			or null if no fields were declared for the array.
+	 */
 	public static String getStringResource (Object key)
 	{
 		return s_stringResources.get (key);

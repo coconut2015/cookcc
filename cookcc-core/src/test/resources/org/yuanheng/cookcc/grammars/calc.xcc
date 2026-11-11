@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	An expression calculator for the generated parser tests.  It covers
+	precedence, left and right associativity, and %prec.  The value of the
+	whole expression is stored in "result".
+-->
+<cookcc>
+	<tokens>NUMBER</tokens>
+	<tokens type="left">'+' '-'</tokens>
+	<tokens type="left">'*' '/'</tokens>
+	<tokens type="right">'^'</tokens>
+	<tokens type="nonassoc">UMINUS</tokens>
+	<lexer>
+		<rule>
+			<pattern>[0-9]+</pattern>
+			<action>
+				_yyValue = Integer.valueOf (yyText ());
+				return NUMBER;
+			</action>
+		</rule>
+		<rule>
+			<!-- A leading "-" in a character class is not literal in CookCC; escape it. -->
+			<pattern>[\-+*/^()]</pattern>
+			<action>return yyText ().charAt (0);</action>
+		</rule>
+		<rule>
+			<pattern>[ \t]+</pattern>
+			<action>/* ignore */</action>
+		</rule>
+		<rule>
+			<pattern>.|\n</pattern>
+			<action>throw new IOException ("Illegal character: " + yyText ());</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+	</lexer>
+	<parser start="program">
+		<type format="((Integer){0})">NUMBER expr</type>
+		<grammar rule="program">
+			<rhs>expr</rhs>
+			<action>result = $1;</action>
+		</grammar>
+		<grammar rule="expr">
+			<rhs>NUMBER</rhs>
+			<action>$$ = $1;</action>
+
+			<rhs>expr '+' expr</rhs>
+			<action>$$ = $1 + $3;</action>
+
+			<rhs>expr '-' expr</rhs>
+			<action>$$ = $1 - $3;</action>
+
+			<rhs>expr '*' expr</rhs>
+			<action>$$ = $1 * $3;</action>
+
+			<rhs>expr '/' expr</rhs>
+			<action>$$ = $1 / $3;</action>
+
+			<rhs>expr '^' expr</rhs>
+			<action>$$ = (int)Math.pow ($1, $3);</action>
+
+			<rhs precedence="UMINUS">'-' expr</rhs>
+			<action>$$ = -$2;</action>
+
+			<rhs>'(' expr ')'</rhs>
+			<action>$$ = $2;</action>
+		</grammar>
+	</parser>
+	<code>
+		public int result;
+	</code>
+</cookcc>

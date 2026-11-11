@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	A line-by-line adder for the error recovery tests.  A line with a syntax
+	error is matched by the "error" rule, and parsing continues with the
+	next line.
+-->
+<cookcc>
+	<tokens>NUMBER</tokens>
+	<tokens type="left">'+'</tokens>
+	<lexer>
+		<rule>
+			<pattern>[0-9]+</pattern>
+			<action>
+				_yyValue = Integer.valueOf (yyText ());
+				return NUMBER;
+			</action>
+		</rule>
+		<rule>
+			<pattern>[+\n]</pattern>
+			<action>return yyText ().charAt (0);</action>
+		</rule>
+		<rule>
+			<pattern>[ \t]+</pattern>
+			<action>/* ignore */</action>
+		</rule>
+		<rule>
+			<pattern><![CDATA[<<EOF>>]]></pattern>
+			<action>return 0;</action>
+		</rule>
+	</lexer>
+	<parser start="lines">
+		<type format="((Integer){0})">NUMBER expr</type>
+		<grammar rule="lines">
+			<rhs>lines line</rhs>
+			<rhs></rhs>
+		</grammar>
+		<grammar rule="line">
+			<rhs>expr '\n'</rhs>
+			<action>out.add (String.valueOf ($1));</action>
+
+			<rhs>error '\n'</rhs>
+			<action>out.add ("error");</action>
+		</grammar>
+		<grammar rule="expr">
+			<rhs>NUMBER</rhs>
+			<action>$$ = $1;</action>
+
+			<rhs>expr '+' expr</rhs>
+			<action>$$ = $1 + $3;</action>
+		</grammar>
+	</parser>
+	<code>
+		public final java.util.List&lt;String&gt; out = new java.util.ArrayList&lt;String&gt; ();
+	</code>
+</cookcc>

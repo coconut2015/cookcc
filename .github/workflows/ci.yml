@@ -1,5 +1,6 @@
-# Builds CookCC, runs the unit tests with JaCoCo code coverage, and uploads
-# the coverage reports to Codecov.
+# Builds CookCC, runs the unit tests and the tests/ integration suite with
+# JaCoCo code coverage, and uploads both coverage reports to Codecov, with the
+# flags "unit" and "integration".  Codecov merges them into one total.
 #
 # Setup: add the repository upload token from codecov.io as the
 # CODECOV_TOKEN secret (Settings > Secrets and variables > Actions).
@@ -35,11 +36,12 @@ jobs:
       - name: Build
         run: bash make.sh package -B
 
-      - name: Upload coverage to Codecov
+      - name: Upload unit test coverage to Codecov
         uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./**/target/site/jacoco/jacoco.xml
+          flags: unit
           fail_ci_if_error: false
 
       - name: Upload distribution jars
@@ -48,3 +50,17 @@ jobs:
           name: cookcc-dist
           path: dist/*.jar
           if-no-files-found: error
+
+      # Runs the tests/ suite against the jars in dist/, with the JaCoCo agent
+      # attached to each JVM that runs CookCC.  Writes
+      # target/site/jacoco-it/jacoco.xml for cookcc-core and cookcc-ap.
+      - name: Integration tests
+        run: bash make.sh test --coverage
+
+      - name: Upload integration test coverage to Codecov
+        uses: codecov/codecov-action@v7
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./target/site/jacoco-it/jacoco.xml
+          flags: integration
+          fail_ci_if_error: false

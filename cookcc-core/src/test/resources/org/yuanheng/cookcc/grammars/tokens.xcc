@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	A lexer-only grammar for the generated lexer tests.  Each action records
+	what it matched in the "out" list, which the tests read back.
+-->
+<cookcc>
+	<lexer>
+		<shortcut name="digit">[0-9]</shortcut>
+		<state name="INITIAL">
+			<!-- Listed before the identifier rule, so it wins a tie in length. -->
+			<rule>
+				<pattern>"if"</pattern>
+				<action>out.add ("IF");</action>
+			</rule>
+			<rule>
+				<pattern>[a-z][a-z0-9]*</pattern>
+				<action>out.add ("ID:" + yyText ());</action>
+			</rule>
+			<!-- Trailing context: the "px" is matched, but not consumed. -->
+			<rule>
+				<pattern>{digit}+/"px"</pattern>
+				<action>out.add ("PIXELS:" + yyText ());</action>
+			</rule>
+			<rule>
+				<pattern>{digit}+</pattern>
+				<action>out.add ("NUM:" + yyText ());</action>
+			</rule>
+			<rule>
+				<pattern>"=="</pattern>
+				<action>out.add ("EQ");</action>
+			</rule>
+			<rule>
+				<pattern>"="</pattern>
+				<action>out.add ("ASSIGN");</action>
+			</rule>
+			<!-- Beginning of line only. -->
+			<rule>
+				<pattern>^"#".*</pattern>
+				<action>out.add ("DIRECTIVE:" + yyText ());</action>
+			</rule>
+			<rule>
+				<pattern>"/*"</pattern>
+				<action>begin (COMMENT);</action>
+			</rule>
+			<rule>
+				<pattern>[ \t]+</pattern>
+				<action>/* ignore */</action>
+			</rule>
+			<rule>
+				<pattern>\n</pattern>
+				<action>out.add ("NL");</action>
+			</rule>
+			<rule>
+				<pattern>.</pattern>
+				<action>out.add ("CHAR:" + yyText ());</action>
+			</rule>
+			<rule>
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>return 0;</action>
+			</rule>
+		</state>
+		<state name="COMMENT">
+			<rule>
+				<pattern>"*/"</pattern>
+				<action>begin (INITIAL);</action>
+			</rule>
+			<rule>
+				<pattern>.|\n</pattern>
+				<action>/* ignore */</action>
+			</rule>
+			<rule>
+				<pattern><![CDATA[<<EOF>>]]></pattern>
+				<action>out.add ("UNTERMINATED"); return 0;</action>
+			</rule>
+		</state>
+	</lexer>
+	<code>
+		public final java.util.List&lt;String&gt; out = new java.util.ArrayList&lt;String&gt; ();
+	</code>
+</cookcc>
